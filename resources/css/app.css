@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* CSS yang ada di customDatePickerWidth.css */
+.customDatePickerWidth {
+    width: 100%; /* Menetapkan lebar penuh dari kontainer */
+}
+
+.customDatePickerWidth .react-datepicker__input-container {
+    width: 100%; /* Menetapkan lebar penuh untuk kontainer input DatePicker */
+}
+
+.customDatePickerWidth .react-datepicker__input {
+    width: 100%; /* Menetapkan lebar penuh untuk elemen input tanggal */
+}
