@@ -10,9 +10,11 @@ Setelah clonning, jalankan :
 6. selanjutnya ketik perintah **php artisan key:generate** 
 7. selanjutnya ketik peritah **npm run build**, agar tidak harus menjalankan npm run dev di server
 
-Pada folder database, terdapat usersimgos.sql, yang di gunakan untuk membuat database di server yang akan di deploy SimgosAppData. 
-Caranya, buatkan database usersimgo terlebih dahulu, kemudian jalan usersimgos.sql di terminal menggukan perintah mysql restore, atau gunakan dbeaver atau heidi sql atau aplikasi sejenisnya.
+Pada folder database, terdapat **usersimgos.sql**, yang di gunakan untuk membuat database di server yang akan di deploy SimgosAppData. 
 
-Untuk merubah nama rumah sakit, lakukan perubahan pada value HOSPITAL_NAME di file .env
+Caranya, buatkan database usersimgo terlebih dahulu, kemudian jalan **usersimgos.sql** di terminal menggukan perintah mysql restore, atau gunakan dbeaver atau heidi sql atau aplikasi sejenisnya.
 
-Untuk menarik perubahan terbaru, bisa menggunakan perintah git pull origin master di /var/www/html/modul-simgos/ menggunakan terminal, selanjutnya akan SimgosAppData akan di update dengan menu-menu baru yang telah di tambahkan 
+Untuk merubah nama rumah sakit, lakukan perubahan pada value **HOSPITAL_NAME** di file **.env**
+
+Untuk menarik perubahan terbaru, bisa menggunakan perintah git pull origin master di /var/www/html/SimgosAppData menggunakan terminal, selanjutnya akan SimgosAppData akan di update dengan menu-menu baru yang telah di tambahkan 
+Jika di deploy di windows xamppp/htdocs, lakukan clone ulang, dan ulangi perintah dari nomor 2 s/d 7 diatas
