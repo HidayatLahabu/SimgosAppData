@@ -1,4 +1,8 @@
 Modul Simgos dibuat sebagai pelengkap aplikasi Simgos Kemenkes
+Aplikasi ini memanfaatkan database simgos sebagai sumber data, dan di tambahkan database usersimgos hanya untuk menyimpan data user saja.
+Aplikasi ini telah di gunakan dengan cara memisahkan database usersimgos dari database simgos. 
+SimgosAppData di deploy pada server Ubuntu 22.04 dan database mysql.
+SimgosAppData menggunakan pengaturan multiple database yang di atur melalui file .env 
 
 Setelah clonning, jalankan :
 
