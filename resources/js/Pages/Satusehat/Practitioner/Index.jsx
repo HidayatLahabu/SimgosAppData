@@ -33,6 +33,19 @@ export default function Index({ auth, practitioner, queryParams = {} }) {
         searchFieldChanged(name, e.target.value);
     };
 
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        // Convert the NIK to an array of characters
+        const nikArray = number.split('');
+        // Shuffle the array
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        // Join the array back into a string
+        return nikArray.join('');
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -73,7 +86,7 @@ export default function Index({ auth, practitioner, queryParams = {} }) {
                                                 <tr key={`${practitioner.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{practitioner.id}</td>
                                                     <td className="px-3 py-3">{practitioner.name}</td>
-                                                    <td className="px-3 py-3">{practitioner.refId}</td>
+                                                    <td className="px-3 py-3">{shuffleNumber(practitioner.refId)}</td>
                                                     <td className="px-3 py-3">{practitioner.getDate}</td>
                                                 </tr>
                                             ))

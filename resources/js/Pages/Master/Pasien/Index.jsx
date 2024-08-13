@@ -34,6 +34,19 @@ export default function Index({ auth, pasien, queryParams = {} }) {
         searchFieldChanged(nama, e.target.value);
     };
 
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        // Convert the NIK to an array of characters
+        const nikArray = number.split('');
+        // Shuffle the array
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        // Join the array back into a string
+        return nikArray.join('');
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -66,8 +79,8 @@ export default function Index({ auth, pasien, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA</th>
                                             <th className="px-3 py-2">TANGGAL LAHIR</th>
                                             <th className="px-3 py-2">ALAMAT</th>
-                                            <th className="px-3 py-2">NIK</th>
-                                            <th className="px-3 py-2">NO BPJS</th>
+                                            <th className="px-3 py-2">BPJS</th>
+                                            <th className="px-3 py-2">TERDAFTAR</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -78,8 +91,8 @@ export default function Index({ auth, pasien, queryParams = {} }) {
                                                     <td className="px-3 py-3">{pasien.nama}</td>
                                                     <td className="px-3 py-3">{formatDate(pasien.tanggal)}</td>
                                                     <td className="px-3 py-3">{pasien.alamat}</td>
-                                                    <td className="px-3 py-3">{pasien.nik}</td>
-                                                    <td className="px-3 py-3">{pasien.bpjs}</td>
+                                                    <td className="px-3 py-3">{pasien.bpjs ? shuffleNumber(pasien.bpjs) : ''}</td>
+                                                    <td className="px-3 py-3">{pasien.terdaftar}</td>
                                                 </tr>
                                             ))
                                         ) : (
