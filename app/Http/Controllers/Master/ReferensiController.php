@@ -2,21 +2,33 @@
 
 namespace App\Http\Controllers\Master;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\MasterReferensiModel;
-use Illuminate\Http\Request;
 
 class ReferensiController extends Controller
 {
+
     public function index()
     {
-        // Define base query
-        $query = MasterReferensiModel::orderBy('TABEL_ID');
+        // Get the search term from the request
+        $searchSubject = request('deskripsi') ? strtolower(request('deskripsi')) : null;
 
-        // Apply search filter if 'subject' query parameter is present
-        if (request('deskripsi')) {
-            $searchSubject = strtolower(request('deskripsi')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+        // Start building the query using the query builder
+        $query = DB::connection('mysql2')->table('master.referensi as referensi')
+            ->select(
+                'referensi.TABEL_ID as tabel_id',
+                'referensi.ID as id',
+                'referensi.DESKRIPSI as deskripsi',
+                'jenis.DESKRIPSI as jenis'
+            )
+            ->leftJoin('master.jenis_referensi as jenis', 'referensi.JENIS', '=', 'jenis.ID')
+            ->orderBy('referensi.TABEL_ID');
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->whereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results

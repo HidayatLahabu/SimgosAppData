@@ -72,11 +72,11 @@ export default function Index({ auth, referensi, queryParams = {} }) {
                                     <tbody>
                                         {referensi.data.length > 0 ? (
                                             referensi.data.map((referensi, index) => (
-                                                <tr key={`${referensi.TABEL_ID}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{referensi.TABEL_ID}</td>
-                                                    <td className="px-3 py-3">{referensi.JENIS}</td>
-                                                    <td className="px-3 py-3">{referensi.ID}</td>
-                                                    <td className="px-3 py-3">{referensi.DESKRIPSI}</td>
+                                                <tr key={`${referensi.tabel_id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{referensi.tabel_id}</td>
+                                                    <td className="px-3 py-3">{referensi.jenis}</td>
+                                                    <td className="px-3 py-3">{referensi.id}</td>
+                                                    <td className="px-3 py-3">{referensi.deskripsi}</td>
                                                 </tr>
                                             ))
                                         ) : (
