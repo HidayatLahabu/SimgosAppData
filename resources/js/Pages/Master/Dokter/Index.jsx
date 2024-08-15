@@ -87,7 +87,13 @@ export default function Index({ auth, dokter, queryParams = {} }) {
                                                 <tr key={`${dokter.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dokter.depan} {dokter.nama} {dokter.belakang}</td>
                                                     <td className="px-3 py-3">{dokter.nip ? shuffleNumber(dokter.nip) : ''}</td>
-                                                    <td className="px-3 py-3">{dokter.nik ? shuffleNumber(dokter.nik) : ''}</td>
+                                                    <td className="px-3 py-3">
+                                                        {dokter.nik ? (
+                                                            shuffleNumber(dokter.nik)
+                                                        ) : (
+                                                            <span className="text-red-500">Belum ada NIK</span>
+                                                        )}
+                                                    </td>
                                                     <td className="px-3 py-3">{dokter.profesi}</td>
                                                 </tr>
                                             ))

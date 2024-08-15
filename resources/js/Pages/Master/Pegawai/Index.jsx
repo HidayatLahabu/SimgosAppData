@@ -87,7 +87,13 @@ export default function Index({ auth, pegawai, queryParams = {} }) {
                                                 <tr key={`${pegawai.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{pegawai.depan} {pegawai.nama} {pegawai.belakang}</td>
                                                     <td className="px-3 py-3">{pegawai.nip ? shuffleNumber(pegawai.nip) : ''}</td>
-                                                    <td className="px-3 py-3">{pegawai.nik ? shuffleNumber(pegawai.nik) : ''}</td>
+                                                    <td className="px-3 py-3">
+                                                        {pegawai.nik ? (
+                                                            shuffleNumber(pegawai.nik)
+                                                        ) : (
+                                                            <span className="text-red-500">Belum ada NIK</span>
+                                                        )}
+                                                    </td>
                                                     <td className="px-3 py-3">{pegawai.profesi}</td>
                                                 </tr>
                                             ))
