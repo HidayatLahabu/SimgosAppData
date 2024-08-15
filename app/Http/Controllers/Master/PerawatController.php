@@ -26,7 +26,7 @@ class PerawatController extends Controller
             )
             ->distinct()
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'perawat.NIP')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'perawat.NIP', '=', 'pengguna.NIP')
             ->leftJoin('master.perawat_ruangan as ruangan_kerja', 'perawat.ID', '=', 'ruangan_kerja.PERAWAT')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'ruangan_kerja.RUANGAN')
             ->where('pegawai.STATUS', 1)

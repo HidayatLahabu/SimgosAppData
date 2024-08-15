@@ -75,10 +75,10 @@ export default function Index({ auth, perawat, queryParams = {} }) {
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">NAMA</th>
-                                            <th className="px-3 py-2">NIP</th>
-                                            <th className="px-3 py-2">NIK</th>
-                                            <th className="px-3 py-2">RUANGAN</th>
+                                            <th className="px-3 py-2">NAMA PEGAWAI</th>
+                                            <th className="px-3 py-2">NIP PEGAWAI</th>
+                                            <th className="px-3 py-2">NIK PENGGUNA</th>
+                                            <th className="px-3 py-2">RUANGAN PERAWAT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
