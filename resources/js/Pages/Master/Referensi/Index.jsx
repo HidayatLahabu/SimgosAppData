@@ -15,7 +15,7 @@ export default function Index({ auth, referensi, queryParams = {} }) {
             delete updatedParams[deskripsi];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('organization.index'), updatedParams, {
+        router.get(route('tindakan.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
