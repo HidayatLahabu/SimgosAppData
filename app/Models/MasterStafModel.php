@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MasterStafModel extends Model
 {
     use HasFactory;
-    public $connection = "mysql3";
+    public $connection = "mysql2";
     protected $table = 'staf';
 }

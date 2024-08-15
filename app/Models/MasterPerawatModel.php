@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MasterPerawatModel extends Model
 {
     use HasFactory;
-    public $connection = "mysql3";
+    public $connection = "mysql2";
     protected $table = 'perawat';
 }
