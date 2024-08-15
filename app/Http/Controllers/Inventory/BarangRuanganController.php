@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 
-class RuanganController extends Controller
+class BarangRuanganController extends Controller
 {
     public function index()
     {

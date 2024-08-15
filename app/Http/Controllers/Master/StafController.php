@@ -14,7 +14,7 @@ class StafController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('master.staff as staf')
+        $query = DB::connection('mysql2')->table('master.staff as staf')
             ->select(
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',

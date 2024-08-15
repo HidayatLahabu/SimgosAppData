@@ -14,7 +14,7 @@ class PerawatController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('master.perawat as perawat')
+        $query = DB::connection('mysql2')->table('master.perawat as perawat')
             ->select(
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',

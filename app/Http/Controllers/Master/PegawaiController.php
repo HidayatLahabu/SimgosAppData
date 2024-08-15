@@ -14,7 +14,7 @@ class PegawaiController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('master.pegawai as pegawai')
+        $query = DB::connection('mysql2')->table('master.pegawai as pegawai')
             ->select(
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',

@@ -14,7 +14,7 @@ class DokterController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('master.dokter as dokter')
+        $query = DB::connection('mysql2')->table('master.dokter as dokter')
             ->select(
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',

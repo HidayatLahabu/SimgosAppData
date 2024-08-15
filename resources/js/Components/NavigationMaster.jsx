@@ -75,6 +75,13 @@ export default function NavigationMaster() {
                         Referensi
                     </NavLink>
                     <NavLink
+                        href={route('ruangan.index')}
+                        active={route().current('ruangan.index')}
+                        className="flex justify-between items-center px-4 py-2 w-full"
+                    >
+                        Ruangan
+                    </NavLink>
+                    <NavLink
                         href={route('tindakan.index')}
                         active={route().current('tindakan.index')}
                         className="flex justify-between items-center px-4 py-2 w-full"

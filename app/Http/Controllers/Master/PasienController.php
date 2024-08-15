@@ -14,7 +14,7 @@ class PasienController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('master.pasien as pasien')
+        $query = DB::connection('mysql2')->table('master.pasien as pasien')
             ->select(
                 'pasien.NORM as norm',
                 'pasien.NAMA as nama',
