@@ -8,7 +8,7 @@ export default function Navigation() {
     return (
         <div className="hidden sm:flex items-center space-x-8">
             <div className="flex-grow flex items-center">
-                <div className="relative flex items-center pl-0 pr-3">
+                <div className="relative flex items-center pl-0 pr-1">
                     <NavLink
                         href={route('dashboard')}
                         active={route().current('dashboard')}

@@ -26,58 +26,58 @@ export default function NavigationInventory() {
     }, []);
 
     return (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative pr-1" ref={dropdownRef}>
             <NavLink href="#" onClick={toggleDropdown}>
                 Inventory
             </NavLink>
             {isDropdownOpen && (
-                <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 w-48">
+                <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
                         href={route('barang.index')}
                         active={route().current('barang.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Barang
                     </NavLink>
                     <NavLink
                         href={route('barangRuangan.index')}
                         active={route().current('barangRuangan.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Barang Ruangan
                     </NavLink>
                     <NavLink
                         href={route('penerimaan.index')}
                         active={route().current('penerimaan.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Penerimaan
                     </NavLink>
                     <NavLink
                         href={route('pengiriman.index')}
                         active={route().current('pengiriman.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Pengiriman
                     </NavLink>
                     <NavLink
                         href={route('permintaan.index')}
                         active={route().current('permintaan.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Permintaan
                     </NavLink>
                     <NavLink
                         href={route('order.index')}
                         active={route().current('order.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Purchase Order
                     </NavLink>
                     <NavLink
                         href={route('stock.index')}
                         active={route().current('stock.index')}
-                        className="flex justify-between items-center px-4 py-2 w-full"
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Stock Opname
                     </NavLink>
