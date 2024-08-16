@@ -16,6 +16,7 @@ class DokterController extends Controller
         // Start building the query using the query builder
         $query = DB::connection('mysql2')->table('master.dokter as dokter')
             ->select(
+                'dokter.ID as id',
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',
                 'pegawai.GELAR_BELAKANG as belakang',
