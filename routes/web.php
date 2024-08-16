@@ -30,6 +30,7 @@ use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Satusehat\MedicationController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
+use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
@@ -132,6 +133,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('staf', [StafController::class, 'index'])->name('staf.index');
 
         Route::get('tindakan', [TindakanController::class, 'index'])->name('tindakan.index');
+
+        Route::get('tindakanRuangan', [TindakanRuanganController::class, 'index'])->name('tindakanRuangan.index');
     });
 });
 
