@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PendaftaranMutasiModel extends Model
 {
     use HasFactory;
+    public $connection = "mysql5";
+    protected $table = 'mutasi';
 }
