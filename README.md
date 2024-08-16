@@ -20,5 +20,5 @@ Caranya, buatkan database usersimgo terlebih dahulu, kemudian jalan **usersimgos
 
 Untuk merubah nama rumah sakit, lakukan perubahan pada value **HOSPITAL_NAME** di file **.env**
 
-Untuk menarik perubahan terbaru, bisa menggunakan perintah git pull origin master di /var/www/html/SimgosAppData menggunakan terminal, selanjutnya akan SimgosAppData akan di update dengan menu-menu baru yang telah di tambahkan 
+Untuk menarik perubahan terbaru, bisa menggunakan perintah **git pull origin master ** di **/var/www/html/SimgosAppData** menggunakan **terminal**, selanjutnya akan SimgosAppData akan di update dengan menu-menu baru yang telah di tambahkan 
 Jika di deploy di windows xamppp/htdocs, lakukan clone ulang, dan ulangi perintah dari nomor 2 s/d 7 diatas
