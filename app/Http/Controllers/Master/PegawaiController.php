@@ -16,6 +16,7 @@ class PegawaiController extends Controller
         // Start building the query using the query builder
         $query = DB::connection('mysql2')->table('master.pegawai as pegawai')
             ->select(
+                'pegawai.ID as id',
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',
                 'pegawai.GELAR_BELAKANG as belakang',

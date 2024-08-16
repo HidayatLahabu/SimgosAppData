@@ -71,7 +71,7 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
                                     <tbody>
                                         {ruangan.data.length > 0 ? (
                                             ruangan.data.map((ruangan, index) => (
-                                                <tr key={`${ruangan.ID}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${ruangan.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{ruangan.id}</td>
                                                     <td className="px-3 py-3">{ruangan.jenis}</td>
                                                     <td className="px-3 py-3">{ruangan.deskripsi}</td>

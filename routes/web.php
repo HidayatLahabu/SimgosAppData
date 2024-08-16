@@ -34,6 +34,12 @@ use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
+use App\Http\Controllers\Pendaftaran\AntrianController;
+use App\Http\Controllers\Pendaftaran\KonsulController;
+use App\Http\Controllers\Pendaftaran\KunjunganController;
+use App\Http\Controllers\Pendaftaran\MutasiController;
+use App\Http\Controllers\Pendaftaran\PendaftaranController;
+use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
@@ -135,6 +141,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('tindakan', [TindakanController::class, 'index'])->name('tindakan.index');
 
         Route::get('tindakanRuangan', [TindakanRuanganController::class, 'index'])->name('tindakanRuangan.index');
+    });
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+
+        Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+
+        Route::get('antrian', [AntrianController::class, 'index'])->name('antrian.index');
+
+        Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
+
+        Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
+
+        Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
     });
 });
 

@@ -16,6 +16,7 @@ class StafController extends Controller
         // Start building the query using the query builder
         $query = DB::connection('mysql2')->table('master.staff as staf')
             ->select(
+                'staf.ID as id',
                 'pegawai.GELAR_DEPAN as depan',
                 'pegawai.NAMA as nama',
                 'pegawai.GELAR_BELAKANG as belakang',

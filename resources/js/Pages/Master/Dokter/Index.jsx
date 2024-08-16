@@ -62,7 +62,7 @@ export default function Index({ auth, dokter, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={4} className="px-3 py-2">
+                                            <th colSpan={5} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -75,6 +75,7 @@ export default function Index({ auth, dokter, queryParams = {} }) {
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
+                                            <th className="px-3 py-2">ID</th>
                                             <th className="px-3 py-2">NAMA PEGAWAI</th>
                                             <th className="px-3 py-2">NIP PENGGUNA</th>
                                             <th className="px-3 py-2">NIK PENGGUNA</th>
@@ -85,6 +86,7 @@ export default function Index({ auth, dokter, queryParams = {} }) {
                                         {dokter.data.length > 0 ? (
                                             dokter.data.map((dokter, index) => (
                                                 <tr key={`${dokter.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dokter.id}</td>
                                                     <td className="px-3 py-3">{dokter.depan} {dokter.nama} {dokter.belakang}</td>
                                                     <td className="px-3 py-3">{dokter.nip ? shuffleNumber(dokter.nip) : ''}</td>
                                                     <td className="px-3 py-3">
@@ -99,7 +101,7 @@ export default function Index({ auth, dokter, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="4" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="5" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
