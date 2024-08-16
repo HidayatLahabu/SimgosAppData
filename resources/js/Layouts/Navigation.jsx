@@ -3,6 +3,7 @@ import NavigationSatusehat from '@/Components/NavigationSatusehat';
 import NavigationInventory from '@/Components/NavigationInventory';
 import NavLink from '@/Components/NavLink';
 import NavigationMaster from '@/Components/NavigationMaster';
+import NavigationPendaftaran from '@/Components/NavigationPendaftaran';
 
 export default function Navigation() {
     return (
@@ -18,6 +19,7 @@ export default function Navigation() {
                     </NavLink>
                 </div>
                 <NavigationSatusehat />
+                <NavigationPendaftaran />
                 <NavigationInventory />
                 <NavigationMaster />
             </div>
