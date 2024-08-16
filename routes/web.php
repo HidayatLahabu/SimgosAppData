@@ -34,7 +34,6 @@ use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
-use App\Http\Controllers\Pendaftaran\AntrianController;
 use App\Http\Controllers\Pendaftaran\KonsulController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
 use App\Http\Controllers\Pendaftaran\MutasiController;
@@ -149,8 +148,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
-
-        Route::get('antrian', [AntrianController::class, 'index'])->name('antrian.index');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
 
