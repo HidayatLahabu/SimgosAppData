@@ -47,13 +47,6 @@ export default function NavigationPendaftaran() {
                         Kunjungan
                     </NavLink>
                     <NavLink
-                        href={route('antrian.index')}
-                        active={route().current('antrian.index')}
-                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
-                    >
-                        Antrian
-                    </NavLink>
-                    <NavLink
                         href={route('konsul.index')}
                         active={route().current('konsul.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
