@@ -85,7 +85,7 @@ export default function Index({ auth, pendaftaran, queryParams = {} }) {
                                     <tbody>
                                         {pendaftaran.data.length > 0 ? (
                                             pendaftaran.data.map((pendaftaran, index) => (
-                                                <tr key={`${pendaftaran.norm}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${pendaftaran.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{pendaftaran.nomor}</td>
                                                     <td className="px-3 py-3">{pendaftaran.norm}</td>
                                                     <td className="px-3 py-3">{pendaftaran.nama}</td>
