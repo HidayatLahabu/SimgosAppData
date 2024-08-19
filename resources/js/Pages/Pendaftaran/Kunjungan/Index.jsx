@@ -76,6 +76,7 @@ export default function Index({ auth, kunjungan, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA</th>
                                             <th className="px-3 py-2">MASUK</th>
                                             <th className="px-3 py-2">KELUAR</th>
@@ -87,6 +88,7 @@ export default function Index({ auth, kunjungan, queryParams = {} }) {
                                             kunjungan.data.map((kunjungan, index) => (
                                                 <tr key={`${kunjungan.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{kunjungan.nomor}</td>
+                                                    <td className="px-3 py-3">{kunjungan.norm}</td>
                                                     <td className="px-3 py-3">{kunjungan.nama}</td>
                                                     <td className="px-3 py-3">{kunjungan.masuk}</td>
                                                     <td className="px-3 py-3">{kunjungan.keluar}</td>
