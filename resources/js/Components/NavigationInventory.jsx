@@ -25,9 +25,25 @@ export default function NavigationInventory() {
         };
     }, []);
 
+    // Function to check if any of the dropdown routes are active
+    const isAnyDropdownLinkActive = () => {
+        return route().current('barang.index') ||
+            route().current('barangRuangan.index') ||
+            route().current('penerimaan.index') ||
+            route().current('pengiriman.index') ||
+            route().current('permintaan.index') ||
+            route().current('order.index') ||
+            route().current('stock.index') ||
+            route().current('transaksi.index');
+    };
+
     return (
         <div className="relative pr-1" ref={dropdownRef}>
-            <NavLink href="#" onClick={toggleDropdown}>
+            <NavLink
+                href="#"
+                onClick={toggleDropdown}
+                active={isAnyDropdownLinkActive()}
+            >
                 Inventory
             </NavLink>
             {isDropdownOpen && (

@@ -25,9 +25,23 @@ export default function NavigationBpjs() {
         };
     }, []);
 
+    // Function to check if any of the dropdown routes are active
+    const isAnyDropdownLinkActive = () => {
+        return route().current('pesertaBpjs.index') ||
+            route().current('kunjunganBpjs.index') ||
+            route().current('pengajuanSep.index') ||
+            route().current('rekonBpjs.index') ||
+            route().current('monitoringRekon.index') ||
+            route().current('rujukanBpjs.index');
+    };
+
     return (
         <div className="relative pr-1" ref={dropdownRef}>
-            <NavLink href="#" onClick={toggleDropdown}>
+            <NavLink
+                href="#"
+                onClick={toggleDropdown}
+                active={isAnyDropdownLinkActive()}
+            >
                 BPJS
             </NavLink>
             {isDropdownOpen && (

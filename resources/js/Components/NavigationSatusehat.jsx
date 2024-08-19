@@ -25,9 +25,33 @@ export default function NavigationSatusehat() {
         };
     }, []);
 
+    // Function to check if any of the dropdown routes are active
+    const isAnyDropdownLinkActive = () => {
+        return route().current('organization.index') ||
+            route().current('location.index') ||
+            route().current('patient.index') ||
+            route().current('practitioner.index') ||
+            route().current('encounter.index') ||
+            route().current('condition.index') ||
+            route().current('observation.index') ||
+            route().current('procedure.index') ||
+            route().current('composition.index') ||
+            route().current('consent.index') ||
+            route().current('diagnosticReport.index') ||
+            route().current('medication.index') ||
+            route().current('medicationDispanse.index') ||
+            route().current('medicationRequest.index') ||
+            route().current('serviceRequest.index') ||
+            route().current('specimen.index');
+    };
+
     return (
         <div className="relative pr-1" ref={dropdownRef}>
-            <NavLink href="#" onClick={toggleDropdown}>
+            <NavLink
+                href="#"
+                onClick={toggleDropdown}
+                active={isAnyDropdownLinkActive()}
+            >
                 SatuSehat
             </NavLink>
             {isDropdownOpen && (

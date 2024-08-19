@@ -25,9 +25,26 @@ export default function NavigationMaster() {
         };
     }, []);
 
+    // Function to check if any of the dropdown routes are active
+    const isAnyDropdownLinkActive = () => {
+        return route().current('pasien.index') ||
+            route().current('pegawai.index') ||
+            route().current('dokter.index') ||
+            route().current('perawat.index') ||
+            route().current('staf.index') ||
+            route().current('referensi.index') ||
+            route().current('ruangan.index') ||
+            route().current('tindakan.index') ||
+            route().current('tindakanRuangan.index');
+    };
+
     return (
         <div className="relative pr-1" ref={dropdownRef}>
-            <NavLink href="#" onClick={toggleDropdown}>
+            <NavLink
+                href="#"
+                onClick={toggleDropdown}
+                active={isAnyDropdownLinkActive()}
+            >
                 Master
             </NavLink>
             {isDropdownOpen && (

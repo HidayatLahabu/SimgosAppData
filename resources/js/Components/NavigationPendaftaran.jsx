@@ -25,9 +25,23 @@ export default function NavigationPendaftaran() {
         };
     }, []);
 
+    // Function to check if any of the dropdown routes are active
+    const isAnyDropdownLinkActive = () => {
+        return route().current('pendaftaran.index') ||
+            route().current('kunjungan.index') ||
+            route().current('konsul.index') ||
+            route().current('mutasi.index') ||
+            route().current('reservasi.index') ||
+            route().current('antrian.index');
+    };
+
     return (
         <div className="relative pr-1" ref={dropdownRef}>
-            <NavLink href="#" onClick={toggleDropdown}>
+            <NavLink
+                href="#"
+                onClick={toggleDropdown}
+                active={isAnyDropdownLinkActive()}
+            >
                 Pendaftaran
             </NavLink>
             {isDropdownOpen && (
