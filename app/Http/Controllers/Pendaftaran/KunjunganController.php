@@ -18,6 +18,7 @@ class KunjunganController extends Controller
             ->select(
                 'kunjungan.NOMOR as nomor',
                 'pasien.NAMA as nama',
+                'pasien.NORM as norm',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
                 'kunjungan.KELUAR as keluar'

@@ -76,6 +76,7 @@ export default function Index({ auth, konsul, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA</th>
                                             <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">RUANGAN ASAL</th>
@@ -87,6 +88,7 @@ export default function Index({ auth, konsul, queryParams = {} }) {
                                             konsul.data.map((konsul, index) => (
                                                 <tr key={`${konsul.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{konsul.nomor}</td>
+                                                    <td className="px-3 py-3">{konsul.norm}</td>
                                                     <td className="px-3 py-3">{konsul.nama}</td>
                                                     <td className="px-3 py-3">{konsul.tanggal}</td>
                                                     <td className="px-3 py-3">{konsul.asal}</td>
