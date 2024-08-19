@@ -65,7 +65,7 @@ export default function Index({ auth, pesertaBpjs, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
+                                                    placeholder="Cari peserta"
                                                     onChange={e => onInputChange('nama', e)}
                                                     onKeyPress={e => onKeyPress('nama', e)}
                                                 />
