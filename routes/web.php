@@ -1,5 +1,11 @@
 <?php
 
+use App\Http\Controllers\Bpjs\KunjunganBpjsController;
+use App\Http\Controllers\Bpjs\MonitoringRekonController;
+use App\Http\Controllers\Bpjs\PengajuanSepController;
+use App\Http\Controllers\Bpjs\PesertaBpjController;
+use App\Http\Controllers\Bpjs\RencanaKontrolController;
+use App\Http\Controllers\Bpjs\RujukanMasukController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -18,8 +24,6 @@ use App\Http\Controllers\Inventory\BarangController;
 use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
-use App\Http\Controllers\Pendaftaran\KonsulController;
-use App\Http\Controllers\Pendaftaran\MutasiController;
 use App\Http\Controllers\Satusehat\LocationController;
 use App\Http\Controllers\Satusehat\SpecimenController;
 use App\Http\Controllers\Inventory\TransaksiController;
@@ -30,17 +34,19 @@ use App\Http\Controllers\Inventory\PenerimaanController;
 use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Satusehat\MedicationController;
-use App\Http\Controllers\Pendaftaran\KunjunganController;
-use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
-use App\Http\Controllers\Pendaftaran\PendaftaranController;
-use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
+use App\Http\Controllers\Pendaftaran\KonsulController;
+use App\Http\Controllers\Pendaftaran\KunjunganController;
+use App\Http\Controllers\Pendaftaran\MutasiController;
+use App\Http\Controllers\Pendaftaran\PendaftaranController;
+use App\Http\Controllers\Pendaftaran\ReservasiController;
+use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
@@ -157,6 +163,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
 
         Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
+    });
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('bpjs')->namespace('App\Http\Controllers\Bpjs')->group(function () {
+        Route::get('pesertaBpjs', [PesertaBpjController::class, 'index'])->name('pesertaBpjs.index');
+
+        Route::get('kunjunganBpjs', [KunjunganBpjsController::class, 'index'])->name('kunjunganBpjs.index');
+
+        Route::get('pengajuanSep', [PengajuanSepController::class, 'index'])->name('pengajuanSep.index');
+
+        Route::get('rekonBpjs', [RencanaKontrolController::class, 'index'])->name('rekonBpjs.index');
+
+        Route::get('monitoringRekon', [MonitoringRekonController::class, 'index'])->name('monitoringRekon.index');
+
+        Route::get('rujukanBpjs', [RujukanMasukController::class, 'index'])->name('rujukanBpjs.index');
     });
 });
 
