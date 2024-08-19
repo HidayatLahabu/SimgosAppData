@@ -76,7 +76,7 @@ export default function Index({ auth, pasien, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA</th>
+                                            <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">TANGGAL LAHIR</th>
                                             <th className="px-3 py-2">ALAMAT</th>
                                             <th className="px-3 py-2">BPJS</th>

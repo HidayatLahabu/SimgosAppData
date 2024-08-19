@@ -77,7 +77,7 @@ export default function Index({ auth, mutasi, queryParams = {} }) {
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
                                             <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA</th>
+                                            <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">RUANGAN TUJUAN</th>
                                             <th className="px-3 py-2">RESERVASI</th>

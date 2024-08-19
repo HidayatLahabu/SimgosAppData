@@ -77,7 +77,7 @@ export default function Index({ auth, pesertaBpjs, queryParams = {} }) {
                                             <th className="px-3 py-2">NO KARTU</th>
                                             <th className="px-3 py-2">NIK</th>
                                             <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA</th>
+                                            <th className="px-3 py-2">NAMA PESERTA</th>
                                             <th className="px-3 py-2">JENIS PESERTA</th>
                                             <th className="px-3 py-2">KELAS</th>
                                         </tr>
