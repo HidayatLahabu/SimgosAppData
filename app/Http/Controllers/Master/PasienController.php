@@ -22,7 +22,7 @@ class PasienController extends Controller
                 'kip.ALAMAT as alamat',
                 'kip.NOMOR as nik',
                 'peserta.noKartu as bpjs',
-                'peserta.TANGGAL as terdaftar'
+                'pasien.TANGGAL as terdaftar'
             )
             ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
             ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm')
