@@ -154,6 +154,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
 
         Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
+
+        Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
     });
 });
 
