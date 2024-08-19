@@ -25,7 +25,6 @@ class KunjunganController extends Controller
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
-            ->where('pendaftaran.STATUS', 1)
             ->where('pasien.STATUS', 1);
 
         // Add search filter if provided
@@ -34,7 +33,7 @@ class KunjunganController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('kunjungan.NOMOR')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('kunjungan.MASUK')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
