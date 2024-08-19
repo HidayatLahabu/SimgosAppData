@@ -54,7 +54,7 @@ export default function Index({ auth, perawat, queryParams = {} }) {
             <Head title="Master" />
 
             <div className="py-5">
-                <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
