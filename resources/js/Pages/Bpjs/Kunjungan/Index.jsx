@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import { formatDate } from '@/utils/formatDate';
 
 export default function Index({ auth, kunjunganBpjs, queryParams = {} }) {
 
@@ -89,7 +90,7 @@ export default function Index({ auth, kunjunganBpjs, queryParams = {} }) {
                                                     <td className="px-3 py-3">{kunjunganBpjs.noSEP}</td>
                                                     <td className="px-3 py-3">{kunjunganBpjs.tglSEP}</td>
                                                     <td className="px-3 py-3">{kunjunganBpjs.noRujukan}</td>
-                                                    <td className="px-3 py-3">{kunjunganBpjs.tglRujukan}</td>
+                                                    <td className="px-3 py-3">{formatDate(kunjunganBpjs.tglRujukan)}</td>
                                                     <td className="px-3 py-3">{kunjunganBpjs.norm}</td>
                                                     <td className="px-3 py-3">{kunjunganBpjs.nama}</td>
                                                 </tr>
