@@ -182,5 +182,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('layanan')->namespace('App\Http\Controllers\Layanan')->group(function () {
+        Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
+
+        Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
+
+        Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
+
+        Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
+    });
+});
+
 
 require __DIR__ . '/auth.php';

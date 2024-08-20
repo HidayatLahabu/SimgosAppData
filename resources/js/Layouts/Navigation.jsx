@@ -5,6 +5,7 @@ import NavLink from '@/Components/NavLink';
 import NavigationMaster from '@/Components/NavigationMaster';
 import NavigationPendaftaran from '@/Components/NavigationPendaftaran';
 import NavigationBpjs from '@/Components/NavigationBpjs';
+import NavigationLayanan from '@/Components/NavigationLayanan';
 
 export default function Navigation() {
     return (
@@ -22,6 +23,7 @@ export default function Navigation() {
                 <NavigationSatusehat />
                 <NavigationPendaftaran />
                 <NavigationBpjs />
+                <NavigationLayanan />
                 <NavigationInventory />
                 <NavigationMaster />
             </div>
