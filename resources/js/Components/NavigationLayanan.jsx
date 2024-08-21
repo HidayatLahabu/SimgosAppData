@@ -63,7 +63,7 @@ export default function NavigationLayanan() {
                         active={route().current('layananResep.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Farmasi
+                        Resep
                     </NavLink>
                     <NavLink
                         href={route('layananPulang.index')}
