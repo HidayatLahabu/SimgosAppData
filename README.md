@@ -1,24 +1,48 @@
-Modul Simgos dibuat sebagai pelengkap aplikasi Simgos Kemenkes.
-Aplikasi ini memanfaatkan database simgos sebagai sumber data, dan di tambahkan database usersimgos hanya untuk menyimpan data user saja.
-Aplikasi ini telah di gunakan dengan cara memisahkan database usersimgos dari database simgos. 
-SimgosAppData di deploy pada server Ubuntu 22.04 dan database mysql.
-SimgosAppData menggunakan pengaturan multiple database melalui file .env 
+SimgosAppData is an extension module designed to complement the Simgos Kemenkes application. It integrates seamlessly with the existing simgos database for data management while maintaining a separate usersimgos database dedicated to user information.
 
-Setelah clonning, jalankan :
+Deployment Overview:
 
-1. kemudian masuk ke folder tempat aplikasi di deploy, jika di linux maka di folder /var/www/html/SimgoAppData, jika di windows xampp adanya di htdocs
-2. copy **.env.example** menjadi **.env**
-3. lakukan penyesuaian isi file **.env** sesuai catatan yang ada di dalamnya
-4. kemudian ketik perintah **composer install** di terminal
-5. kemudian ketik perintah **npm install** di terminal
-6. selanjutnya ketik perintah **php artisan key:generate** 
-7. selanjutnya ketik peritah **npm run build**, agar tidak harus menjalankan npm run dev di server
+    Server: Ubuntu 22.04
+    Database: MySQL
+    Multiple Database Setup: Configured through the .env file
 
-Pada folder database, terdapat **usersimgos.sql**, yang di gunakan untuk membuat database di server yang akan di deploy SimgosAppData. 
+Deployment Instructions
 
-Caranya, buatkan database usersimgo terlebih dahulu, kemudian jalan **usersimgos.sql** di terminal menggukan perintah mysql restore, atau gunakan dbeaver atau heidi sql atau aplikasi sejenisnya.
+    Navigate to the deployment directory:
+        Linux: /var/www/html/SimgoAppData
+        Windows: C:\xampp\htdocs\SimgoAppData
 
-Untuk merubah nama rumah sakit, lakukan perubahan pada value **HOSPITAL_NAME** di file **.env**
+    Environment Setup:
+        Copy .env.example to .env.
+        Customize the .env file according to the provided instructions.
 
-Untuk menarik perubahan terbaru, bisa menggunakan perintah **git pull origin master** di **/var/www/html/SimgosAppData** menggunakan **terminal**, selanjutnya akan SimgosAppData akan di update dengan menu-menu baru yang telah di tambahkan 
-Jika di deploy di windows xamppp/htdocs, lakukan clone ulang, dan ulangi perintah dari nomor 2 s/d 7 diatas
+    Install Dependencies:
+        Run composer install to install PHP dependencies.
+        Run npm install to install Node.js dependencies.
+
+    Generate Application Key:
+        Run php artisan key:generate.
+
+    Build Frontend Assets:
+        Run npm run build to compile assets for production. This step eliminates the need to run npm run dev on the server.
+
+Database Setup
+
+In the database folder, you'll find usersimgos.sql, which contains the structure for the usersimgos database. To set it up:
+
+    Create the usersimgos database on your MySQL server.
+    Import the usersimgos.sql file using one of the following methods:
+        Terminal: Run mysql -u [username] -p usersimgos < usersimgos.sql.
+        GUI Tools: Use DBeaver, HeidiSQL, or a similar application.
+
+Customization
+
+To change the hospital name, update the HOSPITAL_NAME value in the .env file.
+Updating the Application
+
+To pull the latest updates:
+
+    Linux: Navigate to /var/www/html/SimgosAppData and run git pull origin master in the terminal.
+    Windows: If deployed on Windows, re-clone the repository and repeat steps 2 to 7 above.
+
+Pro Tip: Fork this repository to stay up-to-date with the latest developments and enhancements in real time.
