@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, ruangan, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (field, value) => {
@@ -15,7 +15,7 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
             delete updatedParams[field];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('ruangan.index'), updatedParams, {
+        router.get(route('barangRuangan.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -74,14 +74,14 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {ruangan.data.length > 0 ? (
-                                            ruangan.data.map((ruangan, index) => (
-                                                <tr key={`${ruangan.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{ruangan.namaRuangan}</td>
-                                                    <td className="px-3 py-3">{ruangan.namaBarang}</td>
-                                                    <td className="px-3 py-3">{ruangan.satuan}</td>
-                                                    <td className="px-3 py-3 text-center">{ruangan.stock}</td>
-                                                    <td className="px-3 py-3">{ruangan.tanggal}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.namaRuangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.namaBarang}</td>
+                                                    <td className="px-3 py-3">{dataTable.satuan}</td>
+                                                    <td className="px-3 py-3 text-center">{dataTable.stock}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -91,7 +91,7 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={ruangan.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

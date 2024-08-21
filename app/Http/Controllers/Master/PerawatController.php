@@ -43,7 +43,7 @@ class PerawatController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderBy('pegawai.NAMA')->paginate(10)->appends(request()->query());
+        $data = $query->orderBy('ruangan.DESKRIPSI')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();

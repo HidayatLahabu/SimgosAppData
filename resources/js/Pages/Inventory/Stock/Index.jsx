@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 
-export default function Index({ auth, stock, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (namaRuangan, value) => {
@@ -70,16 +70,16 @@ export default function Index({ auth, stock, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {stock.data.length > 0 ? (
-                                            stock.data.map((stock, index) => (
-                                                <tr key={`${stock.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{stock.namaRuangan}</td>
-                                                    <td className="px-3 py-3">{stock.tanggal}</td>
-                                                    <td className="px-3 py-3">{stock.dibuat}</td>
-                                                    <td className="px-3 py-3">{stock.status}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.namaRuangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{dataTable.dibuat}</td>
+                                                    <td className="px-3 py-3">{dataTable.status}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
-                                                            href={route("stockBarang.list", { id: stock.id })}
+                                                            href={route("stockBarang.list", { id: dataTable.id })}
                                                         />
                                                     </td>
                                                 </tr>
@@ -91,7 +91,7 @@ export default function Index({ auth, stock, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={stock.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>
