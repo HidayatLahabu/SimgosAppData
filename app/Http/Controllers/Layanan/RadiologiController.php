@@ -22,8 +22,8 @@ class RadiologiController extends Controller
                 'pegawai.NAMA as dokter',
                 'pegawai.GELAR_DEPAN as gelarDepan',
                 'pegawai.GELAR_BELAKANG as gelarBelakang',
-                'pasien.norm',
-                'pasien.nama',
+                'pasien.NORM as norm',
+                'pasien.NAMA as nama',
                 'peserta.noKartu'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderRad.KUNJUNGAN')
