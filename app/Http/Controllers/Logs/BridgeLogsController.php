@@ -11,9 +11,8 @@ class BridgeLogsController extends Controller
     public function index()
     {
         // Query untuk mengambil 100 data berdasarkan tanggal hari ini
-        $query = LogsBridgeModel::whereDate('TGL_REQUEST', now())
-            ->orderByDesc('TGL_REQUEST')
-            ->take(100); // Ambil hanya 100 data
+        $query = LogsBridgeModel::orderByDesc('TGL_REQUEST')
+            ->take(50); // Ambil hanya 100 data
 
         // Apply search filter jika parameter 'nama' ada
         if (request('nama')) {
