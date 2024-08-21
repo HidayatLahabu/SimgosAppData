@@ -10,27 +10,34 @@ class BridgeLogsController extends Controller
 {
     public function index()
     {
-        // Define base query
+        // Query untuk mengambil 100 data berdasarkan tanggal hari ini
         $query = LogsBridgeModel::whereDate('TGL_REQUEST', now())
             ->orderByDesc('TGL_REQUEST')
-            ->limit(100); // Batasi hasil query menjadi 100 baris
+            ->take(100); // Ambil hanya 100 data
 
-        // Apply search filter if 'subject' query parameter is present
+        // Apply search filter jika parameter 'nama' ada
         if (request('nama')) {
-            $searchSubject = strtolower(request('nama')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+            $searchSubject = strtolower(request('nama')); // Convert search term ke lowercase
+            $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert kolom ke lowercase untuk perbandingan
         }
 
-        // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        // Get all results first and then paginate manually
+        $results = $query->get();
+        $data = new \Illuminate\Pagination\LengthAwarePaginator(
+            $results->forPage(request()->get('page', 1), 10),
+            $results->count(),
+            10,
+            request()->get('page', 1),
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
 
-        // Convert data to array
+        // Convert data ke array
         $dataArray = $data->toArray();
 
-        // Return Inertia view with paginated data
+        // Return Inertia view dengan data yang sudah dipaginasi
         return inertia("Logs/Bridge/Index", [
             'dataTable' => [
-                'data' => $dataArray['data'], // Only the paginated data
+                'data' => $dataArray['data'], // Hanya data yang sudah dipaginasi
                 'links' => $dataArray['links'], // Pagination links
             ],
             'queryParams' => request()->all()
