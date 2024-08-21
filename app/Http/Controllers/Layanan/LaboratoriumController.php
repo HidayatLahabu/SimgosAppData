@@ -14,21 +14,25 @@ class LaboratoriumController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql6')->table('layanan.order_lab as orderLab')
+        $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
             ->select(
                 'orderLab.NOMOR as nomor',
                 'orderLab.TANGGAL as tanggal',
                 'orderLab.KUNJUNGAN as kunjungan',
+                'pegawai.NAMA as dokter',
+                'pegawai.GELAR_DEPAN as gelarDepan',
+                'pegawai.GELAR_BELAKANG as gelarBelakang',
                 'pasien.norm',
                 'pasien.nama'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM');
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.ID', '=', 'orderLab.DOKTER_ASAL');;
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->whereRaw('LOWER(pasien.nama) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results

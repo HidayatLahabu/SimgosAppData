@@ -76,7 +76,7 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
                                             <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">KUNJUNGAN</th>
+                                            <th className="px-3 py-2">ORDER OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                         </tr>
@@ -87,7 +87,7 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                                 <tr key={`${layananLab.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{layananLab.nomor}</td>
                                                     <td className="px-3 py-3">{layananLab.tanggal}</td>
-                                                    <td className="px-3 py-3">{layananLab.kunjungan}</td>
+                                                    <td className="px-3 py-3">{layananLab.gelarDepan} {layananLab.dokter} {layananLab.gelarBelakang}</td>
                                                     <td className="px-3 py-3">{layananLab.norm}</td>
                                                     <td className="px-3 py-3">{layananLab.nama}</td>
                                                 </tr>

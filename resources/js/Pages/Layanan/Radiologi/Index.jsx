@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, layananLab, queryParams = {} }) {
+export default function Index({ auth, layananRad, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -15,7 +15,7 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
             delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('layananLab.index'), updatedParams, {
+        router.get(route('layananRad.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -50,14 +50,14 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="BPJS" />
+            <Head title="Layanan" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Monitoring Rencana Kontrol</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Order Radiologi</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
@@ -76,20 +76,20 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
                                             <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">KUNJUNGAN</th>
+                                            <th className="px-3 py-2">ORDER OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {layananLab.data.length > 0 ? (
-                                            layananLab.data.map((layananLab, index) => (
-                                                <tr key={`${layananLab.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{layananLab.nomor}</td>
-                                                    <td className="px-3 py-3">{layananLab.tanggal}</td>
-                                                    <td className="px-3 py-3">{layananLab.kunjungan}</td>
-                                                    <td className="px-3 py-3">{layananLab.norm}</td>
-                                                    <td className="px-3 py-3">{layananLab.nama}</td>
+                                        {layananRad.data.length > 0 ? (
+                                            layananRad.data.map((layananRad, index) => (
+                                                <tr key={`${layananRad.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{layananRad.nomor}</td>
+                                                    <td className="px-3 py-3">{layananRad.tanggal}</td>
+                                                    <td className="px-3 py-3">{layananRad.gelarDepan} {layananRad.dokter} {layananRad.gelarBelakang}</td>
+                                                    <td className="px-3 py-3">{layananRad.norm}</td>
+                                                    <td className="px-3 py-3">{layananRad.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -99,7 +99,7 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={layananLab.links} />
+                                <Pagination links={layananRad.links} />
                             </div>
                         </div>
                     </div>
