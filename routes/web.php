@@ -16,6 +16,7 @@ use App\Http\Controllers\Master\RuanganController;
 use App\Http\Controllers\Bpjs\PesertaBpjController;
 use App\Http\Controllers\Inventory\OrderController;
 use App\Http\Controllers\Inventory\StockController;
+use App\Http\Controllers\Logs\BridgeLogsController;
 use App\Http\Controllers\Master\TindakanController;
 use App\Http\Controllers\Inventory\BarangController;
 use App\Http\Controllers\Master\ReferensiController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\Layanan\RadiologiController;
 use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
+use App\Http\Controllers\Logs\PenggunaAksesController;
 use App\Http\Controllers\Pendaftaran\KonsulController;
 use App\Http\Controllers\Pendaftaran\MutasiController;
 use App\Http\Controllers\Satusehat\LocationController;
@@ -39,6 +41,7 @@ use App\Http\Controllers\Inventory\PenerimaanController;
 use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Layanan\LaboratoriumController;
+use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
 use App\Http\Controllers\Pendaftaran\ReservasiController;
@@ -195,6 +198,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
         Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
+    });
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('logs')->namespace('App\Http\Controllers\Logs')->group(function () {
+        Route::get('logsBridge', [BridgeLogsController::class, 'index'])->name('logsBridge.index');
+
+        Route::get('logsAkses', [PenggunaAksesController::class, 'index'])->name('logsAkses.index');
+
+        Route::get('logsRequest', [PenggunaRequestController::class, 'index'])->name('logsRequest.index');
     });
 });
 

@@ -6,6 +6,7 @@ import NavigationMaster from '@/Components/NavigationMaster';
 import NavigationPendaftaran from '@/Components/NavigationPendaftaran';
 import NavigationBpjs from '@/Components/NavigationBpjs';
 import NavigationLayanan from '@/Components/NavigationLayanan';
+import NavigationLogs from '@/Components/NavigationLogs';
 
 export default function Navigation() {
     return (
@@ -25,6 +26,7 @@ export default function Navigation() {
                 <NavigationBpjs />
                 <NavigationLayanan />
                 <NavigationInventory />
+                <NavigationLogs />
                 <NavigationMaster />
             </div>
         </div>
