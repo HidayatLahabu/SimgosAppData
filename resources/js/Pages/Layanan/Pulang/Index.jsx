@@ -80,7 +80,7 @@ export default function Index({ auth, layananPulang, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">STATUS</th>
                                             <th className="px-3 py-2">KEADAAN</th>
-                                            <th className="px-3 py-2">JENIS PASIEN</th>
+                                            <th className="px-3 py-2">DPJP</th>
                                         </tr>
                                     </thead>
                                     <tbody>
