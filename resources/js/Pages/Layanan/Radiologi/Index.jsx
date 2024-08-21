@@ -79,6 +79,7 @@ export default function Index({ auth, layananRad, queryParams = {} }) {
                                             <th className="px-3 py-2">ORDER OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
+                                            <th className="px-3 py-2">JENIS PASIEN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -90,6 +91,13 @@ export default function Index({ auth, layananRad, queryParams = {} }) {
                                                     <td className="px-3 py-3">{layananRad.gelarDepan} {layananRad.dokter} {layananRad.gelarBelakang}</td>
                                                     <td className="px-3 py-3">{layananRad.norm}</td>
                                                     <td className="px-3 py-3">{layananRad.nama}</td>
+                                                    <td className="px-3 py-3">
+                                                        {layananRad.noKartu ? (
+                                                            <span>BPJS</span>
+                                                        ) : (
+                                                            <span>Tanpa Asuransi/Umum</span>
+                                                        )}
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (

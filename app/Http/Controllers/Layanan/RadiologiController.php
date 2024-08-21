@@ -23,12 +23,14 @@ class RadiologiController extends Controller
                 'pegawai.GELAR_DEPAN as gelarDepan',
                 'pegawai.GELAR_BELAKANG as gelarBelakang',
                 'pasien.norm',
-                'pasien.nama'
+                'pasien.nama',
+                'peserta.noKartu'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderRad.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.ID', '=', 'orderRad.DOKTER_ASAL');;
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.ID', '=', 'orderRad.DOKTER_ASAL')
+            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm');
 
         // Add search filter if provided
         if ($searchSubject) {

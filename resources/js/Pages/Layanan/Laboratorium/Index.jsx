@@ -79,6 +79,7 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                             <th className="px-3 py-2">ORDER OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
+                                            <th className="px-3 py-2">JENIS PASIEN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -90,6 +91,13 @@ export default function Index({ auth, layananLab, queryParams = {} }) {
                                                     <td className="px-3 py-3">{layananLab.gelarDepan} {layananLab.dokter} {layananLab.gelarBelakang}</td>
                                                     <td className="px-3 py-3">{layananLab.norm}</td>
                                                     <td className="px-3 py-3">{layananLab.nama}</td>
+                                                    <td className="px-3 py-3">
+                                                        {layananLab.noKartu ? (
+                                                            <span>BPJS</span>
+                                                        ) : (
+                                                            <span>Tanpa Asuransi/Umum</span>
+                                                        )}
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
