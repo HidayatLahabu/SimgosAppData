@@ -29,7 +29,8 @@ class LaboratoriumController extends Controller
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.ID', '=', 'orderLab.DOKTER_ASAL')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm');
 
         // Add search filter if provided
