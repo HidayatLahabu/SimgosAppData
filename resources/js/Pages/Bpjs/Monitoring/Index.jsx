@@ -3,9 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, monitoringRekon, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -84,15 +83,15 @@ export default function Index({ auth, monitoringRekon, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {monitoringRekon.data.length > 0 ? (
-                                            monitoringRekon.data.map((monitoringRekon, index) => (
-                                                <tr key={`${monitoringRekon.noSuratKontrol}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{monitoringRekon.noSuratKontrol}</td>
-                                                    <td className="px-3 py-3">{monitoringRekon.tglTerbitKontrol}</td>
-                                                    <td className="px-3 py-3">{monitoringRekon.nama}</td>
-                                                    <td className="px-3 py-3">{monitoringRekon.namaDokter}</td>
-                                                    <td className="px-3 py-3">{monitoringRekon.namaJnsKontrol}</td>
-                                                    <td className="px-3 py-3">{monitoringRekon.noSepAsalKontrol}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noSuratKontrol}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noSuratKontrol}</td>
+                                                    <td className="px-3 py-3">{dataTable.tglTerbitKontrol}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.namaDokter}</td>
+                                                    <td className="px-3 py-3">{dataTable.namaJnsKontrol}</td>
+                                                    <td className="px-3 py-3">{dataTable.noSepAsalKontrol}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -102,7 +101,7 @@ export default function Index({ auth, monitoringRekon, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={monitoringRekon.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

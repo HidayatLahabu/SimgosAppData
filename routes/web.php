@@ -113,22 +113,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('inventory')->namespace('App\Http\Controllers\Inventory')->group(function () {
-        Route::get('barang', [BarangController::class, 'index'])->name('barang.index');
+        Route::get('daftarBarang', [BarangController::class, 'index'])->name('daftarBarang.index');
 
-        Route::get('order', [OrderController::class, 'index'])->name('order.index');
+        Route::get('orderBarang', [OrderController::class, 'index'])->name('orderBarang.index');
 
-        Route::get('penerimaan', [PenerimaanController::class, 'index'])->name('penerimaan.index');
+        Route::get('penerimaanBarang', [PenerimaanController::class, 'index'])->name('penerimaanBarang.index');
 
-        Route::get('pengiriman', [PengirimanController::class, 'index'])->name('pengiriman.index');
+        Route::get('pengirimanBarang', [PengirimanController::class, 'index'])->name('pengirimanBarang.index');
 
-        Route::get('permintaan', [PermintaanController::class, 'index'])->name('permintaan.index');
+        Route::get('permintaanBarang', [PermintaanController::class, 'index'])->name('permintaanBarang.index');
 
         Route::get('barangRuangan', [BarangRuanganController::class, 'index'])->name('barangRuangan.index');
 
-        Route::get('stock', [StockController::class, 'index'])->name('stock.index');
-        Route::get('stock/list/{id}', [StockController::class, 'list'])->name('stock.list');
+        Route::get('stockBarang', [StockController::class, 'index'])->name('stockBarang.index');
+        Route::get('stockBarang/list/{id}', [StockController::class, 'list'])->name('stockBarang.list');
 
-        Route::get('transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+        Route::get('transaksiBarang', [TransaksiController::class, 'index'])->name('transaksiBarang.index');
     });
 });
 

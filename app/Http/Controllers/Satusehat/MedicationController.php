@@ -27,7 +27,7 @@ class MedicationController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Medication/Index", [
-            'medication' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

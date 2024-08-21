@@ -65,7 +65,7 @@ export default function NavigationBpjs() {
                         active={route().current('pengajuanSep.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengajuan
+                        Pengajuan SEP
                     </NavLink>
                     <NavLink
                         href={route('rekonBpjs.index')}

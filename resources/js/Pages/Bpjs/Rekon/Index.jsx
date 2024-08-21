@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, rekonBpjs, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -84,15 +84,15 @@ export default function Index({ auth, rekonBpjs, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {rekonBpjs.data.length > 0 ? (
-                                            rekonBpjs.data.map((rekonBpjs, index) => (
-                                                <tr key={`${rekonBpjs.noSurat}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{rekonBpjs.noSurat}</td>
-                                                    <td className="px-3 py-3">{formatDate(rekonBpjs.tanggal)}</td>
-                                                    <td className="px-3 py-3">{rekonBpjs.noSep}</td>
-                                                    <td className="px-3 py-3">POLI {rekonBpjs.poliTujuan}</td>
-                                                    <td className="px-3 py-3">{rekonBpjs.norm}</td>
-                                                    <td className="px-3 py-3">{rekonBpjs.nama}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noSurat}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noSurat}</td>
+                                                    <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
+                                                    <td className="px-3 py-3">{dataTable.noSep}</td>
+                                                    <td className="px-3 py-3">POLI {dataTable.poliTujuan}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -102,7 +102,7 @@ export default function Index({ auth, rekonBpjs, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={rekonBpjs.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

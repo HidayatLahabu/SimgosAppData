@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, pesertaBpjs, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,15 +83,15 @@ export default function Index({ auth, pesertaBpjs, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pesertaBpjs.data.length > 0 ? (
-                                            pesertaBpjs.data.map((pesertaBpjs, index) => (
-                                                <tr key={`${pesertaBpjs.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{pesertaBpjs.noKartu ? shuffleNumber(pesertaBpjs.noKartu) : ''}</td>
-                                                    <td className="px-3 py-3">{pesertaBpjs.nik ? shuffleNumber(pesertaBpjs.nik) : ''}</td>
-                                                    <td className="px-3 py-3">{pesertaBpjs.norm}</td>
-                                                    <td className="px-3 py-3">{pesertaBpjs.nama}</td>
-                                                    <td className="px-3 py-3">{pesertaBpjs.nmJenisPeserta}</td>
-                                                    <td className="px-3 py-3">{pesertaBpjs.nmKelas}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noKartu ? shuffleNumber(dataTable.noKartu) : ''}</td>
+                                                    <td className="px-3 py-3">{dataTable.nik ? shuffleNumber(dataTable.nik) : ''}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.nmJenisPeserta}</td>
+                                                    <td className="px-3 py-3">{dataTable.nmKelas}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -101,7 +101,7 @@ export default function Index({ auth, pesertaBpjs, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={pesertaBpjs.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

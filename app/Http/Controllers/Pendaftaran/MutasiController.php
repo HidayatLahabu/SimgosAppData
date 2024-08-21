@@ -42,7 +42,7 @@ class MutasiController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Mutasi/Index", [
-            'mutasi' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

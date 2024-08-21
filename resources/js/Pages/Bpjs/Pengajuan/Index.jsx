@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, pengajuanSep, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,15 +83,15 @@ export default function Index({ auth, pengajuanSep, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pengajuanSep.data.length > 0 ? (
-                                            pengajuanSep.data.map((pengajuanSep, index) => (
-                                                <tr key={`${pengajuanSep.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{pengajuanSep.noKartu}</td>
-                                                    <td className="px-3 py-3">{pengajuanSep.tglSep}</td>
-                                                    <td className="px-3 py-3">{pengajuanSep.keterangan}</td>
-                                                    <td className="px-3 py-3">{pengajuanSep.tgl}</td>
-                                                    <td className="px-3 py-3">{pengajuanSep.norm}</td>
-                                                    <td className="px-3 py-3">{pengajuanSep.nama}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noKartu}</td>
+                                                    <td className="px-3 py-3">{dataTable.tglSep}</td>
+                                                    <td className="px-3 py-3">{dataTable.keterangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.tgl}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -101,7 +101,7 @@ export default function Index({ auth, pengajuanSep, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={pengajuanSep.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

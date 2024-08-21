@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, referensi, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (deskripsi, value) => {
@@ -70,13 +70,13 @@ export default function Index({ auth, referensi, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {referensi.data.length > 0 ? (
-                                            referensi.data.map((referensi, index) => (
-                                                <tr key={`${referensi.tabel_id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{referensi.tabel_id}</td>
-                                                    <td className="px-3 py-3">{referensi.jenis}</td>
-                                                    <td className="px-3 py-3">{referensi.id}</td>
-                                                    <td className="px-3 py-3">{referensi.deskripsi}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.tabel_id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.tabel_id}</td>
+                                                    <td className="px-3 py-3">{dataTable.jenis}</td>
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.deskripsi}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -86,7 +86,7 @@ export default function Index({ auth, referensi, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={referensi.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

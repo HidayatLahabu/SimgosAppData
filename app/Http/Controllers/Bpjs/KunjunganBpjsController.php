@@ -38,7 +38,7 @@ class KunjunganBpjsController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Bpjs/Kunjungan/Index", [
-            'kunjunganBpjs' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

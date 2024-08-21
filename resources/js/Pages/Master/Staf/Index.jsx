@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
 
-export default function Index({ auth, staf, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,20 +83,20 @@ export default function Index({ auth, staf, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {staf.data.length > 0 ? (
-                                            staf.data.map((staf, index) => (
-                                                <tr key={`${staf.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{staf.id}</td>
-                                                    <td className="px-3 py-3">{staf.depan} {staf.nama} {staf.belakang}</td>
-                                                    <td className="px-3 py-3">{staf.nip ? shuffleNumber(staf.nip) : ''}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.depan} {dataTable.nama} {dataTable.belakang}</td>
+                                                    <td className="px-3 py-3">{dataTable.nip ? shuffleNumber(dataTable.nip) : ''}</td>
                                                     <td className="px-3 py-3">
-                                                        {staf.nik ? (
-                                                            shuffleNumber(staf.nik)
+                                                        {dataTable.nik ? (
+                                                            shuffleNumber(dataTable.nik)
                                                         ) : (
                                                             <span className="text-red-500">Belum ada NIK</span>
                                                         )}
                                                     </td>
-                                                    <td className="px-3 py-3">{staf.ruangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.ruangan}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -106,7 +106,7 @@ export default function Index({ auth, staf, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={staf.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

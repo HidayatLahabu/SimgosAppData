@@ -27,7 +27,7 @@ class ConditionController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Condition/Index", [
-            'condition' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

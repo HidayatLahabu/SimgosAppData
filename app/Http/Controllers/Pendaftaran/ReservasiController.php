@@ -27,7 +27,7 @@ class ReservasiController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Reservasi/Index", [
-            'reservasi' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

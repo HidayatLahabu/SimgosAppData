@@ -3,9 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, mutasi, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -84,15 +83,15 @@ export default function Index({ auth, mutasi, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {mutasi.data.length > 0 ? (
-                                            mutasi.data.map((mutasi, index) => (
-                                                <tr key={`${mutasi.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{mutasi.nomor}</td>
-                                                    <td className="px-3 py-3">{mutasi.norm}</td>
-                                                    <td className="px-3 py-3">{mutasi.nama}</td>
-                                                    <td className="px-3 py-3">{mutasi.tanggal}</td>
-                                                    <td className="px-3 py-3">{mutasi.tujuan}</td>
-                                                    <td className="px-3 py-3">{mutasi.reservasi}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{dataTable.tujuan}</td>
+                                                    <td className="px-3 py-3">{dataTable.reservasi}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -102,7 +101,7 @@ export default function Index({ auth, mutasi, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={mutasi.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, ruangan, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (deskripsi, value) => {
@@ -69,12 +69,12 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {ruangan.data.length > 0 ? (
-                                            ruangan.data.map((ruangan, index) => (
-                                                <tr key={`${ruangan.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{ruangan.id}</td>
-                                                    <td className="px-3 py-3">{ruangan.jenis}</td>
-                                                    <td className="px-3 py-3">{ruangan.deskripsi}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.jenis}</td>
+                                                    <td className="px-3 py-3">{dataTable.deskripsi}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -84,7 +84,7 @@ export default function Index({ auth, ruangan, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={ruangan.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

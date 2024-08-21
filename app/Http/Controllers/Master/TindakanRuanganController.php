@@ -47,7 +47,7 @@ class TindakanRuanganController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Master/TindakanRuangan/Index", [
-            'tindakanRuangan' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

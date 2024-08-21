@@ -27,7 +27,7 @@ class PatientController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Patient/Index", [
-            'patient' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

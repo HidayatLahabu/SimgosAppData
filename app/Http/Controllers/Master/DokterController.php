@@ -45,7 +45,7 @@ class DokterController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Master/Dokter/Index", [
-            'dokter' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

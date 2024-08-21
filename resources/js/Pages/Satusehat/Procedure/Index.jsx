@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, procedure, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (subject, value) => {
@@ -69,14 +69,14 @@ export default function Index({ auth, procedure, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {procedure.data.length > 0 ? (
-                                            procedure.data.map((procedure, index) => (
-                                                <tr key={`${procedure.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{procedure.id}</td>
-                                                    <td className="px-3 py-3">{procedure.subject}</td>
-                                                    <td className="px-3 py-3">{procedure.refId}</td>
-                                                    <td className="px-3 py-3">{procedure.nopen}</td>
-                                                    <td className="px-3 py-3">{procedure.sendDate}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.subject}</td>
+                                                    <td className="px-3 py-3">{dataTable.refId}</td>
+                                                    <td className="px-3 py-3">{dataTable.nopen}</td>
+                                                    <td className="px-3 py-3">{dataTable.sendDate}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -86,7 +86,7 @@ export default function Index({ auth, procedure, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={procedure.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

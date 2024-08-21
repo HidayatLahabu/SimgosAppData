@@ -27,7 +27,7 @@ class ConsentController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Consent/Index", [
-            'consent' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
 
-export default function Index({ auth, perawat, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,20 +83,20 @@ export default function Index({ auth, perawat, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {perawat.data.length > 0 ? (
-                                            perawat.data.map((perawat, index) => (
-                                                <tr key={`${perawat.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{perawat.id}</td>
-                                                    <td className="px-3 py-3">{perawat.depan} {perawat.nama} {perawat.belakang}</td>
-                                                    <td className="px-3 py-3">{perawat.nip ? shuffleNumber(perawat.nip) : ''}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.depan} {dataTable.nama} {dataTable.belakang}</td>
+                                                    <td className="px-3 py-3">{dataTable.nip ? shuffleNumber(dataTable.nip) : ''}</td>
                                                     <td className="px-3 py-3">
-                                                        {perawat.nik ? (
-                                                            shuffleNumber(perawat.nik)
+                                                        {dataTable.nik ? (
+                                                            shuffleNumber(dataTable.nik)
                                                         ) : (
                                                             <span className="text-red-500">Belum ada NIK</span>
                                                         )}
                                                     </td>
-                                                    <td className="px-3 py-3">{perawat.ruangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.ruangan}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -106,7 +106,7 @@ export default function Index({ auth, perawat, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={perawat.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

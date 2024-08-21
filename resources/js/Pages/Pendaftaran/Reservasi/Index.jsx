@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, reservasi, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -81,13 +81,13 @@ export default function Index({ auth, reservasi, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {reservasi.data.length > 0 ? (
-                                            reservasi.data.map((reservasi, index) => (
-                                                <tr key={`${reservasi.NOMOR}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{reservasi.NOMOR}</td>
-                                                    <td className="px-3 py-3">{reservasi.TANGGAL}</td>
-                                                    <td className="px-3 py-3">{reservasi.ATAS_NAMA}</td>
-                                                    <td className="px-3 py-3">{reservasi.KONTAK_INFO}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.NOMOR}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.NOMOR}</td>
+                                                    <td className="px-3 py-3">{dataTable.TANGGAL}</td>
+                                                    <td className="px-3 py-3">{dataTable.ATAS_NAMA}</td>
+                                                    <td className="px-3 py-3">{dataTable.KONTAK_INFO}</td>
                                                 </tr>
                                             ))
                                         ) : (

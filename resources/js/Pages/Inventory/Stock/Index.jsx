@@ -16,7 +16,7 @@ export default function Index({ auth, stock, queryParams = {} }) {
             delete updatedParams[namaRuangan];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('stock.index'), updatedParams, {
+        router.get(route('stockBarang.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -79,7 +79,7 @@ export default function Index({ auth, stock, queryParams = {} }) {
                                                     <td className="px-3 py-3">{stock.status}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
-                                                            href={route("stock.list", { id: stock.id })}
+                                                            href={route("stockBarang.list", { id: stock.id })}
                                                         />
                                                     </td>
                                                 </tr>

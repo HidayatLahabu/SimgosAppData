@@ -27,7 +27,7 @@ class OrganizationController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Organization/Index", [
-            'organization' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

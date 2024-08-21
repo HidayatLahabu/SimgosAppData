@@ -49,7 +49,7 @@ class BarangController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Inventory/Barang/Index", [
-            'barang' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

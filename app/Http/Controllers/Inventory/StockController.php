@@ -38,7 +38,7 @@ class StockController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Inventory/Stock/Index", [
-            'stock' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

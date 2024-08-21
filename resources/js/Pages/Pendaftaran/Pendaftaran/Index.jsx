@@ -3,9 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, pendaftaran, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,14 +82,14 @@ export default function Index({ auth, pendaftaran, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {pendaftaran.data.length > 0 ? (
-                                            pendaftaran.data.map((pendaftaran, index) => (
-                                                <tr key={`${pendaftaran.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{pendaftaran.nomor}</td>
-                                                    <td className="px-3 py-3">{pendaftaran.norm}</td>
-                                                    <td className="px-3 py-3">{pendaftaran.nama}</td>
-                                                    <td className="px-3 py-3">{pendaftaran.alamat}</td>
-                                                    <td className="px-3 py-3">{pendaftaran.tanggal}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.alamat}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -100,7 +99,7 @@ export default function Index({ auth, pendaftaran, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={pendaftaran.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

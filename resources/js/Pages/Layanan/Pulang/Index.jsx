@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, layananPulang, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -57,7 +57,7 @@ export default function Index({ auth, layananPulang, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Order Radiologi</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Pulang</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
@@ -84,16 +84,16 @@ export default function Index({ auth, layananPulang, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {layananPulang.data.length > 0 ? (
-                                            layananPulang.data.map((layananPulang, index) => (
-                                                <tr key={`${layananPulang.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{layananPulang.id}</td>
-                                                    <td className="px-3 py-3">{layananPulang.tanggal}</td>
-                                                    <td className="px-3 py-3">{layananPulang.norm}</td>
-                                                    <td className="px-3 py-3">{layananPulang.nama}</td>
-                                                    <td className="px-3 py-3">{layananPulang.status}</td>
-                                                    <td className="px-3 py-3">{layananPulang.keadaan}</td>
-                                                    <td className="px-3 py-3">{layananPulang.gelarDepan} {layananPulang.dokter} {layananPulang.gelarBelakang}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.status}</td>
+                                                    <td className="px-3 py-3">{dataTable.keadaan}</td>
+                                                    <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -103,7 +103,7 @@ export default function Index({ auth, layananPulang, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={layananPulang.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

@@ -46,7 +46,7 @@ class ResepController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Layanan/Resep/Index", [
-            'layananResep' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

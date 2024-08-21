@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatNumber } from "@/utils/formatNumber";
 
-export default function Index({ auth, tindakan, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -68,13 +68,13 @@ export default function Index({ auth, tindakan, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {tindakan.data.length > 0 ? (
-                                            tindakan.data.map((tindakan, index) => (
-                                                <tr key={`${tindakan.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{tindakan.id}</td>
-                                                    <td className="px-3 py-3">{tindakan.jenis}</td>
-                                                    <td className="px-3 py-3">{tindakan.nama}</td>
-                                                    <td className="px-3 py-3 text-right">{formatNumber(tindakan.tarif)}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.jenis}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 text-right">{formatNumber(dataTable.tarif)}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -84,7 +84,7 @@ export default function Index({ auth, tindakan, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={tindakan.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

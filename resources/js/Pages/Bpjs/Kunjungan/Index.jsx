@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, kunjunganBpjs, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -84,15 +84,15 @@ export default function Index({ auth, kunjunganBpjs, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {kunjunganBpjs.data.length > 0 ? (
-                                            kunjunganBpjs.data.map((kunjunganBpjs, index) => (
-                                                <tr key={`${kunjunganBpjs.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{kunjunganBpjs.noSEP}</td>
-                                                    <td className="px-3 py-3">{kunjunganBpjs.tglSEP}</td>
-                                                    <td className="px-3 py-3">{kunjunganBpjs.noRujukan}</td>
-                                                    <td className="px-3 py-3">{formatDate(kunjunganBpjs.tglRujukan)}</td>
-                                                    <td className="px-3 py-3">{kunjunganBpjs.norm}</td>
-                                                    <td className="px-3 py-3">{kunjunganBpjs.nama}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noSEP}</td>
+                                                    <td className="px-3 py-3">{dataTable.tglSEP}</td>
+                                                    <td className="px-3 py-3">{dataTable.noRujukan}</td>
+                                                    <td className="px-3 py-3">{formatDate(dataTable.tglRujukan)}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -102,7 +102,7 @@ export default function Index({ auth, kunjunganBpjs, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={kunjunganBpjs.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

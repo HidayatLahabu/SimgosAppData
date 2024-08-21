@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, rujukanBpjs, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -84,15 +84,15 @@ export default function Index({ auth, rujukanBpjs, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {rujukanBpjs.data.length > 0 ? (
-                                            rujukanBpjs.data.map((rujukanBpjs, index) => (
-                                                <tr key={`${rujukanBpjs.noKunjungan}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{rujukanBpjs.noKunjungan}</td>
-                                                    <td className="px-3 py-3">{formatDate(rujukanBpjs.tglKunjungan)}</td>
-                                                    <td className="px-3 py-3">{rujukanBpjs.noKartu ? shuffleNumber(rujukanBpjs.noKartu) : ''}</td>
-                                                    <td className="px-3 py-3">{rujukanBpjs.provPerujuk}</td>
-                                                    <td className="px-3 py-3">{rujukanBpjs.norm}</td>
-                                                    <td className="px-3 py-3">{rujukanBpjs.nama}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.noKunjungan}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.noKunjungan}</td>
+                                                    <td className="px-3 py-3">{formatDate(dataTable.tglKunjungan)}</td>
+                                                    <td className="px-3 py-3">{dataTable.noKartu ? shuffleNumber(dataTable.noKartu) : ''}</td>
+                                                    <td className="px-3 py-3">{dataTable.provPerujuk}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -102,7 +102,7 @@ export default function Index({ auth, rujukanBpjs, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={rujukanBpjs.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

@@ -41,7 +41,7 @@ class KunjunganController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Kunjungan/Index", [
-            'kunjungan' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

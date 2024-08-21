@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, practitioner, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (name, value) => {
@@ -81,13 +81,13 @@ export default function Index({ auth, practitioner, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {practitioner.data.length > 0 ? (
-                                            practitioner.data.map((practitioner, index) => (
-                                                <tr key={`${practitioner.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{practitioner.id}</td>
-                                                    <td className="px-3 py-3">{practitioner.name}</td>
-                                                    <td className="px-3 py-3">{shuffleNumber(practitioner.refId)}</td>
-                                                    <td className="px-3 py-3">{practitioner.getDate}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.name}</td>
+                                                    <td className="px-3 py-3">{shuffleNumber(dataTable.refId)}</td>
+                                                    <td className="px-3 py-3">{dataTable.getDate}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -97,7 +97,7 @@ export default function Index({ auth, practitioner, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={practitioner.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

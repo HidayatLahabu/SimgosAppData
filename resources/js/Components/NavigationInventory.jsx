@@ -27,14 +27,14 @@ export default function NavigationInventory() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('barang.index') ||
+        return route().current('daftarBarang.index') ||
             route().current('barangRuangan.index') ||
-            route().current('penerimaan.index') ||
-            route().current('pengiriman.index') ||
-            route().current('permintaan.index') ||
-            route().current('order.index') ||
-            route().current('stock.index') ||
-            route().current('transaksi.index');
+            route().current('penerimaanBarang.index') ||
+            route().current('pengirimanBarang.index') ||
+            route().current('permintaanBarang.index') ||
+            route().current('orderBarang.index') ||
+            route().current('stockBarang.index') ||
+            route().current('transaksiBarang.index');
     };
 
     return (
@@ -49,11 +49,11 @@ export default function NavigationInventory() {
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('barang.index')}
-                        active={route().current('barang.index')}
+                        href={route('daftarBarang.index')}
+                        active={route().current('daftarBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Barang
+                        Daftar Barang
                     </NavLink>
                     <NavLink
                         href={route('barangRuangan.index')}
@@ -63,43 +63,43 @@ export default function NavigationInventory() {
                         Barang Ruangan
                     </NavLink>
                     <NavLink
-                        href={route('penerimaan.index')}
-                        active={route().current('penerimaan.index')}
+                        href={route('penerimaanBarang.index')}
+                        active={route().current('penerimaanBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Penerimaan
+                        Penerimaan Barang
                     </NavLink>
                     <NavLink
-                        href={route('pengiriman.index')}
-                        active={route().current('pengiriman.index')}
+                        href={route('pengirimanBarang.index')}
+                        active={route().current('pengirimanBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengiriman
+                        Pengiriman Barang
                     </NavLink>
                     <NavLink
-                        href={route('permintaan.index')}
-                        active={route().current('permintaan.index')}
+                        href={route('permintaanBarang.index')}
+                        active={route().current('permintaanBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Permintaan
+                        Permintaan Barang
                     </NavLink>
                     <NavLink
-                        href={route('order.index')}
-                        active={route().current('order.index')}
+                        href={route('orderBarang.index')}
+                        active={route().current('orderBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Purchase Order
+                        Order Barang
                     </NavLink>
                     <NavLink
-                        href={route('stock.index')}
-                        active={route().current('stock.index')}
+                        href={route('stockBarang.index')}
+                        active={route().current('stockBarang.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Stock Opname
                     </NavLink>
                     <NavLink
-                        href={route('transaksi.index')}
-                        active={route().current('transaksi.index')}
+                        href={route('transaksiBarang.index')}
+                        active={route().current('transaksiBarang.index')}
                         className="flex justify-between items-center px-4 py-2 w-full"
                     >
                         Transaksi Ruangan

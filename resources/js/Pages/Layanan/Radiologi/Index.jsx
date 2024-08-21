@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, layananRad, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,16 +83,16 @@ export default function Index({ auth, layananRad, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {layananRad.data.length > 0 ? (
-                                            layananRad.data.map((layananRad, index) => (
-                                                <tr key={`${layananRad.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{layananRad.nomor}</td>
-                                                    <td className="px-3 py-3">{layananRad.tanggal}</td>
-                                                    <td className="px-3 py-3">{layananRad.gelarDepan} {layananRad.dokter} {layananRad.gelarBelakang}</td>
-                                                    <td className="px-3 py-3">{layananRad.norm}</td>
-                                                    <td className="px-3 py-3">{layananRad.nama}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
                                                     <td className="px-3 py-3">
-                                                        {layananRad.noKartu ? (
+                                                        {dataTable.noKartu ? (
                                                             <span>BPJS</span>
                                                         ) : (
                                                             <span>Tanpa Asuransi/Umum</span>
@@ -107,7 +107,7 @@ export default function Index({ auth, layananRad, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={layananRad.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

@@ -27,7 +27,7 @@ class CompositionController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Satusehat/Composition/Index", [
-            'composition' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],

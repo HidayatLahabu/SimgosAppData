@@ -4,7 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 
-export default function Index({ auth, antrian, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -83,15 +83,15 @@ export default function Index({ auth, antrian, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {antrian.data.length > 0 ? (
-                                            antrian.data.map((antrian, index) => (
-                                                <tr key={`${antrian.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{antrian.nomor}</td>
-                                                    <td className="px-3 py-3">{antrian.norm}</td>
-                                                    <td className="px-3 py-3">{antrian.nama}</td>
-                                                    <td className="px-3 py-3">{antrian.tanggal}</td>
-                                                    <td className="px-3 py-3">{antrian.ruangan}</td>
-                                                    <td className="px-3 py-3">{antrian.urut}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{dataTable.ruangan}</td>
+                                                    <td className="px-3 py-3">{dataTable.urut}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -101,7 +101,7 @@ export default function Index({ auth, antrian, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={antrian.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>

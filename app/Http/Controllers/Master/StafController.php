@@ -50,7 +50,7 @@ class StafController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Master/Staf/Index", [
-            'staf' => [
+            'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
