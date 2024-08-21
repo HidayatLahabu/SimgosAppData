@@ -85,9 +85,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.ID}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.ID}</td>
-                                                    <td className="px-3 py-3">{dataTable.URL}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{dataTable.URL}</td>
                                                     <td className="px-3 py-3">{dataTable.TGL_REQUEST}</td>
-                                                    <td className="px-3 py-3">{dataTable.RESPONSE}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{dataTable.RESPONSE}</td>
                                                 </tr>
                                             ))
                                         ) : (
