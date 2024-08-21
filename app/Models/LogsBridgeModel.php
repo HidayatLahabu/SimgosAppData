@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class LogsBridgeModel extends Model
 {
     use HasFactory;
+    public $connection = "mysql8";
+    protected $table = 'bridge_log';
 }
