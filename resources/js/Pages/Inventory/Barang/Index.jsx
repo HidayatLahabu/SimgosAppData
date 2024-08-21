@@ -5,7 +5,7 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatNumber } from "@/utils/formatNumber";
 
-export default function Index({ auth, barang, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -53,7 +53,7 @@ export default function Index({ auth, barang, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari barang"
+                                                    placeholder="Cari dataTable"
                                                     onChange={e => onInputChange('nama', e)}
                                                     onKeyPress={e => onKeyPress('nama', e)}
                                                 />
@@ -63,7 +63,7 @@ export default function Index({ auth, barang, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">NAMA BARANG</th>
+                                            <th className="px-3 py-2">NAMA dataTable</th>
                                             <th className="px-3 py-2">KATEGORI</th>
                                             <th className="px-3 py-2 text-center">SATUAN</th>
                                             <th className="px-3 py-2 text-right">HARGA BELI</th>
@@ -71,15 +71,15 @@ export default function Index({ auth, barang, queryParams = {} }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {barang.data.length > 0 ? (
-                                            barang.data.map((barang, index) => (
-                                                <tr key={`${barang.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{barang.id}</td>
-                                                    <td className="px-3 py-3">{barang.nama}</td>
-                                                    <td className="px-3 py-3">{barang.kategori}</td>
-                                                    <td className="px-3 py-3 text-center">{barang.satuan}</td>
-                                                    <td className="px-3 py-3 text-right">{formatNumber(barang.beli)}</td>
-                                                    <td className="px-3 py-3 text-right">{formatNumber(barang.jual)}</td>
+                                        {dataTable.data.length > 0 ? (
+                                            dataTable.data.map((dataTable, index) => (
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3">{dataTable.kategori}</td>
+                                                    <td className="px-3 py-3 text-center">{dataTable.satuan}</td>
+                                                    <td className="px-3 py-3 text-right">{formatNumber(dataTable.beli)}</td>
+                                                    <td className="px-3 py-3 text-right">{formatNumber(dataTable.jual)}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -89,7 +89,7 @@ export default function Index({ auth, barang, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={barang.links} />
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>
