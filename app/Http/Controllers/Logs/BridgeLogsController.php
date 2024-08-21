@@ -11,7 +11,7 @@ class BridgeLogsController extends Controller
     public function index()
     {
         // Define base query
-        $query = LogsBridgeModel::orderByDesc('TGL_REQUEST')->limit(100);
+        $query = LogsBridgeModel::orderByDesc('TGL_REQUEST');
 
         // Apply search filter if 'subject' query parameter is present
         if (request('nama')) {
