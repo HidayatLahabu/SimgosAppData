@@ -10,30 +10,22 @@ class BridgeLogsController extends Controller
 {
     public function index()
     {
-        // Query untuk mengambil 100 data berdasarkan tanggal hari ini
-        $query = LogsBridgeModel::orderByDesc('TGL_REQUEST')
-            ->take(50); // Ambil hanya 100 data
+        // Define base query
+        $query = LogsBridgeModel::orderByDesc('TGL_REQUEST')->limit(100);
 
-        // Apply search filter jika parameter 'nama' ada
+        // Apply search filter if 'subject' query parameter is present
         if (request('nama')) {
-            $searchSubject = strtolower(request('nama')); // Convert search term ke lowercase
-            $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert kolom ke lowercase untuk perbandingan
+            $searchSubject = strtolower(request('nama')); // Convert search term to lowercase
+            $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
         }
 
-        // Get all results first and then paginate manually
-        $results = $query->get();
-        $data = new \Illuminate\Pagination\LengthAwarePaginator(
-            $results->forPage(request()->get('page', 1), 10),
-            $results->count(),
-            10,
-            request()->get('page', 1),
-            ['path' => request()->url(), 'query' => request()->query()]
-        );
+        // Paginate the results
+        $data = $query->paginate(10)->appends(request()->query());
 
-        // Convert data ke array
+        // Convert data to array
         $dataArray = $data->toArray();
 
-        // Return Inertia view dengan data yang sudah dipaginasi
+        // Return Inertia view with paginated data
         return inertia("Logs/Bridge/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Hanya data yang sudah dipaginasi
