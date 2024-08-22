@@ -19,19 +19,45 @@ class BridgeLogsController extends Controller
             $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
         }
 
-        // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        // Limit the results to the last 50 rows
+        $data = $query->take(50)->get();
 
         // Convert data to array
         $dataArray = $data->toArray();
 
-        // Return Inertia view with paginated data
+        // Return Inertia view with limited data
         return inertia("Logs/Bridge/Index", [
             'dataTable' => [
-                'data' => $dataArray['data'], // Hanya data yang sudah dipaginasi
-                'links' => $dataArray['links'], // Pagination links
+                'data' => $dataArray, // Data without pagination
             ],
             'queryParams' => request()->all()
         ]);
     }
+
+    // public function index()
+    // {
+    //     // Define base query
+    //     $query = LogsBridgeModel::orderByDesc('TGL_REQUEST');
+
+    //     // Apply search filter if 'subject' query parameter is present
+    //     if (request('nama')) {
+    //         $searchSubject = strtolower(request('nama')); // Convert search term to lowercase
+    //         $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+    //     }
+
+    //     // Paginate the results
+    //     $data = $query->paginate(10)->appends(request()->query());
+
+    //     // Convert data to array
+    //     $dataArray = $data->toArray();
+
+    //     // Return Inertia view with paginated data
+    //     return inertia("Logs/Bridge/Index", [
+    //         'dataTable' => [
+    //             'data' => $dataArray['data'], // Hanya data yang sudah dipaginasi
+    //             'links' => $dataArray['links'], // Pagination links
+    //         ],
+    //         'queryParams' => request()->all()
+    //     ]);
+    // }
 }

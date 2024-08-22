@@ -50,7 +50,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="Logs" />
+            <Head title="BPJS" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -97,7 +97,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={dataTable.links} />
+                                {/* <Pagination links={dataTable.links} /> */}
                             </div>
                         </div>
                     </div>
