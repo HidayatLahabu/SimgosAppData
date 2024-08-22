@@ -33,24 +33,17 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(nama, e.target.value);
     };
 
-    // Function to shuffle the digits of a 16-digit NIK
-    const shuffleNumber = (number) => {
-        // Convert the NIK to an array of characters
-        const nikArray = number.split('');
-        // Shuffle the array
-        for (let i = nikArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
-        }
-        // Join the array back into a string
-        return nikArray.join('');
+    // Function to filter the response and display only {"code":"200","message":"OK"} if found
+    const filterResponse = (response) => {
+        const targetString = '{"code":"200","message":"OK"}';
+        return response.includes(targetString) ? targetString : response;
     };
 
     return (
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="BPJS" />
+            <Head title="Logs" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -87,7 +80,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.ID}</td>
                                                     <td className="px-3 py-3 break-words max-w-xs">{dataTable.URL}</td>
                                                     <td className="px-3 py-3">{dataTable.TGL_REQUEST}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">{dataTable.RESPONSE}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">
+                                                        {filterResponse(dataTable.RESPONSE)}
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
