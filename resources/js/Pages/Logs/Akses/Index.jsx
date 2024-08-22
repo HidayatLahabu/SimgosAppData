@@ -15,7 +15,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('monitoringRekon.index'), updatedParams, {
+        router.get(route('logsAkses.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -33,31 +33,35 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(nama, e.target.value);
     };
 
-    // Function to shuffle the digits of a 16-digit NIK
-    const shuffleNumber = (number) => {
-        // Convert the NIK to an array of characters
-        const nikArray = number.split('');
-        // Shuffle the array
-        for (let i = nikArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+    // Function to truncate JSON string
+    const truncateJson = (jsonString) => {
+        try {
+            const jsonObject = JSON.parse(jsonString);
+            const truncated = JSON.stringify(jsonObject, (key, value) => {
+                if (key === 'PETUGAS_MEDIS') {
+                    // Limit the number of items in PETUGAS_MEDIS array
+                    value = value.slice(0, 1);
+                }
+                return value;
+            });
+            return truncated.length > 100 ? truncated.substring(0, 100) + '...' : truncated;
+        } catch (e) {
+            return jsonString;
         }
-        // Join the array back into a string
-        return nikArray.join('');
     };
 
     return (
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="BPJS" />
+            <Head title="Logs" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Monitoring Rencana Kontrol</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pengguna Akses Logs</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
@@ -65,7 +69,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
+                                                    placeholder="Cari url"
                                                     onChange={e => onInputChange('nama', e)}
                                                     onKeyPress={e => onKeyPress('nama', e)}
                                                 />
@@ -74,24 +78,24 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">ID</th>
                                             <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">NAMA DOKTER</th>
-                                            <th className="px-3 py-2">JENIS KONTROL</th>
-                                            <th className="px-3 py-2">NO SEP</th>
+                                            <th className="px-3 py-2">PENGGUNA</th>
+                                            <th className="px-3 py-2">AKSI</th>
+                                            <th className="px-3 py-2">SEBELUM</th>
+                                            <th className="px-3 py-2">SESUDAH</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.noSuratKontrol}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.noSuratKontrol}</td>
-                                                    <td className="px-3 py-3">{dataTable.tglTerbitKontrol}</td>
+                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                     <td className="px-3 py-3">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.namaDokter}</td>
-                                                    <td className="px-3 py-3">{dataTable.namaJnsKontrol}</td>
-                                                    <td className="px-3 py-3">{dataTable.noSepAsalKontrol}</td>
+                                                    <td className="px-3 py-3">{dataTable.aksi}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sebelum)}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sesudah)}</td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -101,7 +105,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                <Pagination links={dataTable.links} />
+                                {/* <Pagination links={dataTable.links} /> */}
                             </div>
                         </div>
                     </div>
