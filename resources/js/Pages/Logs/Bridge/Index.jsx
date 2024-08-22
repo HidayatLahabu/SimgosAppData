@@ -35,8 +35,19 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to filter the response and display only {"code":"200","message":"OK"} if found
     const filterResponse = (response) => {
-        const targetString = '{"code":"200","message":"OK"}';
-        return response.includes(targetString) ? targetString : response;
+        const targetStrings = [
+            '{"code":"200","message":"Sukses"}',
+            '{"code":"200","message":"OK"}',
+            '{"code":"200","message":"Ok"}' // Added this line for 'Ok'
+        ];
+
+        for (const targetString of targetStrings) {
+            if (response.includes(targetString)) {
+                return targetString;
+            }
+        }
+
+        return response;
     };
 
     return (
