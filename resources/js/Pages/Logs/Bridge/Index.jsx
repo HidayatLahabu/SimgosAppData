@@ -33,25 +33,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(nama, e.target.value);
     };
 
-    // Function to filter the response and display only {"code":"200","message":"OK"} if found
-    // const filterResponse = (response) => {
-    //     const targetStrings = [
-    //         '{"code":"200","message":"Sukses"}',
-    //         '{"code":"200","message":"OK"}',
-    //         '{"code":"200","message":"Ok"}' // Added this line for 'Ok'
-    //     ];
-
-    //     for (const targetString of targetStrings) {
-    //         if (response.includes(targetString)) {
-    //             return targetString;
-    //         }
-    //     }
-
-    //     return response;
-    // };
-
     const filterResponse = (response) => {
-        // Define the target strings for specific messages
         const targetStrings = [
             '{"code":"200","message":"Sukses"}',
             '{"code":"200","message":"OK"}',
@@ -65,11 +47,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             }
         }
 
-        // Check if the response is a JSON object and filter specific fields
         try {
             const responseObject = JSON.parse(response);
-
-            // Check if the parsed object has the expected fields
             const filteredFields = {};
             if (responseObject.hasOwnProperty("refresh_token_expires_in")) {
                 filteredFields["refresh_token_expires_in"] = responseObject.refresh_token_expires_in;
@@ -84,10 +63,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                 filteredFields["organization_name"] = responseObject.organization_name;
             }
 
-            // Return the filtered fields as a JSON string if there are any fields
             return Object.keys(filteredFields).length > 0 ? JSON.stringify(filteredFields) : response;
         } catch (e) {
-            // If JSON parsing fails, return the full response
+            console.error('Failed to parse JSON:', e);
             return response;
         }
     };
