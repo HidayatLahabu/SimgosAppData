@@ -40,9 +40,15 @@ class PenggunaAksesController extends Controller
         // Paginate the results
         $data = $query->orderByDesc('akses.TANGGAL')->paginate(10); // 10 items per page
 
+        // Convert data to array
+        $dataArray = $data->toArray();
+
         // Return Inertia view with paginated data
         return inertia("Logs/Akses/Index", [
-            'dataTable' => $data, // Data with pagination
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
             'queryParams' => request()->all()
         ]);
     }

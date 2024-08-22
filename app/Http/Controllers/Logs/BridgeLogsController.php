@@ -19,8 +19,14 @@ class BridgeLogsController extends Controller
             $query->whereRaw('LOWER(URL) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
         }
 
-        // Limit the results to the last 50 rows
-        $data = $query->take(50)->get();
+        // Get today's date
+        $today = now()->format('Y-m-d'); // 'Y-m-d' is the format for dates
+
+        // Add filter for today's date
+        $query->whereDate('TGL_REQUEST', $today);
+
+        // Paginate the results
+        $data = $query->paginate(10); // 10 items per page
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -28,7 +34,8 @@ class BridgeLogsController extends Controller
         // Return Inertia view with limited data
         return inertia("Logs/Bridge/Index", [
             'dataTable' => [
-                'data' => $dataArray, // Data without pagination
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
             ],
             'queryParams' => request()->all()
         ]);
