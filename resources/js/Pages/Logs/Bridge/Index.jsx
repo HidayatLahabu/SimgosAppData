@@ -34,21 +34,64 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to filter the response and display only {"code":"200","message":"OK"} if found
+    // const filterResponse = (response) => {
+    //     const targetStrings = [
+    //         '{"code":"200","message":"Sukses"}',
+    //         '{"code":"200","message":"OK"}',
+    //         '{"code":"200","message":"Ok"}' // Added this line for 'Ok'
+    //     ];
+
+    //     for (const targetString of targetStrings) {
+    //         if (response.includes(targetString)) {
+    //             return targetString;
+    //         }
+    //     }
+
+    //     return response;
+    // };
+
     const filterResponse = (response) => {
+        // Define the target strings for specific messages
         const targetStrings = [
             '{"code":"200","message":"Sukses"}',
             '{"code":"200","message":"OK"}',
-            '{"code":"200","message":"Ok"}' // Added this line for 'Ok'
+            '{"code":"200","message":"Ok"}'
         ];
 
+        // Check if the response includes any of the target strings
         for (const targetString of targetStrings) {
             if (response.includes(targetString)) {
                 return targetString;
             }
         }
 
-        return response;
+        // Check if the response is a JSON object and filter specific fields
+        try {
+            const responseObject = JSON.parse(response);
+
+            // Check if the parsed object has the expected fields
+            const filteredFields = {};
+            if (responseObject.hasOwnProperty("refresh_token_expires_in")) {
+                filteredFields["refresh_token_expires_in"] = responseObject.refresh_token_expires_in;
+            }
+            if (responseObject.hasOwnProperty("api_product_list")) {
+                filteredFields["api_product_list"] = responseObject.api_product_list;
+            }
+            if (responseObject.hasOwnProperty("api_product_list_json")) {
+                filteredFields["api_product_list_json"] = responseObject.api_product_list_json;
+            }
+            if (responseObject.hasOwnProperty("organization_name")) {
+                filteredFields["organization_name"] = responseObject.organization_name;
+            }
+
+            // Return the filtered fields as a JSON string if there are any fields
+            return Object.keys(filteredFields).length > 0 ? JSON.stringify(filteredFields) : response;
+        } catch (e) {
+            // If JSON parsing fails, return the full response
+            return response;
+        }
     };
+
 
     return (
         <AuthenticatedLayout
