@@ -14,6 +14,9 @@ class PenggunaAksesController extends Controller
         // Get the search term from the request
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
+        // Get today's date
+        $today = now()->format('Y-m-d'); // 'Y-m-d' is the format for dates
+
         // Start building the query using the query builder
         $query = DB::connection('mysql8')->table('logs.pengguna_akses_log as akses')
             ->select(
@@ -31,17 +34,15 @@ class PenggunaAksesController extends Controller
             $query->whereRaw('LOWER(pengguna.nama) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
-        // Paginate the results
-        $data = $query->orderByDesc('akses.TANGGAL')->take(50)->get();
+        // Add filter for today's date
+        $query->whereDate('akses.TANGGAL', $today);
 
-        // Convert data to array
-        $dataArray = $data->toArray();
+        // Paginate the results
+        $data = $query->orderByDesc('akses.TANGGAL')->paginate(10); // 10 items per page
 
         // Return Inertia view with paginated data
         return inertia("Logs/Akses/Index", [
-            'dataTable' => [
-                'data' => $dataArray, // Data without pagination
-            ],
+            'dataTable' => $data, // Data with pagination
             'queryParams' => request()->all()
         ]);
     }

@@ -105,7 +105,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         )}
                                     </tbody>
                                 </table>
-                                {/* <Pagination links={dataTable.links} /> */}
+                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>
