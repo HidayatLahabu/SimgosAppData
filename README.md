@@ -46,3 +46,6 @@ To pull the latest updates:
     Windows: If deployed on Windows, re-clone the repository and repeat steps 2 to 7 above.
 
 Pro Tip: Fork this repository to stay up-to-date with the latest developments and enhancements in real time.
+
+Notes:
+NIK and other Identity Number, in frontend has been manipulate when display in table
