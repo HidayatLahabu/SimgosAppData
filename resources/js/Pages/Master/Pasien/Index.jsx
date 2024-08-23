@@ -88,9 +88,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.norm}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                     <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
-                                                    <td className="px-3 py-3">{dataTable.alamat}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.alamat}</td>
                                                     <td className="px-3 py-3">{dataTable.bpjs ? shuffleNumber(dataTable.bpjs) : ''}</td>
                                                     <td className="px-3 py-3">{dataTable.terdaftar}</td>
                                                 </tr>

@@ -92,7 +92,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.noRujukan}</td>
                                                     <td className="px-3 py-3">{formatDate(dataTable.tglRujukan)}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                 </tr>
                                             ))
                                         ) : (

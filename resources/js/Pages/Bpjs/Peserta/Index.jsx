@@ -89,7 +89,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.noKartu ? shuffleNumber(dataTable.noKartu) : ''}</td>
                                                     <td className="px-3 py-3">{dataTable.nik ? shuffleNumber(dataTable.nik) : ''}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                     <td className="px-3 py-3">{dataTable.nmJenisPeserta}</td>
                                                     <td className="px-3 py-3">{dataTable.nmKelas}</td>
                                                 </tr>

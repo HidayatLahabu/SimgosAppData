@@ -88,8 +88,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <tr key={`${dataTable.noSuratKontrol}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.noSuratKontrol}</td>
                                                     <td className="px-3 py-3">{dataTable.tglTerbitKontrol}</td>
-                                                    <td className="px-3 py-3">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.namaDokter}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.namaDokter}</td>
                                                     <td className="px-3 py-3">{dataTable.namaJnsKontrol}</td>
                                                     <td className="px-3 py-3">{dataTable.noSepAsalKontrol}</td>
                                                 </tr>
