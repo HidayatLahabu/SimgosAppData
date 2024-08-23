@@ -198,6 +198,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
         Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
+
+        Route::get('layananTindakan', [TindakanMedisController::class, 'index'])->name('layananTindakan.index');
     });
 });
 

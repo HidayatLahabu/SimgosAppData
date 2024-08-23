@@ -30,7 +30,8 @@ export default function NavigationLayanan() {
         return route().current('layananLab.index') ||
             route().current('layananRad.index') ||
             route().current('layananResep.index') ||
-            route().current('layananPulang.index');
+            route().current('layananPulang.index') ||
+            route().current('layananTindakan.index');
     };
 
     return (
@@ -64,6 +65,13 @@ export default function NavigationLayanan() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Resep
+                    </NavLink>
+                    <NavLink
+                        href={route('layananTindakan.index')}
+                        active={route().current('layananTindakan.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Tindakan Medis
                     </NavLink>
                     <NavLink
                         href={route('layananPulang.index')}
