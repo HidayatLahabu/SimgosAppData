@@ -92,7 +92,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.id}</td>
                                                     <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                     <td className="px-3 py-3">{dataTable.aksi}</td>
                                                     <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sebelum)}</td>
                                                     <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sesudah)}</td>
