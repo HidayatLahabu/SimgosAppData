@@ -15,7 +15,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('logsAkses.index'), updatedParams, {
+        router.get(route('logsRequest.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -33,23 +33,6 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(nama, e.target.value);
     };
 
-    // Function to truncate JSON string
-    const truncateJson = (jsonString) => {
-        try {
-            const jsonObject = JSON.parse(jsonString);
-            const truncated = JSON.stringify(jsonObject, (key, value) => {
-                if (key === 'PETUGAS_MEDIS') {
-                    // Limit the number of items in PETUGAS_MEDIS array
-                    value = value.slice(0, 1);
-                }
-                return value;
-            });
-            return truncated.length > 100 ? truncated.substring(0, 100) + '...' : truncated;
-        } catch (e) {
-            return jsonString;
-        }
-    };
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -61,7 +44,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pengguna Akses Logs</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pengguna Request Logs</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
@@ -79,11 +62,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">PENGGUNA</th>
-                                            <th className="px-3 py-2">AKSI</th>
-                                            <th className="px-3 py-2">SEBELUM</th>
-                                            <th className="px-3 py-2">SESUDAH</th>
+                                            <th className="px-3 py-2">TANGGAL AKSES</th>
+                                            <th className="px-3 py-2">TANGGAL SELESAI</th>
+                                            <th className="px-3 py-2">URL</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -91,11 +73,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.id}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                     <td className="px-3 py-3">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.aksi}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sebelum)}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sesudah)}</td>
+                                                    <td className="px-3 py-3">{dataTable.mulai}</td>
+                                                    <td className="px-3 py-3">{dataTable.selesai}</td>
+                                                    <td className="px-3 py-3  break-words max-w-xs">{dataTable.url}</td>
                                                 </tr>
                                             ))
                                         ) : (
