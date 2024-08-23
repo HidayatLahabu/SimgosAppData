@@ -90,7 +90,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
+                                                    <td className="px-3 py-3 uppercase">{dataTable.pelaksana}</td>
                                                     <td className="px-3 py-3">{dataTable.jenisTindakan}</td>
                                                 </tr>
                                             ))

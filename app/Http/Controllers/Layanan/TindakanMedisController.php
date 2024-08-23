@@ -19,9 +19,7 @@ class TindakanMedisController extends Controller
                 'tindakan.ID as id',
                 'tindakan.TANGGAL as tanggal',
                 'tindakan.KUNJUNGAN as kunjungan',
-                'pegawai.NAMA as dokter',
-                'pegawai.GELAR_DEPAN as gelarDepan',
-                'pegawai.GELAR_BELAKANG as gelarBelakang',
+                'pengguna.NAMA as pelaksana',
                 'pasien.NORM as norm',
                 'pasien.NAMA as nama',
                 'masterTindakan.NAMA as jenisTindakan'
@@ -29,7 +27,7 @@ class TindakanMedisController extends Controller
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakan.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.ID', '=', 'tindakan.OLEH')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'tindakan.OLEH')
             ->leftJoin('master.tindakan as masterTindakan', 'tindakan.TINDAKAN', '=', 'masterTindakan.ID')
             ->where('tindakan.STATUS', 1);
 
