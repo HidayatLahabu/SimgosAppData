@@ -88,7 +88,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <tr key={`${dataTable.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{dataTable.noKartu}</td>
                                                     <td className="px-3 py-3">{dataTable.tglSep}</td>
-                                                    <td className="px-3 py-3">{dataTable.keterangan}</td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{dataTable.keterangan}</td>
                                                     <td className="px-3 py-3">{dataTable.tgl}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
