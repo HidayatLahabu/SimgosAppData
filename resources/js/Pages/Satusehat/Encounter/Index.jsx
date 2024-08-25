@@ -50,10 +50,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.subject || ''}
-                                                    placeholder="Cari encounter"
-                                                    onChange={e => onInputChange('subject', e)}
-                                                    onKeyPress={e => onKeyPress('subject', e)}
+                                                    defaultValue={queryParams.refId || ''}
+                                                    placeholder="Cari berdasarkan refId"
+                                                    onChange={e => onInputChange('refId', e)}
+                                                    onKeyPress={e => onKeyPress('refId', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -71,18 +71,16 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${data.refId}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{data.id}</td>
                                                     <td className="px-3 py-3">{data.subject}</td>
                                                     <td className="px-3 py-3">{data.period}</td>
                                                     <td className="px-3 py-3">{data.refId}</td>
                                                     <td className="px-3 py-3">{data.sendDate}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
-                                                        {data.id && (
-                                                            <ButtonDetail
-                                                                href={route("encounter.detail", { id: data.id })}
-                                                            />
-                                                        )}
+                                                        <ButtonDetail
+                                                            href={route("encounter.detail", { id: data.refId })}
+                                                        />
                                                     </td>
                                                 </tr>
                                             ))

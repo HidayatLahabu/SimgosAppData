@@ -38,7 +38,7 @@ class EncounterController extends Controller
     public function detail($id)
     {
         // Fetch the specific encounter by ID
-        $query = SatusehatEncounterModel::where('id', $id)->first();
+        $query = SatusehatEncounterModel::where('refId', $id)->first();
 
         // Check if the record exists
         if (!$query) {

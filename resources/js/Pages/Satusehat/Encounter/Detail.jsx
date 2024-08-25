@@ -6,7 +6,7 @@ export default function Detail({ auth, detail }) {
     // Prepare the data to be displayed in the desired format
     const encounterDetails = [
         { no: 1, uraian: 'ID', value: detail.id },
-        { no: 2, uraian: 'Identifier', value: JSON.stringify(detail.identifier) }, // Convert JSON to string for display
+        { no: 2, uraian: 'Identifier', value: JSON.stringify(detail.identifier) },
         { no: 3, uraian: 'Status', value: detail.status },
         { no: 4, uraian: 'Class', value: JSON.stringify(detail.class) },
         { no: 5, uraian: 'Subject', value: JSON.stringify(detail.subject) },
