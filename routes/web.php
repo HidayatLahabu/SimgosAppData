@@ -89,6 +89,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('practitioner', [PractitionerController::class, 'index'])->name('practitioner.index');
 
         Route::get('encounter', [EncounterController::class, 'index'])->name('encounter.index');
+        Route::get('encounter/detail/{id}', [EncounterController::class, 'detail'])->name('encounter.detail');
 
         Route::get('condition', [ConditionController::class, 'index'])->name('condition.index');
 
