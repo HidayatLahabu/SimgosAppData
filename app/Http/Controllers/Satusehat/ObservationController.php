@@ -34,4 +34,21 @@ class ObservationController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific encounter by ID
+        $query = SatusehatObservationModel::where('nopen', $id)->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('observation.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Satusehat/Observation/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
