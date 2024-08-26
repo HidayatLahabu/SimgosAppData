@@ -37,16 +37,16 @@ class ProcedureController extends Controller
 
     public function detail($id)
     {
-        // Fetch the specific encounter by ID
+        // Fetch the specific data
         $query = SatusehatProcedureModel::where('nopen', $id)->first();
 
         // Check if the record exists
         if (!$query) {
-            // Handle the case where the encounter was not found
+            // Handle the case where the data was not found
             return redirect()->route('procedure.index')->with('error', 'Data not found.');
         }
 
-        // Return Inertia view with the encounter data
+        // Return Inertia view with the data
         return inertia("Satusehat/Procedure/Detail", [
             'detail' => $query,
         ]);
