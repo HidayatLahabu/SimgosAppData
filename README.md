@@ -2,7 +2,7 @@ SimgosAppData is an extension module designed to complement the Simgos Kemenkes 
 
 Deployment Overview:
 
-    SimgoAppData only tested ini Linux OS
+    SimgoAppData has only tested in Linux OS
     Server: Ubuntu 22.04
     Database: MySQL
     Multiple Database Setup: Configured through the .env file
