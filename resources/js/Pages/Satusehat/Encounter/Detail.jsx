@@ -4,26 +4,26 @@ import { Head } from "@inertiajs/react";
 
 export default function Detail({ auth, detail }) {
     // Prepare the data to be displayed in the desired format
-    const encounterDetails = [
-        { no: 1, uraian: 'ID', value: detail.id },
-        { no: 2, uraian: 'Identifier', value: JSON.stringify(detail.identifier) },
-        { no: 3, uraian: 'Status', value: detail.status },
-        { no: 4, uraian: 'Class', value: JSON.stringify(detail.class) },
-        { no: 5, uraian: 'Subject', value: JSON.stringify(detail.subject) },
-        { no: 6, uraian: 'Participant', value: JSON.stringify(detail.participant) },
-        { no: 7, uraian: 'Period', value: JSON.stringify(detail.period) },
-        { no: 8, uraian: 'Location', value: JSON.stringify(detail.location) },
-        { no: 9, uraian: 'Diagnosis', value: JSON.stringify(detail.diagnosis) },
-        { no: 10, uraian: 'Status History', value: JSON.stringify(detail.statusHistory) },
-        { no: 11, uraian: 'Service Provider', value: JSON.stringify(detail.serviceProvider) },
-        { no: 12, uraian: 'Ref ID', value: detail.refId },
-        { no: 13, uraian: 'Send Date', value: detail.sendDate },
-        { no: 14, uraian: 'Send', value: detail.send },
+    const detailData = [
+        { uraian: 'ID', value: detail.id },
+        { uraian: 'Identifier', value: JSON.stringify(detail.identifier) },
+        { uraian: 'Status', value: detail.status },
+        { uraian: 'Class', value: JSON.stringify(detail.class) },
+        { uraian: 'Subject', value: JSON.stringify(detail.subject) },
+        { uraian: 'Participant', value: JSON.stringify(detail.participant) },
+        { uraian: 'Period', value: JSON.stringify(detail.period) },
+        { uraian: 'Location', value: JSON.stringify(detail.location) },
+        { uraian: 'Diagnosis', value: JSON.stringify(detail.diagnosis) },
+        { uraian: 'Status History', value: JSON.stringify(detail.statusHistory) },
+        { uraian: 'Service Provider', value: JSON.stringify(detail.serviceProvider) },
+        { uraian: 'Ref ID', value: detail.refId },
+        { uraian: 'Send Date', value: detail.sendDate },
+        { uraian: 'Send', value: detail.send },
     ];
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Detail Encounter" />
+            <Head title="SatuSehat" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -42,9 +42,9 @@ export default function Detail({ auth, detail }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {encounterDetails.map((detailItem, index) => (
+                                        {detailData.map((detailItem, index) => (
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3">{detailItem.no}</td>
+                                                <td className="px-3 py-3">{index + 1}</td>
                                                 <td className="px-3 py-3 uppercase">{detailItem.uraian}</td>
                                                 <td className="px-3 py-3">{detailItem.value}</td>
                                             </tr>

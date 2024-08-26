@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('organization/detail/{id}', [OrganizationController::class, 'detail'])->name('organization.detail');
 
         Route::get('location', [LocationController::class, 'index'])->name('location.index');
+        Route::get('location/detail/{id}', [LocationController::class, 'detail'])->name('location.detail');
 
         Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
 
