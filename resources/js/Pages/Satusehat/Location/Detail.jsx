@@ -29,7 +29,7 @@ export default function Detail({ auth, detail }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Detail Encounter" />
+            <Head title="SatuSehat" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">

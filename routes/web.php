@@ -87,33 +87,46 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('location/detail/{id}', [LocationController::class, 'detail'])->name('location.detail');
 
         Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
+        Route::get('patient/detail/{id}', [PatientController::class, 'detail'])->name('patient.detail');
 
         Route::get('practitioner', [PractitionerController::class, 'index'])->name('practitioner.index');
+        Route::get('practitioner/detail/{id}', [PractitionerController::class, 'detail'])->name('practitioner.detail');
 
         Route::get('encounter', [EncounterController::class, 'index'])->name('encounter.index');
         Route::get('encounter/detail/{id}', [EncounterController::class, 'detail'])->name('encounter.detail');
 
         Route::get('condition', [ConditionController::class, 'index'])->name('condition.index');
+        Route::get('condition/detail/{id}', [ConditionController::class, 'detail'])->name('condition.detail');
 
         Route::get('observation', [ObservationController::class, 'index'])->name('observation.index');
+        Route::get('observation/detail/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
 
         Route::get('procedure', [ProcedureController::class, 'index'])->name('procedure.index');
+        Route::get('procedure/detail/{id}', [ProcedureController::class, 'detail'])->name('procedure.detail');
 
         Route::get('composition', [CompositionController::class, 'index'])->name('composition.index');
+        Route::get('composition/detail/{id}', [CompositionController::class, 'detail'])->name('composition.detail');
 
         Route::get('consent', [ConsentController::class, 'index'])->name('consent.index');
+        Route::get('consent/detail/{id}', [ConsentController::class, 'detail'])->name('consent.detail');
 
         Route::get('diagnosticReport', [DiagnosticReportController::class, 'index'])->name('diagnosticReport.index');
+        Route::get('diagnosticReport/detail/{id}', [DiagnosticReportController::class, 'detail'])->name('diagnosticReport.detail');
 
         Route::get('medication', [MedicationController::class, 'index'])->name('medication.index');
+        Route::get('medication/detail/{id}', [MedicationController::class, 'detail'])->name('medication.detail');
 
         Route::get('medicationDispanse', [MedicationDispanseController::class, 'index'])->name('medicationDispanse.index');
+        Route::get('medicationDispanse/detail/{id}', [MedicationDispanseController::class, 'detail'])->name('medicationDispanse.detail');
 
         Route::get('medicationRequest', [MedicationRequestController::class, 'index'])->name('medicationRequest.index');
+        Route::get('medicationRequest/detail/{id}', [MedicationRequestController::class, 'detail'])->name('medicationRequest.detail');
 
         Route::get('serviceRequest', [ServiceRequestController::class, 'index'])->name('serviceRequest.index');
+        Route::get('serviceRequest/detail/{id}', [ServiceRequestController::class, 'detail'])->name('serviceRequest.detail');
 
         Route::get('specimen', [SpecimenController::class, 'index'])->name('specimen.index');
+        Route::get('specimen/detail/{id}', [SpecimenController::class, 'detail'])->name('specimen.detail');
     });
 });
 
