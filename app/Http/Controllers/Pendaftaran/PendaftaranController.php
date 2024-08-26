@@ -48,4 +48,63 @@ class PendaftaranController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select([
+                'pendaftaran.NOMOR as NOMOR',
+                'pendaftaran.NORM as NORM',
+                'pasien.NAMA as NAMA',
+                'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
+                'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
+                'kartu_asuransi_pasien.NOMOR as ASURANSI',
+                'agama.DESKRIPSI as AGAMA',
+                'kelamin.DESKRIPSI as JENIS_KELAMIN',
+                'pendidikan.DESKRIPSI as PENDIDIKAN',
+                'wilayah.DESKRIPSI as WILAYAH',
+                'diagnosa_masuk.ICD as DIAGNOSA_MASUK_ICD',
+                'mrconso.STR as DIAGNOSA_MASUK_STR',
+                'penanggung_jawab_pasien.NAMA as PENANGGUNG_JAWAB_PASIEN',
+                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
+                'tujuan_pasien.STATUS as STATUS_PASIEN',
+                'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
+                'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
+                'ppk.NAMA as NAMA_FASKES'
+            ])
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
+            ->leftJoin('master.referensi as kelamin', 'pasien.JENIS_KELAMIN', '=', 'kelamin.ID')
+            ->leftJoin('master.referensi as agama', 'agama.ID', '=', 'pasien.AGAMA')
+            ->leftJoin('master.referensi as pendidikan', 'pendidikan.ID', '=', 'pasien.PENDIDIKAN')
+            ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
+            ->leftJoin('pendaftaran.penanggung_jawab_pasien as penanggung_jawab_pasien', 'penanggung_jawab_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'tujuan_pasien.DOKTER')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('master.diagnosa_masuk as diagnosa_masuk', 'diagnosa_masuk.ID', '=', 'pendaftaran.DIAGNOSA_MASUK')
+            ->leftJoin('master.mrconso as mrconso', 'mrconso.CODE', '=', 'diagnosa_masuk.ICD')
+            ->leftJoin('pendaftaran.surat_rujukan_pasien as surat_rujukan_pasien', 'surat_rujukan_pasien.ID', '=', 'pendaftaran.RUJUKAN')
+            ->leftJoin('master.ppk as ppk', 'ppk.ID', '=', 'surat_rujukan_pasien.PPK')
+            ->where('pendaftaran.NOMOR', $id)
+            ->where('agama.JENIS', 1)
+            ->where('kelamin.JENIS', 2)
+            ->where('pendidikan.JENIS', 3)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('pendaftaran.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Pendaftaran/Pendaftaran/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
