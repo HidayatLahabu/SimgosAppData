@@ -2,6 +2,7 @@ SimgosAppData is an extension module designed to complement the Simgos Kemenkes 
 
 Deployment Overview:
 
+    SimgoAppData only tested ini Linux OS
     Server: Ubuntu 22.04
     Database: MySQL
     Multiple Database Setup: Configured through the .env file
@@ -10,8 +11,7 @@ Deployment Instructions
 
     Navigate to the deployment directory:
         Linux: /var/www/html/SimgoAppData
-        Windows: C:\xampp\htdocs\SimgoAppData
-
+        
     Environment Setup:
         Copy .env.example to .env.
         Customize the .env file according to the provided instructions.
