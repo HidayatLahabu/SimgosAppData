@@ -81,6 +81,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('satusehat')->namespace('App\Http\Controllers\Satusehat')->group(function () {
         Route::get('organization', [OrganizationController::class, 'index'])->name('organization.index');
+        Route::get('organization/detail/{id}', [OrganizationController::class, 'detail'])->name('organization.detail');
 
         Route::get('location', [LocationController::class, 'index'])->name('location.index');
 
