@@ -43,7 +43,7 @@ class ConditionController extends Controller
         // Check if the record exists
         if (!$query) {
             // Handle the case where the encounter was not found
-            return redirect()->route('condition.index')->with('error', 'Encounter not found.');
+            return redirect()->route('condition.index')->with('error', 'Data not found.');
         }
 
         // Return Inertia view with the encounter data
