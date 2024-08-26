@@ -7,16 +7,16 @@ export default function Detail({ auth, detail }) {
     const detailData = [
         { uraian: 'ID', value: detail.id },
         { uraian: 'IDENTIFIER', value: JSON.stringify(detail.identifier) },
-        { uraian: 'STATUS', value: detail.status },
-        { uraian: 'CLASS', value: JSON.stringify(detail.class) },
+        { uraian: 'CLINICAL STATUS', value: detail.clinicalStatus },
+        { uraian: 'VERIFICATION STATUS', value: JSON.stringify(detail.verificationStatus) },
+        { uraian: 'CATEGORY', value: JSON.stringify(detail.category) },
+        { uraian: 'SEVERITY', value: JSON.stringify(detail.severity) },
+        { uraian: 'CODE', value: JSON.stringify(detail.code) },
+        { uraian: 'BODY SITE', value: JSON.stringify(detail.bodySite) },
         { uraian: 'SUBJECT', value: JSON.stringify(detail.subject) },
-        { uraian: 'PARTICIPANT', value: JSON.stringify(detail.participant) },
-        { uraian: 'PERIOD', value: JSON.stringify(detail.period) },
-        { uraian: 'LOCATION', value: JSON.stringify(detail.location) },
-        { uraian: 'DIAGNOSIS', value: JSON.stringify(detail.diagnosis) },
-        { uraian: 'STATUS HISTORY', value: JSON.stringify(detail.statusHistory) },
-        { uraian: 'SERVICE PROVIDER', value: JSON.stringify(detail.serviceProvider) },
+        { uraian: 'ENCOUNTER', value: JSON.stringify(detail.encounter) },
         { uraian: 'REF ID', value: detail.refId },
+        { uraian: 'NOPEN', value: detail.nopen },
         { uraian: 'SEND DATE', value: detail.sendDate },
         { uraian: 'SEND', value: detail.send },
     ];
@@ -31,7 +31,7 @@ export default function Detail({ auth, detail }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-xl pb-2">
-                                    DATA DETAIL ENCOUNTER
+                                    DATA DETAIL CONDITION
                                 </h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
