@@ -179,6 +179,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pendaftaran/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+        Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
 
