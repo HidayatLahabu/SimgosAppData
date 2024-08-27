@@ -56,10 +56,10 @@ class PendaftaranController extends Controller
             ->select([
                 'pendaftaran.NOMOR as NOMOR',
                 'pendaftaran.NORM as NORM',
-                'pasien.NAMA as NAMA',
+                'pasien.NAMA as NAMA_PASIEN',
                 'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
                 'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
-                'kartu_asuransi_pasien.NOMOR as ASURANSI',
+                'kartu_asuransi_pasien.NOMOR as NOMOR_ASURANSI',
                 'agama.DESKRIPSI as AGAMA',
                 'kelamin.DESKRIPSI as JENIS_KELAMIN',
                 'pendidikan.DESKRIPSI as PENDIDIKAN',
@@ -72,7 +72,7 @@ class PendaftaranController extends Controller
                 'tujuan_pasien.STATUS as STATUS_PASIEN',
                 'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
                 'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
-                'ppk.NAMA as NAMA_FASKES'
+                'ppk.NAMA as FASKES_PERUJUK'
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
