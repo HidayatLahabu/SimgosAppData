@@ -43,6 +43,7 @@ use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Layanan\LaboratoriumController;
 use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
+use App\Http\Controllers\Layanan\TindakanMedisController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
 use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\CompositionController;
