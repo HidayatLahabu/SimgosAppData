@@ -49,7 +49,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={5} className="px-3 py-2">
+                                            <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.name || ''}
@@ -88,7 +88,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="5" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
