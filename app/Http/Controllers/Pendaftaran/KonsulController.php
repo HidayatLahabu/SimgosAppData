@@ -50,4 +50,42 @@ class KonsulController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
+            ->select([
+                'konsul.NOMOR as NOMOR',
+                'konsul.KUNJUNGAN as KUNJUNGAN',
+                'konsul.TANGGAL as TANGGAL',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA',
+                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
+                'konsul.ALASAN as ALASAN',
+                'konsul.PERMINTAAN_TINDAKAN as PERMINTAAN_TINDAKAN',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                'konsul.STATUS as STATUS_KONSUL'
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'konsul.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'konsul.TUJUAN')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'konsul.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->where('konsul.NOMOR', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('konsul.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Pendaftaran/Konsul/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }

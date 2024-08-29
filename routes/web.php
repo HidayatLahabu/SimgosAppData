@@ -183,6 +183,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
+        Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');
 
         Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
 
