@@ -49,3 +49,6 @@ Untuk menarik pembaruan terbaru:
 Tip Pro: Fork repositori ini untuk tetap terbarui dengan perkembangan dan peningkatan terbaru secara real-time.
 
 Catatan: NIK dan Nomor Identitas lainnya di frontend dimanipulasi saat ditampilkan di tabel.
+
+Update :
+- 08/29/2024 -> Menambahkan menu konsul detail
