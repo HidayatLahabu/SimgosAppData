@@ -1,51 +1,51 @@
-SimgosAppData is an extension module designed to complement the Simgos Kemenkes application. It integrates seamlessly with the existing simgos database for data management while maintaining a separate usersimgos database dedicated to user information.
+SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini terintegrasi dengan mulus dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah usersimgos didedikasikan untuk informasi pengguna.
 
-Deployment Overview:
+Ikhtisar Deployment:
 
-    SimgoAppData has only tested in Linux OS
+    SimgosAppData hanya diuji di OS Linux
     Server: Ubuntu 22.04
     Database: MySQL
-    Multiple Database Setup: Configured through the .env file
+    Setup Database Multiple: Dikendalikan melalui file .env
 
-Deployment Instructions
+Instruksi Deployment:
 
-    Navigate to the deployment directory:
+    1. Navigasi ke Direktori Deployment:
         Linux: /var/www/html/SimgoAppData
-        
-    Environment Setup:
-        Copy .env.example to .env.
-        Customize the .env file according to the provided instructions.
 
-    Install Dependencies:
-        Run composer install to install PHP dependencies.
-        Run npm install to install Node.js dependencies.
+    2. Setup Lingkungan:
+        Salin file .env.example menjadi .env.
+        Sesuaikan file .env sesuai dengan petunjuk yang diberikan.
 
-    Generate Application Key:
-        Run php artisan key:generate.
+    3. Install Dependencies:
+        Jalankan composer install untuk menginstal dependensi PHP.
+        Jalankan npm install untuk menginstal dependensi Node.js.
 
-    Build Frontend Assets:
-        Run npm run build to compile assets for production. This step eliminates the need to run npm run dev on the server.
+    4. Generate Kunci Aplikasi:
+        Jalankan php artisan key:generate.
 
-Database Setup
+    5. Bangun Aset Frontend:
+        Jalankan npm run build untuk mengompilasi aset untuk produksi. Langkah ini menghilangkan kebutuhan untuk menjalankan npm run dev di server.
 
-In the database folder, you'll find usersimgos.sql, which contains the structure for the usersimgos database. To set it up:
+Setup Database:
 
-    Create the usersimgos database on your MySQL server.
-    Import the usersimgos.sql file using one of the following methods:
-        Terminal: Run mysql -u [username] -p usersimgos < usersimgos.sql.
-        GUI Tools: Use DBeaver, HeidiSQL, or a similar application.
+Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur untuk database usersimgos. Untuk menyiapkannya:
 
-Customization
+    6. Buat database usersimgos di server MySQL Anda.
+    Impor file usersimgos.sql menggunakan salah satu metode berikut:
+        Terminal: Jalankan mysql -u [username] -p usersimgos < usersimgos.sql.
+        Alat GUI: Gunakan DBeaver, HeidiSQL, atau aplikasi serupa.
 
-To change the hospital name, update the HOSPITAL_NAME value in the .env file.
-Updating the Application
+Kustomisasi:
 
-To pull the latest updates:
+    7. Untuk mengubah nama rumah sakit, perbarui nilai HOSPITAL_NAME dalam file .env.
 
-    Linux: Navigate to /var/www/html/SimgosAppData and run git pull origin master in the terminal.
-    Windows: If deployed on Windows, re-clone the repository and repeat steps 2 to 7 above.
+Memperbarui Aplikasi:
 
-Pro Tip: Fork this repository to stay up-to-date with the latest developments and enhancements in real time.
+Untuk menarik pembaruan terbaru:
 
-Notes:
-NIK and other Identity Number in frontend has been manipulate when display in table
+    Linux: Navigasi ke /var/www/html/SimgosAppData dan jalankan git pull origin master di terminal.
+    Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 7 di atas.
+
+Tip Pro: Fork repositori ini untuk tetap terbarui dengan perkembangan dan peningkatan terbaru secara real-time.
+
+Catatan: NIK dan Nomor Identitas lainnya di frontend dimanipulasi saat ditampilkan di tabel.
