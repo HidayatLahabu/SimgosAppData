@@ -43,7 +43,17 @@ export default function DashboardCards({ items = [] }) {
                                         </div>
                                         <div className="text-right">
                                             <p>Memiliki ID: {item.MEMILIKI_ID}</p>
-                                            <p>Tidak Memiliki ID: {item.TDK_MEMILIKI_ID}</p>
+                                            <p>Tidak Memiliki ID: {item.TIDAK_MEMILIKI_ID}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-between mt-2">
+                                        <div className="text-left">
+                                            <p className="font-bold">Persentase: </p>
+                                            <p className="font-bold">{parseFloat(item.PERSEN).toFixed(2)} %</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p>Tanggal Sinkronisasi</p>
+                                            <p>{item.LAST_UPDATE}</p>
                                         </div>
                                     </div>
                                 </div>
