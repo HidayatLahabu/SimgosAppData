@@ -26,10 +26,12 @@ class DokterController extends Controller
             )
             ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
             ->leftJoin('aplikasi.pengguna as pengguna', 'dokter.NIP', '=', 'pengguna.NIP')
-            ->leftJoin('master.referensi as referensi', 'pegawai.SMF', '=', 'referensi.ID')
+            ->leftJoin('master.referensi as referensi', function ($join) {
+                $join->on('referensi.ID', '=', 'pegawai.SMF')
+                    ->where('referensi.JENIS', '=', 26);
+            })
             ->where('dokter.STATUS', 1)
             ->whereNotNull('pegawai.NAMA')
-            ->where('referensi.JENIS', 26)
             ->orderBy('pegawai.NAMA');
 
         // Add search filter if provided
