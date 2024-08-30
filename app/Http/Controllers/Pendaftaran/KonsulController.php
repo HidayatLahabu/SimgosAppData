@@ -57,8 +57,9 @@ class KonsulController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
             ->select([
                 'konsul.NOMOR as NOMOR',
-                'konsul.KUNJUNGAN as KUNJUNGAN',
                 'konsul.TANGGAL as TANGGAL',
+                'konsul.KUNJUNGAN as KUNJUNGAN',
+                'pendaftaran.NOMOR as PENDAFTARAN',
                 'pasien.NORM as NORM',
                 'pasien.NAMA as NAMA',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',

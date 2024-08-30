@@ -60,16 +60,25 @@ class MutasiController extends Controller
                 'mutasi.TANGGAL as TANGGAL',
                 'pasien.NORM as NORM',
                 'pasien.NAMA as NAMA',
-                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'mutasi.RESERVASI as RESERVASI',
-                'pengguna.NAMA as OLEH',
-                'mutasi.STATUS as STATUS_MUTASI'
+                'mutasi.STATUS as STATUS_MUTASI',
+                'mutasi_oleh.NAMA as MUTASI_OLEH',
+                'mutasi.STATUS as STATUS_MUTASI',
+                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
+                'ruang_kamar.KAMAR as KAMAR_TUJUAN',
+                'ruang_kamar_tidur.TEMPAT_TIDUR as TEMPAT_TIDUR',
+                'reservasi_oleh.NAMA as RESERVASI_OLEH',
+                'reservasi.STATUS as STATUS_RESERVASI'
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('pendaftaran.reservasi as reservasi', 'reservasi.NOMOR', '=', 'mutasi.RESERVASI')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'mutasi.TUJUAN')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'mutasi.OLEH')
+            ->leftJoin('master.ruang_kamar_tidur as ruang_kamar_tidur', 'ruang_kamar_tidur.ID', '=', 'reservasi.RUANG_KAMAR_TIDUR')
+            ->leftJoin('master.ruang_kamar as ruang_kamar', 'ruang_kamar.ID', '=', 'ruang_kamar_tidur.RUANG_KAMAR')
+            ->leftJoin('aplikasi.pengguna as mutasi_oleh', 'mutasi_oleh.ID', '=', 'mutasi.OLEH')
+            ->leftJoin('aplikasi.pengguna as reservasi_oleh', 'reservasi_oleh.ID', '=', 'reservasi.OLEH')
             ->where('mutasi.NOMOR', $id)
             ->distinct()
             ->first();
