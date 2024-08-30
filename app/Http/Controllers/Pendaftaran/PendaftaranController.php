@@ -52,7 +52,8 @@ class PendaftaranController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+        $query = DB::connection('mysql5')
+            ->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
                 'pendaftaran.NOMOR as NOMOR',
                 'pendaftaran.NORM as NORM',
@@ -77,13 +78,24 @@ class PendaftaranController extends Controller
                 'penjamin.NOMOR as NOMOR_PENJAMIN',
                 'jenis_peserta_penjamin.DESKRIPSI as JENIS_PESERTA_PENJAMIN',
                 'penjamin.NO_SURAT as NOMOR_SURAT_PENJAMIN',
-                'dpjp.nama as DPJP_PENJAMIN'
+                'dpjp.nama as DPJP_PENJAMIN',
+                'kecelakaan.NOMOR as KECELAKAAN_NOMOR',
+                'kecelakaan_jenis.DESKRIPSI as JENIS_KECELAKAAN'
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
-            ->leftJoin('master.referensi as kelamin', 'pasien.JENIS_KELAMIN', '=', 'kelamin.ID')
-            ->leftJoin('master.referensi as agama', 'agama.ID', '=', 'pasien.AGAMA')
-            ->leftJoin('master.referensi as pendidikan', 'pendidikan.ID', '=', 'pasien.PENDIDIKAN')
+            ->leftJoin('master.referensi as kelamin', function ($join) {
+                $join->on('pasien.JENIS_KELAMIN', '=', 'kelamin.ID')
+                    ->where('kelamin.JENIS', '=', 2);
+            })
+            ->leftJoin('master.referensi as agama', function ($join) {
+                $join->on('agama.ID', '=', 'pasien.AGAMA')
+                    ->where('agama.JENIS', '=', 1);
+            })
+            ->leftJoin('master.referensi as pendidikan', function ($join) {
+                $join->on('pendidikan.ID', '=', 'pasien.PENDIDIKAN')
+                    ->where('pendidikan.JENIS', '=', 3);
+            })
             ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
             ->leftJoin('pendaftaran.penanggung_jawab_pasien as penanggung_jawab_pasien', 'penanggung_jawab_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
@@ -98,10 +110,12 @@ class PendaftaranController extends Controller
             ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('master.jenis_peserta_penjamin as jenis_peserta_penjamin', 'jenis_peserta_penjamin.ID', '=', 'penjamin.JENIS_PESERTA')
             ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'penjamin.DPJP')
+            ->leftJoin('pendaftaran.kecelakaan as kecelakaan', 'kecelakaan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.referensi as kecelakaan_jenis', function ($join) {
+                $join->on('kecelakaan_jenis.ID', '=', 'kecelakaan.JENIS')
+                    ->where('kecelakaan_jenis.JENIS', '=', 212);
+            })
             ->where('pendaftaran.NOMOR', $id)
-            ->where('agama.JENIS', 1)
-            ->where('kelamin.JENIS', 2)
-            ->where('pendidikan.JENIS', 3)
             ->distinct()
             ->first();
 
