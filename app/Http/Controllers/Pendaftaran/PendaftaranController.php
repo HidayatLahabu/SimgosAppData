@@ -80,7 +80,10 @@ class PendaftaranController extends Controller
                 'penjamin.NO_SURAT as NOMOR_SURAT_PENJAMIN',
                 'dpjp.nama as DPJP_PENJAMIN',
                 'kecelakaan.NOMOR as KECELAKAAN_NOMOR',
-                'kecelakaan_jenis.DESKRIPSI as JENIS_KECELAKAAN'
+                'kecelakaan_jenis.DESKRIPSI as JENIS_KECELAKAAN',
+                'kecelakaan.NO_LP as LAPORAN_POLISI',
+                'kecelakaan.LOKASI as LOKASI_KECELAKAAN',
+                'kecelakaan.TANGGAL_KEJADIAN as TANGGAL_KEJADIAN',
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
