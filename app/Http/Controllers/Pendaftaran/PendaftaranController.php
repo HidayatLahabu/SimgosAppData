@@ -69,7 +69,7 @@ class PendaftaranController extends Controller
                 'penanggung_jawab_pasien.NAMA as PENANGGUNG_JAWAB_PASIEN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
-                'tujuan_pasien.STATUS as STATUS_PASIEN',
+                'pendaftaran.STATUS as STATUS_PASIEN',
                 'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
                 'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
                 'ppk.NAMA as FASKES_PERUJUK',
