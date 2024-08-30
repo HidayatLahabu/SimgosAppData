@@ -60,13 +60,15 @@ class MutasiController extends Controller
                 'mutasi.TANGGAL as TANGGAL',
                 'pasien.NORM as NORM',
                 'pasien.NAMA as NAMA',
-                'mutasi.RESERVASI as RESERVASI',
                 'mutasi.STATUS as STATUS_MUTASI',
                 'mutasi_oleh.NAMA as MUTASI_OLEH',
                 'mutasi.STATUS as STATUS_MUTASI',
+                'mutasi.RESERVASI as RESERVASI',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'ruang_kamar.KAMAR as KAMAR_TUJUAN',
                 'ruang_kamar_tidur.TEMPAT_TIDUR as TEMPAT_TIDUR',
+                'reservasi.ATAS_NAMA as ATAS_NAMA',
+                'reservasi.KONTAK_INFO as NOMOR_KONTAK',
                 'reservasi_oleh.NAMA as RESERVASI_OLEH',
                 'reservasi.STATUS as STATUS_RESERVASI'
             ])
