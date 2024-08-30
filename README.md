@@ -50,5 +50,5 @@ Tip Pro: Fork repositori ini untuk tetap terbarui dengan perkembangan dan pening
 
 Catatan: 
 - NIK dan Nomor Identitas lainnya di frontend dimanipulasi saat ditampilkan di tabel.
-- Update terbaru bisa di baca di halaman Wiki
+- Update terbaru bisa di baca di halaman release
 
