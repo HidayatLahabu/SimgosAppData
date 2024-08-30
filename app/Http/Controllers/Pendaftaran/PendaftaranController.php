@@ -72,7 +72,8 @@ class PendaftaranController extends Controller
                 'tujuan_pasien.STATUS as STATUS_PASIEN',
                 'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
                 'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
-                'ppk.NAMA as FASKES_PERUJUK'
+                'ppk.NAMA as FASKES_PERUJUK',
+                'pengantar_pasien.NAMA as PENGANTAR_PASIEN'
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
@@ -89,6 +90,7 @@ class PendaftaranController extends Controller
             ->leftJoin('master.mrconso as mrconso', 'mrconso.CODE', '=', 'diagnosa_masuk.ICD')
             ->leftJoin('pendaftaran.surat_rujukan_pasien as surat_rujukan_pasien', 'surat_rujukan_pasien.ID', '=', 'pendaftaran.RUJUKAN')
             ->leftJoin('master.ppk as ppk', 'ppk.ID', '=', 'surat_rujukan_pasien.PPK')
+            ->leftJoin('pendaftaran.pengantar_pasien as pengantar_pasien', 'pengantar_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
             ->where('pendaftaran.NOMOR', $id)
             ->where('agama.JENIS', 1)
             ->where('kelamin.JENIS', 2)
