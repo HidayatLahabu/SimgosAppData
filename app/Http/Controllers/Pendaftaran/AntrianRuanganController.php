@@ -21,7 +21,8 @@ class AntrianRuanganController extends Controller
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as nama',
                 'ruangan.DESKRIPSI as ruangan',
-                'antrian.NOMOR as urut'
+                'antrian.NOMOR as urut',
+                'antrian.STATUS as status'
             )
             ->leftJoin('pendaftaran.pendaftaran AS pendaftaran', 'pendaftaran.NOMOR', '=', 'antrian.REF')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
