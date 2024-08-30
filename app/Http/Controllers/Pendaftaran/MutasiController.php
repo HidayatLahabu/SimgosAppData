@@ -49,4 +49,40 @@ class MutasiController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
+            ->select([
+                'mutasi.NOMOR as NOMOR',
+                'mutasi.KUNJUNGAN as KUNJUNGAN',
+                'mutasi.TANGGAL as TANGGAL',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA',
+                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
+                'mutasi.RESERVASI as RESERVASI',
+                'pengguna.NAMA as OLEH',
+                'mutasi.STATUS as STATUS_MUTASI'
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'mutasi.TUJUAN')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'mutasi.OLEH')
+            ->where('mutasi.NOMOR', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('konsul.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Pendaftaran/Konsul/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
