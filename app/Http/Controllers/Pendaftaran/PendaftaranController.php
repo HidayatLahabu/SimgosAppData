@@ -73,7 +73,11 @@ class PendaftaranController extends Controller
                 'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
                 'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
                 'ppk.NAMA as FASKES_PERUJUK',
-                'pengantar_pasien.NAMA as PENGANTAR_PASIEN'
+                'pengantar_pasien.NAMA as PENGANTAR_PASIEN',
+                'penjamin.NOMOR as NOMOR_PENJAMIN',
+                'jenis_peserta_penjamin.DESKRIPSI as JENIS_PESERTA_PENJAMIN',
+                'penjamin.NO_SURAT as NOMOR_SURAT_PENJAMIN',
+                'dpjp.nama as DPJP_PENJAMIN'
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
@@ -91,6 +95,9 @@ class PendaftaranController extends Controller
             ->leftJoin('pendaftaran.surat_rujukan_pasien as surat_rujukan_pasien', 'surat_rujukan_pasien.ID', '=', 'pendaftaran.RUJUKAN')
             ->leftJoin('master.ppk as ppk', 'ppk.ID', '=', 'surat_rujukan_pasien.PPK')
             ->leftJoin('pendaftaran.pengantar_pasien as pengantar_pasien', 'pengantar_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.jenis_peserta_penjamin as jenis_peserta_penjamin', 'jenis_peserta_penjamin.ID', '=', 'penjamin.JENIS_PESERTA')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'penjamin.DPJP')
             ->where('pendaftaran.NOMOR', $id)
             ->where('agama.JENIS', 1)
             ->where('kelamin.JENIS', 2)
