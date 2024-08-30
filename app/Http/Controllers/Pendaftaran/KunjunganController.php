@@ -67,7 +67,11 @@ class KunjunganController extends Controller
                 'penerima_kunjungan.NAMA as DITERIMA_OLEH',
                 'kunjungan.STATUS as STATUS_KUNJUNGAN',
                 'final_kunjungan.NAMA as FINAL_HASIL_OLEH',
-                'kunjungan.FINAL_HASIL_TANGGAL as FINAL_HASIL_TANGGAL'
+                'kunjungan.FINAL_HASIL_TANGGAL as FINAL_HASIL_TANGGAL',
+                'perubahan_tanggal_kunjungan.TANGGAL_LAMA as TANGGAL_KUNJUNGAN_LAMA',
+                'perubahan_tanggal_kunjungan.TANGGAL_BARU as TANGGAL_KUNJUNGAN_BARU',
+                'perubahan_oleh.NAMA as PERUBAHAN_KUNJUNGAN_OLEH',
+                'perubahan_tanggal_kunjungan.STATUS as STATUS_PERUBAHAN_KUNJUNGAN'
             ])
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
@@ -79,6 +83,8 @@ class KunjunganController extends Controller
             ->leftJoin('master.diagnosa_masuk as diagnosa_masuk', 'diagnosa_masuk.ID', '=', 'pendaftaran.DIAGNOSA_MASUK')
             ->leftJoin('aplikasi.pengguna as penerima_kunjungan', 'penerima_kunjungan.ID', '=', 'kunjungan.DITERIMA_OLEH')
             ->leftJoin('aplikasi.pengguna as final_kunjungan', 'final_kunjungan.ID', '=', 'kunjungan.FINAL_HASIL_OLEH')
+            ->leftJoin('pendaftaran.perubahan_tanggal_kunjungan AS perubahan_tanggal_kunjungan', 'perubahan_tanggal_kunjungan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('aplikasi.pengguna AS perubahan_oleh', 'perubahan_oleh.ID', '=', 'perubahan_tanggal_kunjungan.OLEH')
             ->where('kunjungan.NOMOR', $id)
             ->distinct()
             ->first();
