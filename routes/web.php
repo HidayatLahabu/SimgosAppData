@@ -188,9 +188,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
         Route::get('mutasi/detail/{id}', [MutasiController::class, 'detail'])->name('mutasi.detail');
 
-        Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
-        Route::get('reservasi/detail/{id}', [ReservasiController::class, 'detail'])->name('reservasi.detail');
-
         Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
         Route::get('antrian/detail/{id}', [AntrianRuanganController::class, 'detail'])->name('antrian.detail');
     });

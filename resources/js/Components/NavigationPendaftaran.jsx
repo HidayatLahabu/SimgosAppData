@@ -75,13 +75,6 @@ export default function NavigationPendaftaran() {
                         Mutasi
                     </NavLink>
                     <NavLink
-                        href={route('reservasi.index')}
-                        active={route().current('reservasi.index')}
-                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
-                    >
-                        Reservasi
-                    </NavLink>
-                    <NavLink
                         href={route('antrian.index')}
                         active={route().current('antrian.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
