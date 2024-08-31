@@ -86,8 +86,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.noKartu ? shuffleNumber(dataTable.noKartu) : ''}</td>
-                                                    <td className="px-3 py-3">{dataTable.nik ? shuffleNumber(dataTable.nik) : ''}</td>
+                                                    <td className="px-3 py-3">{dataTable.noKartu}</td>
+                                                    <td className="px-3 py-3">{dataTable.nik}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                     <td className="px-3 py-3">{dataTable.nmJenisPeserta}</td>
