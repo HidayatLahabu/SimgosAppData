@@ -196,6 +196,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('bpjs')->namespace('App\Http\Controllers\Bpjs')->group(function () {
         Route::get('pesertaBpjs', [PesertaBpjController::class, 'index'])->name('pesertaBpjs.index');
+        Route::get('pesertaBpjs/detail/{id}', [PesertaBpjController::class, 'detail'])->name('pesertaBpjs.detail');
 
         Route::get('kunjunganBpjs', [KunjunganBpjsController::class, 'index'])->name('kunjunganBpjs.index');
 
