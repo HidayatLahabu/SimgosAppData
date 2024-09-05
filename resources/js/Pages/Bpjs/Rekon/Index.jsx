@@ -4,6 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatDate } from '@/utils/formatDate';
+import ButtonDetail from "@/Components/ButtonDetail";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -62,7 +63,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -81,18 +82,24 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">TUJUAN</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.noSurat}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.noSurat}</td>
-                                                    <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
-                                                    <td className="px-3 py-3">{dataTable.noSep}</td>
-                                                    <td className="px-3 py-3">POLI {dataTable.poliTujuan}</td>
-                                                    <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
+                                            dataTable.data.map((data, index) => (
+                                                <tr key={`${data.noSurat}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{data.noSurat}</td>
+                                                    <td className="px-3 py-3">{formatDate(data.tanggal)}</td>
+                                                    <td className="px-3 py-3">{data.noSep}</td>
+                                                    <td className="px-3 py-3">POLI {data.poliTujuan}</td>
+                                                    <td className="px-3 py-3">{data.norm}</td>
+                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
+                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                        <ButtonDetail
+                                                            href={route("rekonBpjs.detail", { id: data.noSurat })}
+                                                        />
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (

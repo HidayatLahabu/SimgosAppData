@@ -205,6 +205,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pengajuanSep/detail/{id}', [PengajuanSepController::class, 'detail'])->name('pengajuanSep.detail');
 
         Route::get('rekonBpjs', [RencanaKontrolController::class, 'index'])->name('rekonBpjs.index');
+        Route::get('rekonBpjs/detail/{id}', [RencanaKontrolController::class, 'detail'])->name('rekonBpjs.detail');
 
         Route::get('monitoringRekon', [MonitoringRekonController::class, 'index'])->name('monitoringRekon.index');
 
