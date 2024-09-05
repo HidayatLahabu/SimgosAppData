@@ -46,4 +46,39 @@ class PengajuanSepController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql6')->table('bpjs.pengajuan as pengajuan')
+            ->select(
+                'pengajuan.noKartu',
+                'peserta.norm as norm',
+                'peserta.nama as nama',
+                'pengajuan.tglSep',
+                'pengajuan.jnsPelayanan',
+                'pengajuan.jnsPengajuan',
+                'pengajuan.keterangan',
+                'pengajuan.user',
+                'pengajuan.tgl',
+                'pengajuan.tglAprove',
+                'pengajuan.userAprove',
+                'pengajuan.status',
+            )
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu')
+            ->where('pengajuan.tgl', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('pengajuanSep.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Bpjs/Pengajuan/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
