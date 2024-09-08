@@ -5,7 +5,7 @@ Ikhtisar Deployment:
     SimgosAppData hanya diuji di OS Linux
     Server: Ubuntu 22.04
     Database: MySQL
-    Setup Database Multiple: Dikendalikan melalui file .env
+    Setup Database Multiple: diatur pada file .env
 
 Instruksi Deployment:
 
