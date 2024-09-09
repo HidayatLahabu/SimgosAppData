@@ -34,4 +34,23 @@ class MonitoringRekonController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = BpjsMonitorRekonModel::where('noSuratKontrol', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('monitoringRekon.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Bpjs/Monitoring/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }

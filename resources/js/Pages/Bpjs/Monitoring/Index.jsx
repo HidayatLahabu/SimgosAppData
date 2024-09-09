@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import ButtonDetail from "@/Components/ButtonDetail";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -61,7 +62,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -80,23 +81,30 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA DOKTER</th>
                                             <th className="px-3 py-2">JENIS KONTROL</th>
                                             <th className="px-3 py-2">NO SEP</th>
+                                            <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.noSuratKontrol}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.noSuratKontrol}</td>
-                                                    <td className="px-3 py-3">{dataTable.tglTerbitKontrol}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.namaDokter}</td>
-                                                    <td className="px-3 py-3">{dataTable.namaJnsKontrol}</td>
-                                                    <td className="px-3 py-3">{dataTable.noSepAsalKontrol}</td>
+                                            dataTable.data.map((data, index) => (
+                                                <tr key={`${data.noSuratKontrol}-${index}`}
+                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{data.noSuratKontrol}</td>
+                                                    <td className="px-3 py-3">{data.tglTerbitKontrol}</td>
+                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
+                                                    <td className="px-3 py-3 uppercase">{data.namaDokter}</td>
+                                                    <td className="px-3 py-3">{data.namaJnsKontrol}</td>
+                                                    <td className="px-3 py-3">{data.noSepAsalKontrol}</td>
+                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                        <ButtonDetail
+                                                            href={route("monitoringRekon.detail", { id: data.noSuratKontrol })}
+                                                        />
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
