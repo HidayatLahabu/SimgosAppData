@@ -45,4 +45,37 @@ class RujukanMasukController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql6')->table('bpjs.rujukan_masuk as rujukan')
+            ->select(
+                'rujukan.noKunjungan',
+                'rujukan.tglKunjungan',
+                'rujukan.noKartu',
+                'rujukan.provPerujuk',
+                'rujukan.diagnosa',
+                'rujukan.keluhan',
+                'rujukan.poliRujukan',
+                'rujukan.pelayanan',
+                'peserta.norm',
+                'peserta.nama',
+            )
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'rujukan.noKartu')
+            ->where('rujukan.noKunjungan', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('rujukanBpjs.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Bpjs/Rujukan/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
