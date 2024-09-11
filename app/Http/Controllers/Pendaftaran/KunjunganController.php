@@ -21,7 +21,8 @@ class KunjunganController extends Controller
                 'pasien.NORM as norm',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
-                'kunjungan.KELUAR as keluar'
+                'kunjungan.KELUAR as keluar',
+                'kunjungan.STATUS as status',
             )
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
