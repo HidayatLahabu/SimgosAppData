@@ -218,6 +218,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('layanan')->namespace('App\Http\Controllers\Layanan')->group(function () {
         Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
+        Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
 
