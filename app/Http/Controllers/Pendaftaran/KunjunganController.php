@@ -56,23 +56,27 @@ class KunjunganController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select([
                 'kunjungan.NOMOR as NOMOR',
-                'kunjungan.NOPEN as PENDAFTARAN',
+                'kunjungan.NOPEN as NO_PENDAFTARAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA',
+                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'ruang_kamar.KAMAR as KAMAR_TUJUAN',
                 'ruang_kamar_tidur.TEMPAT_TIDUR as TEMPAT_TIDUR',
                 'kunjungan.MASUK as TANGGAL_MASUK',
                 'kunjungan.KELUAR as TANGGAL_KELUAR',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
+                'kunjungan.REF as REF',
                 'penerima_kunjungan.NAMA as DITERIMA_OLEH',
-                'kunjungan.STATUS as STATUS_KUNJUNGAN',
+                'kunjungan.BARU as STATUS_KUNJUNGAN',
+                'kunjungan.TITIPAN as TITIPAN',
+                'kunjungan.TITIPAN_KELAS as TITIPAN_KELAS',
+                'kunjungan.STATUS as STATUS_AKTIFITAS_KUNJUNGAN',
                 'final_kunjungan.NAMA as FINAL_HASIL_OLEH',
                 'kunjungan.FINAL_HASIL_TANGGAL as FINAL_HASIL_TANGGAL',
                 'perubahan_tanggal_kunjungan.TANGGAL_LAMA as TANGGAL_KUNJUNGAN_LAMA',
                 'perubahan_tanggal_kunjungan.TANGGAL_BARU as TANGGAL_KUNJUNGAN_BARU',
                 'perubahan_oleh.NAMA as PERUBAHAN_KUNJUNGAN_OLEH',
-                'perubahan_tanggal_kunjungan.STATUS as STATUS_PERUBAHAN_KUNJUNGAN'
+                'perubahan_tanggal_kunjungan.STATUS as STATUS_PERUBAHAN_KUNJUNGAN',
             ])
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')

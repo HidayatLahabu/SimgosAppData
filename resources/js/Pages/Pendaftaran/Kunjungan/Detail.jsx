@@ -34,7 +34,19 @@ export default function Detail({ auth, detail }) {
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
+                                                <td className="px-3 py-3 break-words">
+                                                    {detailItem.uraian === "STATUS_KUNJUNGAN" ? (
+                                                        detailItem.value === 1 ? "Baru" :
+                                                            detailItem.value === 2 ? "Lama" :
+                                                                detailItem.value === 2 ? "Selesai" :
+                                                                    detailItem.value
+                                                    ) : detailItem.uraian === "STATUS_AKTIFITAS_KUNJUNGAN" ? (
+                                                        detailItem.value === 0 ? "Batal Kunjungan" :
+                                                            detailItem.value === 1 ? "Pasien Berada di ruangan ini / Sedang dilayani" :
+                                                                detailItem.value === 2 ? "Selesai" :
+                                                                    detailItem.value
+                                                    ) : detailItem.value}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

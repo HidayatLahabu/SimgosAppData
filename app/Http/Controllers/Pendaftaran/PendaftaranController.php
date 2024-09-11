@@ -84,6 +84,17 @@ class PendaftaranController extends Controller
                 'kecelakaan.NO_LP as LAPORAN_POLISI',
                 'kecelakaan.LOKASI as LOKASI_KECELAKAAN',
                 'kecelakaan.TANGGAL_KEJADIAN as TANGGAL_KEJADIAN',
+                'pendaftaran.PAKET as PAKET',
+                'pendaftaran.BERAT_BAYI as BERAT_BAYI',
+                'pendaftaran.PANJANG_BAYI as PANJANG_BAYI',
+                'pendaftaran.CITO as CITO',
+                'pendaftaran.RESIKO_JATUH as RESIKO_JATUH',
+                'pendaftaran.LOKASI_DITEMUKAN as LOKASI_DITEMUKAN',
+                'pendaftaran.TANGGAL_DITEMUKAN as TANGGAL_DITEMUKAN',
+                'pendaftaran.JAM_LAHIR as JAM_LAHIR',
+                'pendaftaran.CONSENT_SATUSEHAT as CONSENT_SATUSEHAT',
+                'pendaftaran.PAKET as PAKET',
+                'pendaftaran.STATUS as STATUS_PENDAFTARAN',
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
@@ -118,6 +129,7 @@ class PendaftaranController extends Controller
                 $join->on('kecelakaan_jenis.ID', '=', 'kecelakaan.JENIS')
                     ->where('kecelakaan_jenis.JENIS', '=', 212);
             })
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pendaftaran.OLEH')
             ->where('pendaftaran.NOMOR', $id)
             ->distinct()
             ->first();
