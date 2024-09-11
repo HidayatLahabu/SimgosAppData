@@ -20,12 +20,12 @@ class PendaftaranController extends Controller
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as nama',
                 'kip.ALAMAT as alamat',
-                'pendaftaran.TANGGAL as tanggal'
+                'pendaftaran.TANGGAL as tanggal',
+                'pendaftaran.STATUS as status',
             )
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
             ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
-            ->where('pendaftaran.STATUS', 1)
             ->where('pasien.STATUS', 1);
 
         // Add search filter if provided
