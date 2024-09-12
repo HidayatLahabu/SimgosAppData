@@ -21,7 +21,8 @@ class MutasiController extends Controller
                 'pasien.NORM as norm',
                 'ruanganTujuan.DESKRIPSI as tujuan',
                 'mutasi.TANGGAL as tanggal',
-                'mutasi.RESERVASI as reservasi'
+                'mutasi.RESERVASI as reservasi',
+                'mutasi.STATUS as status',
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
@@ -70,7 +71,7 @@ class MutasiController extends Controller
                 'reservasi.ATAS_NAMA as ATAS_NAMA',
                 'reservasi.KONTAK_INFO as NOMOR_KONTAK',
                 'reservasi_oleh.NAMA as RESERVASI_OLEH',
-                'reservasi.STATUS as STATUS_RESERVASI'
+                'reservasi.STATUS as STATUS_RESERVASI',
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')

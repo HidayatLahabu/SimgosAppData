@@ -21,7 +21,8 @@ class KonsulController extends Controller
                 'pasien.NORM as norm',
                 'ruanganAsal.DESKRIPSI as asal',
                 'ruanganTujuan.DESKRIPSI as tujuan',
-                'konsul.TANGGAL as tanggal'
+                'konsul.TANGGAL as tanggal',
+                'konsul.STATUS as status',
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'konsul.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')

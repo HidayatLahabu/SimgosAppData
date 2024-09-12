@@ -80,6 +80,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">ALAMAT</th>
                                             <th className="px-3 py-2">TANGGAL</th>
+                                            <th className="px-3 py-2">STATUS</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
@@ -92,6 +93,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3 data">{data.nama}</td>
                                                     <td className="px-3 py-3">{data.alamat}</td>
                                                     <td className="px-3 py-3">{data.tanggal}</td>
+                                                    <td className="px-3 py-3">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("pendaftaran.detail", { id: data.nomor })}

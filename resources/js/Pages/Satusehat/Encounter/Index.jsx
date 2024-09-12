@@ -50,10 +50,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.refId || ''}
-                                                    placeholder="Cari berdasarkan refId"
-                                                    onChange={e => onInputChange('refId', e)}
-                                                    onKeyPress={e => onKeyPress('refId', e)}
+                                                    defaultValue={queryParams.subject || ''}
+                                                    placeholder="Cari berdasarkan subject"
+                                                    onChange={e => onInputChange('subject', e)}
+                                                    onKeyPress={e => onKeyPress('subject', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -71,7 +71,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.refId}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${data.refId}-${index}`}
+                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{data.id}</td>
                                                     <td className="px-3 py-3">{data.subject}</td>
                                                     <td className="px-3 py-3">{data.period}</td>
