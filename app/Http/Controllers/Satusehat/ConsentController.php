@@ -34,4 +34,21 @@ class ConsentController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = SatusehatConsentModel::where('refId', $id)->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the data was not found
+            return redirect()->route('consent.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the data
+        return inertia("Satusehat/Consent/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }

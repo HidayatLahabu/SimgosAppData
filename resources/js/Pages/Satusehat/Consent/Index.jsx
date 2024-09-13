@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import ButtonDetail from "@/Components/ButtonDetail";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -48,13 +49,13 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={5} className="px-3 py-2">
+                                            <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.patient || ''}
-                                                    placeholder="Cari patient"
-                                                    onChange={e => onInputChange('patient', e)}
-                                                    onKeyPress={e => onKeyPress('patient', e)}
+                                                    placeholder="Cari body send"
+                                                    onChange={e => onInputChange('bodySend', e)}
+                                                    onKeyPress={e => onKeyPress('bodySend', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -66,22 +67,28 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">REF ID</th>
                                             <th className="px-3 py-2">SEND DATE</th>
+                                            <th className="px-3 py-2">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.id}</td>
-                                                    <td className="px-3 py-3">{dataTable.patient}</td>
-                                                    <td className="px-3 py-3">{dataTable.refId}</td>
-                                                    <td className="px-3 py-3">{dataTable.nopen}</td>
-                                                    <td className="px-3 py-3">{dataTable.sendDate}</td>
+                                            dataTable.data.map((data, index) => (
+                                                <tr key={`${data.refId}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{data.id}</td>
+                                                    <td className="px-3 py-3">{data.bodySend}</td>
+                                                    <td className="px-3 py-3">{data.norm}</td>
+                                                    <td className="px-3 py-3">{data.refId}</td>
+                                                    <td className="px-3 py-3">{data.sendDate}</td>
+                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                        <ButtonDetail
+                                                            href={route("consent.detail", { id: data.refId })}
+                                                        />
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="5" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
