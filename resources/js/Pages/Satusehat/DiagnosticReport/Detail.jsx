@@ -12,7 +12,7 @@ export default function Detail({ auth, detail }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Pendaftaran" />
+            <Head title="SatuSehat" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -20,8 +20,8 @@ export default function Detail({ auth, detail }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("pendaftaran.index")} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL PENDAFTARAN</h1>
+                                    <ButtonBack href={route("diagnosticReport.index")} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL DIAGNOSTIC REPORT</h1>
                                 </div>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
@@ -36,23 +36,10 @@ export default function Detail({ auth, detail }) {
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">
-                                                    {detailItem.uraian === "STATUS_PENDAFTARAN" ? (
-                                                        detailItem.value === 0 ? "Batal" :
-                                                            detailItem.value === 1 ? "Aktif" :
-                                                                detailItem.value === 2 ? "Selesai" :
-                                                                    detailItem.value
-                                                    ) : detailItem.uraian === "STATUS_PASIEN" ? (
-                                                        detailItem.value === 0 ? "Dibatalkan/Tidak Aktif" :
-                                                            detailItem.value === 1 ? "Aktif" :
-                                                                detailItem.value === 2 ? "Meninggal" :
-                                                                    detailItem.value
-                                                    ) : detailItem.value}
-                                                </td>
+                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
                                             </tr>
                                         ))}
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>
