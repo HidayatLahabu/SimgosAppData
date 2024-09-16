@@ -89,11 +89,11 @@ class MutasiController extends Controller
         // Check if the record exists
         if (!$query) {
             // Handle the case where the encounter was not found
-            return redirect()->route('konsul.index')->with('error', 'Data not found.');
+            return redirect()->route('mutasi.index')->with('error', 'Data not found.');
         }
 
         // Return Inertia view with the encounter data
-        return inertia("Pendaftaran/Konsul/Detail", [
+        return inertia("Pendaftaran/Mutasi/Detail", [
             'detail' => $query,
         ]);
     }
