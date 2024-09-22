@@ -2,10 +2,9 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import DetailHasil from './DetailHasil';
-import DetailCatatan from './DetailCatatan';
 import ButtonBack from '@/Components/ButtonBack';
 
-export default function Detail({ auth, detail, detailHasil, detailCatatan }) {
+export default function Detail({ auth, detail, detailHasil }) {
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
         uraian: key,
@@ -22,8 +21,8 @@ export default function Detail({ auth, detail, detailHasil, detailCatatan }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("layananLab.index")} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL LAYANAN LABORATORIUM</h1>
+                                    <ButtonBack href={route("layananRad.index")} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL LAYANAN RADIOLOGI</h1>
                                 </div>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
@@ -50,7 +49,6 @@ export default function Detail({ auth, detail, detailHasil, detailCatatan }) {
             </div>
 
             <DetailHasil detailHasil={detailHasil} />
-            <DetailCatatan detailCatatan={detailCatatan} />
         </AuthenticatedLayout>
     );
 }
