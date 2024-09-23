@@ -15,7 +15,7 @@ export default function DetailHasil({ detailHasil = {} }) {
                                 <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                     <tr>
                                         <th className="px-3 py-2">NO</th>
-                                        <th className="px-3 py-2">ORDER ID</th>
+                                        <th className="px-3 py-2">HASIL ID</th>
                                         <th className="px-3 py-2">TINDAKAN</th>
                                         <th className="px-3 py-2">TANGGAL</th>
                                         <th className="px-3 py-2">KLINIS</th>
@@ -32,7 +32,7 @@ export default function DetailHasil({ detailHasil = {} }) {
                                         detailHasil.map((hasil, index) => (
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.ORDER_ID}</td>
+                                                <td className="px-3 py-3 w-56">{hasil.HASIL_ID}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.TINDAKAN}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.TANGGAL}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.KLINIS}</td>
