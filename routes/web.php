@@ -221,6 +221,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
+        Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
+        Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
 
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
