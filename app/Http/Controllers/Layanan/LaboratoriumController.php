@@ -15,31 +15,38 @@ class LaboratoriumController extends Controller
 
         // Start building the query using the query builder
         $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
-            ->select(
-                'orderLab.NOMOR as nomor',
-                'orderLab.TANGGAL as tanggal',
-                'orderLab.KUNJUNGAN as kunjungan',
-                'pegawai.NAMA as dokter',
-                'pegawai.GELAR_DEPAN as gelarDepan',
-                'pegawai.GELAR_BELAKANG as gelarBelakang',
-                'pasien.NORM as norm',
-                'pasien.NAMA as nama',
-                'peserta.noKartu'
-            )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm');
+            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm')
+            ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
+            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.ID', '=', 'orderDetail.REF');
 
         // Add search filter if provided
         if ($searchSubject) {
             $query->whereRaw('LOWER(pasien.nama) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
+        // Group by 'nomor' and select the first occurrence for other fields
+        $query->selectRaw('
+            orderLab.NOMOR as nomor,
+            MIN(orderLab.TANGGAL) as tanggal,  -- or use MAX or AVG based on your requirement
+            MIN(orderLab.KUNJUNGAN) as kunjungan,
+            MIN(pegawai.NAMA) as dokter,
+            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+            MIN(pasien.NORM) as norm,
+            MIN(pasien.NAMA) as nama,
+            MIN(peserta.noKartu) as noKartu,
+            MIN(orderLab.STATUS) as statusKunjungan,
+            MIN(hasil.STATUS) as statusHasil
+        ')
+            ->groupBy('orderLab.NOMOR');
+
         // Paginate the results
-        $data = $query->orderByDesc('orderLab.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('tanggal')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -53,6 +60,7 @@ class LaboratoriumController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
 
     public function detail($id)
     {
@@ -96,30 +104,20 @@ class LaboratoriumController extends Controller
             ->where('order.NOMOR', $id)
             ->first();
 
-        // Fetch data hasil lab (lab test results)
         $queryHasil = DB::connection('mysql7')->table('layanan.order_detil_lab as orderDetail')
             ->select(
                 'orderDetail.ORDER_ID',
                 'tindakan.NAMA as TINDAKAN',
                 'parameter.PARAMETER as PARAMETER',
-                DB::raw('GROUP_CONCAT(hasilLab.HASIL ORDER BY hasilLab.PARAMETER_TINDAKAN SEPARATOR ", ") as HASIL'),
-                DB::raw('GROUP_CONCAT(hasilLab.NILAI_NORMAL ORDER BY hasilLab.PARAMETER_TINDAKAN SEPARATOR ", ") as NILAI_NORMAL'),
-                DB::raw('GROUP_CONCAT(hasilLab.SATUAN ORDER BY hasilLab.PARAMETER_TINDAKAN SEPARATOR ", ") as SATUAN'),
+                'hasilLab.HASIL',
+                'hasilLab.NILAI_NORMAL',
+                'hasilLab.SATUAN',
                 'hasilLab.STATUS'
             )
             ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'orderDetail.TINDAKAN')
-            ->leftJoin(DB::raw('(SELECT
-                                TINDAKAN_MEDIS,
-                                PARAMETER_TINDAKAN,
-                                STATUS,
-                                GROUP_CONCAT(HASIL ORDER BY PARAMETER_TINDAKAN SEPARATOR ", ") as HASIL,
-                                GROUP_CONCAT(NILAI_NORMAL ORDER BY PARAMETER_TINDAKAN SEPARATOR ", ") as NILAI_NORMAL,
-                                GROUP_CONCAT(SATUAN ORDER BY PARAMETER_TINDAKAN SEPARATOR ", ") as SATUAN
-                            FROM layanan.hasil_lab
-                            GROUP BY TINDAKAN_MEDIS, PARAMETER_TINDAKAN, STATUS) as hasilLab'), 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetail.REF')
+            ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetail.REF')
             ->leftJoin('master.parameter_tindakan_lab as parameter', 'parameter.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
             ->where('orderDetail.ORDER_ID', $id)
-            ->groupBy('orderDetail.ORDER_ID', 'tindakan.NAMA', 'parameter.PARAMETER', 'hasilLab.STATUS')
             ->get();
 
         // Fetch data catatan (main lab order details)

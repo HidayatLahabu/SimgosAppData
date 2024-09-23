@@ -62,7 +62,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={8} className="px-3 py-2">
+                                            <th colSpan={9} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -81,7 +81,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">JENIS PASIEN</th>
-                                            <th className="px-3 py-2">STATUS</th>
+                                            <th className="px-3 py-2">STATUS<br />KUNJUNGAN</th>
+                                            <th className="px-3 py-2">STATUS<br />HASIL</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
@@ -101,7 +102,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                             <span>Tanpa Asuransi/Umum</span>
                                                         )}
                                                     </td>
-                                                    <td className="px-3 py-3">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Ada Hasil' : data.statusHasil === 2 ? 'Belum Final Hasil' : 'Sudah Final Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananLab.detail", { id: data.nomor })}
@@ -111,7 +113,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="9" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
