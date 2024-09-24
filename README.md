@@ -3,9 +3,9 @@ SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Sim
 Ikhtisar Deployment:
 
     SimgosAppData hanya diuji di OS Linux
-    Server: Ubuntu 22.04
+    Server: Ubuntu 22.04 & Ubuntu 24.04
     Database: MySQL
-    Setup Database Multiple: diatur pada file .env
+    Setup Multiple Database: pada .env
 
 Instruksi Deployment:
 
