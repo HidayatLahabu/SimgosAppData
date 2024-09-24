@@ -61,7 +61,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -80,6 +80,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">PELAKSANA TINDAKAN</th>
                                             <th className="px-3 py-2">JENIS TINDAKAN</th>
+                                            <th className="px-3 py-2">STATUS HASIL</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -92,11 +93,12 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.pelaksana}</td>
                                                     <td className="px-3 py-3">{dataTable.jenisTindakan}</td>
+                                                    <td className="px-3 py-3">{dataTable.statusHasil === 1 ? 'Belum Ada Hasil' : dataTable.statusHasil === 2 ? 'Belum Final Hasil' : 'Sudah Final Hasil'}</td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

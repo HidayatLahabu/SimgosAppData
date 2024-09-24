@@ -22,7 +22,8 @@ class TindakanMedisController extends Controller
                 'pengguna.NAMA as pelaksana',
                 'pasien.NORM as norm',
                 'pasien.NAMA as nama',
-                'masterTindakan.NAMA as jenisTindakan'
+                'masterTindakan.NAMA as jenisTindakan',
+                'tindakan.STATUS as statusHasil'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakan.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
