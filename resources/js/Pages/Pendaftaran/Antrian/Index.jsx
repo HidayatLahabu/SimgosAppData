@@ -93,7 +93,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                     <td className="px-3 py-3">{dataTable.ruangan}</td>
                                                     <td className="px-3 py-3">{dataTable.urut}</td>
-                                                    <td className="px-3 py-3">{dataTable.status === 0 ? 'Batal' : dataTable.status === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3">{dataTable.status === 0 ? 'Batal' : dataTable.status === 1 ? 'Belum Diterima' : 'Diterima'}</td>
                                                 </tr>
                                             ))
                                         ) : (
