@@ -1,6 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import DashboardTable from './DashboardTable';
+import SatuSehatTable from './SatuSehatTable';
 
 export default function Dashboard({ auth, items }) {
     return (
@@ -10,7 +11,8 @@ export default function Dashboard({ auth, items }) {
             <Head title="Beranda" />
 
             <div className="py-5 flex flex-wrap w-full">
-                <DashboardTable items={items} />
+                {/* <DashboardTable items={items} /> */}
+                <SatuSehatTable items={items} />
             </div>
         </AuthenticatedLayout>
     );
