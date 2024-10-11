@@ -378,8 +378,8 @@ class ComposerStaticInitbdbfd16dfd9a37a3d7ee96cdfb7255f3
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -598,6 +598,7 @@ class ComposerStaticInitbdbfd16dfd9a37a3d7ee96cdfb7255f3
         'App\\Http\\Controllers\\Inventory\\PermintaanController' => __DIR__ . '/../..' . '/app/Http/Controllers/Inventory/PermintaanController.php',
         'App\\Http\\Controllers\\Inventory\\StockController' => __DIR__ . '/../..' . '/app/Http/Controllers/Inventory/StockController.php',
         'App\\Http\\Controllers\\Inventory\\TransaksiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Inventory/TransaksiController.php',
+        'App\\Http\\Controllers\\Laporan\\LaporanRl12Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Laporan/LaporanRl12Controller.php',
         'App\\Http\\Controllers\\Layanan\\LaboratoriumController' => __DIR__ . '/../..' . '/app/Http/Controllers/Layanan/LaboratoriumController.php',
         'App\\Http\\Controllers\\Layanan\\PulangController' => __DIR__ . '/../..' . '/app/Http/Controllers/Layanan/PulangController.php',
         'App\\Http\\Controllers\\Layanan\\RadiologiController' => __DIR__ . '/../..' . '/app/Http/Controllers/Layanan/RadiologiController.php',
@@ -605,6 +606,7 @@ class ComposerStaticInitbdbfd16dfd9a37a3d7ee96cdfb7255f3
         'App\\Http\\Controllers\\Layanan\\TindakanMedisController' => __DIR__ . '/../..' . '/app/Http/Controllers/Layanan/TindakanMedisController.php',
         'App\\Http\\Controllers\\Logs\\BridgeLogsController' => __DIR__ . '/../..' . '/app/Http/Controllers/Logs/BridgeLogsController.php',
         'App\\Http\\Controllers\\Logs\\PenggunaAksesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Logs/PenggunaAksesController.php',
+        'App\\Http\\Controllers\\Logs\\PenggunaLogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Logs/PenggunaLogController.php',
         'App\\Http\\Controllers\\Logs\\PenggunaRequestController' => __DIR__ . '/../..' . '/app/Http/Controllers/Logs/PenggunaRequestController.php',
         'App\\Http\\Controllers\\Master\\DokterController' => __DIR__ . '/../..' . '/app/Http/Controllers/Master/DokterController.php',
         'App\\Http\\Controllers\\Master\\PasienController' => __DIR__ . '/../..' . '/app/Http/Controllers/Master/PasienController.php',
