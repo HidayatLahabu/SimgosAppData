@@ -19,6 +19,7 @@ use App\Http\Controllers\Inventory\StockController;
 use App\Http\Controllers\Logs\BridgeLogsController;
 use App\Http\Controllers\Master\TindakanController;
 use App\Http\Controllers\Inventory\BarangController;
+use App\Http\Controllers\Logs\PenggunaLogController;
 use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
 use App\Http\Controllers\Bpjs\RujukanMasukController;
@@ -221,14 +222,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
-        Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
         Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
 
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
         Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
+        Route::get('layananPulang/detail/{id}', [PulangController::class, 'detail'])->name('layananPulang.detail');
 
         Route::get('layananTindakan', [TindakanMedisController::class, 'index'])->name('layananTindakan.index');
+        Route::get('layananTindakan/detail/{id}', [TindakanMedisController::class, 'detail'])->name('layananTindakan.detail');
     });
 });
 
@@ -239,6 +241,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('logsAkses', [PenggunaAksesController::class, 'index'])->name('logsAkses.index');
 
         Route::get('logsRequest', [PenggunaRequestController::class, 'index'])->name('logsRequest.index');
+
+        Route::get('logsPengguna', [PenggunaLogController::class, 'index'])->name('logsPengguna.index');
     });
 });
 

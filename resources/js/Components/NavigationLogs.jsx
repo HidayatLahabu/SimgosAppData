@@ -64,6 +64,13 @@ export default function NavigationLogs() {
                     >
                         Pengguna Request
                     </NavLink>
+                    <NavLink
+                        href={route('logsPengguna.index')}
+                        active={route().current('logsPengguna.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Pengguna Aplikasi
+                    </NavLink>
                 </div>
             )}
         </div>

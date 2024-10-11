@@ -25,6 +25,9 @@ class BridgeLogsController extends Controller
         // Add filter for today's date
         $query->whereDate('TGL_REQUEST', $today);
 
+        // Add limit to the query
+        $query->limit(100); // Limit the results to 100 records
+
         // Paginate the results
         $data = $query->paginate(10); // 10 items per page
 

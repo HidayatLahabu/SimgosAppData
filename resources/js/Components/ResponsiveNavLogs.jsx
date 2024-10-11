@@ -32,6 +32,7 @@ export default function ResponsiveNavLogs() {
                             <ResponsiveNavLink href={route('logsBridge.index')}>Bridge Logs</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('logsAkses.index')}>Pengguna Akses</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('logsRequest.index')}>Pengguna Request</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('logsPengguna.index')}>Pengguna Aplikasi</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>
