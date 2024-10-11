@@ -36,6 +36,9 @@ class PenggunaLogController extends Controller
         // Add filter for today's date
         $query->whereDate('penggunaLog.TANGGAL_AKSES', $today);
 
+        // Limit the query to 100 rows
+        $query->limit(100);
+
         // Paginate the results
         $data = $query->orderByDesc('penggunaLog.TANGGAL_AKSES')->paginate(10); // 10 items per page
 

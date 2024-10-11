@@ -37,6 +37,9 @@ class PenggunaAksesController extends Controller
         // Add filter for today's date
         $query->whereDate('akses.TANGGAL', $today);
 
+        // Limit the query to 100 rows
+        $query->limit(100);
+
         // Paginate the results
         $data = $query->orderByDesc('akses.TANGGAL')->paginate(10); // 10 items per page
 
