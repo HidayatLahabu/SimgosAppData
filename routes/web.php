@@ -34,6 +34,7 @@ use App\Http\Controllers\Satusehat\LocationController;
 use App\Http\Controllers\Satusehat\SpecimenController;
 use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
+use App\Http\Controllers\Laporan\LaporanRl12Controller;
 use App\Http\Controllers\Satusehat\ConditionController;
 use App\Http\Controllers\Satusehat\EncounterController;
 use App\Http\Controllers\Satusehat\ProcedureController;
