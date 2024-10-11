@@ -246,5 +246,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
+        Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
+    });
+});
+
 
 require __DIR__ . '/auth.php';

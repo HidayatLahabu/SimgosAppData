@@ -7,6 +7,7 @@ import ResponsiveNavLayanan from '@/Components/ResponsiveNavLayanan';
 import ResponsiveNavInventory from '@/Components/ResponsiveNavInventory';
 import ResponsiveNavLogs from '@/Components/ResponsiveNavLogs';
 import ResponsiveNavMaster from '@/Components/ResponsiveNavMaster';
+import ResponsiveNavLaporan from '@/Components/ResponsiveNavLaporan';
 
 export default function Navigation() {
     const { auth } = usePage().props;
@@ -21,6 +22,7 @@ export default function Navigation() {
                     <ResponsiveNavBpjs />
                     <ResponsiveNavLayanan />
                     <ResponsiveNavInventory />
+                    <ResponsiveNavLaporan />
                     <ResponsiveNavLogs />
                     <ResponsiveNavMaster />
                     <ResponsiveNavLink method="post" href={route('logout')} as="button">
