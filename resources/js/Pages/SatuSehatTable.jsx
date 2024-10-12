@@ -10,6 +10,11 @@ export default function SatuSehatTable({ items = [] }) {
         return <div>Error: Data not available</div>;
     }
 
+    // Sorting the items array by 'NAMA'
+    const sortedItems = [...items].sort((a, b) => {
+        return a.NAMA.localeCompare(b.NAMA);
+    });
+
     return (
         <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
@@ -28,7 +33,7 @@ export default function SatuSehatTable({ items = [] }) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.map((item, index) => (
+                                {sortedItems.map((item, index) => (
                                     <tr key={index}>
                                         <td className="border px-4 py-2">{item.NAMA}</td>
                                         <td className="border px-4 py-2 text-center">{item.TOTAL}</td>
