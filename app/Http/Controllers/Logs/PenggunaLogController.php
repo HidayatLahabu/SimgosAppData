@@ -14,7 +14,7 @@ class PenggunaLogController extends Controller
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
         // Get today's date
-        $today = now()->format('Y-m-d'); // 'Y-m-d' is the format for dates
+        $today = now()->setTimezone('Asia/Makassar')->format('Y-m-d');
 
         // Start building the query using the query builder
         $query = DB::connection('mysql9')->table('aplikasi.pengguna_log as penggunaLog')
