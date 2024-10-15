@@ -34,19 +34,6 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(name, e.target.value);
     };
 
-    // Function to shuffle the digits of a 16-digit NIK
-    const shuffleNumber = (number) => {
-        // Convert the NIK to an array of characters
-        const nikArray = number.split('');
-        // Shuffle the array
-        for (let i = nikArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
-        }
-        // Join the array back into a string
-        return nikArray.join('');
-    };
-
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -89,7 +76,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{data.id}</td>
                                                     <td className="px-3 py-3">{data.name}</td>
-                                                    <td className="px-3 py-3">{shuffleNumber(data.refId)}</td>
+                                                    <td className="px-3 py-3">{data.refId}</td>
                                                     <td className="px-3 py-3">{data.getDate}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail

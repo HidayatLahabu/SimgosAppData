@@ -47,11 +47,7 @@ export default function Detail({ auth, detail }) {
                                                 <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3 w-16">{index + 1}</td>
                                                     <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">
-                                                        {detailItem.uraian === 'refId'
-                                                            ? shuffleNumber(detailItem.value)
-                                                            : detailItem.value}
-                                                    </td>
+                                                    <td className="px-3 py-3 break-words max-w-xs">{detailItem.value}</td>
                                                 </tr>
                                             );
                                         })}
