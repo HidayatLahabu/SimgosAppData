@@ -212,12 +212,180 @@ class DashboardController extends Controller
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
                 LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
                 LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Allergy Intolerance' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT recordedDate FROM `kemkes-ihs`.`allergy_intolerance` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`allergy_intolerance` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Care Plan' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`care_plan` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`care_plan` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Condition Hasil PA' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`condition_hasil_pa` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`condition_hasil_pa` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Condition Penilaian Tumor' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`condition_penilaian_tumor` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`condition_penilaian_tumor` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Condition Riwayat Penyakit Dahulu' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`condition_riwayat_penyakit_dahulu` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`condition_riwayat_penyakit_dahulu` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'EOF' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`eof` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`eof` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Medication Statement' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`medication_statement` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`medication_statement` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Observation Anamnesis Riwayat Lainnya' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`observation_anamnesis_riwayat_lainnya` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`observation_anamnesis_riwayat_lainnya` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Observation Faktor Risiko' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`observation_faktor_risiko` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`observation_faktor_risiko` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Observation Pemeriksaan EKG' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`observation_pemeriksaan_ekg` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`observation_pemeriksaan_ekg` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Observation Penilaian Grace Risk Skor' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`observation_penilaian_grace_risk_skor` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`observation_penilaian_grace_risk_skor` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Questionnaire Response' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`questionnaire_response` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`questionnaire_response` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
+            UNION ALL
+            SELECT
+                'Service Request Jadwal Kontrol' NAMA,
+                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
+                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
+                COUNT(*) TOTAL,
+                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
+                (SELECT sendDate FROM `kemkes-ihs`.`service_request_jadwal_kontrol` WHERE ID = 7) LAST_UPDATE
+            FROM
+                `kemkes-ihs`.`service_request_jadwal_kontrol` o
+                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
+                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
+                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
             ";
 
         // Execute the query using the mysql4 connection
         $data = DB::connection('mysql4')->select($query);
 
-        //dd($data);
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
             'items' => $data
