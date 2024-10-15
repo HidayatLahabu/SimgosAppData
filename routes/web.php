@@ -133,6 +133,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('allergy', [AllergyController::class, 'index'])->name('allergy.index');
         Route::get('allergy/detail/{id}', [AllergyController::class, 'detail'])->name('allergy.detail');
+
+        Route::get('barangBza', [BarangToBzaController::class, 'index'])->name('barangBza.index');
+        Route::get('barangBza/detail/{id}', [BarangToBzaController::class, 'detail'])->name('barangBza.detail');
     });
 });
 

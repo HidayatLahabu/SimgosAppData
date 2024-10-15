@@ -25,6 +25,7 @@ export default function ResponsiveNavSatusehat() {
         { href: 'medicationRequest.index', label: 'Medication Request' },
         { href: 'serviceRequest.index', label: 'Service Request' },
         { href: 'specimen.index', label: 'Specimen' },
+        { href: 'barangBza.index', label: 'Barang' },
     ];
 
     // Sort navLinks by label in ascending order
