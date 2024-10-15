@@ -4,6 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import { shuffleNumber } from '@/utils/shuffleNumber';
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -32,19 +33,6 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     const onKeyPress = (nama, e) => {
         if (e.key !== 'Enter') return;
         searchFieldChanged(nama, e.target.value);
-    };
-
-    // Function to shuffle the digits of a 16-digit NIK
-    const shuffleNumber = (number) => {
-        // Convert the NIK to an array of characters
-        const nikArray = number.split('');
-        // Shuffle the array
-        for (let i = nikArray.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
-        }
-        // Join the array back into a string
-        return nikArray.join('');
     };
 
     return (
@@ -88,8 +76,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.noKartu}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{data.noKartu}</td>
-                                                    <td className="px-3 py-3">{data.nik}</td>
+                                                    <td className="px-3 py-3">{shuffleNumber(data.noKartu)}</td>
+                                                    <td className="px-3 py-3">{shuffleNumber(data.nik)}</td>
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
                                                     <td className="px-3 py-3">{data.nmJenisPeserta}</td>
