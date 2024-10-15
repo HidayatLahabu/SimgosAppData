@@ -4,7 +4,6 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
-import { shuffleNumber } from '@/utils/shuffleNumber';
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -33,6 +32,16 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     const onKeyPress = (nama, e) => {
         if (e.key !== 'Enter') return;
         searchFieldChanged(nama, e.target.value);
+    };
+
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        const nikArray = number.split('');
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        return nikArray.join('');
     };
 
     return (

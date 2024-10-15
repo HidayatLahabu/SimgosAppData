@@ -2,7 +2,6 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
-import { shuffleNumber } from '@/utils/shuffleNumber';
 
 export default function Detail({ auth, detail }) {
     // Generate detailData dynamically from the detail object
@@ -10,6 +9,16 @@ export default function Detail({ auth, detail }) {
         uraian: key, // Keep the original column name as it is
         value: detail[key],
     }));
+
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        const nikArray = number.split('');
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        return nikArray.join('');
+    };
 
     return (
         <AuthenticatedLayout user={auth.user}>
