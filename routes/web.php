@@ -24,6 +24,7 @@ use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
 use App\Http\Controllers\Bpjs\RujukanMasukController;
 use App\Http\Controllers\Layanan\RadiologiController;
+use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
@@ -129,6 +130,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('specimen', [SpecimenController::class, 'index'])->name('specimen.index');
         Route::get('specimen/detail/{id}', [SpecimenController::class, 'detail'])->name('specimen.detail');
+
+        Route::get('allergy', [AllergyController::class, 'index'])->name('allergy.index');
+        Route::get('allergy/detail/{id}', [AllergyController::class, 'detail'])->name('allergy.detail');
     });
 });
 

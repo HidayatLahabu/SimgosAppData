@@ -43,6 +43,7 @@ export default function NavigationSatusehat() {
             route().current('medicationRequest.index') ||
             route().current('serviceRequest.index') ||
             route().current('specimen.index');
+        route().current('allergy.index');
     };
 
     // List of dropdown items
@@ -63,6 +64,7 @@ export default function NavigationSatusehat() {
         { label: 'Medication Request', route: 'medicationRequest.index' },
         { label: 'Service Request', route: 'serviceRequest.index' },
         { label: 'Specimen', route: 'specimen.index' },
+        { label: 'Allergy Intolerance', route: 'allergy.index' },
     ];
 
     // Sort the links alphabetically by label

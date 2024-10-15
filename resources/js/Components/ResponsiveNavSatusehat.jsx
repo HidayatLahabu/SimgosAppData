@@ -8,6 +8,28 @@ export default function ResponsiveNavSatusehat() {
         setIsOpen(!isOpen);
     };
 
+    const navLinks = [
+        { href: 'organization.index', label: 'Organization' },
+        { href: 'location.index', label: 'Location' },
+        { href: 'patient.index', label: 'Patient' },
+        { href: 'practitioner.index', label: 'Practitioner' },
+        { href: 'encounter.index', label: 'Encounter' },
+        { href: 'condition.index', label: 'Condition' },
+        { href: 'observation.index', label: 'Observation' },
+        { href: 'procedure.index', label: 'Procedure' },
+        { href: 'composition.index', label: 'Composition' },
+        { href: 'consent.index', label: 'Consent' },
+        { href: 'diagnosticReport.index', label: 'Diagnostic Report' },
+        { href: 'medication.index', label: 'Medication' },
+        { href: 'medicationDispanse.index', label: 'Medication Dispanse' },
+        { href: 'medicationRequest.index', label: 'Medication Request' },
+        { href: 'serviceRequest.index', label: 'Service Request' },
+        { href: 'specimen.index', label: 'Specimen' },
+    ];
+
+    // Sort navLinks by label in ascending order
+    const sortedNavLinks = navLinks.sort((a, b) => a.label.localeCompare(b.label));
+
     return (
         <div className="relative">
             <button
@@ -29,22 +51,14 @@ export default function ResponsiveNavSatusehat() {
                 <div className="absolute left-0 mt-1 w-full rounded-md shadow-lg bg-white dark:bg-indigo-950 z-10">
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
-                            <ResponsiveNavLink href={route('organization.index')}>Organization</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('location.index')}>Location</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('patient.index')}>Patient</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('practitioner.index')}>Practitioner</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('encounter.index')}>Encounter</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('condition.index')}>Condition</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('observation.index')}>Observation</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('procedure.index')}>Procedure</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('composition.index')}>Composition</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('consent.index')}>Consent</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('diagnosticReport.index')}>Diagnostic Report</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('medication.index')}>Medication</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('medicationDispanse.index')}>Medication Dispanse</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('medicationRequest.index')}>Medication Request</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('serviceRequest.index')}>Service Request</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('specimen.index')}>Specimen</ResponsiveNavLink>
+                            {sortedNavLinks.map((link) => (
+                                <ResponsiveNavLink
+                                    key={link.href}
+                                    href={route(link.href)}
+                                >
+                                    {link.label}
+                                </ResponsiveNavLink>
+                            ))}
                         </div>
                     </div>
                 </div>
