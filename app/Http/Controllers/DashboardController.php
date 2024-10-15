@@ -193,7 +193,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 5) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`diagnostic_report` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.nopen AND tp.`STATUS` !=0
@@ -206,7 +206,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 13) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`consent` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -219,7 +219,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT recordedDate FROM `kemkes-ihs`.`allergy_intolerance` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 16) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`allergy_intolerance` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -232,7 +232,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`care_plan` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 14) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`care_plan` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -245,7 +245,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`condition_hasil_pa` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 17) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`condition_hasil_pa` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -258,7 +258,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`condition_penilaian_tumor` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 17) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`condition_penilaian_tumor` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -271,22 +271,9 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`condition_riwayat_penyakit_dahulu` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 25) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`condition_riwayat_penyakit_dahulu` o
-                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
-                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
-                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
-            UNION ALL
-            SELECT
-                'EOF' NAMA,
-                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
-                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
-                COUNT(*) TOTAL,
-                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`eof` WHERE ID = 7) LAST_UPDATE
-            FROM
-                `kemkes-ihs`.`eof` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
                 LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
                 LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
@@ -297,7 +284,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`medication_statement` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 9) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`medication_statement` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -310,7 +297,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`observation_anamnesis_riwayat_lainnya` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 20) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`observation_anamnesis_riwayat_lainnya` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -323,7 +310,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`observation_faktor_risiko` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 26) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`observation_faktor_risiko` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -336,7 +323,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`observation_pemeriksaan_ekg` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 21) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`observation_pemeriksaan_ekg` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
@@ -349,22 +336,9 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`observation_penilaian_grace_risk_skor` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 22) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`observation_penilaian_grace_risk_skor` o
-                LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
-                LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
-                LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
-            UNION ALL
-            SELECT
-                'Questionnaire Response' NAMA,
-                IFNULL(SUM(IF(o.id IS NOT NULL, 1, 0)), 0) MEMILIKI_ID,
-                IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
-                COUNT(*) TOTAL,
-                IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`questionnaire_response` WHERE ID = 7) LAST_UPDATE
-            FROM
-                `kemkes-ihs`.`questionnaire_response` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
                 LEFT JOIN `master`.ruangan r ON r.ID=tp.RUANGAN
                 LEFT JOIN pendaftaran.pendaftaran pp ON o.refId=pp.NOMOR
@@ -375,7 +349,7 @@ class DashboardController extends Controller
                 IFNULL(SUM(IF(o.id IS NULL, 1, 0)), 0) TIDAK_MEMILIKI_ID,
                 COUNT(*) TOTAL,
                 IFNULL((SUM(IF(o.id IS NOT NULL, 1, 0)) / COUNT(*)) * 100, 0) AS PERSEN,
-                (SELECT sendDate FROM `kemkes-ihs`.`service_request_jadwal_kontrol` WHERE ID = 7) LAST_UPDATE
+                (SELECT TANGGAL_TERAKHIR FROM `kemkes-ihs`.`sinkronisasi` WHERE ID = 28) LAST_UPDATE
             FROM
                 `kemkes-ihs`.`service_request_jadwal_kontrol` o
                 LEFT JOIN pendaftaran.tujuan_pasien tp ON tp.NOPEN=o.refId AND tp.`STATUS` !=0
