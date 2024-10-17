@@ -24,7 +24,6 @@ use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
 use App\Http\Controllers\Bpjs\RujukanMasukController;
 use App\Http\Controllers\Layanan\RadiologiController;
-use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
@@ -48,7 +47,6 @@ use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
 use App\Http\Controllers\Layanan\TindakanMedisController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
-use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Master\TindakanRuanganController;
@@ -58,6 +56,8 @@ use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
+use App\Http\Controllers\Satusehat\AllergyController;
+use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
@@ -232,6 +232,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('layanan')->namespace('App\Http\Controllers\Layanan')->group(function () {
         Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
         Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
+        Route::get('/layananLab-print', [LaboratoriumController::class, 'print'])->name('layananLab.print');
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
         Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
@@ -263,5 +264,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
     });
 });
+
 
 require __DIR__ . '/auth.php';

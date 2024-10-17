@@ -4,6 +4,8 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import Cetak from "./Cetak"
+
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -89,8 +91,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                             <span>Tanpa Asuransi/Umum</span>
                                                         )}
                                                     </td>
-                                                    <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Aktif' : 'Selesai'}</td>
-                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Ada Hasil' : data.statusHasil === 2 ? 'Belum Final Hasil' : 'Sudah Final Hasil'}</td>
+                                                    <td className="px-3 py-3">
+                                                        {data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3">
+                                                        {data.statusHasil === 1 ? 'Belum Ada Hasil' : data.statusHasil === 2 ? 'Belum Final Hasil' : 'Sudah Final Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananLab.detail", { id: data.nomor })}
@@ -110,6 +114,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="w-full mt-2">
+                <Cetak
+                />
             </div>
         </AuthenticatedLayout>
     );

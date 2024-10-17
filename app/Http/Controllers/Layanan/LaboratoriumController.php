@@ -20,9 +20,10 @@ class LaboratoriumController extends Controller
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
             ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.ID', '=', 'orderDetail.REF');
+            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -31,18 +32,18 @@ class LaboratoriumController extends Controller
 
         // Group by 'nomor' and select the first occurrence for other fields
         $query->selectRaw('
-            orderLab.NOMOR as nomor,
-            MIN(orderLab.TANGGAL) as tanggal,  -- or use MAX or AVG based on your requirement
-            MIN(orderLab.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(peserta.noKartu) as noKartu,
-            MIN(orderLab.STATUS) as statusKunjungan,
-            MIN(hasil.STATUS) as statusHasil
-        ')
+                orderLab.NOMOR as nomor,
+                MIN(orderLab.TANGGAL) as tanggal, 
+                MIN(orderLab.KUNJUNGAN) as kunjungan,
+                MIN(pegawai.NAMA) as dokter,
+                MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+                MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+                MIN(pasien.NORM) as norm,
+                MIN(pasien.NAMA) as nama,
+                MIN(peserta.noKartu) as noKartu,
+                MIN(orderLab.STATUS) as statusKunjungan,
+                MIN(hasil.STATUS) as statusHasil
+            ')
             ->groupBy('orderLab.NOMOR');
 
         // Paginate the results
@@ -147,6 +148,72 @@ class LaboratoriumController extends Controller
             'detail' => $queryDetail,
             'detailHasil' => $queryHasil,
             'detailCatatan' => $queryCatatan,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Retrieve input values
+        $jenisPasien  = $request->input('jenisPasien');
+        $dariTanggal  = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+
+        // Prepare the base query
+        $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
+            ->leftJoin('pendaftaran.kunjungan as kunjunganCatatan', 'kunjunganCatatan.REF', '=', 'orderLab.NOMOR')
+            ->leftJoin('layanan.catatan_hasil_lab as hasil', 'hasil.KUNJUNGAN', '=', 'kunjunganCatatan.NOMOR');
+
+        // Select relevant columns
+        $query->selectRaw('
+                orderLab.NOMOR as nomor,
+                orderLab.TANGGAL as tanggal, 
+                orderLab.KUNJUNGAN as kunjungan,
+                pasien.NORM as norm,
+                pasien.NAMA as nama,
+                peserta.noKartu as noKartu,
+                orderLab.STATUS as statusKunjungan,
+                hasil.STATUS as statusHasil
+            ')
+            ->groupBy('orderLab.NOMOR', 'orderLab.TANGGAL', 'orderLab.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'peserta.noKartu', 'orderLab.STATUS', 'hasil.STATUS');
+
+        // Filter based on patient type
+        $pasien = 'Semua Jenis Pasien';
+        if ($jenisPasien == 1) {
+            $query->whereNotNull('peserta.noKartu'); // pasien BPJS
+            $pasien = 'BPJS';
+        } elseif ($jenisPasien == 2) {
+            $query->whereNull('peserta.noKartu'); // pasien non-BPJS
+            $pasien = 'Umum';
+        }
+
+        // Filter by date range
+        if ($dariTanggal && $sampaiTanggal) {
+            $query->whereBetween('orderLab.TANGGAL', [$dariTanggal, $sampaiTanggal]);
+        }
+
+        // Execute the query and retrieve the data
+        $data = $query->where('orderLab.STATUS', 2)
+            ->where('hasil.STATUS', 1)
+            ->get();
+
+        // Map through the collection to set the statusHasil for each item
+        $data = $data->map(function ($item) {
+            // Set statusHasil based on the value of hasil.STATUS
+            $item->statusHasil = $item->statusHasil == 1 ? 'Sudah Final Hasil' : 'Belum ada Hasil';
+            return $item;
+        });
+
+        // Return data to the frontend using Inertia
+        return inertia("Layanan/Laboratorium/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'jenisPasien' => $pasien,
         ]);
     }
 }
