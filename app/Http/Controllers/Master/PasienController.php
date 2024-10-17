@@ -25,7 +25,7 @@ class PasienController extends Controller
                 'pasien.TANGGAL as terdaftar'
             )
             ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm')
+            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
             ->where('pasien.STATUS', 1);
 
         // Add search filter if provided
