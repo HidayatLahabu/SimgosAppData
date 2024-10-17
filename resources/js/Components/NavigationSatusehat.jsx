@@ -41,9 +41,11 @@ export default function NavigationSatusehat() {
             route().current('medication.index') ||
             route().current('medicationDispanse.index') ||
             route().current('medicationRequest.index') ||
+            route().current('serviceRequest.index') ||
             route().current('specimen.index') ||
             route().current('allergy.index') ||
-            route().current('barangBza.index');
+            route().current('barangBza.index') ||
+            route().current('carePlan.index');
     };
 
     // List of dropdown items
@@ -66,6 +68,7 @@ export default function NavigationSatusehat() {
         { label: 'Specimen', route: 'specimen.index' },
         { label: 'Allergy Intolerance', route: 'allergy.index' },
         { label: 'Barang', route: 'barangBza.index' },
+        { label: 'Care Plan', route: 'carePlan.index' },
     ];
 
     // Sort the links alphabetically by label

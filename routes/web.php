@@ -58,6 +58,7 @@ use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
+use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
@@ -137,6 +138,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('barangBza', [BarangToBzaController::class, 'index'])->name('barangBza.index');
         Route::get('barangBza/detail/{id}', [BarangToBzaController::class, 'detail'])->name('barangBza.detail');
+
+        Route::get('carePlan', [CarePlanController::class, 'index'])->name('carePlan.index');
+        Route::get('carePlan/detail/{id}', [CarePlanController::class, 'detail'])->name('carePlan.detail');
     });
 });
 
