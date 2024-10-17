@@ -47,7 +47,7 @@ class LaboratoriumController extends Controller
             ->groupBy('orderLab.NOMOR');
 
         // Paginate the results
-        $data = $query->orderByDesc('tanggal')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('tanggal')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
