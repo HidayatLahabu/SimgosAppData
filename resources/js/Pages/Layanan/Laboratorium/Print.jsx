@@ -24,7 +24,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
                                 </p>
 
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-900">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4">
                                     <thead className="text-sm font-bold text-gray-900 bg-white dark:text-gray-900 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 text-center">NO</th>
