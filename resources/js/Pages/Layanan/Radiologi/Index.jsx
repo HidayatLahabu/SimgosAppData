@@ -4,6 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import Cetak from "./Cetak"
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -40,7 +41,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         >
             <Head title="Layanan" />
 
-            <div className="py-5">
+            <div className="pt-5 pb-2">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
@@ -110,6 +111,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="w-full">
+                <Cetak
+                />
             </div>
         </AuthenticatedLayout>
     );

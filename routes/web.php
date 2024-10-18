@@ -228,6 +228,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+//layanan
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('layanan')->namespace('App\Http\Controllers\Layanan')->group(function () {
         Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
@@ -236,6 +237,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
         Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
+        Route::get('/layananRad-print', [RadiologiController::class, 'print'])->name('layananRad.print');
 
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
@@ -247,6 +249,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+//logs
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('logs')->namespace('App\Http\Controllers\Logs')->group(function () {
         Route::get('logsBridge', [BridgeLogsController::class, 'index'])->name('logsBridge.index');
@@ -259,6 +262,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
+//laporan
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');

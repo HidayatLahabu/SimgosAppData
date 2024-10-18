@@ -88,7 +88,6 @@ class BarangToBzaController extends Controller
 
         $poaId = $queryDetail->poa;
         $queryPoa = SatusehatPoaModel::where('id', $poaId)->first();
-        //dd($queryPoa);
 
         // Fetch data catatan (main lab order details)
         $povId = $queryDetail->pov;

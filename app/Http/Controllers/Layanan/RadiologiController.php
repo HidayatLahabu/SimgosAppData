@@ -47,7 +47,7 @@ class RadiologiController extends Controller
         $query->groupBy('orderRad.NOMOR');
 
         // Paginate the results
-        $data = $query->orderByDesc('tanggal')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('tanggal')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -128,6 +128,63 @@ class RadiologiController extends Controller
         return inertia("Layanan/Radiologi/Detail", [
             'detail' => $queryDetail,
             'detailHasil' => $queryHasil,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Retrieve input values
+        $jenisPasien  = $request->input('jenisPasien');
+        $dariTanggal  = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+
+        // Prepare the base query
+        $query = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
+            ->join('pendaftaran.kunjungan as kunjunganPasien', 'kunjunganPasien.NOMOR', '=', 'orderRad.KUNJUNGAN')
+            ->join('pendaftaran.pendaftaran as pendaftaranPasien', 'pendaftaranPasien.NOMOR', '=', 'kunjunganPasien.NOPEN')
+            ->join('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaranPasien.NORM')
+            ->join('master.kartu_identitas_pasien as identitas', 'pasien.NORM', '=', 'identitas.NORM')
+            ->join('bpjs.peserta as bpjs', 'bpjs.nik', '=', 'identitas.NOMOR')
+            ->join('pendaftaran.kunjungan as kunjunganTindakan', 'kunjunganTindakan.REF', '=', 'orderRad.NOMOR')
+            ->join('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjunganTindakan.NOMOR')
+            ->join('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->join('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
+            ->join('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP');
+
+        // Select relevant columns
+        $query->selectRaw('
+                orderRad.NOMOR as nomor,
+                orderRad.TANGGAL as tanggal,
+                orderRad.KUNJUNGAN as kunjungan,
+                pasien.NORM as norm,
+                pasien.NAMA as nama,
+                bpjs.noKartu as noKartu,
+                pegawai.NAMA as dokter
+            ')
+            ->groupBy('orderRad.NOMOR', 'orderRad.TANGGAL', 'orderRad.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'bpjs.noKartu', 'hasil.DOKTER');
+
+        // Filter based on patient type
+        $pasien = 'Semua Jenis Pasien';
+        if ($jenisPasien == 1) {
+            $query->whereNotNull('bpjs.noKartu'); // pasien BPJS
+            $pasien = 'BPJS';
+        } elseif ($jenisPasien == 2) {
+            $query->whereNull('bpjs.noKartu'); // pasien non-BPJS
+            $pasien = 'Umum';
+        }
+
+        // Execute the query and retrieve the data
+        $data = $query->where('orderRad.STATUS', 1)
+            ->orWhere('orderRad.STATUS', 2)
+            ->whereBetween('orderRad.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->get();
+
+        // Return data to the frontend using Inertia
+        return inertia("Layanan/Radiologi/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'jenisPasien' => $pasien,
         ]);
     }
 }
