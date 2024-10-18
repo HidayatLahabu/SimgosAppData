@@ -148,6 +148,7 @@ class RadiologiController extends Controller
             ->join('pendaftaran.kunjungan as kunjunganTindakan', 'kunjunganTindakan.REF', '=', 'orderRad.NOMOR')
             ->join('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjunganTindakan.NOMOR')
             ->join('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->join('master.tindakan as masterTindakan', 'masterTindakan.ID', '=', 'tindakanMedis.TINDAKAN')
             ->join('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
             ->join('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP');
 
@@ -159,9 +160,10 @@ class RadiologiController extends Controller
                 pasien.NORM as norm,
                 pasien.NAMA as nama,
                 bpjs.noKartu as noKartu,
-                pegawai.NAMA as dokter
+                pegawai.NAMA as dokter,
+                masterTindakan.NAMA as namaTindakan
             ')
-            ->groupBy('orderRad.NOMOR', 'orderRad.TANGGAL', 'orderRad.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'bpjs.noKartu', 'hasil.DOKTER');
+            ->groupBy('orderRad.NOMOR', 'orderRad.TANGGAL', 'orderRad.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'bpjs.noKartu', 'hasil.DOKTER', 'masterTindakan.NAMA');
 
         // Filter based on patient type
         $pasien = 'Semua Jenis Pasien';

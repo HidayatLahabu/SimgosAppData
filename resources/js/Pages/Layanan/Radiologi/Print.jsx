@@ -32,7 +32,8 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                             <th className="px-3 py-2 text-center">TANGGAL</th>
                                             <th className="px-3 py-2 text-center">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 text-center">JENIS PASIEN</th>
+                                            <th className="px-3 py-2">JENIS <br />PASIEN</th>
+                                            <th className="px-3 py-2">TINDAKAN</th>
                                             <th className="px-3 py-2">DOKTER PELAKSANA</th>
                                         </tr>
                                     </thead>
@@ -50,8 +51,11 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                                     {item.norm}
                                                 </td>
                                                 <td className="px-3 py-2">{item.nama}</td>
-                                                <td className="px-3 py-2 text-center">
+                                                <td className="px-3 py-2">
                                                     {jenisPasien}
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    {item.namaTindakan}
                                                 </td>
                                                 <td className="px-3 py-2">
                                                     {item.dokter}
