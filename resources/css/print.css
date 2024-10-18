@@ -1,49 +1,34 @@
 @media print {
     body {
-        font-size: 12pt;
-        /* or larger */
-        color: black;
-        /* Ensure good contrast */
-        margin: 0;
-        /* Remove default margin */
+        font-size: 12pt; /* or larger */
+        color: black; /* Ensure good contrast */
+        margin: 0; /* Remove default margin */
         display: flex;
-        justify-content: center;
-        /* Center content horizontally */
+        justify-content: center; /* Center content horizontally */
     }
 
     .content {
-        width: 100%;
-        /* Full width */
-        max-width: none;
-        /* Remove any max width limit */
-        padding: 20px;
-        /* Add padding if needed */
+        width: 100%; /* Full width */
+        max-width: none; /* Remove any max width limit */
+        padding: 20px; /* Add padding if needed */
     }
 
     table {
-        border-collapse: collapse;
-        /* Better table rendering */
-        width: 100%;
-        /* Full width */
+        border-collapse: collapse; /* Better table rendering */
+        width: 100%; /* Full width */
     }
 
-    th,
-    td {
-        border: 1px solid black;
-        /* Clear borders */
-        padding: 8px;
-        /* More space for readability */
+    th, td {
+        border: 1px solid black; /* Clear borders */
+        padding: 8px; /* More space for readability */
     }
 
     table {
-        border-collapse: collapse;
-        /* Ensures borders are combined */
+        border-collapse: collapse; /* Ensures borders are combined */
     }
 
-    th,
-    td {
-        border: none;
-        /* Remove all borders by default */
+    th, td {
+        border: none; /* Remove all borders by default */
     }
 
     .text-small {
@@ -53,24 +38,17 @@
 
 @media screen {
     body {
-        font-size: 16pt;
-        /* Larger font size for screen */
-        color: black;
-        /* Standard color for readability */
-        margin: 0;
-        /* Standard margin for screen */
+        font-size: 16pt; /* Larger font size for screen */
+        color: black; /* Standard color for readability */
+        margin: 0; /* Standard margin for screen */
         display: flex;
-        justify-content: center;
-        /* Center content horizontally */
+        justify-content: center; /* Center content horizontally */
     }
 
     .content {
-        width: 100%;
-        /* Full width */
-        max-width: none;
-        /* Remove any max width limit */
-        padding: 20px;
-        /* Add padding if needed */
+        width: 100%; /* Full width */
+        max-width: none; /* Remove any max width limit */
+        padding: 20px; /* Add padding if needed */
     }
 
     table {
@@ -78,19 +56,15 @@
         width: 100%;
     }
 
-    th,
-    td {
-        border: none;
-        /* Remove all borders by default */
+    th, td {
+        border: none; /* Remove all borders by default */
     }
 
     .text-small {
-        font-size: 1rem;
-        /* Adjust for larger screens */
+        font-size: 1rem; /* Adjust for larger screens */
     }
 
     .text-screen {
-        font-size: 1.1rem;
-        /* Adjust for larger screens */
+        font-size: 1.1rem; /* Adjust for larger screens */
     }
 }

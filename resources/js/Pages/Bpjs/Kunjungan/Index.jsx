@@ -75,7 +75,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.noSEP}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${data.noSEP}-${index}`}
+                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{data.noSEP}</td>
                                                     <td className="px-3 py-3">{data.tglSEP}</td>
                                                     <td className="px-3 py-3">{data.noRujukan}</td>
