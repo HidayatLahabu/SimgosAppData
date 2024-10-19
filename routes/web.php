@@ -59,6 +59,7 @@ use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
 use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CarePlanController;
+use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
@@ -141,6 +142,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('carePlan', [CarePlanController::class, 'index'])->name('carePlan.index');
         Route::get('carePlan/detail/{id}', [CarePlanController::class, 'detail'])->name('carePlan.detail');
+
+        Route::get('conditionPa', [ConditionHasilPaController::class, 'index'])->name('conditionPa.index');
+        Route::get('conditionPa/detail/{id}', [ConditionHasilPaController::class, 'detail'])->name('conditionPa.detail');
     });
 });
 

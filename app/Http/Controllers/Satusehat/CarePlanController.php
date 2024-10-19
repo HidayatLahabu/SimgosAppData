@@ -34,4 +34,21 @@ class CarePlanController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = SatusehatCarePlanModel::where('nopen', $id)->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the data was not found
+            return redirect()->route('carePlan.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the data
+        return inertia("Satusehat/CarePlan/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }
