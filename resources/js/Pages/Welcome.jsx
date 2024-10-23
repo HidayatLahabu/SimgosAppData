@@ -51,7 +51,7 @@ export default function Welcome({ auth, hospitalName }) {
                 </div>
                 <footer className="bg-gray-50 text-black/50 dark:bg-indigo-950 dark:text-gray-200 py-2">
                     <div className="text-center">
-                        <p>&copy; {new Date().getFullYear()} Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
+                        <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
                     </div>
                 </footer>
             </div>
