@@ -11,7 +11,7 @@ class ServiceRequestController extends Controller
     public function index()
     {
         // Define base query
-        $query = SatusehatServiceRequestModel::orderByDesc('id')->orderByDesc('sendDate');
+        $query = SatusehatServiceRequestModel::orderByDesc('sendDate')->orderByDesc('id');
 
         // Apply search filter if 'subject' query parameter is present
         if (request('subject')) {

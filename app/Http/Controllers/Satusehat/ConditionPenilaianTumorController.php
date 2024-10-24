@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Satusehat;
 
 use App\Http\Controllers\Controller;
-use App\Models\SatusehatSpecimenModel;
+use App\Models\SatusehatConditionPenilaianTumorModel;
 use Illuminate\Http\Request;
 
-class SpecimenController extends Controller
+class ConditionPenilaianTumorController extends Controller
 {
     public function index()
     {
         // Define base query
-        $query = SatusehatSpecimenModel::orderByDesc('sendDate')->orderByDesc('id');
+        $query = SatusehatConditionPenilaianTumorModel::orderByDesc('id')->orderByDesc('sendDate');
 
         // Apply search filter if 'subject' query parameter is present
         if (request('subject')) {
@@ -26,29 +26,12 @@ class SpecimenController extends Controller
         $dataArray = $data->toArray();
 
         // Return Inertia view with paginated data
-        return inertia("Satusehat/Specimen/Index", [
+        return inertia("Satusehat/ConditionTumor/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
             'queryParams' => request()->all()
-        ]);
-    }
-
-    public function detail($id)
-    {
-        // Fetch the specific data
-        $query = SatusehatSpecimenModel::where('refId', $id)->first();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the data was not found
-            return redirect()->route('specimen.index')->with('error', 'Data not found.');
-        }
-
-        // Return Inertia view with the data
-        return inertia("Satusehat/Specimen/Detail", [
-            'detail' => $query,
         ]);
     }
 }

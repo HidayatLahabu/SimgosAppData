@@ -60,6 +60,7 @@ use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
+use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
@@ -145,6 +146,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('conditionPa', [ConditionHasilPaController::class, 'index'])->name('conditionPa.index');
         Route::get('conditionPa/detail/{id}', [ConditionHasilPaController::class, 'detail'])->name('conditionPa.detail');
+
+        Route::get('conditionTumor', [ConditionPenilaianTumorController::class, 'index'])->name('conditionTumor.index');
+        Route::get('conditionTumor/detail/{id}', [ConditionPenilaianTumorController::class, 'detail'])->name('conditionTumor.detail');
     });
 });
 

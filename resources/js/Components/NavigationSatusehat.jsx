@@ -46,7 +46,8 @@ export default function NavigationSatusehat() {
             route().current('allergy.index') ||
             route().current('barangBza.index') ||
             route().current('carePlan.index') ||
-            route().current('conditionPa.index');
+            route().current('conditionPa.index') ||
+            route().current('conditionTumor.index');
     };
 
     // List of dropdown items
@@ -71,6 +72,7 @@ export default function NavigationSatusehat() {
         { label: 'Barang', route: 'barangBza.index' },
         { label: 'Care Plan', route: 'carePlan.index' },
         { label: 'Condition Hasil PA', route: 'conditionPa.index' },
+        { label: 'Condition Penilaian Tumor', route: 'conditionTumor.index' },
     ];
 
     // Sort the links alphabetically by label

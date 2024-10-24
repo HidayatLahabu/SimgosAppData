@@ -11,7 +11,7 @@ class PatientController extends Controller
     public function index()
     {
         // Define base query
-        $query = SatusehatPatientModel::whereNotNull('id')->orderByDesc('getDate');
+        $query = SatusehatPatientModel::orderByDesc('getDate');
 
         // Apply search filter if 'name' query parameter is present
         if (request('name')) {
@@ -46,7 +46,7 @@ class PatientController extends Controller
             return redirect()->route('patient.index')->with('error', 'Data not found.');
         }
 
-        // Return Inertia view with the datadata
+        // Return Inertia view with the data
         return inertia("Satusehat/Patient/Detail", [
             'detail' => $query,
         ]);

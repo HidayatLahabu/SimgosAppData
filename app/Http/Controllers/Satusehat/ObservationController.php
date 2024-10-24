@@ -11,7 +11,7 @@ class ObservationController extends Controller
     public function index()
     {
         // Define base query
-        $query = SatusehatObservationModel::orderByDesc('id')->orderByDesc('sendDate');
+        $query = SatusehatObservationModel::orderByDesc('sendDate')->orderByDesc('id');
 
         // Apply search filter if 'subject' query parameter is present
         if (request('subject')) {
