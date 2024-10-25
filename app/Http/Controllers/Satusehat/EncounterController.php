@@ -11,8 +11,7 @@ class EncounterController extends Controller
     public function index()
     {
         // Define base query
-        $query = SatusehatEncounterModel::whereNotNull('id')
-            ->orderByDesc('sendDate')->orderByDesc('refId');
+        $query = SatusehatEncounterModel::orderByDesc('sendDate')->orderByDesc('refId');
 
         // Apply search filter if 'subject' query parameter is present
         if (request('subject')) {
