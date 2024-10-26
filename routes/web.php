@@ -62,6 +62,7 @@ use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
+use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 
@@ -149,6 +150,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('conditionTumor', [ConditionPenilaianTumorController::class, 'index'])->name('conditionTumor.index');
         Route::get('conditionTumor/detail/{id}', [ConditionPenilaianTumorController::class, 'detail'])->name('conditionTumor.detail');
+
+        Route::get('imagingStudy', [ImagingStudyController::class, 'index'])->name('imagingStudy.index');
+        Route::get('imagingStudy/detail/{id}', [ImagingStudyController::class, 'detail'])->name('imagingStudy.detail');
     });
 });
 

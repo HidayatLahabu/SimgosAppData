@@ -29,6 +29,7 @@ export default function ResponsiveNavSatusehat() {
         { href: 'carePlan.index', label: 'Care Plan' },
         { label: 'Condition Hasil PA', route: 'conditionPa.index' },
         { label: 'Condition Penilaian Tumor', route: 'conditionTumor.index' },
+        { label: 'Imaging Study', route: 'imagingStudy.index' },
     ];
 
     // Sort navLinks by label in ascending order

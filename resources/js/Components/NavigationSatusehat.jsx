@@ -47,7 +47,8 @@ export default function NavigationSatusehat() {
             route().current('barangBza.index') ||
             route().current('carePlan.index') ||
             route().current('conditionPa.index') ||
-            route().current('conditionTumor.index');
+            route().current('conditionTumor.index') ||
+            route().current('imagingStudy.index');
     };
 
     // List of dropdown items
@@ -73,6 +74,7 @@ export default function NavigationSatusehat() {
         { label: 'Care Plan', route: 'carePlan.index' },
         { label: 'Condition Hasil PA', route: 'conditionPa.index' },
         { label: 'Condition Penilaian Tumor', route: 'conditionTumor.index' },
+        { label: 'Imaging Study', route: 'imagingStudy.index' },
     ];
 
     // Sort the links alphabetically by label
