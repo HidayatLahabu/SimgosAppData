@@ -162,8 +162,7 @@ class RadiologiController extends Controller
                 bpjs.noKartu as noKartu,
                 pegawai.NAMA as dokter,
                 masterTindakan.NAMA as namaTindakan
-            ')
-            ->groupBy('orderRad.NOMOR', 'orderRad.TANGGAL', 'orderRad.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'bpjs.noKartu', 'hasil.DOKTER', 'masterTindakan.NAMA');
+            ');
 
         // Filter based on patient type
         $pasien = 'Semua Jenis Pasien';

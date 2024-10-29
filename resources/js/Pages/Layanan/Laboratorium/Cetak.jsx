@@ -29,6 +29,10 @@ export default function Cetak() {
         setData(prevData => ({ ...prevData, jenisPasien: selectedOption.value }));
     };
 
+    const onOrderByChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, orderBy: selectedOption.value }));
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -49,22 +53,41 @@ export default function Cetak() {
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Laporan Layanan Laboratorium</h1>
 
-                        <div className="mt-4">
-                            <InputLabel
-                                htmlFor="jenisPasien"
-                                value="Jenis Pasien"
-                            />
-                            <SelectTwoInput
-                                id="jenisPasien"
-                                name="jenisPasien"
-                                className="mt-1 block w-full"
-                                placeholder="Pilih Jenis Pasien"
-                                onChange={onJenisPasienChange}
-                                options={[
-                                    { value: 1, label: 'BPJS Kesehatan' },
-                                    { value: 2, label: 'Pasien Umum' },
-                                ]}
-                            />
+                        <div className="mt-4 flex space-x-4">
+                            <div className="flex-1">
+                                <InputLabel
+                                    htmlFor="jenisPasien"
+                                    value="Jenis Pasien"
+                                />
+                                <SelectTwoInput
+                                    id="jenisPasien"
+                                    name="jenisPasien"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Jenis Pasien"
+                                    onChange={onJenisPasienChange}
+                                    options={[
+                                        { value: 1, label: 'BPJS Kesehatan' },
+                                        { value: 2, label: 'Pasien Umum' },
+                                    ]}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <InputLabel
+                                    htmlFor="orderBy"
+                                    value="Urutan berdasarkan"
+                                />
+                                <SelectTwoInput
+                                    id="orderBy"
+                                    name="orderBy"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Urutan berdasarkan"
+                                    onChange={onOrderByChange}
+                                    options={[
+                                        { value: 1, label: 'Nama Pasien' },
+                                        { value: 2, label: 'Tanggal' },
+                                    ]}
+                                />
+                            </div>
                         </div>
 
                         <div className="mt-4 flex space-x-4">

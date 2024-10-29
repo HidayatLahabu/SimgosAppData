@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
+import { formatNumber } from '@/utils/formatNumber';
 
 export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien }) {
 
@@ -33,6 +34,8 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2 text-center">JENIS PASIEN</th>
+                                            <th className="px-3 py-2">TINDAKAN</th>
+                                            <th className="px-3 py-2 text-right">TARIF</th>
                                             <th className="px-3 py-2 text-right">STATUS HASIL</th>
                                         </tr>
                                     </thead>
@@ -52,6 +55,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                                 <td className="px-3 py-2">{item.nama}</td>
                                                 <td className="px-3 py-2 text-center">
                                                     {jenisPasien}
+                                                </td>
+                                                <td className="px-3 py-2">{item.tindakan}</td>
+                                                <td className="px-3 py-2 text-right">
+                                                    {formatNumber(item.tarif)}
                                                 </td>
                                                 <td className="px-3 py-2 text-right">
                                                     {item.statusHasil}

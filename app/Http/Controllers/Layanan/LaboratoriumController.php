@@ -33,7 +33,7 @@ class LaboratoriumController extends Controller
         // Group by 'nomor' and select the first occurrence for other fields
         $query->selectRaw('
                 orderLab.NOMOR as nomor,
-                MIN(orderLab.TANGGAL) as tanggal, 
+                MIN(orderLab.TANGGAL) as tanggal,
                 MIN(orderLab.KUNJUNGAN) as kunjungan,
                 MIN(pegawai.NAMA) as dokter,
                 MIN(pegawai.GELAR_DEPAN) as gelarDepan,
@@ -154,9 +154,10 @@ class LaboratoriumController extends Controller
     public function print(Request $request)
     {
         // Retrieve input values
-        $jenisPasien  = $request->input('jenisPasien');
-        $dariTanggal  = $request->input('dari_tanggal');
-        $sampaiTanggal = $request->input('sampai_tanggal');
+        $jenisPasien    = $request->input('jenisPasien');
+        $orderBy        = $request->input('orderBy');
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
 
         // Prepare the base query
         $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
@@ -166,20 +167,22 @@ class LaboratoriumController extends Controller
             ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
             ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
             ->leftJoin('pendaftaran.kunjungan as kunjunganCatatan', 'kunjunganCatatan.REF', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.catatan_hasil_lab as hasil', 'hasil.KUNJUNGAN', '=', 'kunjunganCatatan.NOMOR');
-
-        // Select relevant columns
-        $query->selectRaw('
+            ->leftJoin('layanan.catatan_hasil_lab as catatanHasil', 'catatanHasil.KUNJUNGAN', '=', 'kunjunganCatatan.NOMOR')
+            ->leftJoin('layanan.order_detil_lab as orderDetailLab', 'orderDetailLab.ORDER_ID', '=', 'orderLab.NOMOR')
+            ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetailLab.REF')
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'orderDetailLab.TINDAKAN')
+            ->leftJoin('master.tarif_tindakan as tarif', 'tarif.TINDAKAN', '=', 'tindakan.ID')
+            ->selectRaw('
                 orderLab.NOMOR as nomor,
-                orderLab.TANGGAL as tanggal, 
-                orderLab.KUNJUNGAN as kunjungan,
+                orderLab.TANGGAL as tanggal,
                 pasien.NORM as norm,
                 pasien.NAMA as nama,
                 peserta.noKartu as noKartu,
                 orderLab.STATUS as statusKunjungan,
-                hasil.STATUS as statusHasil
-            ')
-            ->groupBy('orderLab.NOMOR', 'orderLab.TANGGAL', 'orderLab.KUNJUNGAN', 'pasien.NORM', 'pasien.NAMA', 'peserta.noKartu', 'orderLab.STATUS', 'hasil.STATUS');
+                tindakan.NAMA as tindakan,
+                tarif.TARIF as tarif,
+                catatanHasil.STATUS as statusHasil
+            ');
 
         // Filter based on patient type
         $pasien = 'Semua Jenis Pasien';
@@ -191,6 +194,12 @@ class LaboratoriumController extends Controller
             $pasien = 'Umum';
         }
 
+        if ($orderBy == 1) {
+            $query->orderBy('pasien.NAMA')->orderBy('orderLab.TANGGAL');
+        } elseif ($orderBy == 2) {
+            $query->orderBy('orderLab.TANGGAL')->orderBy('pasien.NAMA');
+        }
+
         // Filter by date range
         if ($dariTanggal && $sampaiTanggal) {
             $query->whereBetween('orderLab.TANGGAL', [$dariTanggal, $sampaiTanggal]);
@@ -198,13 +207,15 @@ class LaboratoriumController extends Controller
 
         // Execute the query and retrieve the data
         $data = $query->where('orderLab.STATUS', 2)
-            ->where('hasil.STATUS', 1)
+            ->where('catatanHasil.STATUS', 1)
+            ->where('tindakan.STATUS', 1)
+            ->distinct()
             ->get();
 
         // Map through the collection to set the statusHasil for each item
         $data = $data->map(function ($item) {
             // Set statusHasil based on the value of hasil.STATUS
-            $item->statusHasil = $item->statusHasil == 1 ? 'Sudah Final Hasil' : 'Belum ada Hasil';
+            $item->statusHasil = $item->statusHasil == 1 ? 'Final' : 'Belum ada Hasil';
             return $item;
         });
 
