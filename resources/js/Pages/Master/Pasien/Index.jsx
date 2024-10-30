@@ -49,7 +49,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -67,6 +67,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">TANGGAL LAHIR</th>
                                             <th className="px-3 py-2">ALAMAT</th>
                                             <th className="px-3 py-2">BPJS</th>
+                                            <th className="px-3 py-2">NIK</th>
                                             <th className="px-3 py-2">TERDAFTAR</th>
                                         </tr>
                                     </thead>
@@ -79,12 +80,13 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.alamat}</td>
                                                     <td className="px-3 py-3">{dataTable.bpjs ? dataTable.bpjs : ''}</td>
+                                                    <td className="px-3 py-3">{dataTable.nik ? dataTable.nik : ''}</td>
                                                     <td className="px-3 py-3">{dataTable.terdaftar}</td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
