@@ -49,10 +49,11 @@ export default function NavigationLaporan() {
                         Laporan RL 1.2
                     </NavLink>
                     <NavLink
-                        href="#"
+                        href={route('laporanRl51.index')}
+                        active={route().current('laporanRl51.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laporan RL 1.3
+                        Laporan RL 5.1
                     </NavLink>
 
                 </div>
