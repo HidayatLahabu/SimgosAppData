@@ -30,7 +30,7 @@ export default function ResponsiveNavLaporan() {
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
                             <ResponsiveNavLink href={route('laporanRl12.index')}>Laporan RL 1.2</ResponsiveNavLink>
-                            <ResponsiveNavLink href="#">Laporan RL 1.3</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('laporanRl51.index')}>Laporan RL 5.1</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

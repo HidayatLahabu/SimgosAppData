@@ -24,17 +24,20 @@ use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
 use App\Http\Controllers\Bpjs\RujukanMasukController;
 use App\Http\Controllers\Layanan\RadiologiController;
+use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
 use App\Http\Controllers\Logs\PenggunaAksesController;
 use App\Http\Controllers\Pendaftaran\KonsulController;
 use App\Http\Controllers\Pendaftaran\MutasiController;
+use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\LocationController;
 use App\Http\Controllers\Satusehat\SpecimenController;
 use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
 use App\Http\Controllers\Laporan\LaporanRl12Controller;
+use App\Http\Controllers\Laporan\LaporanRl51Controller;
 use App\Http\Controllers\Satusehat\ConditionController;
 use App\Http\Controllers\Satusehat\EncounterController;
 use App\Http\Controllers\Satusehat\ProcedureController;
@@ -47,24 +50,22 @@ use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
 use App\Http\Controllers\Layanan\TindakanMedisController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
+use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Master\TindakanRuanganController;
+use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
-use App\Http\Controllers\Satusehat\AllergyController;
-use App\Http\Controllers\Satusehat\BarangToBzaController;
-use App\Http\Controllers\Satusehat\CarePlanController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
-use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
-use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
+use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -278,6 +279,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
+        Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
     });
 });
 
