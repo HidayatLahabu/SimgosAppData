@@ -204,6 +204,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
         Route::get('pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
         Route::get('pendaftaran/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
+        Route::get('pendaftaran/kunjungan/{id}', [PendaftaranController::class, 'kunjungan'])->name('pendaftaran.kunjungan');
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
