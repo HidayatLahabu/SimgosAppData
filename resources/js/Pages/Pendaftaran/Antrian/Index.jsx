@@ -7,12 +7,12 @@ import Pagination from "@/Components/Pagination";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('antrian.index'), updatedParams, {
@@ -22,15 +22,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -51,10 +51,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari data berdasarkan nomor antrian, NORM, atau nama pasien"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>

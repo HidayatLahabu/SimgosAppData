@@ -11,7 +11,7 @@ class MutasiController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
@@ -32,7 +32,11 @@ class MutasiController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(mutasi.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Paginate the results
@@ -71,7 +75,7 @@ class MutasiController extends Controller
                 'reservasi.ATAS_NAMA as ATAS_NAMA',
                 'reservasi.KONTAK_INFO as NOMOR_KONTAK',
                 'reservasi_oleh.NAMA as RESERVASI_OLEH',
-                'reservasi.STATUS as STATUS_RESERVASI',
+                'reservasi.STATUS as STATUS_RESERVASI'
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
