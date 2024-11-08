@@ -24,13 +24,13 @@ class BarangToBzaController extends Controller
                 'barangBza.DOSIS_KFA as dosisKfa',
                 'bza.unit_of_mesure as satuanKfa',
                 'barangBza.DOSIS_PERSATUAN as dosisSatuan',
-                'tor.display as satuan',
+                'satuan.display as satuan',
                 'barangBza.STATUS as status'
             )
             ->leftJoin('inventory.barang as barang', 'barang.ID', '=', 'barangBza.BARANG')
             ->leftJoin('kemkes-ihs.bza as bza', 'bza.ID', '=', 'barangBza.KODE_BZA')
-            ->leftJoin('kemkes-ihs.type_code_reference as tor', 'tor.ID', '=', 'barangBza.SATUAN')
-            ->where('tor.TYPE', 19);
+            ->leftJoin('kemkes-ihs.type_code_reference as satuan', 'satuan.ID', '=', 'barangBza.SATUAN')
+            ->where('satuan.type', 19);
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -64,7 +64,7 @@ class BarangToBzaController extends Controller
                 'barangBza.DOSIS_KFA as dosisKfa',
                 'bza.unit_of_mesure as satuanKfa',
                 'barangBza.DOSIS_PERSATUAN as dosisSatuan',
-                'tor.display as satuan',
+                'satuan.display as satuan',
                 'barangBza.STATUS as status',
                 'referensi.DESKRIPSI as ruteObat',
                 'barangToPoaPov.KODE_POA AS poa',
@@ -72,12 +72,12 @@ class BarangToBzaController extends Controller
             )
             ->leftJoin('inventory.barang as barang', 'barang.ID', '=', 'barangBza.BARANG')
             ->leftJoin('kemkes-ihs.bza as bza', 'bza.ID', '=', 'barangBza.KODE_BZA')
-            ->leftJoin('kemkes-ihs.type_code_reference as tor', 'tor.ID', '=', 'barangBza.SATUAN')
+            ->leftJoin('kemkes-ihs.type_code_reference as satuan', 'satuan.id', '=', 'barangBza.SATUAN')
             ->leftJoin('kemkes-ihs.barang_to_poa_pov as barangToPoaPov', 'barangToPoaPov.BARANG', '=', 'barangBza.BARANG')
             ->leftJoin('kemkes-ihs.rute_obat as ruteObat', 'ruteObat.CODE', '=', 'barangToPoaPov.RUTE_OBAT')
             ->leftJoin('master.referensi as referensi', 'referensi.ID', '=', 'ruteObat.RUTE')
             ->where('barangBza.ID', $id)
-            ->where('tor.TYPE', 19)
+            ->where('satuan.TYPE', 19)
             ->where('referensi.JENIS', 217)
             ->first();
 
