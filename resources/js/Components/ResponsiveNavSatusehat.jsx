@@ -30,6 +30,7 @@ export default function ResponsiveNavSatusehat() {
         { label: 'Condition Hasil PA', route: 'conditionPa.index' },
         { label: 'Condition Penilaian Tumor', route: 'conditionTumor.index' },
         { label: 'Imaging Study', route: 'imagingStudy.index' },
+        { label: 'Tindakan To Loinc', route: 'tindakanToLoinc.index' },
     ];
 
     // Sort navLinks by label in ascending order

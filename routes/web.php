@@ -66,6 +66,7 @@ use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
+use App\Http\Controllers\Satusehat\TindakanToLoincController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -154,6 +155,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('imagingStudy', [ImagingStudyController::class, 'index'])->name('imagingStudy.index');
         Route::get('imagingStudy/detail/{id}', [ImagingStudyController::class, 'detail'])->name('imagingStudy.detail');
+
+        Route::get('tindakanToLoinc', [TindakanToLoincController::class, 'index'])->name('tindakanToLoinc.index');
+        Route::get('tindakanToLoinc/detail/{id}', [TindakanToLoincController::class, 'detail'])->name('tindakanToLoinc.detail');
     });
 });
 
