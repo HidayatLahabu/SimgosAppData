@@ -32,7 +32,7 @@ class TindakanToLoincController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('master.NAMA')
+        $data = $query->orderBy('master.NAMA')
             ->paginate(10)->appends(request()->query());
 
         // Convert data to array
