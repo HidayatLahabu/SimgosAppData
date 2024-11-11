@@ -14,9 +14,13 @@ class PesertaBpjController extends Controller
         $query = BpjsPesertaModel::orderByDesc('tglTMT')->where('ketStatusPeserta', 'AKTIF');
 
         // Apply search filter if 'subject' query parameter is present
-        if (request('nama')) {
-            $searchSubject = strtolower(request('nama')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(nama) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+        if (request('search')) {
+            $searchSubject = strtolower(request('search'));
+            $query->where(function ($q) use ($searchSubject) {
+                $q->where('noKartu', 'LIKE', '%' . $searchSubject . '%')
+                    ->orWhere('nik', 'LIKE', '%' . $searchSubject . '%')
+                    ->orWhere('nama', 'LIKE', '%' . $searchSubject . '%');
+            });
         }
 
         // Paginate the results

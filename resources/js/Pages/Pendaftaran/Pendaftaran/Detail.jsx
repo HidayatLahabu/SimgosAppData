@@ -28,8 +28,10 @@ export default function Detail({ auth, detail }) {
                                     </h1>
                                     <div className="flex space-x-4">
                                         <ButtonKunjungan href={route("pendaftaran.kunjungan", { id: detail.NOMOR })} />
-                                        <ButtonPasien href={route("pendaftaran.detail", { id: detail.NORM })} />
-                                        <ButtonBpjs href={route("pendaftaran.detail", { id: detail.NORM })} />
+                                        <ButtonPasien href={route("pendaftaran.pasien", { id: detail.NORM })} />
+                                        {detail.NOMOR_ASURANSI && detail.NOMOR_ASURANSI.trim() !== "" && (
+                                            <ButtonBpjs href={route("pendaftaran.bpjs", { id: detail.NORM })} />
+                                        )}
                                         <ButtonBack href={route("pendaftaran.index")} />
                                     </div>
                                 </div>
