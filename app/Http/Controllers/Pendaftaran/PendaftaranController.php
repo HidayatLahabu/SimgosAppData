@@ -171,7 +171,7 @@ class PendaftaranController extends Controller
                 'kunjungan.TITIPAN as TITIPAN',
                 'kunjungan.TITIPAN_KELAS as TITIPAN_KELAS',
                 'kunjungan.STATUS as STATUS_AKTIFITAS_KUNJUNGAN',
-                'final_kunjungan.NAMA as FINAL_HASIL_OLEH',
+                DB::raw('IFNULL(final_kunjungan.NAMA, "") as FINAL_HASIL_OLEH'),
                 'kunjungan.FINAL_HASIL_TANGGAL as FINAL_HASIL_TANGGAL',
                 'perubahan_tanggal_kunjungan.TANGGAL_LAMA as TANGGAL_KUNJUNGAN_LAMA',
                 'perubahan_tanggal_kunjungan.TANGGAL_BARU as TANGGAL_KUNJUNGAN_BARU',
