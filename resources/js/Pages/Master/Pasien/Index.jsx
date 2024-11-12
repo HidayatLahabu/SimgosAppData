@@ -4,6 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatDate } from '@/utils/formatDate';
+import ButtonDetail from "@/Components/ButtonDetail";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -49,7 +50,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -69,24 +70,37 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">BPJS</th>
                                             <th className="px-3 py-2">NIK</th>
                                             <th className="px-3 py-2">TERDAFTAR</th>
+                                            <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.norm}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.alamat}</td>
-                                                    <td className="px-3 py-3">{dataTable.bpjs ? dataTable.bpjs : ''}</td>
-                                                    <td className="px-3 py-3">{dataTable.nik ? dataTable.nik : ''}</td>
-                                                    <td className="px-3 py-3">{dataTable.terdaftar}</td>
+                                            dataTable.data.map((data, index) => (
+                                                <tr key={`${data.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    <td className="px-3 py-3">{data.norm}</td>
+                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
+                                                    <td className="px-3 py-3">{formatDate(data.tanggal)}</td>
+                                                    <td className="px-3 py-3 uppercase">{data.alamat}</td>
+                                                    <td className="px-3 py-3">
+                                                        {
+                                                            data.bpjs ? dataTable.bpjs : ''
+                                                        }
+                                                    </td>
+                                                    <td className="px-3 py-3">
+                                                        {
+                                                            data.nik ? data.nik : ''
+                                                        }</td>
+                                                    <td className="px-3 py-3">{data.terdaftar}</td>
+                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                        <ButtonDetail
+                                                            href={route("pasien.detail", { id: data.norm })}
+                                                        />
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

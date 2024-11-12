@@ -48,4 +48,90 @@ class PasienController extends Controller
             'queryParams' => request()->all()
         ]);
     }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql2')
+            ->table('master.pasien as pasien')
+            ->select([
+                'pasien.NORM as NORM',
+                'pasien.GELAR_DEPAN AS GELAR_DEPAN',
+                'pasien.NAMA as NAMA',
+                'pasien.GELAR_BELAKANG as GELAR_BELAKANG',
+                'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
+                'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
+                'pasien.JENIS_KELAMIN as JENIS_KELAMIN',
+                'pasien.ALAMAT as ALAMAT',
+                'pasien.RT as RT',
+                'pasien.RW as RW',
+                'wilayah.DESKRIPSI as WILAYAH',
+                'pasien.KODEPOS as KODEPOS',
+                'agama.DESKRIPSI as AGAMA',
+                'kelamin.DESKRIPSI as JENIS_KELAMIN',
+                'pendidikan.DESKRIPSI as PENDIDIKAN',
+                'perkawinan.DESKRIPSI as STATUS_PERKAWINAN',
+                'golonganDarah.DESKRIPSI as GOLONGAN_DARAH',
+                'kewarganegaraan.DESKRIPSI as KEWARGANEGARAAN',
+                'pasien.SUKU as SUKU',
+                'pasien.TIDAK_DIKENAL as TIDAK_DIKENAL',
+                'pasien.JENIS_KELAMIN as JENIS_KELAMIN',
+                'bahasa.DESKRIPSI as BAHASA',
+                'pasien.LOCK_AKSES as LOCK_AKSES',
+                'pasien.TANGGAL as TANGGAL',
+                'identitas.NOMOR as KARTU_IDENTITAS',
+                'asuransi.NOMOR as ASURANSI_PASIEN',
+                'kontak_pasien.NOMOR as KONTAK_PASIEN',
+                'keluarga.NAMA as NAMA_KELUARGA',
+                'keluarga.ALAMAT as ALAMAT_KELUARGA',
+            ])
+            ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
+            ->leftJoin('master.negara as kewarganegaraan', 'kewarganegaraan.ID', '=', 'pasien.KEWARGANEGARAAN')
+            ->leftJoin('master.kartu_identitas_pasien as identitas', 'identitas.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_asuransi_pasien as asuransi', 'asuransi.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kontak_pasien as kontak_pasien', 'kontak_pasien.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.keluarga_pasien as keluarga', 'keluarga.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.referensi as kelamin', function ($join) {
+                $join->on('kelamin.ID', '=', 'pasien.JENIS_KELAMIN')
+                    ->where('kelamin.JENIS', '=', 2);
+            })
+            ->leftJoin('master.referensi as agama', function ($join) {
+                $join->on('agama.ID', '=', 'pasien.AGAMA')
+                    ->where('agama.JENIS', '=', 1);
+            })
+            ->leftJoin('master.referensi as pendidikan', function ($join) {
+                $join->on('pendidikan.ID', '=', 'pasien.PENDIDIKAN')
+                    ->where('pendidikan.JENIS', '=', 3);
+            })
+            ->leftJoin('master.referensi as pekerjaan', function ($join) {
+                $join->on('pekerjaan.ID', '=', 'pasien.PEKERJAAN')
+                    ->where('pendidikan.JENIS', '=', 4);
+            })
+            ->leftJoin('master.referensi as perkawinan', function ($join) {
+                $join->on('perkawinan.ID', '=', 'pasien.STATUS_PERKAWINAN')
+                    ->where('perkawinan.JENIS', '=', 5);
+            })
+            ->leftJoin('master.referensi as golonganDarah', function ($join) {
+                $join->on('golonganDarah.ID', '=', 'pasien.GOLONGAN_DARAH')
+                    ->where('golonganDarah.JENIS', '=', 6);
+            })
+            ->leftJoin('master.referensi as bahasa', function ($join) {
+                $join->on('bahasa.ID', '=', 'pasien.BAHASA')
+                    ->where('bahasa.JENIS', '=', 177);
+            })
+            ->where('pasien.NORM', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('pasien.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Master/Pasien/Detail", [
+            'detail' => $query,
+        ]);
+    }
 }

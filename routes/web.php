@@ -187,6 +187,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('dokter', [DokterController::class, 'index'])->name('dokter.index');
 
         Route::get('pasien', [PasienController::class, 'index'])->name('pasien.index');
+        Route::get('pasien/detail/{id}', [PasienController::class, 'detail'])->name('pasien.detail');
 
         Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
 
