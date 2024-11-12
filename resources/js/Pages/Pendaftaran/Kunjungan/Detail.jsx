@@ -39,9 +39,8 @@ export default function Detail({ auth, detail }) {
                                                 <td className="px-3 py-3 break-words">
                                                     {detailItem.uraian === "STATUS_KUNJUNGAN" ? (
                                                         detailItem.value === 1 ? "Baru" :
-                                                            detailItem.value === 2 ? "Lama" :
-                                                                detailItem.value === 2 ? "Selesai" :
-                                                                    detailItem.value
+                                                            detailItem.value === 0 ? "Lama" :
+                                                                detailItem.value
                                                     ) : detailItem.uraian === "STATUS_AKTIFITAS_KUNJUNGAN" ? (
                                                         detailItem.value === 0 ? "Batal Kunjungan" :
                                                             detailItem.value === 1 ? "Pasien Berada di ruangan ini / Sedang dilayani" :
