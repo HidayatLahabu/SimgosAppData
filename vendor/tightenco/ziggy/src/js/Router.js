@@ -119,7 +119,7 @@ export default class Router extends String {
 
         // Test the passed name against the current route, matching some
         // basic wildcards, e.g. passing `events.*` matches `events.show`
-        const match = new RegExp(`^${name.replace(/\\/g, '\\\\').replace(/\./g, '\\.').replace(/\*/g, '.*')}$`).test(
+        const match = new RegExp(`^${name.replace(/\./g, '\\.').replace(/\*/g, '.*')}$`).test(
             current,
         );
 
@@ -211,7 +211,7 @@ export default class Router extends String {
      * @return {Boolean}
      */
     has(name) {
-        return Object.keys(this._config.routes).includes(name);
+        return this._config.routes.hasOwnProperty(name);
     }
 
     /**

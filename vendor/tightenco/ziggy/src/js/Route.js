@@ -80,6 +80,7 @@ export default class Route {
         // Transform the route's template into a regex that will match a hydrated URL,
         // by replacing its parameter segments with matchers for parameter values
         const pattern = this.template
+            .replace(/[.*+$()[\]]/g, '\\$&')
             .replace(/(\/?){([^}?]*)(\??)}/g, (_, slash, segment, optional) => {
                 const regex = `(?<${segment}>${
                     this.wheres[segment]?.replace(/(^\^)|(\$$)/g, '') || '[^/?]+'
@@ -90,7 +91,9 @@ export default class Route {
 
         const [location, query] = url.replace(/^\w+:\/\//, '').split('?');
 
-        const matches = new RegExp(`^${pattern}/?$`).exec(decodeURI(location));
+        const matches =
+            new RegExp(`^${pattern}/?$`).exec(location) ??
+            new RegExp(`^${pattern}/?$`).exec(decodeURI(location));
 
         if (matches) {
             for (const k in matches.groups) {

@@ -329,6 +329,19 @@ class Str
     }
 
     /**
+     * Determine if a given string doesn't contain a given substring.
+     *
+     * @param  string  $haystack
+     * @param  string|iterable<string>  $needles
+     * @param  bool  $ignoreCase
+     * @return bool
+     */
+    public static function doesntContain($haystack, $needles, $ignoreCase = false)
+    {
+        return ! static::contains($haystack, $needles, $ignoreCase);
+    }
+
+    /**
      * Convert the case of a string.
      *
      * @param  string  $string
@@ -339,6 +352,18 @@ class Str
     public static function convertCase(string $string, int $mode = MB_CASE_FOLD, ?string $encoding = 'UTF-8')
     {
         return mb_convert_case($string, $mode, $encoding);
+    }
+
+    /**
+     * Replace consecutive instances of a given character with a single character in the given string.
+     *
+     * @param  string  $string
+     * @param  string  $character
+     * @return string
+     */
+    public static function deduplicate(string $string, string $character = ' ')
+    {
+        return preg_replace('/'.preg_quote($character, '/').'+/u', $character, $string);
     }
 
     /**
@@ -705,14 +730,19 @@ class Str
      *
      * @param  string  $string
      * @param  array  $options
+     * @param  array  $extensions
      * @return string
      */
-    public static function inlineMarkdown($string, array $options = [])
+    public static function inlineMarkdown($string, array $options = [], array $extensions = [])
     {
         $environment = new Environment($options);
 
         $environment->addExtension(new GithubFlavoredMarkdownExtension());
         $environment->addExtension(new InlinesOnlyExtension());
+
+        foreach ($extensions as $extension) {
+            $environment->addExtension($extension);
+        }
 
         $converter = new MarkdownConverter($environment);
 
@@ -1485,7 +1515,9 @@ class Str
     public static function trim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+|[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value) ?? trim($value);
+            $trimDefaultCharacters = " \n\r\t\v\0";
+
+            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+|[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+$~u', '', $value) ?? trim($value);
         }
 
         return trim($value, $charlist);
@@ -1501,7 +1533,9 @@ class Str
     public static function ltrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}]+~u', '', $value) ?? ltrim($value);
+            $ltrimDefaultCharacters = " \n\r\t\v\0";
+
+            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$ltrimDefaultCharacters.']+~u', '', $value) ?? ltrim($value);
         }
 
         return ltrim($value, $charlist);
@@ -1517,7 +1551,9 @@ class Str
     public static function rtrim($value, $charlist = null)
     {
         if ($charlist === null) {
-            return preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}]+$~u', '', $value) ?? rtrim($value);
+            $rtrimDefaultCharacters = " \n\r\t\v\0";
+
+            return preg_replace('~[\s\x{FEFF}\x{200B}\x{200E}'.$rtrimDefaultCharacters.']+$~u', '', $value) ?? rtrim($value);
         }
 
         return rtrim($value, $charlist);

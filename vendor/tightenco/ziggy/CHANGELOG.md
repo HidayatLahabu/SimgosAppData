@@ -8,6 +8,33 @@ Breaking changes are marked with ⚠️.
 
 ## [Unreleased]
 
+## [v2.4.0] - 2024-11-09
+
+**Added**
+
+- Add ability to strictly type check route names by @bakerkretzmar and @Andyuu in https://github.com/tighten/ziggy/pull/787
+
+**Fixed**
+
+- Fix type definition for route() with only options by @bram-pkg in https://github.com/tighten/ziggy/pull/786
+- Fix `queryParams` return type by @bakerkretzmar in https://github.com/tighten/ziggy/pull/788
+
+**Changed**
+
+- Add note to use inject for vue 3 by @mhelaiwa in https://github.com/tighten/ziggy/pull/785
+- Update `README.md`. by @choowx in https://github.com/tighten/ziggy/pull/782
+
+## [v2.3.1] - 2024-10-17
+
+**Fixed**
+
+- Escape special regex characters when matching routes by @aguingand in https://github.com/tighten/ziggy/pull/766
+- Fix params sometimes being double-decoded by @bakerkretzmar in https://github.com/tighten/ziggy/pull/778
+
+**Changed**
+
+- Optimize has() by @thomas-brx in https://github.com/tighten/ziggy/pull/770
+
 ## [v2.3.0] - 2024-07-21
 
 **Added**
@@ -418,7 +445,9 @@ See [UPGRADING](UPGRADING.md#upgrading-from-1x-to-2x) for detailed upgrade instr
 
 For previous changes see the [Releases](https://github.com/tighten/ziggy/releases) page.
 
-[Unreleased]: https://github.com/tighten/ziggy/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/tighten/ziggy/compare/v2.4.0...HEAD
+[v2.3.1]: https://github.com/tighten/ziggy/compare/v2.3.1...v2.4.0
+[v2.3.1]: https://github.com/tighten/ziggy/compare/v2.3.0...v2.3.1
 [v2.3.0]: https://github.com/tighten/ziggy/compare/v2.2.1...v2.3.0
 [v2.2.1]: https://github.com/tighten/ziggy/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/tighten/ziggy/compare/v2.1.0...v2.2.0

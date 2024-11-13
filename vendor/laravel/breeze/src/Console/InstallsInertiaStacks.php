@@ -41,6 +41,49 @@ trait InstallsInertiaStacks
             });
         }
 
+        if ($this->option('eslint')) {
+            $this->updateNodePackages(function ($packages) {
+                return [
+                    'eslint' => '^8.57.0',
+                    'eslint-plugin-vue' => '^9.23.0',
+                    '@rushstack/eslint-patch' => '^1.8.0',
+                    '@vue/eslint-config-prettier' => '^9.0.0',
+                    'prettier' => '^3.3.0',
+                    'prettier-plugin-organize-imports' => '^4.0.0',
+                    'prettier-plugin-tailwindcss' => '^0.6.5',
+                ] + $packages;
+            });
+
+            if ($this->option('typescript')) {
+                $this->updateNodePackages(function ($packages) {
+                    return [
+                        '@vue/eslint-config-typescript' => '^13.0.0',
+                    ] + $packages;
+                });
+
+                $this->updateNodeScripts(function ($scripts) {
+                    return $scripts + [
+                        'lint' => 'eslint resources/js --ext .js,.ts,.vue --ignore-path .gitignore --fix',
+                    ];
+                });
+
+                copy(__DIR__.'/../../stubs/inertia-vue-ts/.eslintrc.cjs', base_path('.eslintrc.cjs'));
+            } else {
+                $this->updateNodeScripts(function ($scripts) {
+                    return $scripts + [
+                        'lint' => 'eslint resources/js --ext .js,.vue --ignore-path .gitignore --fix',
+                    ];
+                });
+
+                copy(__DIR__.'/../../stubs/inertia-vue/.eslintrc.cjs', base_path('.eslintrc.cjs'));
+            }
+
+            copy(__DIR__.'/../../stubs/inertia-common/.prettierrc', base_path('.prettierrc'));
+        }
+
+        // Providers...
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia-common/app/Providers', app_path('Providers'));
+
         // Controllers...
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia-common/app/Http/Controllers', app_path('Http/Controllers'));
@@ -213,6 +256,51 @@ trait InstallsInertiaStacks
             });
         }
 
+        if ($this->option('eslint')) {
+            $this->updateNodePackages(function ($packages) {
+                return [
+                    'eslint' => '^8.57.0',
+                    'eslint-plugin-react' => '^7.34.4',
+                    'eslint-plugin-react-hooks' => '^4.6.2',
+                    'eslint-plugin-prettier' => '^5.1.3',
+                    'eslint-config-prettier' => '^9.1.0',
+                    'prettier' => '^3.3.0',
+                    'prettier-plugin-organize-imports' => '^4.0.0',
+                    'prettier-plugin-tailwindcss' => '^0.6.5',
+                ] + $packages;
+            });
+
+            if ($this->option('typescript')) {
+                $this->updateNodePackages(function ($packages) {
+                    return [
+                        '@typescript-eslint/eslint-plugin' => '^7.16.0',
+                        '@typescript-eslint/parser' => '^7.16.0',
+                    ] + $packages;
+                });
+
+                $this->updateNodeScripts(function ($scripts) {
+                    return $scripts + [
+                        'lint' => 'eslint resources/js --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore --fix',
+                    ];
+                });
+
+                copy(__DIR__.'/../../stubs/inertia-react-ts/.eslintrc.json', base_path('.eslintrc.json'));
+            } else {
+                $this->updateNodeScripts(function ($scripts) {
+                    return $scripts + [
+                        'lint' => 'eslint resources/js --ext .js,.jsx --ignore-path .gitignore --fix',
+                    ];
+                });
+
+                copy(__DIR__.'/../../stubs/inertia-react/.eslintrc.json', base_path('.eslintrc.json'));
+            }
+
+            copy(__DIR__.'/../../stubs/inertia-common/.prettierrc', base_path('.prettierrc'));
+        }
+
+        // Providers...
+        (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia-common/app/Providers', app_path('Providers'));
+
         // Controllers...
         (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers'));
         (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/inertia-common/app/Http/Controllers', app_path('Http/Controllers'));
@@ -315,6 +403,8 @@ trait InstallsInertiaStacks
             $this->runCommands(['yarn install', 'yarn run build']);
         } elseif (file_exists(base_path('bun.lockb'))) {
             $this->runCommands(['bun install', 'bun run build']);
+        } elseif (file_exists(base_path('deno.lock'))) {
+            $this->runCommands(['deno install', 'deno task build']);
         } else {
             $this->runCommands(['npm install', 'npm run build']);
         }
@@ -371,12 +461,12 @@ trait InstallsInertiaStacks
                     root.render(<App {...props} />);
             EOT,
             <<<'EOT'
-                    if (import.meta.env.DEV) {
-                        createRoot(el).render(<App {...props} />);
-                        return
+                    if (import.meta.env.SSR) {
+                        hydrateRoot(el, <App {...props} />);
+                        return;
                     }
 
-                    hydrateRoot(el, <App {...props} />);
+                    createRoot(el).render(<App {...props} />);
             EOT,
             $path
         );
