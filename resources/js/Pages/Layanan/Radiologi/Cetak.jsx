@@ -25,8 +25,12 @@ export default function Cetak() {
         }));
     }, []);
 
-    const onJenisPasienChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisPasien: selectedOption.value }));
+    const onJenisPenjaminChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
+    };
+
+    const onJenisKunjunganChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
     };
 
     const onSubmit = (e) => {
@@ -49,22 +53,41 @@ export default function Cetak() {
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Laporan Layanan Radiologi</h1>
 
-                        <div className="mt-4">
-                            <InputLabel
-                                htmlFor="jenisPasien"
-                                value="Jenis Pasien"
-                            />
-                            <SelectTwoInput
-                                id="jenisPasien"
-                                name="jenisPasien"
-                                className="mt-1 block w-full"
-                                placeholder="Pilih Jenis Pasien"
-                                onChange={onJenisPasienChange}
-                                options={[
-                                    { value: 1, label: 'BPJS Kesehatan' },
-                                    { value: 2, label: 'Pasien Umum' },
-                                ]}
-                            />
+                        <div className="mt-4 flex space-x-4">
+                            <div className="flex-1">
+                                <InputLabel
+                                    htmlFor="jenisPasien"
+                                    value="Jenis Penjamin"
+                                />
+                                <SelectTwoInput
+                                    id="jenisPasien"
+                                    name="jenisPasien"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Jenis Penjamin"
+                                    onChange={onJenisPenjaminChange}
+                                    options={[
+                                        { value: 1, label: 'Penjamin Non BPJS' },
+                                        { value: 2, label: 'Penjamin BPJS' },
+                                    ]}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <InputLabel
+                                    htmlFor="jenisKunjungan"
+                                    value="Jenis Kunjungan"
+                                />
+                                <SelectTwoInput
+                                    id="jenisKunjungan"
+                                    name="jenisKunjungan"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Jenis Kunjungan"
+                                    onChange={onJenisKunjunganChange}
+                                    options={[
+                                        { value: 1, label: 'Rawat Inap' },
+                                        { value: 2, label: 'Rawat Jalan' },
+                                    ]}
+                                />
+                            </div>
                         </div>
 
                         <div className="mt-4 flex space-x-4">

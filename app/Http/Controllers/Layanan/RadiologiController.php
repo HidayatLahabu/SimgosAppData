@@ -133,59 +133,94 @@ class RadiologiController extends Controller
 
     public function print(Request $request)
     {
-        // Retrieve input values
-        $jenisPasien  = $request->input('jenisPasien');
-        $dariTanggal  = $request->input('dari_tanggal');
-        $sampaiTanggal = $request->input('sampai_tanggal');
+        // Validasi input
+        $request->validate([
+            'jenisPenjamin'  => 'nullable|integer|in:1,2',
+            'jenisKunjungan' => 'nullable|integer|in:1,2',
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
 
-        // Prepare the base query
-        $query = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
-            ->join('pendaftaran.kunjungan as kunjunganPasien', 'kunjunganPasien.NOMOR', '=', 'orderRad.KUNJUNGAN')
-            ->join('pendaftaran.pendaftaran as pendaftaranPasien', 'pendaftaranPasien.NOMOR', '=', 'kunjunganPasien.NOPEN')
-            ->join('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaranPasien.NORM')
-            ->join('master.kartu_identitas_pasien as identitas', 'pasien.NORM', '=', 'identitas.NORM')
-            ->join('bpjs.peserta as bpjs', 'bpjs.nik', '=', 'identitas.NOMOR')
-            ->join('pendaftaran.kunjungan as kunjunganTindakan', 'kunjunganTindakan.REF', '=', 'orderRad.NOMOR')
-            ->join('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjunganTindakan.NOMOR')
-            ->join('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
-            ->join('master.tindakan as masterTindakan', 'masterTindakan.ID', '=', 'tindakanMedis.TINDAKAN')
-            ->join('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
-            ->join('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP');
+        // Ambil nilai input
+        $jenisPenjamin  = $request->input('jenisPenjamin');
+        $jenisKunjungan = $request->input('jenisKunjungan');
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
 
-        // Select relevant columns
-        $query->selectRaw('
-                orderRad.NOMOR as nomor,
-                orderRad.TANGGAL as tanggal,
-                orderRad.KUNJUNGAN as kunjungan,
-                pasien.NORM as norm,
-                pasien.NAMA as nama,
-                bpjs.noKartu as noKartu,
-                pegawai.NAMA as dokter,
-                masterTindakan.NAMA as namaTindakan
-            ');
+        // Variable default untuk label
+        $penjamin = 'Semua Penjamin';
+        $kunjungan = 'Semua Kunjungan';
 
-        // Filter based on patient type
-        $pasien = 'Semua Jenis Pasien';
-        if ($jenisPasien == 1) {
-            $query->whereNotNull('bpjs.noKartu'); // pasien BPJS
-            $pasien = 'BPJS';
-        } elseif ($jenisPasien == 2) {
-            $query->whereNull('bpjs.noKartu'); // pasien non-BPJS
-            $pasien = 'Umum';
+        // Query utama
+        $query = DB::connection('mysql7')->table('layanan.hasil_rad as hasilRad')
+            ->select([
+                'hasilRad.ID as idHasil',
+                'hasilRad.TANGGAL as tanggalHasil',
+                'tindakan.NAMA as namaTindakan',
+                'tindakanMedis.KUNJUNGAN',
+                'pendaftaran.NORM as norm',
+                'pasien.NAMA as namaPasien',
+                'jenisPenjamin.NOMOR as nomorSEP',
+                'pegawai.NAMA as dokterRadiologi',
+                'ruangan.DESKRIPSI as ruangan',
+            ])
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilRad.TINDAKAN_MEDIS')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasilRad.DOKTER')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuanPasien', 'tujuanPasien.NOPEN', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuanPasien.RUANGAN');
+
+        // Filter berdasarkan jenis penjamin
+        if ($jenisPenjamin == 1) {
+            $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
+                ->where('jenisPenjamin.JENIS', 1)
+                ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
+            $penjamin = 'Non BPJS';
+
+            // Filter berdasarkan jenis kunjungan
+            if ($jenisKunjungan == 1) {
+                $query->whereNotIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Exclude Rawat Jalan
+                $kunjungan = 'Rawat Inap';
+            } elseif ($jenisKunjungan == 2) {
+                $query->whereIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Include Rawat Jalan
+                $kunjungan = 'Rawat Jalan';
+            }
+        } elseif ($jenisPenjamin == 2) {
+            $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
+                ->leftJoin('bpjs.kunjungan as kunjunganBpjs', 'kunjunganBpjs.noSEP', '=', 'jenisPenjamin.NOMOR')
+                ->where(function ($query) {
+                    $query->where('jenisPenjamin.JENIS', 2)
+                        ->whereNotNull('jenisPenjamin.NOMOR')
+                        ->where('jenisPenjamin.NOMOR', '!=', '');
+                }); // Pasien BPJS
+            $penjamin = 'BPJS';
+
+            // Filter berdasarkan jenis kunjungan
+            if ($jenisKunjungan == 1) {
+                $query->where('kunjunganBpjs.jenisPelayanan', 1); // Pasien Rawat Inap
+                $kunjungan = 'Rawat Inap';
+            } elseif ($jenisKunjungan == 2) {
+                $query->where('kunjunganBpjs.jenisPelayanan', 2); // Pasien Rawat Jalan
+                $kunjungan = 'Rawat Jalan';
+            }
         }
 
-        // Execute the query and retrieve the data
-        $data = $query->where('orderRad.STATUS', 1)
-            ->orWhere('orderRad.STATUS', 2)
-            ->whereBetween('orderRad.TANGGAL', [$dariTanggal, $sampaiTanggal])
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('hasilRad.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('hasilRad.TANGGAL')
             ->get();
 
-        // Return data to the frontend using Inertia
+        // Kirim data ke frontend menggunakan Inertia
         return inertia("Layanan/Radiologi/Print", [
-            'data' => $data,
-            'dariTanggal' => $dariTanggal,
-            'sampaiTanggal' => $sampaiTanggal,
-            'jenisPasien' => $pasien,
+            'data'              => $data,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
+            'jenisPenjamin'     => $penjamin,
+            'jenisKunjungan'    => $kunjungan,
         ]);
     }
 }
