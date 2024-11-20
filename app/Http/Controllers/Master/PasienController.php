@@ -75,15 +75,16 @@ class PasienController extends Controller
                 'kewarganegaraan.DESKRIPSI as KEWARGANEGARAAN',
                 'pasien.SUKU as SUKU',
                 'pasien.TIDAK_DIKENAL as TIDAK_DIKENAL',
-                'pasien.JENIS_KELAMIN as JENIS_KELAMIN',
                 'bahasa.DESKRIPSI as BAHASA',
                 'pasien.LOCK_AKSES as LOCK_AKSES',
-                'pasien.TANGGAL as TANGGAL',
                 'identitas.NOMOR as KARTU_IDENTITAS',
                 'asuransi.NOMOR as ASURANSI_PASIEN',
                 'kontak_pasien.NOMOR as KONTAK_PASIEN',
                 'keluarga.NAMA as NAMA_KELUARGA',
                 'keluarga.ALAMAT as ALAMAT_KELUARGA',
+                'kontak_keluarga.NOMOR as KONTAK_KELUARGA',
+                'pengguna.NAMA as INPUT_OLEH',
+                'pasien.TANGGAL as TANGGAL_INPUT',
             ])
             ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
             ->leftJoin('master.negara as kewarganegaraan', 'kewarganegaraan.ID', '=', 'pasien.KEWARGANEGARAAN')
@@ -91,6 +92,8 @@ class PasienController extends Controller
             ->leftJoin('master.kartu_asuransi_pasien as asuransi', 'asuransi.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.kontak_pasien as kontak_pasien', 'kontak_pasien.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.keluarga_pasien as keluarga', 'keluarga.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kontak_keluarga_pasien as kontak_keluarga', 'kontak_keluarga.NORM', '=', 'pasien.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pasien.OLEH')
             ->leftJoin('master.referensi as kelamin', function ($join) {
                 $join->on('kelamin.ID', '=', 'pasien.JENIS_KELAMIN')
                     ->where('kelamin.JENIS', '=', 2);

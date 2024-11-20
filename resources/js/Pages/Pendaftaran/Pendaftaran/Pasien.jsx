@@ -1,21 +1,19 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
 
 export default function Detail({ auth, detail }) {
-    // Generate detailData dynamically using useMemo to avoid unnecessary re-calculations
-    const detailData = useMemo(() => Object.keys(detail).map((key) => ({
-        uraian: key,
+    // Generate detailData dynamically from the detail object
+    const detailData = Object.keys(detail).map((key) => ({
+        uraian: key, // Keep the original column name as it is
         value: detail[key],
-    })), [detail]);
+    }));
 
     // Helper function for displaying status text
     const getStatusText = (uraian, value) => {
-        if (uraian === "STATUS_KUNJUNGAN") {
-            return value === 1 ? "Baru" : value === 0 ? "Lama" : value;
-        } else if (uraian === "STATUS_AKTIFITAS_KUNJUNGAN") {
-            return value === 0 ? "Batal Kunjungan" : value === 1 ? "Sedang dilayani" : value === 2 ? "Selesai" : value;
+        if (uraian === "TEMPAT_LAHIR") {
+            return value == 7501 ? "GORONTALO" : value;
         }
         return value;
     };
@@ -31,16 +29,14 @@ export default function Detail({ auth, detail }) {
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
                                     <ButtonBack href={route("pendaftaran.detail", { id: detail.NOMOR_PENDAFTARAN })} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
-                                        Data Detail Kunjungan
-                                    </h1>
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL PASIEN</h1>
                                 </div>
-                                <table className="w-full text-sm text-left text-gray-500 dark:text-gray-200 dark:bg-indigo-900 overflow-x-auto">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">No</th>
-                                            <th className="px-3 py-2">Column</th>
-                                            <th className="px-3 py-2">Value</th>
+                                            <th className="px-3 py-2">NO</th>
+                                            <th className="px-3 py-2">COLUMN</th>
+                                            <th className="px-3 py-2">VALUE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
