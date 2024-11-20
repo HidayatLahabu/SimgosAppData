@@ -182,7 +182,7 @@ class LaboratoriumController extends Controller
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
                 'jenisPenjamin.NOMOR as nomorSEP',
-                'pegawai.NAMA as pelaksana',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilLab.TINDAKAN_MEDIS')
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
