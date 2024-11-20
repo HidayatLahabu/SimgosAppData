@@ -178,6 +178,7 @@ class LaboratoriumController extends Controller
                 'hasilLab.TANGGAL as tanggalHasil',
                 'tindakan.NAMA as namaTindakan',
                 'hasilLab.HASIL as hasil',
+                'hasilLab.SATUAN as satuan',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
                 'jenisPenjamin.NOMOR as nomorSEP',

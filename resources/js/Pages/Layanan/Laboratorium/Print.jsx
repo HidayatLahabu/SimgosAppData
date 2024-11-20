@@ -42,6 +42,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                 <th className="px-3 py-2">NOMOR SEP</th>
                                             )}
                                             <th className="px-3 py-2">TINDAKAN</th>
+                                            <th className="px-3 py-2">HASIL</th>
                                             <th className="px-3 py-2">PELAKSANA</th>
                                         </tr>
                                     </thead>
@@ -53,19 +54,22 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                     {item.idHasil}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
-                                                    {formatDate(item.tanggalHasil)}
+                                                    {item.tanggalHasil}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
                                                     {item.norm}
                                                 </td>
-                                                <td className="px-3 py-2">
+                                                <td className="px-3 py-2 text-nowrap">
                                                     {item.namaPasien}
                                                 </td>
                                                 {jenisPenjamin === 'BPJS' && (
                                                     <td className="px-3 py-2 text-nowrap">{item.nomorSEP}</td>
                                                 )}
-                                                <td className="px-3 py-2">
+                                                <td className="px-3 py-2 text-nowrap">
                                                     {item.namaTindakan}
+                                                </td>
+                                                <td className="px-3 py-2 text-wrap">
+                                                    {item.hasil} {item.satuan}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
                                                     {item.pelaksana}
