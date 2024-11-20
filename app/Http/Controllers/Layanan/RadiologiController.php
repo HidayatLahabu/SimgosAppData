@@ -157,12 +157,10 @@ class RadiologiController extends Controller
                 'hasilRad.ID as idHasil',
                 'hasilRad.TANGGAL as tanggalHasil',
                 'tindakan.NAMA as namaTindakan',
-                'tindakanMedis.KUNJUNGAN',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
                 'jenisPenjamin.NOMOR as nomorSEP',
-                'pegawai.NAMA as dokterRadiologi',
-                'ruangan.DESKRIPSI as ruangan',
+                'pegawai.NAMA as pelaksana',
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilRad.TINDAKAN_MEDIS')
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')

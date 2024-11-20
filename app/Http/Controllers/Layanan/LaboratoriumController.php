@@ -153,78 +153,94 @@ class LaboratoriumController extends Controller
 
     public function print(Request $request)
     {
-        // Retrieve input values
-        $jenisPasien    = $request->input('jenisPasien');
-        $orderBy        = $request->input('orderBy');
+        // Validasi input
+        $request->validate([
+            'jenisPenjamin'  => 'nullable|integer|in:1,2',
+            'jenisKunjungan' => 'nullable|integer|in:1,2',
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $jenisPenjamin  = $request->input('jenisPenjamin');
+        $jenisKunjungan = $request->input('jenisKunjungan');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
 
-        // Prepare the base query
-        $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
+        // Variable default untuk label
+        $penjamin = 'Semua Penjamin';
+        $kunjungan = 'Semua Kunjungan';
+
+        // Query utama
+        $query = DB::connection('mysql7')->table('layanan.hasil_lab as hasilLab')
+            ->select([
+                'hasilLab.ID as idHasil',
+                'hasilLab.TANGGAL as tanggalHasil',
+                'tindakan.NAMA as namaTindakan',
+                'hasilLab.HASIL as hasil',
+                'pendaftaran.NORM as norm',
+                'pasien.NAMA as namaPasien',
+                'jenisPenjamin.NOMOR as nomorSEP',
+                'pegawai.NAMA as pelaksana',
+            ])
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilLab.TINDAKAN_MEDIS')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
-            ->leftJoin('pendaftaran.kunjungan as kunjunganCatatan', 'kunjunganCatatan.REF', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.catatan_hasil_lab as catatanHasil', 'catatanHasil.KUNJUNGAN', '=', 'kunjunganCatatan.NOMOR')
-            ->leftJoin('layanan.order_detil_lab as orderDetailLab', 'orderDetailLab.ORDER_ID', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetailLab.REF')
-            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'orderDetailLab.TINDAKAN')
-            ->leftJoin('master.tarif_tindakan as tarif', 'tarif.TINDAKAN', '=', 'tindakan.ID')
-            ->selectRaw('
-                orderLab.NOMOR as nomor,
-                orderLab.TANGGAL as tanggal,
-                pasien.NORM as norm,
-                pasien.NAMA as nama,
-                peserta.noKartu as noKartu,
-                orderLab.STATUS as statusKunjungan,
-                tindakan.NAMA as tindakan,
-                tarif.TARIF as tarif,
-                catatanHasil.STATUS as statusHasil
-            ');
+            ->leftJoin('aplikasi.pengguna as dokter', 'dokter.ID', '=', 'hasilLab.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuanPasien', 'tujuanPasien.NOPEN', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuanPasien.RUANGAN');
 
-        // Filter based on patient type
-        $pasien = 'Semua Jenis Pasien';
-        if ($jenisPasien == 1) {
-            $query->whereNotNull('peserta.noKartu'); // pasien BPJS
-            $pasien = 'BPJS';
-        } elseif ($jenisPasien == 2) {
-            $query->whereNull('peserta.noKartu'); // pasien non-BPJS
-            $pasien = 'Umum';
+        // Filter berdasarkan jenis penjamin
+        if ($jenisPenjamin == 1) {
+            $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
+                ->where('jenisPenjamin.JENIS', 1)
+                ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
+            $penjamin = 'Non BPJS';
+
+            // Filter berdasarkan jenis kunjungan
+            if ($jenisKunjungan == 1) {
+                $query->whereNotIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Exclude Rawat Jalan
+                $kunjungan = 'Rawat Inap';
+            } elseif ($jenisKunjungan == 2) {
+                $query->whereIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Include Rawat Jalan
+                $kunjungan = 'Rawat Jalan';
+            }
+        } elseif ($jenisPenjamin == 2) {
+            $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
+                ->leftJoin('bpjs.kunjungan as kunjunganBpjs', 'kunjunganBpjs.noSEP', '=', 'jenisPenjamin.NOMOR')
+                ->where(function ($query) {
+                    $query->where('jenisPenjamin.JENIS', 2)
+                        ->whereNotNull('jenisPenjamin.NOMOR')
+                        ->where('jenisPenjamin.NOMOR', '!=', '');
+                }); // Pasien BPJS
+            $penjamin = 'BPJS';
+
+            // Filter berdasarkan jenis kunjungan
+            if ($jenisKunjungan == 1) {
+                $query->where('kunjunganBpjs.jenisPelayanan', 1); // Pasien Rawat Inap
+                $kunjungan = 'Rawat Inap';
+            } elseif ($jenisKunjungan == 2) {
+                $query->where('kunjunganBpjs.jenisPelayanan', 2); // Pasien Rawat Jalan
+                $kunjungan = 'Rawat Jalan';
+            }
         }
 
-        if ($orderBy == 1) {
-            $query->orderBy('pasien.NAMA')->orderBy('orderLab.TANGGAL');
-        } elseif ($orderBy == 2) {
-            $query->orderBy('orderLab.TANGGAL')->orderBy('pasien.NAMA');
-        }
-
-        // Filter by date range
-        if ($dariTanggal && $sampaiTanggal) {
-            $query->whereBetween('orderLab.TANGGAL', [$dariTanggal, $sampaiTanggal]);
-        }
-
-        // Execute the query and retrieve the data
-        $data = $query->where('orderLab.STATUS', 2)
-            ->where('catatanHasil.STATUS', 1)
-            ->where('tindakan.STATUS', 1)
-            ->distinct()
+        // Filter berdasarkan tanggal
+        $data = $query->where('hasilLab.HASIL', '!=', '')
+            ->whereBetween('hasilLab.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('hasilLab.TANGGAL')
             ->get();
 
-        // Map through the collection to set the statusHasil for each item
-        $data = $data->map(function ($item) {
-            // Set statusHasil based on the value of hasil.STATUS
-            $item->statusHasil = $item->statusHasil == 1 ? 'Final' : 'Belum ada Hasil';
-            return $item;
-        });
-
-        // Return data to the frontend using Inertia
+        // Kirim data ke frontend menggunakan Inertia
         return inertia("Layanan/Laboratorium/Print", [
-            'data' => $data,
-            'dariTanggal' => $dariTanggal,
-            'sampaiTanggal' => $sampaiTanggal,
-            'jenisPasien' => $pasien,
+            'data'              => $data,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
+            'jenisPenjamin'     => $penjamin,
+            'jenisKunjungan'    => $kunjungan,
         ]);
     }
 }

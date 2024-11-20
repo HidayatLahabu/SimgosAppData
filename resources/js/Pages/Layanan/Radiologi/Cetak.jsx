@@ -1,139 +1,89 @@
-import React, { useEffect } from "react";
-import { useForm } from "@inertiajs/react";
-import SelectTwoInput from "@/Components/SelectTwoInput";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
+import React, { useEffect } from 'react';
+import { Head } from "@inertiajs/react";
+import { formatDate } from '@/utils/formatDate';
 
-export default function Cetak() {
-
-    const { data, setData } = useForm({
-        dari_tanggal: '',
-        sampai_tanggal: ''
-    });
+export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan, jenisPenjamin }) {
 
     useEffect(() => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        const firstDayOfMonth = `${currentYear}-${currentMonth}-01`;
-        const formattedCurrentDate = currentDate.toISOString().split("T")[0];
-
-        setData(prevData => ({
-            ...prevData,
-            dari_tanggal: firstDayOfMonth,
-            sampai_tanggal: formattedCurrentDate
-        }));
+        import('@/../../resources/css/print.css');
     }, []);
 
-    const onJenisPenjaminChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
-    };
-
-    const onJenisKunjunganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
-    };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        // Filter out empty values
-        const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
-
-        const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("layananRad.print") + "?" + queryString, "_blank");
-    };
-
     return (
-        <div className="pt-2">
-            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
-                <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg">
-                    <form
-                        onSubmit={onSubmit}
-                        className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
-                    >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Laporan Layanan Radiologi</h1>
+        <div className="h-screen w-screen bg-white">
+            <Head title="Layanan" />
 
-                        <div className="mt-4 flex space-x-4">
-                            <div className="flex-1">
-                                <InputLabel
-                                    htmlFor="jenisPasien"
-                                    value="Jenis Penjamin"
-                                />
-                                <SelectTwoInput
-                                    id="jenisPasien"
-                                    name="jenisPasien"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Jenis Penjamin"
-                                    onChange={onJenisPenjaminChange}
-                                    options={[
-                                        { value: 1, label: 'Penjamin Non BPJS' },
-                                        { value: 2, label: 'Penjamin BPJS' },
-                                    ]}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <InputLabel
-                                    htmlFor="jenisKunjungan"
-                                    value="Jenis Kunjungan"
-                                />
-                                <SelectTwoInput
-                                    id="jenisKunjungan"
-                                    name="jenisKunjungan"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Jenis Kunjungan"
-                                    onChange={onJenisKunjunganChange}
-                                    options={[
-                                        { value: 1, label: 'Rawat Inap' },
-                                        { value: 2, label: 'Rawat Jalan' },
-                                    ]}
-                                />
-                            </div>
-                        </div>
+            <div className="content">
+                <div className="w-full mx-auto sm:px-6 lg:px-5">
+                    <div className="w-full bg-white overflow-hidden">
+                        <div className="p-2 bg-white">
+                            <div className="overflow-auto">
+                                <h1 className="text-center font-bold text-2xl">
+                                    LAYANAN RADIOLOGI
+                                </h1>
+                                <h2 className="text-center font-bold text-2xl uppercase">
+                                    JENIS PENJAMIN {jenisPenjamin}
+                                </h2>
+                                <h2 className="text-center font-bold text-2xl uppercase">
+                                    JENIS KUNJUNGAN {jenisKunjungan}
+                                </h2>
+                                <p className="text-center font-bold text-2xl">
+                                    Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
+                                </p>
 
-                        <div className="mt-4 flex space-x-4">
-                            <div className="flex-1">
-                                <InputLabel
-                                    htmlFor="dari_tanggal"
-                                    value="Dari Tanggal"
-                                />
-                                <TextInput
-                                    type="date"
-                                    id="dari_tanggal"
-                                    name="dari_tanggal"
-                                    className="mt-1 block w-full"
-                                    value={data.dari_tanggal}
-                                    onChange={(e) => setData(prevData => ({ ...prevData, dari_tanggal: e.target.value }))}
-                                />
-                            </div>
-
-                            <div className="flex-1">
-                                <InputLabel
-                                    htmlFor="sampai_tanggal"
-                                    value="Sampai Tanggal"
-                                />
-                                <TextInput
-                                    type="date"
-                                    id="sampai_tanggal"
-                                    name="sampai_tanggal"
-                                    className="mt-1 block w-full"
-                                    value={data.sampai_tanggal}
-                                    onChange={(e) => setData(prevData => ({ ...prevData, sampai_tanggal: e.target.value }))}
-                                />
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4">
+                                    <thead className="text-sm font-bold text-gray-900 bg-white dark:text-gray-900 border-b-2 border-gray-500">
+                                        <tr>
+                                            <th className="px-3 py-2">NO</th>
+                                            <th className="px-3 py-2">ID HASIL</th>
+                                            <th className="px-3 py-2">TANGGAL</th>
+                                            <th className="px-3 py-2">NORM</th>
+                                            <th className="px-3 py-2">NAMA PASIEN</th>
+                                            {jenisPenjamin === 'BPJS' && (
+                                                <th className="px-3 py-2">NOMOR SEP</th>
+                                            )}
+                                            <th className="px-3 py-2">TINDAKAN</th>
+                                            <th className="px-3 py-2">PELAKSANA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.map((item, key) => (
+                                            <tr key={item.id} className="border-b bg-white dark:border-gray-500">
+                                                <td className="px-3 py-2 text-nowrap">{key + 1}</td>
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.idHasil}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {formatDate(item.tanggalHasil)}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.norm}
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    {item.namaPasien}
+                                                </td>
+                                                {jenisPenjamin === 'BPJS' && (
+                                                    <td className="px-3 py-2 text-nowrap">{item.nomorSEP}</td>
+                                                )}
+                                                <td className="px-3 py-2">
+                                                    {item.namaTindakan}
+                                                </td>
+                                                <td className="px-3 py-2">
+                                                    {item.pelaksana}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-
-                        <div className="flex justify-between items-center mt-4">
-                            <button
-                                className="bg-red-500 py-1 px-3 text-gray-200 rounded shadow transition-all hover:bg-red-700 ml-auto"
-                                type="submit"
-                            >
-                                Cetak
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
+                <footer className="bg-white text-black text-sm">
+                    <div className="text-center">
+                        <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
+                    </div>
+                </footer>
             </div>
         </div>
-    )
+    );
 }
-

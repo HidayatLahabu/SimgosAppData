@@ -68,7 +68,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                     {item.namaTindakan}
                                                 </td>
                                                 <td className="px-3 py-2">
-                                                    {item.dokterRadiologi}
+                                                    {item.pelaksana}
                                                 </td>
                                             </tr>
                                         ))}
