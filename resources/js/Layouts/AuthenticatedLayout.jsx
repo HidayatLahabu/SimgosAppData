@@ -1,7 +1,7 @@
 import React from 'react';
 import TopNavigation from './TopNavigation';
 
-export default function Authenticated({ user, header, children }) {
+export default function Authenticated({ user, children }) {
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-950">

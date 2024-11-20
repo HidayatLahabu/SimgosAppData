@@ -1,15 +1,18 @@
 import React from 'react';
+import NavLink from '@/Components/NavLink';
 import NavigationSatusehat from '@/Components/NavigationSatusehat';
 import NavigationInventory from '@/Components/NavigationInventory';
-import NavLink from '@/Components/NavLink';
 import NavigationMaster from '@/Components/NavigationMaster';
 import NavigationPendaftaran from '@/Components/NavigationPendaftaran';
 import NavigationBpjs from '@/Components/NavigationBpjs';
 import NavigationLayanan from '@/Components/NavigationLayanan';
 import NavigationLogs from '@/Components/NavigationLogs';
 import NavigationLaporan from '@/Components/NavigationLaporan';
+import NavigationRadiologi from '@/Components/NavigationRadiologi';
 
-export default function Navigation() {
+export default function Navigation({ user }) {
+    const userName = user.name || '';
+
     return (
         <div className="hidden sm:flex items-center space-x-8">
             <div className="flex-grow flex items-center">
@@ -22,16 +25,21 @@ export default function Navigation() {
                         Beranda
                     </NavLink>
                 </div>
-                <NavigationSatusehat />
-                <NavigationPendaftaran />
-                <NavigationBpjs />
-                <NavigationLayanan />
-                <NavigationInventory />
-                <NavigationLaporan />
-                <NavigationLogs />
-                <NavigationMaster />
+                {userName.includes('Radiologi') ? (
+                    <NavigationRadiologi />
+                ) : (
+                    <>
+                        <NavigationSatusehat />
+                        <NavigationPendaftaran />
+                        <NavigationBpjs />
+                        <NavigationLayanan />
+                        <NavigationInventory />
+                        <NavigationLaporan />
+                        <NavigationLogs />
+                        <NavigationMaster />
+                    </>
+                )}
             </div>
         </div>
-
     );
 }
