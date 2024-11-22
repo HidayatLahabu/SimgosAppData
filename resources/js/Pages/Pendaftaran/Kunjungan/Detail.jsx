@@ -2,8 +2,9 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
+import DataKunjungan from './DataKunjungan';
 
-export default function Detail({ auth, detail }) {
+export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
         uraian: key, // Keep the original column name as it is
@@ -57,6 +58,9 @@ export default function Detail({ auth, detail }) {
                     </div>
                 </div>
             </div>
+
+            <DataKunjungan dataKunjungan={dataKunjungan} nomorPendaftaran={nomorPendaftaran} />
+
         </AuthenticatedLayout>
     );
 }

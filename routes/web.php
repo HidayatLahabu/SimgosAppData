@@ -60,13 +60,13 @@ use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
+use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
-use App\Http\Controllers\Satusehat\TindakanToLoincController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -215,6 +215,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
+        Route::get('kunjungan/tableRme/{id}', [KunjunganController::class, 'tableRme'])->name('kunjungan.tableRme');
+        Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
+        Route::get('kunjungan/anamnesis/{id}', [KunjunganController::class, 'anamnesis'])->name('kunjungan.anamnesis');
+        Route::get('kunjungan/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
+        Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
+        Route::get('kunjungan/vital/{id}', [KunjunganController::class, 'vital'])->name('kunjungan.vital');
+        Route::get('kunjungan/kontrol/{id}', [KunjunganController::class, 'kontrol'])->name('kunjungan.kontrol');
+        Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
+        Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');

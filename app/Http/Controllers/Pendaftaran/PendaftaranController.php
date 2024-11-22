@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pendaftaran;
 
 use App\Http\Controllers\Controller;
+use App\Models\PendaftaranKunjunganModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -59,7 +60,7 @@ class PendaftaranController extends Controller
         $query = DB::connection('mysql5')
             ->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                'pendaftaran.NOMOR as NOMOR',
+                'pendaftaran.NOMOR as NOMOR_PENDAFTARAN',
                 'pendaftaran.NORM as NORM',
                 'pasien.NAMA as NAMA_PASIEN',
                 'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
@@ -144,10 +145,34 @@ class PendaftaranController extends Controller
             return redirect()->route('pendaftaran.index')->with('error', 'Data not found.');
         }
 
+        //nomor pendaftaran
+        $noPendaftaran = $query->NOMOR_PENDAFTARAN;
+        // Fetch kunjungan data using the new function
+        $kunjungan = $this->getKunjungan($noPendaftaran);
+
         // Return Inertia view with the encounter data
         return inertia("Pendaftaran/Pendaftaran/Detail", [
-            'detail' => $query,
+            'detail'            => $query,
+            'dataKunjungan'     => $kunjungan,
+            'nomorPendaftaran'  => $noPendaftaran,
         ]);
+    }
+
+    //get data table untuk detail kunjungan
+    protected function getKunjungan($noPendaftaran)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'kunjungan.NOPEN as pendaftaran',
+                'kunjungan.MASUK as masuk',
+                'kunjungan.KELUAR as keluar',
+                'ruangan.DESKRIPSI as ruangan',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->where('pendaftaran.NOMOR', $noPendaftaran)
+            ->get();
     }
 
     public function kunjungan($id)

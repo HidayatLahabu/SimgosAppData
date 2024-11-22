@@ -2,15 +2,11 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
-import ButtonKunjungan from '@/Components/ButtonKunjungan';
-import ButtonPasien from '@/Components/ButtonPasien';
-import ButtonBpjs from '@/Components/ButtonBpjs';
-import DataKunjungan from '../Kunjungan/DataKunjungan';
 
-export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
+export default function Detail({ auth, detail, nomorKunjungan, judulRme }) {
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
-        uraian: key,
+        uraian: key, // Keep the original column name as it is
         value: detail[key],
     }));
 
@@ -23,17 +19,9 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <div className="flex items-center justify-between pb-2">
-                                    <h1 className="text-left uppercase font-bold text-2xl">
-                                        DATA DETAIL PENDAFTARAN
-                                    </h1>
-                                    <div className="flex space-x-4">
-                                        <ButtonPasien href={route("pendaftaran.pasien", { id: detail.NORM })} />
-                                        {detail.NOMOR_ASURANSI && detail.NOMOR_ASURANSI.trim() !== "" && (
-                                            <ButtonBpjs href={route("pendaftaran.bpjs", { id: detail.NORM })} />
-                                        )}
-                                        <ButtonBack href={route("pendaftaran.index")} />
-                                    </div>
+                                <div className="relative flex items-center justify-between pb-2">
+                                    <ButtonBack href={route("kunjungan.detail", { id: nomorKunjungan })} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL {judulRme}</h1>
                                 </div>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
@@ -49,16 +37,14 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
                                                 <td className="px-3 py-3 break-words">
-                                                    {detailItem.uraian === "STATUS_PENDAFTARAN" ? (
-                                                        detailItem.value === 0 ? "Batal" :
-                                                            detailItem.value === 1 ? "Aktif" :
-                                                                detailItem.value === 2 ? "Selesai" :
-                                                                    detailItem.value
-                                                    ) : detailItem.uraian === "STATUS_PASIEN" ? (
-                                                        detailItem.value === 0 ? "Dibatalkan/Tidak Aktif" :
-                                                            detailItem.value === 1 ? "Aktif" :
-                                                                detailItem.value === 2 ? "Meninggal" :
-                                                                    detailItem.value
+                                                    {detailItem.uraian === "DIAGNOSA_STATUS" ? (
+                                                        detailItem.value === 1 ? "Final" :
+                                                            detailItem.value === 0 ? "Belum Final" :
+                                                                detailItem.value
+                                                    ) : detailItem.uraian === "INA_GROUPER" ? (
+                                                        detailItem.value === 1 ? "Final" :
+                                                            detailItem.value === 0 ? "Belum Final" :
+                                                                detailItem.value
                                                     ) : detailItem.value}
                                                 </td>
                                             </tr>
@@ -70,9 +56,6 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                     </div>
                 </div>
             </div>
-
-            <DataKunjungan dataKunjungan={dataKunjungan} nomorPendaftaran={nomorPendaftaran} />
-
         </AuthenticatedLayout>
     );
 }
