@@ -142,12 +142,13 @@ class KunjunganController extends Controller
         // Fetch the specific data
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select([
-                'ruangan.ID',
-                'ruangan.DESKRIPSI',
                 'kunjungan.NOMOR as nomorKunjungan',
                 'kunjungan.NOPEN as nomorPendaftaran',
+                'pasien.NORM as norm',
+                'pasien.NAMA as namaPasien',
             ])
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->where('kunjungan.NOMOR', $id)
             ->distinct()
             ->first();
@@ -159,12 +160,17 @@ class KunjunganController extends Controller
         }
 
         // Get nomor pendaftaran
-        $nomorPendaftaran = $query->nomorPendaftaran;
+        $pendaftaran = $query->nomorPendaftaran;
+        $kunjungan   = $query->nomorKunjungan;
+        $pasien      = $query->namaPasien;
+        $norm        = $query->norm;
 
         return inertia("Pendaftaran/Kunjungan/TableRme", [
             'dataTable'         => $query,
-            'nomorKunjungan'    => $id,
-            'nomorPendaftaran'  => $nomorPendaftaran,
+            'nomorKunjungan'    => $kunjungan,
+            'nomorPendaftaran'  => $pendaftaran,
+            'namaPasien'        => $pasien,
+            'normPasien'        => $norm,
         ]);
     }
 

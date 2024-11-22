@@ -4,7 +4,7 @@ import { Head } from "@inertiajs/react";
 import { Link } from '@inertiajs/react';
 import ButtonBack from '@/Components/ButtonBack';
 
-export default function TableRme({ auth, nomorKunjungan, nomorPendaftaran }) {
+export default function TableRme({ auth, nomorKunjungan, nomorPendaftaran, namaPasien, normPasien }) {
     const data = [
         { title: 'Data Diagnosa', route: "kunjungan.diagnosa", id: nomorPendaftaran },
         { title: 'Data Anamnesis', route: "kunjungan.anamnesis", id: nomorKunjungan },
@@ -30,6 +30,21 @@ export default function TableRme({ auth, nomorKunjungan, nomorPendaftaran }) {
                                     </Link>
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL KUNJUNGAN</h1>
                                 </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 pb-4">
+                                    <div className="flex justify-between border p-2 rounded">
+                                        NOMOR PENDAFTARAN : {nomorPendaftaran}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        NOMOR KUNJUNGAN : {nomorKunjungan}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        NAMA PASIEN : {namaPasien}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        NORM : {normPasien}
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {data.map((item, index) => (
                                         <div key={index} className="bg-white dark:bg-indigo-900 rounded-lg shadow-md p-5">
