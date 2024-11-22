@@ -214,34 +214,39 @@ class KunjunganController extends Controller
         // Fetch the specific data
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select([
-                'anamnesis.ID as ID_ANAMNESIS',
-                'anamnesis.KUNJUNGAN as NOMOR_KUNJUNGAN',
-                'anamnesis.PENDAFTARAN as NOMOR_PENDAFTARAN',
-                'anamnesis.DESKRIPSI as DESKRIPSI',
-                'rpp.DESKRIPSI as RPP',
-                'keluhanUtama.DESKRIPSI as KELUHAN_UTAMA',
-                'anamnesis.RPS as RPS',
-                'anamnesis.RPT as RPT',
-                'anamnesis.RPK as RPK',
-                'anamnesis.RL as RL',
-                'anamnesis.RIWAYAT_ALERGI as RIWAYAT_ALERGI',
-                'anamnesis.REAKSI_ALERGI as REAKSI_ALERGI',
-                'anamnesis.TANGGAL as INPUT_TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as INPUT_OLEH'),
-                'anamnesis.STATUS as STATUS',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'anamnesis.ID as ANAMNESIS_ID',
+                'anamnesis.DESKRIPSI as ANAMNESIS_DESKRIPSI',
+                'rpp.DESKRIPSI as ANAMNESIS_RPP',
+                'keluhanUtama.DESKRIPSI as ANAMNESIS_KELUHAN_UTAMA',
+                'anamnesis.RPS as ANAMNESIS_RPS',
+                'anamnesis.RPT as ANAMNESIS_RPT',
+                'anamnesis.RPK as ANAMNESIS_RPK',
+                'anamnesis.RL as ANAMNESIS_RL',
+                'anamnesis.RIWAYAT_ALERGI as ANAMNESIS_RIWAYAT_ALERGI',
+                'anamnesis.REAKSI_ALERGI as ANAMNESIS_REAKSI_ALERGI',
+                'anamnesis.TANGGAL as ANAMNESIS_INPUT_TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as ANAMNESIS_INPUT_OLEH'),
+                'anamnesis.STATUS as ANAMNESIS_STATUS',
+                'anamnesisDiperoleh.AUTOANAMNESIS as ANAMNESIS_DIPEROLEH_AUTOANAMNESIS',
+                'anamnesisDiperoleh.ALLOANAMNESIS as ANAMNESIS_DIPEROLEH_ALLOANAMNESIS',
+                'anamnesisDiperoleh.DARI as ANAMNESIS_DIPEROLEH_DARI',
             ])
             ->leftJoin('medicalrecord.anamnesis as anamnesis', 'anamnesis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('medicalrecord.rpp as rpp', 'rpp.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('medicalrecord.keluhan_utama as keluhanUtama', 'keluhanUtama.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('medicalrecord.anamnesis_diperoleh as anamnesisDiperoleh', 'anamnesisDiperoleh.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'anamnesis.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('kunjungan.NOMOR', $id)
             ->distinct()
             ->first();
 
-        return inertia("Pendaftaran/Kunjungan/TableRme", [
-            'dataTable'         => $query,
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
             'nomorKunjungan'    => $id,
+            'judulRme'          => 'ANAMNESIS',
         ]);
     }
 
