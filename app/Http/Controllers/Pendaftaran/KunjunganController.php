@@ -181,15 +181,15 @@ class KunjunganController extends Controller
             ->select([
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'diagnosa.ID as DIAGNOSA_ID',
-                'diagnosa.KODE as DIAGNOSA_KODE',
-                'diagnosa.DIAGNOSA as DIAGNOSA_URAIAN',
-                'diagnosa.UTAMA as DIAGNOSA_UTAMA',
-                'diagnosa.INACBG as DIAGNOSA_INACBG',
-                'diagnosa.BARU as DIAGNOSA_BARU',
-                'diagnosa.TANGGAL as DIAGNOSA_TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as INPUT_OLEH'),
-                'diagnosa.STATUS as DIAGNOSA_STATUS',
+                'diagnosa.ID as ID',
+                'diagnosa.KODE as KODE',
+                'diagnosa.DIAGNOSA as DIAGNOSA',
+                'diagnosa.UTAMA as UTAMA',
+                'diagnosa.INACBG as INACBG',
+                'diagnosa.BARU as BARU',
+                'diagnosa.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'diagnosa.STATUS as STATUS',
                 'diagnosa.INA_GROUPER as INA_GROUPER',
             ])
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
@@ -216,22 +216,22 @@ class KunjunganController extends Controller
             ->select([
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
-                'anamnesis.ID as ANAMNESIS_ID',
-                'anamnesis.DESKRIPSI as ANAMNESIS_DESKRIPSI',
-                'rpp.DESKRIPSI as ANAMNESIS_RPP',
-                'keluhanUtama.DESKRIPSI as ANAMNESIS_KELUHAN_UTAMA',
-                'anamnesis.RPS as ANAMNESIS_RPS',
-                'anamnesis.RPT as ANAMNESIS_RPT',
-                'anamnesis.RPK as ANAMNESIS_RPK',
-                'anamnesis.RL as ANAMNESIS_RL',
-                'anamnesis.RIWAYAT_ALERGI as ANAMNESIS_RIWAYAT_ALERGI',
-                'anamnesis.REAKSI_ALERGI as ANAMNESIS_REAKSI_ALERGI',
-                'anamnesis.TANGGAL as ANAMNESIS_INPUT_TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as ANAMNESIS_INPUT_OLEH'),
-                'anamnesis.STATUS as ANAMNESIS_STATUS',
-                'anamnesisDiperoleh.AUTOANAMNESIS as ANAMNESIS_DIPEROLEH_AUTOANAMNESIS',
-                'anamnesisDiperoleh.ALLOANAMNESIS as ANAMNESIS_DIPEROLEH_ALLOANAMNESIS',
-                'anamnesisDiperoleh.DARI as ANAMNESIS_DIPEROLEH_DARI',
+                'anamnesis.ID as ID',
+                'anamnesis.DESKRIPSI as DESKRIPSI',
+                'rpp.DESKRIPSI as RPP',
+                'keluhanUtama.DESKRIPSI as KELUHAN_UTAMA',
+                'anamnesis.RPS as RPS',
+                'anamnesis.RPT as RPT',
+                'anamnesis.RPK as RPK',
+                'anamnesis.RL as RL',
+                'anamnesis.RIWAYAT_ALERGI as RIWAYAT_ALERGI',
+                'anamnesis.REAKSI_ALERGI as REAKSI_ALERGI',
+                'anamnesisDiperoleh.AUTOANAMNESIS as AUTOANAMNESIS',
+                'anamnesisDiperoleh.ALLOANAMNESIS as ALLOANAMNESIS',
+                'anamnesisDiperoleh.DARI as DARI',
+                'anamnesis.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'anamnesis.STATUS as STATUS',
             ])
             ->leftJoin('medicalrecord.anamnesis as anamnesis', 'anamnesis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('medicalrecord.rpp as rpp', 'rpp.KUNJUNGAN', '=', 'kunjungan.NOMOR')
@@ -247,6 +247,53 @@ class KunjunganController extends Controller
             'detail'            => $query,
             'nomorKunjungan'    => $id,
             'judulRme'          => 'ANAMNESIS',
+        ]);
+    }
+
+    public function askep($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'askep.ID as ID',
+                'askep.SUBJECKTIF as SUBJECKTIF',
+                'askep.OBJEKTIF as OBJEKTIF',
+                'askep.SUBJECT_MINOR as SUBJECT_MINOR',
+                'askep.OBJECT_MINOR as OBJECT_MINOR',
+                'askep.FAKTOR_RESIKO as FAKTOR_RESIKO',
+                'askep.DIAGNOSA as DIAGNOSA',
+                'askep.DESK_DIAGNOSA as DESK_DIAGNOSA',
+                'askep.LAMA_INTEVENSI as LAMA_INTEVENSI',
+                'askep.JENIS_LAMA_INTERVENSI as JENIS_LAMA_INTERVENSI',
+                'askep.TUJUAN as TUJUAN',
+                'askep.DESK_TUJUAN as DESK_TUJUAN',
+                'askep.KRITERIA_HASIL as KRITERIA_HASIL',
+                'askep.INTERVENSI as INTERVENSI',
+                'askep.DESK_INTERVENSI as DESK_INTERVENSI',
+                'askep.OBSERVASI as OBSERVASI',
+                'askep.THEURAPEUTIC as THEURAPEUTIC',
+                'askep.EDUKASI as EDUKASI',
+                'askep.KOLABORASI as KOLABORASI',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'askep.USER_VERIFIKASI as USER_VERIFIKASI',
+                'askep.TANGGAL_VERIFIKASI as TANGGAL_VERIFIKASI',
+                'askep.TANGGAL_INPUT as TANGGAL_INPUT',
+                'askep.TANGGAL as TANGGAL',
+                'askep.STATUS as STATUS',
+            ])
+            ->leftJoin('medicalrecord.asuhan_keperawatan as askep', 'askep.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'askep.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('kunjungan.NOMOR', $id)
+            ->distinct()
+            ->first();
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $id,
+            'judulRme'          => 'ASUHAN KEPERAWATAN',
         ]);
     }
 
