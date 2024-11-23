@@ -220,7 +220,7 @@ class KunjunganController extends Controller
     public function diagnosa($id)
     {
 
-        $dataKunjungan = DB::connection('mysql11')->table('medicalrecord.diagnosa as diagnosa')
+        $dataKunjungan = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
             ->select([
                 'kunjungan.NOMOR as nomorKunjungan',
                 'kunjungan.NOPEN as nomorPendaftaran',
@@ -272,7 +272,7 @@ class KunjunganController extends Controller
     public function detailDiagnosa($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql11')->table('medicalrecord.diagnosa as diagnosa')
+        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
             ->select([
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
@@ -322,7 +322,7 @@ class KunjunganController extends Controller
     public function anamnesis($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql11')->table('medicalrecord.anamnesis as anamnesis')
+        $query = DB::connection('mysql5')->table('medicalrecord.anamnesis as anamnesis')
             ->select([
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
@@ -385,7 +385,7 @@ class KunjunganController extends Controller
     public function askep($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql11')->table('medicalrecord.asuhan_keperawatan as askep')
+        $query = DB::connection('mysql5')->table('medicalrecord.asuhan_keperawatan as askep')
             ->select([
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
@@ -578,7 +578,7 @@ class KunjunganController extends Controller
     public function jadwalKontrol($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql11')->table('medicalrecord.jadwal_kontrol as jadwalKontrol')
+        $query = DB::connection('mysql5')->table('medicalrecord.jadwal_kontrol as jadwalKontrol')
             ->select([
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
