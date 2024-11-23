@@ -37,7 +37,7 @@ export default function Detail({ auth, detail, nomorKunjungan, judulRme }) {
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
                                                 <td className="px-3 py-3 break-words">
-                                                    {detailItem.uraian === "DIAGNOSA_STATUS" ? (
+                                                    {detailItem.uraian === "STATUS" ? (
                                                         detailItem.value === 1 ? "Final" :
                                                             detailItem.value === 0 ? "Belum Final" :
                                                                 detailItem.value

@@ -297,6 +297,101 @@ class KunjunganController extends Controller
         ]);
     }
 
+    public function cppt($id)
+    {
+
+        $dataKunjungan = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomorKunjungan',
+                'kunjungan.NOPEN as nomorPendaftaran',
+                'pasien.NORM as norm',
+                'pasien.NAMA as namaPasien',
+            ])
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->where('kunjungan.NOMOR', $id)
+            ->distinct()
+            ->first();
+
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'cppt.KUNJUNGAN as kunjungan',
+                'cppt.ID as id',
+                'cppt.TANGGAL as tanggal',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                'cppt.STATUS as status',
+            ])
+            ->leftJoin('medicalrecord.cppt as cppt', 'cppt.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'cppt.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('kunjungan.NOMOR', $id)
+            ->get();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('kunjungan.detail', $id)->with('error', 'Data not found.');
+        }
+
+        // Get nomor pendaftaran
+        $nomorPendaftaran = $dataKunjungan->nomorPendaftaran;
+        $nomorKunjungan   = $dataKunjungan->nomorKunjungan;
+        $namaPasien       = $dataKunjungan->namaPasien;
+        $normPasien       = $dataKunjungan->norm;
+
+        return inertia("Pendaftaran/Kunjungan/TableCppt", [
+            'dataTable'         => $query,
+            'nomorKunjungan'    => $nomorKunjungan,
+            'nomorPendaftaran'  => $nomorPendaftaran,
+            'namaPasien'        => $namaPasien,
+            'normPasien'        => $normPasien,
+        ]);
+    }
+
+    public function detailCppt($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.cppt as cppt')
+            ->select([
+                'cppt.KUNJUNGAN as NOMOR_KUNJUNGAN',
+                'cppt.ID as ID',
+                'cppt.SUBYEKTIF as SUBYEKTIF',
+                'cppt.OBYEKTIF as OBYEKTIF',
+                'cppt.ASSESMENT as ASSESMENT',
+                'cppt.TULIS as TULIS',
+                'cppt.JENIS as JENIS',
+                DB::raw('CONCAT(tenagaMedis.GELAR_DEPAN, " ", tenagaMedis.NAMA, " ", tenagaMedis.GELAR_BELAKANG) as TENAGA_MEDIS'),
+                'cppt.STATUS_TBAK as STATUS_TBAK',
+                'cppt.STATUS_SBAR as STATUS_SBAR',
+                'cppt.BACA as BACA',
+                'cppt.KONFIRMASI as KONFIRMASI',
+                'cppt.ADIME as ADIME',
+                'cppt.DOKTER_TBAK_OR_SBAR as DOKTER_TBAK_OR_SBAR',
+                'cppt.RENCANA_PULANG as RENCANA_PULANG',
+                'cppt.TANGGAL_RENCANA_PULANG as TANGGAL_RENCANA_PULANG',
+                'cppt.SUB_DEVISI as SUB_DEVISI',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'cppt.VERIFIKASI as VERIFIKASI',
+                'cppt.STATUS as STATUS',
+            ])
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'cppt.TENAGA_MEDIS')
+            ->leftJoin('master.pegawai as tenagaMedis', 'tenagaMedis.NIP', '=', 'dokter.NIP')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'cppt.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('cppt.ID', $id)
+            ->distinct()
+            ->first();
+
+        $nomorKunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $nomorKunjungan,
+            'judulRme'          => 'CPPT',
+        ]);
+    }
+
     public function laboratorium($id)
     {
         // Fetch data utama (main lab order details)
