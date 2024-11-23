@@ -46,5 +46,7 @@ Untuk menarik pembaruan terbaru:
     Linux: Navigasi ke /var/www/html/SimgosAppData dan jalankan git pull origin master di terminal.
     Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 7 di atas.
 
-Tip Pro: Fork repositori ini untuk tetap terbarui dengan perkembangan dan peningkatan terbaru secara real-time.
+Tip : Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara real-time.
+
+Notes : Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
 
