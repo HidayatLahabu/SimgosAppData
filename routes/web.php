@@ -217,12 +217,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
         Route::get('kunjungan/tableRme/{id}', [KunjunganController::class, 'tableRme'])->name('kunjungan.tableRme');
         Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
+        Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
         Route::get('kunjungan/anamnesis/{id}', [KunjunganController::class, 'anamnesis'])->name('kunjungan.anamnesis');
         Route::get('kunjungan/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
-        Route::get('kunjungan/vital/{id}', [KunjunganController::class, 'vital'])->name('kunjungan.vital');
-        Route::get('kunjungan/kontrol/{id}', [KunjunganController::class, 'kontrol'])->name('kunjungan.kontrol');
+        Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
+        Route::get('kunjungan/tandaVital/{id}', [KunjunganController::class, 'tandaVital'])->name('kunjungan.tandaVital');
+        Route::get('kunjungan/detailTandaVital/{id}', [KunjunganController::class, 'detailTandaVital'])->name('kunjungan.detailTandaVital');
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
 
