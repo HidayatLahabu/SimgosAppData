@@ -8,12 +8,12 @@ import ButtonDetail from "@/Components/ButtonDetail";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (name, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[name] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[name];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('patient.index'), updatedParams, {
@@ -23,24 +23,34 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (name, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
         if (value === '') {
             // If input is cleared, reload page with queryParams and reset to page 1
-            router.get(route('patient.index'), { ...queryParams, name: '', page: 1 }, {
+            router.get(route('patient.index'), { ...queryParams, search: '', page: 1 }, {
                 preserveState: true,
                 preserveScroll: true,
             });
         } else {
             // Perform search when input changes
-            searchFieldChanged(name, value);
+            searchFieldChanged(search, value);
         }
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (name, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(name, e.target.value);
+        searchFieldChanged(search, e.target.value);
+    };
+
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        const nikArray = number.split('');
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        return nikArray.join('');
     };
 
     return (
@@ -61,10 +71,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.name || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('name', e)}
-                                                    onKeyPress={e => onKeyPress('name', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari patient berdasarkan ID, nama, ref ID, atau NIK"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>

@@ -8,12 +8,12 @@ import ButtonDetail from "@/Components/ButtonDetail";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (patient, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[patient] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[patient];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('consent.index'), updatedParams, {
@@ -23,15 +23,24 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (patient, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(patient, value);
+        if (value === '') {
+            // If input is cleared, reload page with queryParams and reset to page 1
+            router.get(route('consent.index'), { ...queryParams, search: '', page: 1 }, {
+                preserveState: true,
+                preserveScroll: true,
+            });
+        } else {
+            // Perform search when input changes
+            searchFieldChanged(search, value);
+        }
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (patient, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(patient, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -52,10 +61,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.patient || ''}
-                                                    placeholder="Cari body send"
-                                                    onChange={e => onInputChange('bodySend', e)}
-                                                    onKeyPress={e => onKeyPress('bodySend', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari consent berdasarkan body send atau NORM"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -63,7 +72,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">PATIENT</th>
+                                            <th className="px-3 py-2">BODY SEND</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">REF ID</th>
                                             <th className="px-3 py-2">SEND DATE</th>

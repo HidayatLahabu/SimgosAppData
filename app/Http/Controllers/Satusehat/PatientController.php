@@ -14,9 +14,15 @@ class PatientController extends Controller
         $query = SatusehatPatientModel::orderByDesc('getDate');
 
         // Apply search filter if 'name' query parameter is present
-        if (request('name')) {
-            $searchName = strtolower(request('name')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchName . '%']); // Convert column to lowercase for comparison
+        if (request('search')) {
+            $searchSubject = strtolower(request('search')); // Convert search term to lowercase
+            // $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchName . '%']); 
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(id) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(name) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(nik) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Paginate the results

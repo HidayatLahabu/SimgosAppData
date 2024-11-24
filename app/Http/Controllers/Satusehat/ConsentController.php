@@ -14,9 +14,13 @@ class ConsentController extends Controller
         $query = SatusehatConsentModel::orderByDesc('id')->orderByDesc('sendDate');
 
         // Apply search filter if 'subject' query parameter is present
-        if (request('patient')) {
-            $searchSubject = strtolower(request('patient')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(patient) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+        if (request('search')) {
+            $searchSubject = strtolower(request('search')); // Convert search term to lowercase
+            // $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchName . '%']); 
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(bodySend) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(norm) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Paginate the results
