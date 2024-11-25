@@ -99,6 +99,7 @@ class PendaftaranController extends Controller
                 'pendaftaran.JAM_LAHIR as JAM_LAHIR',
                 'pendaftaran.CONSENT_SATUSEHAT as CONSENT_SATUSEHAT',
                 'pendaftaran.PAKET as PAKET',
+                'pengguna.NAMA as OLEH',
                 'pendaftaran.STATUS as STATUS_PENDAFTARAN',
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
