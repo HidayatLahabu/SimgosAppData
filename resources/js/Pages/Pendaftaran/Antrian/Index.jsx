@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import { formatDate } from '@/utils/formatDate';
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -77,7 +78,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{dataTable.nomor}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3">{formatDate(dataTable.tanggal)}</td>
                                                     <td className="px-3 py-3">{dataTable.ruangan}</td>
                                                     <td className="px-3 py-3">{dataTable.urut}</td>
                                                     <td className="px-3 py-3">{dataTable.status === 0 ? 'Batal' : dataTable.status === 1 ? 'Belum Diterima' : 'Diterima'}</td>
