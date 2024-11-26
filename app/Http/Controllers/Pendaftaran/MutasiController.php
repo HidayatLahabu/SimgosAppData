@@ -101,4 +101,96 @@ class MutasiController extends Controller
             'detail' => $query,
         ]);
     }
+
+    public function filterByTime($filter)
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
+            ->select(
+                'mutasi.NOMOR as nomor',
+                'pasien.NAMA as nama',
+                'pasien.NORM as norm',
+                'ruanganTujuan.DESKRIPSI as tujuan',
+                'mutasi.TANGGAL as tanggal',
+                'mutasi.RESERVASI as reservasi',
+                'mutasi.STATUS as status',
+            )
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.ruangan as ruanganTujuan', 'ruanganTujuan.ID', '=', 'mutasi.TUJUAN')
+            ->where('pasien.STATUS', 1);
+
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
+        switch ($filter) {
+            case 'hariIni':
+                $query->whereDate('mutasi.TANGGAL', now()->format('Y-m-d'));
+                $countQuery->whereDate('mutasi.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                break;
+
+            case 'mingguIni':
+                $query->whereBetween('mutasi.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $countQuery->whereBetween('mutasi.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                break;
+
+            case 'bulanIni':
+                $query->whereMonth('mutasi.TANGGAL', now()->month)
+                    ->whereYear('mutasi.TANGGAL', now()->year);
+                $countQuery->whereMonth('mutasi.TANGGAL', now()->month)
+                    ->whereYear('mutasi.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                break;
+
+            case 'tahunIni':
+                $query->whereYear('mutasi.TANGGAL', now()->year);
+                $countQuery->whereYear('mutasi.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                break;
+
+            default:
+                abort(404, 'Filter not found');
+        }
+
+        // Get count
+        $count = $countQuery->count();
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(mutasi.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate the results
+        $data = $query->orderByDesc('mutasi.TANGGAL')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Pendaftaran/Mutasi/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+        ]);
+    }
 }
