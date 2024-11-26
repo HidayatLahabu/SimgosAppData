@@ -10,7 +10,7 @@ export default function DetailPoa({ detailPoa = {} }) {
         { label: 'UNIT LOGISTIK TERKECIL', key: 'unit_logistik_terkecil' },
         { label: 'BENTUK SEDIAAN', key: 'bentuk_sediaan' },
         { label: 'ID BENTUK SEDIAAN', key: 'id_bentuk_sediaan' },
-        { label: 'GOLONGAN OBAT', key: 'golongan_obat' },
+        { label: 'GOLONGAN OBAT', key: 'gologan_obat' },
         { label: 'URL', key: 'url' },
         { label: 'STATUS', key: 'status' },
     ];
