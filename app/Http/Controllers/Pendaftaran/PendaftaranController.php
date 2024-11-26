@@ -348,4 +348,79 @@ class PendaftaranController extends Controller
             'detail' => $query,
         ]);
     }
+
+    public function filterByTime($filter)
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Determine the date filter based on the type
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select(
+                'pendaftaran.NOMOR as nomor',
+                'pendaftaran.NORM as norm',
+                'pasien.NAMA as nama',
+                'kip.ALAMAT as alamat',
+                'pendaftaran.TANGGAL as tanggal',
+                'pendaftaran.STATUS as status',
+            )
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
+            ->where('pasien.STATUS', 1);
+
+        switch ($filter) {
+            case 'hariIni':
+                $query->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                break;
+
+            case 'mingguIni':
+                $query->whereBetween('pendaftaran.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                break;
+
+            case 'bulanIni':
+                $query->whereMonth('pendaftaran.TANGGAL', now()->month)
+                    ->whereYear('pendaftaran.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                break;
+
+            case 'tahunIni':
+                $query->whereYear('pendaftaran.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                break;
+
+            default:
+                abort(404, 'Filter not found');
+        }
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate the results
+        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Pendaftaran/Pendaftaran/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+        ]);
+    }
 }

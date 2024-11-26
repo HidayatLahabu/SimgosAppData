@@ -2,7 +2,6 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
-import ButtonKunjungan from '@/Components/ButtonKunjungan';
 import ButtonPasien from '@/Components/ButtonPasien';
 import ButtonBpjs from '@/Components/ButtonBpjs';
 import DataKunjungan from '../Kunjungan/DataKunjungan';

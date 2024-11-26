@@ -212,6 +212,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pendaftaran/kunjungan/{id}', [PendaftaranController::class, 'kunjungan'])->name('pendaftaran.kunjungan');
         Route::get('pendaftaran/pasien/{id}', [PendaftaranController::class, 'pasien'])->name('pendaftaran.pasien');
         Route::get('pendaftaran/bpjs/{id}', [PendaftaranController::class, 'bpjs'])->name('pendaftaran.bpjs');
+        Route::get('/pendaftaran/{filter}', [PendaftaranController::class, 'filterByTime'])
+            ->name('pendaftaran.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
@@ -227,6 +231,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/detailTandaVital/{id}', [KunjunganController::class, 'detailTandaVital'])->name('kunjungan.detailTandaVital');
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
+        Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
+        Route::get('/kunjungan-hariIni', [KunjunganController::class, 'hariIni'])->name('kunjungan.hariIni');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');
