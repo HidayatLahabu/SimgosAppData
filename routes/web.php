@@ -244,6 +244,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
         Route::get('mutasi/detail/{id}', [MutasiController::class, 'detail'])->name('mutasi.detail');
+        Route::get('/mutasi/{filter}', [MutasiController::class, 'filterByTime'])
+            ->name('mutasi.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
         Route::get('antrian/detail/{id}', [AntrianRuanganController::class, 'detail'])->name('antrian.detail');
