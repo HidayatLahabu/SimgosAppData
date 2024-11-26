@@ -118,14 +118,22 @@ class KonsulController extends Controller
             ->leftJoin('master.ruangan as ruanganTujuan', 'ruanganTujuan.ID', '=', 'konsul.TUJUAN')
             ->where('pasien.STATUS', 1);
 
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
         switch ($filter) {
             case 'hariIni':
                 $query->whereDate('konsul.TANGGAL', now()->format('Y-m-d'));
+                $countQuery->whereDate('konsul.TANGGAL', now()->format('Y-m-d'));
                 $header = 'HARI INI';
                 break;
 
             case 'mingguIni':
                 $query->whereBetween('konsul.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $countQuery->whereBetween('konsul.TANGGAL', [
                     now()->startOfWeek()->format('Y-m-d'),
                     now()->endOfWeek()->format('Y-m-d')
                 ]);
@@ -135,17 +143,23 @@ class KonsulController extends Controller
             case 'bulanIni':
                 $query->whereMonth('konsul.TANGGAL', now()->month)
                     ->whereYear('konsul.TANGGAL', now()->year);
+                $countQuery->whereMonth('konsul.TANGGAL', now()->month)
+                    ->whereYear('konsul.TANGGAL', now()->year);
                 $header = 'BULAN INI';
                 break;
 
             case 'tahunIni':
                 $query->whereYear('konsul.TANGGAL', now()->year);
+                $countQuery->whereYear('konsul.TANGGAL', now()->year);
                 $header = 'TAHUN INI';
                 break;
 
             default:
                 abort(404, 'Filter not found');
         }
+
+        // Get count
+        $count = $countQuery->count();
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -170,6 +184,7 @@ class KonsulController extends Controller
             ],
             'queryParams' => request()->all(),
             'header' => $header,
+            'totalCount' => $count,
         ]);
     }
 }

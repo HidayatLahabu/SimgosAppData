@@ -369,14 +369,22 @@ class PendaftaranController extends Controller
             ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
             ->where('pasien.STATUS', 1);
 
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
         switch ($filter) {
             case 'hariIni':
                 $query->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
+                $countQuery->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
                 $header = 'HARI INI';
                 break;
 
             case 'mingguIni':
                 $query->whereBetween('pendaftaran.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $countQuery->whereBetween('pendaftaran.TANGGAL', [
                     now()->startOfWeek()->format('Y-m-d'),
                     now()->endOfWeek()->format('Y-m-d')
                 ]);
@@ -386,17 +394,23 @@ class PendaftaranController extends Controller
             case 'bulanIni':
                 $query->whereMonth('pendaftaran.TANGGAL', now()->month)
                     ->whereYear('pendaftaran.TANGGAL', now()->year);
+                $countQuery->whereMonth('pendaftaran.TANGGAL', now()->month)
+                    ->whereYear('pendaftaran.TANGGAL', now()->year);
                 $header = 'BULAN INI';
                 break;
 
             case 'tahunIni':
                 $query->whereYear('pendaftaran.TANGGAL', now()->year);
+                $countQuery->whereYear('pendaftaran.TANGGAL', now()->year);
                 $header = 'TAHUN INI';
                 break;
 
             default:
                 abort(404, 'Filter not found');
         }
+
+        // Get count
+        $count = $countQuery->count();
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -421,6 +435,7 @@ class PendaftaranController extends Controller
             ],
             'queryParams' => request()->all(),
             'header' => $header,
+            'totalCount' => $count,
         ]);
     }
 }

@@ -5,9 +5,8 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
-import { AxiosHeaders } from 'axios';
 
-export default function Index({ auth, dataTable, header, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -47,7 +46,7 @@ export default function Index({ auth, dataTable, header, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Konsul {header}</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Konsul {header} {totalCount} Pasien</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                     <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
