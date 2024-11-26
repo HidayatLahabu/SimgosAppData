@@ -238,6 +238,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');
+        Route::get('/konsul/{filter}', [KonsulController::class, 'filterByTime'])
+            ->name('konsul.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
         Route::get('mutasi/detail/{id}', [MutasiController::class, 'detail'])->name('mutasi.detail');
