@@ -232,7 +232,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
-        Route::get('/kunjungan-hariIni', [KunjunganController::class, 'hariIni'])->name('kunjungan.hariIni');
+        Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])
+            ->name('kunjungan.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');

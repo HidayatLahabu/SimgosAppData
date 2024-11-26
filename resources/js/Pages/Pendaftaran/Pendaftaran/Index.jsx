@@ -48,7 +48,7 @@ export default function Index({ auth, dataTable, header, queryParams = {} }) {
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pendaftaran {header}</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
@@ -67,7 +67,6 @@ export default function Index({ auth, dataTable, header, queryParams = {} }) {
                                             </th>
                                         </tr>
                                     </thead>
-
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
