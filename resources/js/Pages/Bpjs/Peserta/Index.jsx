@@ -34,6 +34,16 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         searchFieldChanged(search, e.target.value);
     };
 
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        const nikArray = number.split('');
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        return nikArray.join('');
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -53,7 +63,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor kartu, NIK, atau nama pasien"
+                                                    placeholder="Cari data berdasarkan nomor kartu, NIK, NORM atau nama pasien"
                                                     onChange={e => onInputChange('search', e)}
                                                     onKeyPress={e => onKeyPress('search', e)}
                                                 />
@@ -67,7 +77,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PESERTA</th>
                                             <th className="px-3 py-2">JENIS PESERTA</th>
-                                            <th className="px-3 py-2">KELAS</th>
+                                            <th className="px-3 py-2">STATUS PESERTA</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
@@ -80,7 +90,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
                                                     <td className="px-3 py-3">{data.nmJenisPeserta}</td>
-                                                    <td className="px-3 py-3">{data.nmKelas}</td>
+                                                    <td className="px-3 py-3">{data.ketStatusPeserta}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("pesertaBpjs.detail", { id: data.noKartu })}
