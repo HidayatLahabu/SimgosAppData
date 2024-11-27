@@ -9,12 +9,12 @@ import Cetak from "./Cetak"
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('layananRad.index'), updatedParams, {
@@ -24,15 +24,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -53,23 +53,23 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={9} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari data berdasarkan nomor order, NORM, atau nama pasien"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">NOMOR ORDER</th>
                                             <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">ORDER OLEH</th>
+                                            <th className="px-3 py-2">OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">JENIS PASIEN</th>
                                             <th className="px-3 py-2">STATUS<br />KUNJUNGAN</th>
+                                            <th className="px-3 py-2">STATUS<br />ORDER</th>
                                             <th className="px-3 py-2">STATUS<br />HASIL</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
@@ -83,15 +83,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{data.gelarDepan} <span className='uppercase'>{data.dokter}</span>  {data.gelarBelakang}</td>
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3">
-                                                        {data.noKartu ? (
-                                                            <span>BPJS</span>
-                                                        ) : (
-                                                            <span>Tanpa Asuransi/Umum</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Aktif' : data.statusKunjungan === 2 ? 'Selesai' : ''}</td>
-                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Ada Hasil' : data.statusHasil === 2 ? 'Belum Final Hasil' : data.statusHasil === 3 ? 'Sudah Final Hasil' : ''}</td>
+                                                    <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</td>
+                                                    <td className="px-3 py-3">{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Final' : ''}</td>
+                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Final' : 'Belum Ada Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananRad.detail", { id: data.nomor })}

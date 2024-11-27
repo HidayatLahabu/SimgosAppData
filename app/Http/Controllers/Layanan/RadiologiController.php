@@ -11,43 +11,46 @@ class RadiologiController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
             ->selectRaw('
             orderRad.NOMOR as nomor,
             MIN(orderRad.TANGGAL) as tanggal,
-            MIN(orderRad.KUNJUNGAN) as kunjungan,
-            orderRad.STATUS as statusKunjungan,
             MIN(pegawai.NAMA) as dokter,
             MIN(pegawai.GELAR_DEPAN) as gelarDepan,
             MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
             MIN(pasien.NORM) as norm,
             MIN(pasien.NAMA) as nama,
-            MIN(peserta.noKartu) as noKartu,
-            MIN(hasil.STATUS) as statusHasil
+            MIN(kunjungan.STATUS) as statusKunjungan,
+            MIN(orderRad.STATUS) as statusOrder,
+            MIN(hasilRad.STATUS) as statusHasil
         ')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.REF', '=', 'orderRad.NOMOR')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik');
+            ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.ORDER_ID', '=', 'orderRad.NOMOR')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'orderRadDetail.REF')
+            ->leftJoin('layanan.hasil_rad as hasilRad', 'hasilRad.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->whereNotNull('kunjungan.REF');
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(pasien.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(orderRad.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Group by 'nomor'
         $query->groupBy('orderRad.NOMOR');
 
         // Paginate the results
-        $data = $query->orderByDesc('tanggal')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('orderRad.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
