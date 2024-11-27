@@ -21,10 +21,11 @@ class PengajuanSepController extends Controller
                 'pengajuan.keterangan',
                 'pengajuan.tgl',
                 'pengajuan.tglAprove',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama'
             )
-            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu');
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -53,7 +54,7 @@ class PengajuanSepController extends Controller
         $query = DB::connection('mysql6')->table('bpjs.pengajuan as pengajuan')
             ->select(
                 'pengajuan.noKartu',
-                'peserta.norm as norm',
+                'pasien.NORM as norm',
                 'peserta.nama as nama',
                 'pengajuan.tglSep',
                 'pengajuan.jnsPelayanan',
@@ -66,6 +67,7 @@ class PengajuanSepController extends Controller
                 'pengajuan.status',
             )
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->where('pengajuan.tgl', $id)
             ->distinct()
             ->first();
