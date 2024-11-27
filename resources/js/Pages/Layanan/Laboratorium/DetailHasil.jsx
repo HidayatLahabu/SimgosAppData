@@ -33,7 +33,9 @@ export default function DetailHasil({ detailHasil = {} }) {
                                                 <td className="px-3 py-3 w-56">{hasil.HASIL}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.NILAI_NORMAL}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.SATUAN}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.STATUS}</td>
+                                                <td className="px-3 py-3 w-56">
+                                                    {hasil.STATUS === 1 ? "Final Hasil" : 'Belum Final Hasil'}
+                                                </td>
                                             </tr>
                                         ))
                                     ) : (
