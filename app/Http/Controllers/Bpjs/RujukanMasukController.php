@@ -34,6 +34,19 @@ class RujukanMasukController extends Controller
         // Paginate the results
         $data = $query->orderByDesc('rujukan.tglKunjungan')->paginate(10)->appends(request()->query());
 
+        // Transform JSON column 'provPerujuk'
+        $data->getCollection()->transform(function ($item) {
+            // Decode the JSON column
+            $provPerujuk = json_decode($item->provPerujuk, true);
+            if (is_array($provPerujuk)) {
+                $kode = $provPerujuk['kode'] ?? '';
+                $nama = $provPerujuk['nama'] ?? '';
+                $item->provPerujuk = trim("{$kode} - {$nama}");
+            }
+
+            return $item;
+        });
+
         // Convert data to array
         $dataArray = $data->toArray();
 
