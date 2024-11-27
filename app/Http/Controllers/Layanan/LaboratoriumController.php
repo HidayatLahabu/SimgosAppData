@@ -11,7 +11,7 @@ class LaboratoriumController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
@@ -27,7 +27,11 @@ class LaboratoriumController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(pasien.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Group by 'nomor' and select the first occurrence for other fields
@@ -61,7 +65,6 @@ class LaboratoriumController extends Controller
             'queryParams' => request()->all()
         ]);
     }
-
 
     public function detail($id)
     {
