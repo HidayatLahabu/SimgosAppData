@@ -20,22 +20,24 @@ class KunjunganBpjsController extends Controller
                 'kunjungan.tglSEP',
                 'kunjungan.noRujukan',
                 'kunjungan.tglRujukan',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama'
             )
-            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu');
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
 
         // Add search filter if provided
         if ($searchSubject) {
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(kunjungan.noSEP) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(kunjungan.noRujukan) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhere('pasien.NORM', 'LIKE', '%' . $searchSubject . '%');
             });
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('kunjungan.tglRujukan')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('kunjungan.tglSEP')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -56,7 +58,7 @@ class KunjunganBpjsController extends Controller
         $query = DB::connection('mysql6')->table('bpjs.kunjungan as kunjungan')
             ->select(
                 'kunjungan.noKartu',
-                'peserta.norm as norm',
+                'pasien.NORM as norm',
                 'peserta.nama as nama',
                 'kunjungan.noSEP',
                 'kunjungan.tglSEP',
@@ -91,6 +93,7 @@ class KunjunganBpjsController extends Controller
                 'kunjungan.flagProcedure',
             )
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->leftJoin('bpjs.ppk as ppkRujukan', 'ppkRujukan.kode', '=', 'kunjungan.ppkRujukan')
             ->leftJoin('bpjs.ppk as ppkPelayanan', 'ppkPelayanan.kode', '=', 'kunjungan.ppkPelayanan')
             ->where('kunjungan.noSEP', $id)
