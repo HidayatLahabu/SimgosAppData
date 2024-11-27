@@ -122,6 +122,7 @@ class LaboratoriumController extends Controller
             ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetail.REF')
             ->leftJoin('master.parameter_tindakan_lab as parameter', 'parameter.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
             ->where('orderDetail.ORDER_ID', $id)
+            ->where('hasilLab.HASIL', '!=', '')
             ->get();
 
         // Fetch data catatan (main lab order details)

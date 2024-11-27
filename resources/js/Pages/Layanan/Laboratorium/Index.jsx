@@ -88,13 +88,13 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                         {data.noKartu ? (
                                                             <span>BPJS</span>
                                                         ) : (
-                                                            <span>Tanpa Asuransi/Umum</span>
+                                                            <span>Non BPJS</span>
                                                         )}
                                                     </td>
                                                     <td className="px-3 py-3">
-                                                        {data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                        {data.statusKunjungan === 2 ? 'Final' : data.statusKunjungan === 1 ? 'Belum Final' : 'Batal'}</td>
                                                     <td className="px-3 py-3">
-                                                        {data.statusHasil === 1 ? 'Belum Ada Hasil' : data.statusHasil === 2 ? 'Belum Final Hasil' : 'Sudah Final Hasil'}</td>
+                                                        {data.statusHasil === 1 ? 'Sudah Final Hasil' : 'Belum Ada Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananLab.detail", { id: data.nomor })}
