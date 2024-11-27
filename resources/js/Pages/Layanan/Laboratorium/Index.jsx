@@ -69,8 +69,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">OLEH</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">JENIS PASIEN</th>
                                             <th className="px-3 py-2">STATUS<br />KUNJUNGAN</th>
+                                            <th className="px-3 py-2">STATUS<br />ORDER</th>
                                             <th className="px-3 py-2">STATUS<br />HASIL</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
@@ -84,17 +84,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}</td>
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
+                                                    <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</td>
                                                     <td className="px-3 py-3">
-                                                        {data.noKartu ? (
-                                                            <span>BPJS</span>
-                                                        ) : (
-                                                            <span>Non BPJS</span>
-                                                        )}
-                                                    </td>
+                                                        {data.statusOrder === 2 ? 'Sudah Final' : data.statusOrder === 1 ? 'Belum Final' : 'Batal'}</td>
                                                     <td className="px-3 py-3">
-                                                        {data.statusKunjungan === 2 ? 'Final' : data.statusKunjungan === 1 ? 'Belum Final' : 'Batal'}</td>
-                                                    <td className="px-3 py-3">
-                                                        {data.statusHasil === 1 ? 'Sudah Final Hasil' : 'Belum Ada Hasil'}</td>
+                                                        {data.statusHasil === 1 ? 'Sudah Final' : 'Belum Ada Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananLab.detail", { id: data.nomor })}

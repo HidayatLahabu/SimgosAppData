@@ -84,8 +84,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
                                                     <td className="px-3 py-3">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</td>
-                                                    <td className="px-3 py-3">{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Final' : ''}</td>
-                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Final' : 'Belum Ada Hasil'}</td>
+                                                    <td className="px-3 py-3">{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Sudah Final' : ''}</td>
+                                                    <td className="px-3 py-3">{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Sudah Final' : 'Belum Ada Hasil'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananRad.detail", { id: data.nomor })}

@@ -20,8 +20,6 @@ class LaboratoriumController extends Controller
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
             ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
             ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
 
@@ -44,14 +42,14 @@ class LaboratoriumController extends Controller
                 MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
                 MIN(pasien.NORM) as norm,
                 MIN(pasien.NAMA) as nama,
-                MIN(peserta.noKartu) as noKartu,
-                MIN(orderLab.STATUS) as statusKunjungan,
+                MIN(kunjungan.STATUS) as statusKunjungan,
+                MIN(orderLab.STATUS) as statusOrder,
                 MIN(hasil.STATUS) as statusHasil
             ')
             ->groupBy('orderLab.NOMOR');
 
         // Paginate the results
-        $data = $query->orderByDesc('tanggal')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('orderLab.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
