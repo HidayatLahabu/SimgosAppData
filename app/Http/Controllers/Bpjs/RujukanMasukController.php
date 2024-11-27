@@ -20,10 +20,11 @@ class RujukanMasukController extends Controller
                 'rujukan.tglKunjungan',
                 'rujukan.noKartu',
                 'rujukan.provPerujuk',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama'
             )
-            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'rujukan.noKartu');
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'rujukan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -59,10 +60,11 @@ class RujukanMasukController extends Controller
                 'rujukan.keluhan',
                 'rujukan.poliRujukan',
                 'rujukan.pelayanan',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama',
             )
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'rujukan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->where('rujukan.noKunjungan', $id)
             ->distinct()
             ->first();
@@ -73,9 +75,54 @@ class RujukanMasukController extends Controller
             return redirect()->route('rujukanBpjs.index')->with('error', 'Data not found.');
         }
 
+        // Convert all JSON fields in the object to strings without curly braces
+        foreach (get_object_vars($query) as $key => $value) {
+            if ($this->isJson($value)) {
+                $query->$key = $this->formatJson($value); // Format JSON
+            }
+        }
+
         // Return Inertia view with the encounter data
         return inertia("Bpjs/Rujukan/Detail", [
             'detail' => $query,
         ]);
+    }
+
+    /**
+     * Check if a string is JSON.
+     */
+    private function isJson($string)
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * Format JSON string into a plain text string without curly braces.
+     */
+    private function formatJson($json)
+    {
+        $data = json_decode($json, true); // Decode JSON to array
+        if (is_array($data)) {
+            $flattened = [];
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    // Handle nested arrays
+                    $nested = implode(', ', array_map(
+                        fn($nestedKey, $nestedValue) => is_array($nestedValue)
+                            ? "{$nestedKey}: [" . json_encode($nestedValue) . "]"
+                            : "{$nestedKey}: {$nestedValue}",
+                        array_keys($value),
+                        $value
+                    ));
+                    $flattened[] = "{$key}: [{$nested}]";
+                } else {
+                    // Handle scalar values
+                    $flattened[] = "{$key}: {$value}";
+                }
+            }
+            return implode(', ', $flattened); // Combine into a single string
+        }
+        return $json; // Return original if not a valid array
     }
 }
