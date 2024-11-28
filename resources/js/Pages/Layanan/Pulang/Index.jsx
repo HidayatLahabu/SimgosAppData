@@ -3,16 +3,17 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import ButtonDetail from "@/Components/ButtonDetail";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('layananPulang.index'), updatedParams, {
@@ -22,15 +23,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -51,36 +52,40 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari data berdasarkan nomor kunjungan, NORM, atau nama pasien"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">KUNJUNGAN</th>
                                             <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">STATUS</th>
                                             <th className="px-3 py-2">KEADAAN</th>
                                             <th className="px-3 py-2">DPJP</th>
+                                            <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.id}</td>
+                                                    <td className="px-3 py-3">{dataTable.kunjungan}</td>
                                                     <td className="px-3 py-3">{dataTable.tanggal}</td>
                                                     <td className="px-3 py-3">{dataTable.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.status}</td>
                                                     <td className="px-3 py-3">{dataTable.keadaan}</td>
                                                     <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
+                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                        <ButtonDetail
+                                                            href={route("layananPulang.detail", { id: dataTable.id })}
+                                                        />
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
