@@ -290,9 +290,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
         Route::get('layananPulang/detail/{id}', [PulangController::class, 'detail'])->name('layananPulang.detail');
-
-        Route::get('layananTindakan', [TindakanMedisController::class, 'index'])->name('layananTindakan.index');
-        Route::get('layananTindakan/detail/{id}', [TindakanMedisController::class, 'detail'])->name('layananTindakan.detail');
     });
 });
 
