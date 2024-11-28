@@ -73,6 +73,7 @@ class PendaftaranController extends Controller
                 'diagnosa_masuk.ICD as DIAGNOSA_MASUK_ICD',
                 'mrconso.STR as DIAGNOSA_MASUK_STR',
                 'penanggung_jawab_pasien.NAMA as PENANGGUNG_JAWAB_PASIEN',
+                'kip_penanggung_jawab_pasien.NOMOR as IDENTITAS_PENANGGUNG_JAWAB_PASIEN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
                 'pendaftaran.STATUS as STATUS_PASIEN',
@@ -118,6 +119,7 @@ class PendaftaranController extends Controller
             })
             ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
             ->leftJoin('pendaftaran.penanggung_jawab_pasien as penanggung_jawab_pasien', 'penanggung_jawab_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('pendaftaran.kartu_identitas_penanggung_jawab as kip_penanggung_jawab_pasien', 'kip_penanggung_jawab_pasien.PENANGGUNG_JAWAB_ID', '=', 'penanggung_jawab_pasien.ID')
             ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'tujuan_pasien.DOKTER')

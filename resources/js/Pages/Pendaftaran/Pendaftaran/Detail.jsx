@@ -58,6 +58,10 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                                                             detailItem.value === 1 ? "Aktif" :
                                                                 detailItem.value === 2 ? "Meninggal" :
                                                                     detailItem.value
+                                                    ) : detailItem.uraian === "CONSENT_SATUSEHAT" ? (
+                                                        detailItem.value === 0 ? "Tidak Disetujui" :
+                                                            detailItem.value === 1 ? "Disetujui" :
+                                                                detailItem.value
                                                     ) : detailItem.value}
                                                 </td>
                                             </tr>
