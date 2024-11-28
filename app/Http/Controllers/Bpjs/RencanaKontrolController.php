@@ -11,7 +11,7 @@ class RencanaKontrolController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
@@ -30,7 +30,12 @@ class RencanaKontrolController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(rekon.noSurat) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(rekon.nomor) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhere('pasien.NORM', 'LIKE', '%' . $searchSubject . '%');
+            });
         }
 
         // Paginate the results

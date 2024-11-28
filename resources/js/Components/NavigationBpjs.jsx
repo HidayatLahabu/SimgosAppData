@@ -31,8 +31,7 @@ export default function NavigationBpjs() {
             route().current('kunjunganBpjs.index') ||
             route().current('pengajuanSep.index') ||
             route().current('rekonBpjs.index') ||
-            route().current('monitoringRekon.index') ||
-            route().current('rujukanBpjs.index');
+            route().current('monitoringRekon.index');
     };
 
     return (
@@ -80,13 +79,6 @@ export default function NavigationBpjs() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Monitoring Rekon
-                    </NavLink>
-                    <NavLink
-                        href={route('rujukanBpjs.index')}
-                        active={route().current('rujukanBpjs.index')}
-                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
-                    >
-                        Rujukan Masuk
                     </NavLink>
                 </div>
             )}

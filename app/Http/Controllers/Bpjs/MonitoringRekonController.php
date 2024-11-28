@@ -10,13 +10,19 @@ class MonitoringRekonController extends Controller
 {
     public function index()
     {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
         // Define base query
         $query = BpjsMonitorRekonModel::orderByDesc('tglRencanaKontrol');
 
         // Apply search filter if 'subject' query parameter is present
-        if (request('nama')) {
-            $searchSubject = strtolower(request('nama')); // Convert search term to lowercase
-            $query->whereRaw('LOWER(nama) LIKE ?', ['%' . $searchSubject . '%']); // Convert column to lowercase for comparison
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(noSuratKontrol) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(noSepAsalKontrol) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Paginate the results

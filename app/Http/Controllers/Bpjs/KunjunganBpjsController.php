@@ -62,10 +62,6 @@ class KunjunganBpjsController extends Controller
                 'peserta.nama as nama',
                 'kunjungan.noSEP',
                 'kunjungan.tglSEP',
-                'kunjungan.tglRujukan',
-                'kunjungan.asalRujukan',
-                'kunjungan.noRujukan',
-                'ppkRujukan.nama as ppkRujukan',
                 'ppkPelayanan.nama as ppkPelayanan',
                 'kunjungan.jenisPelayanan',
                 'kunjungan.catatan',
@@ -91,11 +87,21 @@ class KunjunganBpjsController extends Controller
                 'kunjungan.kecamatan',
                 'kunjungan.tujuanKunj',
                 'kunjungan.flagProcedure',
+                'kunjungan.tglRujukan',
+                'kunjungan.asalRujukan',
+                'kunjungan.noRujukan',
+                'kunjungan.ppkRujukan',
+                'rujukan.tglKunjungan',
+                'rujukan.provPerujuk',
+                'rujukan.diagnosa',
+                'rujukan.keluhan',
+                'rujukan.poliRujukan',
+                'rujukan.pelayanan',
             )
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
-            ->leftJoin('bpjs.ppk as ppkRujukan', 'ppkRujukan.kode', '=', 'kunjungan.ppkRujukan')
             ->leftJoin('bpjs.ppk as ppkPelayanan', 'ppkPelayanan.kode', '=', 'kunjungan.ppkPelayanan')
+            ->leftJoin('bpjs.rujukan_masuk as rujukan', 'rujukan.noKunjungan', '=', 'kunjungan.noRujukan')
             ->where('kunjungan.noSEP', $id)
             ->distinct()
             ->first();
@@ -106,10 +112,55 @@ class KunjunganBpjsController extends Controller
             return redirect()->route('kunjunganBpjs.index')->with('error', 'Data not found.');
         }
 
+        // Convert all JSON fields in the object to strings without curly braces
+        foreach (get_object_vars($query) as $key => $value) {
+            if ($this->isJson($value)) {
+                $query->$key = $this->formatJson($value); // Format JSON
+            }
+        }
+
         // Return Inertia view with the encounter data
         return inertia("Bpjs/Kunjungan/Detail", [
             'detail' => $query,
         ]);
+    }
+
+    /**
+     * Check if a string is JSON.
+     */
+    private function isJson($string)
+    {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+
+    /**
+     * Format JSON string into a plain text string without curly braces.
+     */
+    private function formatJson($json)
+    {
+        $data = json_decode($json, true); // Decode JSON to array
+        if (is_array($data)) {
+            $flattened = [];
+            foreach ($data as $key => $value) {
+                if (is_array($value)) {
+                    // Handle nested arrays
+                    $nested = implode(', ', array_map(
+                        fn($nestedKey, $nestedValue) => is_array($nestedValue)
+                            ? "{$nestedKey}: [" . json_encode($nestedValue) . "]"
+                            : "{$nestedKey}: {$nestedValue}",
+                        array_keys($value),
+                        $value
+                    ));
+                    $flattened[] = "{$key}: [{$nested}]";
+                } else {
+                    // Handle scalar values
+                    $flattened[] = "{$key}: {$value}";
+                }
+            }
+            return implode(', ', $flattened); // Combine into a single string
+        }
+        return $json; // Return original if not a valid array
     }
 
     public function filterByTime($filter)

@@ -8,12 +8,12 @@ import ButtonDetail from "@/Components/ButtonDetail";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('monitoringRekon.index'), updatedParams, {
@@ -23,15 +23,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -52,10 +52,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari data berdasarkan nomor kontrol, nomor SEP atau nama pasien"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -67,7 +67,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">NAMA DOKTER</th>
                                             <th className="px-3 py-2">JENIS KONTROL</th>
-                                            <th className="px-3 py-2">NO SEP</th>
+                                            <th className="px-3 py-2">NOMOR SEP</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
                                     </thead>
