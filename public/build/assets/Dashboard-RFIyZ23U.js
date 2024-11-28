@@ -1,0 +1,1 @@
+import{j as r,Y as a}from"./app-Dw_I0XRi.js";import{A as s}from"./AuthenticatedLayout-CCYuSiPI.js";import i from"./SatuSehatTable-CV5mA9o9.js";import"./transition-CFU2u1Zh.js";function x({auth:e,items:t}){return r.jsxs(s,{user:e.user,children:[r.jsx(a,{title:"Beranda"}),r.jsx("div",{className:"py-5 flex flex-wrap w-full",children:r.jsx(i,{items:t})})]})}export{x as default};
