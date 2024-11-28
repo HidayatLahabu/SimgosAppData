@@ -70,10 +70,10 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
+                                            <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">ALAMAT</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
+                                            <th className="px-3 py-2">PENJAMIN</th>
                                             <th className="px-3 py-2">STATUS</th>
                                             <th className="px-3 py-2 text-center">MENU</th>
                                         </tr>
@@ -83,10 +83,10 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                     <td className="px-3 py-3">{data.nomor}</td>
+                                                    <td className="px-3 py-3">{data.tanggal}</td>
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 data">{data.nama}</td>
-                                                    <td className="px-3 py-3">{data.alamat}</td>
-                                                    <td className="px-3 py-3">{data.tanggal}</td>
+                                                    <td className="px-3 py-3">{data.penjamin}</td>
                                                     <td className="px-3 py-3">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
