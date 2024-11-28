@@ -260,6 +260,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjunganBpjs', [KunjunganBpjsController::class, 'index'])->name('kunjunganBpjs.index');
         Route::get('kunjunganBpjs/detail/{id}', [KunjunganBpjsController::class, 'detail'])->name('kunjunganBpjs.detail');
+        Route::get('/kunjunganBpjs/{filter}', [KunjunganBpjsController::class, 'filterByTime'])
+            ->name('kunjunganBpjs.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('pengajuanSep', [PengajuanSepController::class, 'index'])->name('pengajuanSep.index');
         Route::get('pengajuanSep/detail/{id}', [PengajuanSepController::class, 'detail'])->name('pengajuanSep.detail');
