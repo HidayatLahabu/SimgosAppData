@@ -10,6 +10,16 @@ export default function Detail({ auth, detail }) {
         value: detail[key],
     }));
 
+    // Function to shuffle the digits of a 16-digit NIK
+    const shuffleNumber = (number) => {
+        const nikArray = number.split('');
+        for (let i = nikArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nikArray[i], nikArray[j]] = [nikArray[j], nikArray[i]];
+        }
+        return nikArray.join('');
+    };
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="SatuSehat" />
@@ -36,7 +46,7 @@ export default function Detail({ auth, detail }) {
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words max-w-xs">{detailItem.value}</td>
+                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
                                             </tr>
                                         ))}
                                     </tbody>

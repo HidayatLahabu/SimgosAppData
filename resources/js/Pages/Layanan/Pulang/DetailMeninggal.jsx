@@ -31,9 +31,30 @@ export default function DetailMeninggal({ detailMeninggal }) {
                                             <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
                                             <td className="px-3 py-3 break-words">
                                                 {detailItem.uraian === "STATUS" ? (
-                                                    detailItem.value === 0 ? "Belum Final" :
-                                                        detailItem.value === 1 ? "Sudah Final" :
+                                                    detailItem.value === 1 ? "Belum Final" :
+                                                        detailItem.value === 2 ? "Sudah Final" :
                                                             detailItem.value
+                                                ) : detailItem.uraian === "JENIS_LAHIR_MATI" ? (
+                                                    detailItem.value === 1 ? "Iya" :
+                                                        detailItem.value === 2 ? "Tidak" :
+                                                            ''
+                                                ) : detailItem.uraian === "PERISTIWA_PERSALINAN" ? (
+                                                    detailItem.value === 0 ? "Tidak" :
+                                                        detailItem.value === 1 ? "Ya" :
+                                                            ''
+                                                ) : detailItem.uraian === "PERISTIWA_KEHAMILAN" ? (
+                                                    detailItem.value === 0 ? "Tidak" :
+                                                        detailItem.value === 1 ? "Ya" :
+                                                            ''
+                                                ) : detailItem.uraian === "DILAKUKAN_OPERASI" ? (
+                                                    detailItem.value === 0 ? "Tidak" :
+                                                        detailItem.value === 1 ? "Ya" :
+                                                            ''
+                                                ) : detailItem.uraian === "STATUS_VERIFIKASI" ? (
+                                                    detailItem.value === 0 ? "Tidak Diverifikasi" :
+                                                        detailItem.value === 1 ? "Menunggu" :
+                                                            detailItem.value === 2 ? "Terverifikasi" :
+                                                                ''
                                                 ) : detailItem.value}
                                             </td>
                                         </tr>
