@@ -98,15 +98,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
         Route::get('patient/detail/{id}', [PatientController::class, 'detail'])->name('patient.detail');
+        Route::get('/patient/{filter}', [PatientController::class, 'filterByTime'])
+            ->name('patient.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('practitioner', [PractitionerController::class, 'index'])->name('practitioner.index');
         Route::get('practitioner/detail/{id}', [PractitionerController::class, 'detail'])->name('practitioner.detail');
 
         Route::get('encounter', [EncounterController::class, 'index'])->name('encounter.index');
         Route::get('encounter/detail/{id}', [EncounterController::class, 'detail'])->name('encounter.detail');
+        Route::get('/encounter/{filter}', [EncounterController::class, 'filterByTime'])
+            ->name('encounter.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('condition', [ConditionController::class, 'index'])->name('condition.index');
         Route::get('condition/detail/{id}', [ConditionController::class, 'detail'])->name('condition.detail');
+        Route::get('/condition/{filter}', [ConditionController::class, 'filterByTime'])
+            ->name('condition.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('observation', [ObservationController::class, 'index'])->name('observation.index');
         Route::get('observation/detail/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
@@ -116,6 +125,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('composition', [CompositionController::class, 'index'])->name('composition.index');
         Route::get('composition/detail/{id}', [CompositionController::class, 'detail'])->name('composition.detail');
+        Route::get('/composition/{filter}', [CompositionController::class, 'filterByTime'])
+            ->name('composition.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('consent', [ConsentController::class, 'index'])->name('consent.index');
         Route::get('consent/detail/{id}', [ConsentController::class, 'detail'])->name('consent.detail');
@@ -140,12 +152,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('allergy', [AllergyController::class, 'index'])->name('allergy.index');
         Route::get('allergy/detail/{id}', [AllergyController::class, 'detail'])->name('allergy.detail');
+        Route::get('/allergy/{filter}', [AllergyController::class, 'filterByTime'])
+            ->name('allergy.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('barangBza', [BarangToBzaController::class, 'index'])->name('barangBza.index');
         Route::get('barangBza/detail/{id}', [BarangToBzaController::class, 'detail'])->name('barangBza.detail');
 
         Route::get('carePlan', [CarePlanController::class, 'index'])->name('carePlan.index');
         Route::get('carePlan/detail/{id}', [CarePlanController::class, 'detail'])->name('carePlan.detail');
+        Route::get('/carePlan/{filter}', [CarePlanController::class, 'filterByTime'])
+            ->name('carePlan.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('conditionPa', [ConditionHasilPaController::class, 'index'])->name('conditionPa.index');
         Route::get('conditionPa/detail/{id}', [ConditionHasilPaController::class, 'detail'])->name('conditionPa.detail');

@@ -4,16 +4,17 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import ButtonTime from '@/Components/ButtonTime';
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
     // Function to handle search input changes
-    const searchFieldChanged = (author, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[author] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[author];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('carePlan.index'), updatedParams, {
@@ -23,15 +24,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (author, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(author, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (author, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(author, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -43,18 +44,31 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Care Plan</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Care Plan {header} {totalCount} {text}</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                        <tr>
+                                            <th colSpan={8} className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan author atau nopen"
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("carePlan.filterByTime", "hariIni")} text="Hari Ini" />
+                                                    <ButtonTime href={route("carePlan.filterByTime", "mingguIni")} text="Minggu Ini" />
+                                                    <ButtonTime href={route("carePlan.filterByTime", "bulanIni")} text="Bulan Ini" />
+                                                    <ButtonTime href={route("carePlan.filterByTime", "tahunIni")} text="Tahun Ini" />
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th colSpan={6} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.author || ''}
-                                                    placeholder="Cari berdasarkan author"
-                                                    onChange={e => onInputChange('author', e)}
-                                                    onKeyPress={e => onKeyPress('author', e)}
-                                                />
+
                                             </th>
                                         </tr>
                                     </thead>
