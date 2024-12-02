@@ -1,10 +1,11 @@
-SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini terintegrasi dengan mulus dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah usersimgos didedikasikan untuk informasi pengguna.
+SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini terintegrasi dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah usersimgos didedikasikan untuk informasi pengguna.
 
 Ikhtisar Deployment:
 
     SimgosAppData hanya diuji di OS Linux
     Server: Ubuntu 22.04 & Ubuntu 24.04
     Database: MySQL
+    PHP versi 8.2
     Setup Multiple Database: pada .env
 
 Instruksi Deployment:
@@ -17,8 +18,8 @@ Instruksi Deployment:
         Sesuaikan file .env sesuai dengan petunjuk yang diberikan.
 
     3. Install Dependencies:
-        Jalankan composer install untuk menginstal dependensi PHP.
-        Jalankan npm install untuk menginstal dependensi Node.js.
+        Jalankan composer install untuk menginstal dependensi PHP. Disarankan menggunakan PHP versi 8.2
+        Jalankan npm install untuk menginstal dependensi Node.js. Disarankan menggunakan Node.js versi 18.20.4 dan NPM versi 10.7
 
     4. Generate Kunci Aplikasi:
         Jalankan php artisan key:generate.
