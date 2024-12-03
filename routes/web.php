@@ -119,6 +119,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('observation', [ObservationController::class, 'index'])->name('observation.index');
         Route::get('observation/detail/{id}', [ObservationController::class, 'detail'])->name('observation.detail');
+        Route::get('/observation/{filter}', [ObservationController::class, 'filterByTime'])
+            ->name('observation.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('procedure', [ProcedureController::class, 'index'])->name('procedure.index');
         Route::get('procedure/detail/{id}', [ProcedureController::class, 'detail'])->name('procedure.detail');
@@ -131,9 +134,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('consent', [ConsentController::class, 'index'])->name('consent.index');
         Route::get('consent/detail/{id}', [ConsentController::class, 'detail'])->name('consent.detail');
+        Route::get('/consent/{filter}', [ConsentController::class, 'filterByTime'])
+            ->name('consent.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('diagnosticReport', [DiagnosticReportController::class, 'index'])->name('diagnosticReport.index');
         Route::get('diagnosticReport/detail/{id}', [DiagnosticReportController::class, 'detail'])->name('diagnosticReport.detail');
+        Route::get('/diagnosticReport/{filter}', [DiagnosticReportController::class, 'filterByTime'])
+            ->name('diagnosticReport.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('medication', [MedicationController::class, 'index'])->name('medication.index');
         Route::get('medication/detail/{id}', [MedicationController::class, 'detail'])->name('medication.detail');
@@ -146,9 +155,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('serviceRequest', [ServiceRequestController::class, 'index'])->name('serviceRequest.index');
         Route::get('serviceRequest/detail/{id}', [ServiceRequestController::class, 'detail'])->name('serviceRequest.detail');
+        Route::get('/serviceRequest/{filter}', [ServiceRequestController::class, 'filterByTime'])
+            ->name('serviceRequest.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('specimen', [SpecimenController::class, 'index'])->name('specimen.index');
         Route::get('specimen/detail/{id}', [SpecimenController::class, 'detail'])->name('specimen.detail');
+        Route::get('/specimen/{filter}', [SpecimenController::class, 'filterByTime'])
+            ->name('specimen.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('allergy', [AllergyController::class, 'index'])->name('allergy.index');
         Route::get('allergy/detail/{id}', [AllergyController::class, 'detail'])->name('allergy.detail');
