@@ -53,7 +53,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor kontrol, nomor SEP atau nama pasien"
+                                                    placeholder="Cari data berdasarkan nomor kontrol, nomor SEP, nama pasien atau nama dokter"
                                                     onChange={e => onInputChange('search', e)}
                                                     onKeyPress={e => onKeyPress('search', e)}
                                                 />
@@ -63,7 +63,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
+                                            <th className="px-3 py-2">TANGGAL TERBIT</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             <th className="px-3 py-2">NAMA DOKTER</th>
                                             <th className="px-3 py-2">JENIS KONTROL</th>

@@ -21,7 +21,8 @@ class MonitoringRekonController extends Controller
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(noSuratKontrol) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(nama) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(noSepAsalKontrol) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(noSepAsalKontrol) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(namaDokter) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 
