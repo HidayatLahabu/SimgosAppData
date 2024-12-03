@@ -332,6 +332,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
         Route::get('layananPulang/detail/{id}', [PulangController::class, 'detail'])->name('layananPulang.detail');
+        Route::get('/layananPulang/{filter}', [PulangController::class, 'filterByTime'])
+            ->name('layananPulang.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
 });
 

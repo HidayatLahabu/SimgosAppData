@@ -15,18 +15,6 @@ class PulangController extends Controller
 
         // Start building the query using the query builder
         $query = DB::connection('mysql7')->table('layanan.pasien_pulang as pulang')
-            ->select(
-                'pulang.ID as id',
-                'pulang.KUNJUNGAN as kunjungan',
-                'pulang.TANGGAL as tanggal',
-                'pegawai.NAMA as dokter',
-                'pegawai.GELAR_DEPAN as gelarDepan',
-                'pegawai.GELAR_BELAKANG as gelarBelakang',
-                'pasien.NORM as norm',
-                'pasien.NAMA as nama',
-                'refCara.DESKRIPSI as cara',
-                'refKeadaan.DESKRIPSI as keadaan'
-            )
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'pulang.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pulang.DOKTER')
@@ -50,6 +38,21 @@ class PulangController extends Controller
             });
         }
 
+        // Group by 'pulang.ID' and select aggregated fields
+        $query->selectRaw('
+            pulang.ID as id,
+            MIN(pulang.TANGGAL) as tanggal,
+            MIN(pulang.KUNJUNGAN) as kunjungan,
+            MIN(pegawai.NAMA) as dokter,
+            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+            MIN(pasien.NORM) as norm,
+            MIN(pasien.NAMA) as nama,
+            MIN(refCara.DESKRIPSI) as cara,
+            MIN(refKeadaan.DESKRIPSI) as keadaan
+        ')
+            ->groupBy('pulang.ID');
+
         // Paginate the results
         $data = $query->orderByDesc('pulang.TANGGAL')->paginate(10)->appends(request()->query());
 
@@ -63,6 +66,111 @@ class PulangController extends Controller
                 'links' => $dataArray['links'], // Pagination links
             ],
             'queryParams' => request()->all()
+        ]);
+    }
+
+    public function filterByTime($filter)
+    {
+        // Mendapatkan istilah pencarian dari request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Membangun query dasar
+        $baseQuery = DB::connection('mysql7')->table('layanan.pasien_pulang as pulang')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'pulang.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pulang.DOKTER')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('bpjs.peserta as peserta', 'pasien.NORM', '=', 'peserta.norm')
+            ->leftJoin('master.referensi as refCara', function ($join) {
+                $join->on('refCara.ID', '=', 'pulang.CARA')
+                    ->where('refCara.JENIS', '=', 45);
+            })
+            ->leftJoin('master.referensi as refKeadaan', function ($join) {
+                $join->on('refKeadaan.ID', '=', 'pulang.KEADAAN')
+                    ->where('refKeadaan.JENIS', '=', 46);
+            });
+
+        // Menerapkan filter waktu
+        switch ($filter) {
+            case 'hariIni':
+                $baseQuery->whereDate('pulang.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'mingguIni':
+                $baseQuery->whereBetween('pulang.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'bulanIni':
+                $baseQuery->whereMonth('pulang.TANGGAL', now()->month)
+                    ->whereYear('pulang.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'tahunIni':
+                $baseQuery->whereYear('pulang.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                $text = 'PASIEN';
+                break;
+
+            default:
+                abort(404, 'Filter tidak ditemukan');
+        }
+
+        // Membangun query data dengan grouping dan seleksi
+        $dataQuery = clone $baseQuery;
+        $dataQuery->selectRaw('
+            pulang.ID as id,
+            MIN(pulang.TANGGAL) as tanggal,
+            MIN(pulang.KUNJUNGAN) as kunjungan,
+            MIN(pegawai.NAMA) as dokter,
+            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+            MIN(pasien.NORM) as norm,
+            MIN(pasien.NAMA) as nama,
+            MIN(refCara.DESKRIPSI) as cara,
+            MIN(refKeadaan.DESKRIPSI) as keadaan
+        ')
+            ->groupBy('pulang.ID');
+
+        // Membangun query count
+        $count = $baseQuery->distinct('pulang.ID')->count('pulang.ID');
+
+        // Menambahkan filter pencarian jika ada
+        if ($searchSubject) {
+            $dataQuery->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pulang.KUNJUNGAN) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+
+            // Perbarui count untuk pencarian
+            $count = $baseQuery->distinct('pulang.ID')->count('pulang.ID');
+        }
+
+        // Mengambil data dengan paginasi
+        $data = $dataQuery->orderByDesc('pulang.TANGGAL')->paginate(10)->appends(request()->query());
+
+        // Mengonversi data ke array
+        $dataArray = $data->toArray();
+
+        // Mengembalikan view Inertia dengan data yang dipaginate
+        return inertia("Layanan/Pulang/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Hanya data yang dipaginate
+                'links' => $dataArray['links'], // Tautan paginasi
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+            'text' => $text,
         ]);
     }
 

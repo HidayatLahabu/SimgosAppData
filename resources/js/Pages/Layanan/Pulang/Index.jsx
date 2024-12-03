@@ -4,8 +4,9 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import ButtonTime from '@/Components/ButtonTime';
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -45,18 +46,24 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Pulang</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Pulang {header} {totalCount} {text}</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor kunjungan, NORM, atau nama pasien"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
+                                            <th colSpan={9} className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan nomor kunjungan, NORM, atau nama pasien"
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("layananPulang.filterByTime", "hariIni")} text="Hari Ini" />
+                                                    <ButtonTime href={route("layananPulang.filterByTime", "mingguIni")} text="Minggu Ini" />
+                                                    <ButtonTime href={route("layananPulang.filterByTime", "bulanIni")} text="Bulan Ini" />
+                                                    <ButtonTime href={route("layananPulang.filterByTime", "tahunIni")} text="Tahun Ini" />
+                                                </div>
                                             </th>
                                         </tr>
                                     </thead>
