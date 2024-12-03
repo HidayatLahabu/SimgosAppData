@@ -64,6 +64,107 @@ class LaboratoriumController extends Controller
         ]);
     }
 
+    public function filterByTime($filter)
+    {
+        // Mendapatkan istilah pencarian dari request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Membangun query dasar
+        $baseQuery = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
+            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+
+        // Menerapkan filter waktu
+        switch ($filter) {
+            case 'hariIni':
+                $baseQuery->whereDate('orderLab.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'mingguIni':
+                $baseQuery->whereBetween('orderLab.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'bulanIni':
+                $baseQuery->whereMonth('orderLab.TANGGAL', now()->month)
+                    ->whereYear('orderLab.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'tahunIni':
+                $baseQuery->whereYear('orderLab.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                $text = 'PASIEN';
+                break;
+
+            default:
+                abort(404, 'Filter tidak ditemukan');
+        }
+
+        // Membangun query data dengan grouping dan seleksi
+        $dataQuery = clone $baseQuery;
+        $dataQuery->selectRaw('
+            orderLab.NOMOR as nomor,
+            MIN(orderLab.TANGGAL) as tanggal,
+            MIN(orderLab.KUNJUNGAN) as kunjungan,
+            MIN(pegawai.NAMA) as dokter,
+            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+            MIN(pasien.NORM) as norm,
+            MIN(pasien.NAMA) as nama,
+            MIN(kunjungan.STATUS) as statusKunjungan,
+            MIN(orderLab.STATUS) as statusOrder,
+            MIN(hasil.STATUS) as statusHasil
+        ')
+            ->groupBy('orderLab.NOMOR');
+
+        // Membangun query count
+        $count = $baseQuery->distinct('orderLab.NOMOR')->count('orderLab.NOMOR');
+
+        // Menambahkan filter pencarian jika ada
+        if ($searchSubject) {
+            $dataQuery->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+
+            // Juga perlu menambahkan filter pencarian pada count jika diperlukan
+            $count = $baseQuery->distinct('orderLab.NOMOR')->count('orderLab.NOMOR');
+        }
+
+        // Mengambil data dengan paginasi
+        $data = $dataQuery->orderByDesc('orderLab.TANGGAL')->paginate(5)->appends(request()->query());
+
+        // Mengonversi data ke array
+        $dataArray = $data->toArray();
+
+        // Mengembalikan view Inertia dengan data yang dipaginate
+        return inertia("Layanan/Laboratorium/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Hanya data yang dipaginate
+                'links' => $dataArray['links'], // Tautan paginasi
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+            'text' => $text,
+        ]);
+    }
+
+
     public function detail($id)
     {
         // Fetch data utama (main lab order details)

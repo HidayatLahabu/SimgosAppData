@@ -314,10 +314,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
         Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
         Route::get('/layananLab-print', [LaboratoriumController::class, 'print'])->name('layananLab.print');
+        Route::get('/layananLab/{filter}', [LaboratoriumController::class, 'filterByTime'])
+            ->name('layananLab.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
         Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
         Route::get('/layananRad-print', [RadiologiController::class, 'print'])->name('layananRad.print');
+        Route::get('/layananRad/{filter}', [RadiologiController::class, 'filterByTime'])
+            ->name('layananRad.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
 
