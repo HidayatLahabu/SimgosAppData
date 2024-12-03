@@ -305,6 +305,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('monitoringRekon', [MonitoringRekonController::class, 'index'])->name('monitoringRekon.index');
         Route::get('monitoringRekon/detail/{id}', [MonitoringRekonController::class, 'detail'])->name('monitoringRekon.detail');
+        Route::get('/monitoringRekon/{filter}', [MonitoringRekonController::class, 'filterByTime'])
+            ->name('monitoringRekon.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
 });
 
