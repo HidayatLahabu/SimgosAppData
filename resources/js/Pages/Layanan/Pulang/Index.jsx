@@ -4,9 +4,10 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import Cetak from "./Cetak"
 import ButtonTime from '@/Components/ButtonTime';
 
-export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, text, keadaanPulang, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -107,6 +108,10 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="w-full">
+                <Cetak keadaanPulang={keadaanPulang} />
             </div>
         </AuthenticatedLayout>
     );

@@ -249,7 +249,7 @@ class RadiologiController extends Controller
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
 
-        // Variable default untuk label
+        // Variable default
         $penjamin = 'Semua Penjamin';
         $kunjungan = 'Semua Kunjungan';
 
@@ -261,7 +261,6 @@ class RadiologiController extends Controller
                 'tindakan.NAMA as namaTindakan',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
-                'jenisPenjamin.NOMOR as nomorSEP',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilRad.TINDAKAN_MEDIS')
@@ -279,9 +278,8 @@ class RadiologiController extends Controller
             $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
                 ->where('jenisPenjamin.JENIS', 1)
                 ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
-            $penjamin = 'Non BPJS';
+            $penjamin = 'Non BPJS KESEHATAN';
 
-            // Filter berdasarkan jenis kunjungan
             if ($jenisKunjungan == 1) {
                 $query->whereNotIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Exclude Rawat Jalan
                 $kunjungan = 'Rawat Inap';
@@ -297,9 +295,10 @@ class RadiologiController extends Controller
                         ->whereNotNull('jenisPenjamin.NOMOR')
                         ->where('jenisPenjamin.NOMOR', '!=', '');
                 }); // Pasien BPJS
-            $penjamin = 'BPJS';
+            $penjamin = 'BPJS KESEHATAN';
 
-            // Filter berdasarkan jenis kunjungan
+            $query->addSelect(DB::raw('IFNULL(jenisPenjamin.NOMOR, "") as nomorSEP'));
+
             if ($jenisKunjungan == 1) {
                 $query->where('kunjunganBpjs.jenisPelayanan', 1); // Pasien Rawat Inap
                 $kunjungan = 'Rawat Inap';
@@ -314,7 +313,7 @@ class RadiologiController extends Controller
             ->orderBy('hasilRad.TANGGAL')
             ->get();
 
-        // Kirim data ke frontend menggunakan Inertia
+        // Kirim data ke frontend
         return inertia("Layanan/Radiologi/Print", [
             'data'              => $data,
             'dariTanggal'       => $dariTanggal,

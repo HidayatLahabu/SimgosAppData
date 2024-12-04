@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Layanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\MasterReferensiModel;
 
 class PulangController extends Controller
 {
@@ -54,10 +55,13 @@ class PulangController extends Controller
             ->groupBy('pulang.ID');
 
         // Paginate the results
-        $data = $query->orderByDesc('pulang.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('pulang.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
+
+        //get data referensi pasien pulang
+        $keadaanPulang = MasterReferensiModel::where('JENIS', 46)->get();
 
         // Return Inertia view with paginated data
         return inertia("Layanan/Pulang/Index", [
@@ -65,7 +69,8 @@ class PulangController extends Controller
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
-            'queryParams' => request()->all()
+            'queryParams' => request()->all(),
+            'keadaanPulang' => $keadaanPulang,
         ]);
     }
 
@@ -156,7 +161,7 @@ class PulangController extends Controller
         }
 
         // Mengambil data dengan paginasi
-        $data = $dataQuery->orderByDesc('pulang.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $dataQuery->orderByDesc('pulang.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Mengonversi data ke array
         $dataArray = $data->toArray();
@@ -272,6 +277,180 @@ class PulangController extends Controller
         return inertia("Layanan/Pulang/Detail", [
             'detail' => $queryDetail,
             'detailMeninggal' => $queryMeninggal,
+        ]);
+    }
+
+    // public function print(Request $request)
+    // {
+    //     // Validasi input
+    //     $request->validate([
+    //         'jenisPenjamin'  => 'nullable|integer|in:1,2',
+    //         'keadaanPulang'  => 'nullable|integer',
+    //         'dari_tanggal'   => 'required|date',
+    //         'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+    //     ]);
+
+    //     // Ambil nilai input
+    //     $jenisPenjamin  = $request->input('jenisPenjamin');
+    //     $keadaanPulang  = $request->input('keadaanPulang');
+    //     $dariTanggal    = $request->input('dari_tanggal');
+    //     $sampaiTanggal  = $request->input('sampai_tanggal');
+
+    //     // Variable default untuk label
+    //     $penjamin = 'Semua Penjamin';
+    //     $keadaan  = 'Semua Keadaan Pulang';
+
+    //     // Query utama
+    //     $query = DB::connection('mysql7')->table('layanan.pasien_pulang as pulang')
+    //         ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'pulang.NOPEN')
+    //         ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+    //         ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pulang.DOKTER')
+    //         ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+    //         ->leftJoin('master.referensi as refKeadaan', function ($join) {
+    //             $join->on('refKeadaan.ID', '=', 'pulang.KEADAAN')
+    //                 ->where('refKeadaan.JENIS', '=', 46);
+    //         })
+    //         ->selectRaw('
+    //             pulang.ID as idPulang,
+    //             MIN(pulang.TANGGAL) as tanggal,
+    //             MIN(pulang.KUNJUNGAN) as kunjungan,
+    //             MIN(pegawai.NAMA) as dokter,
+    //             MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+    //             MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+    //             MIN(pasien.NORM) as norm,
+    //             MIN(pasien.NAMA) as namaPasien,
+    //             MIN(refKeadaan.DESKRIPSI) as keadaan
+    //     ')
+    //         ->groupBy('pulang.ID');
+
+    //     // Filter berdasarkan jenis penjamin
+    //     if ($jenisPenjamin) {
+    //         $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'pulang.NOPEN');
+    //         if ($jenisPenjamin == 1) {
+    //             $query->where('jenisPenjamin.JENIS', 1)->where('jenisPenjamin.NOMOR', '=', ''); // Non BPJS
+    //             $penjamin = 'Non BPJS';
+    //         } elseif ($jenisPenjamin == 2) {
+    //             $query->where(function ($query) {
+    //                 $query->where('jenisPenjamin.JENIS', 2)
+    //                     ->whereNotNull('jenisPenjamin.NOMOR')
+    //                     ->where('jenisPenjamin.NOMOR', '!=', '');
+    //             }); // BPJS
+    //             $penjamin = 'BPJS';
+    //         }
+    //     }
+
+    //     // Filter berdasarkan keadaan pulang
+    //     if ($keadaanPulang) {
+    //         $query->where('pulang.KEADAAN', '=', $keadaanPulang);
+    //         $keadaan = DB::connection('mysql7')->table('master.referensi')
+    //             ->where('ID', $keadaanPulang)
+    //             ->where('JENIS', '=', 46)
+    //             ->value('DESKRIPSI');
+    //     }
+
+    //     // Filter berdasarkan tanggal
+    //     $data = $query->whereBetween('pulang.TANGGAL', [$dariTanggal, $sampaiTanggal])
+    //         ->orderBy('pulang.TANGGAL')
+    //         ->get();
+
+    //     // Kirim data ke frontend menggunakan Inertia
+    //     return inertia("Layanan/Pulang/Print", [
+    //         'data'          => $data,
+    //         'dariTanggal'   => $dariTanggal,
+    //         'sampaiTanggal' => $sampaiTanggal,
+    //         'jenisPenjamin' => $penjamin,
+    //         'keadaanPulang' => $keadaan,
+    //     ]);
+    // }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'jenisPenjamin'  => 'nullable|integer|in:1,2',
+            'keadaanPulang'  => 'nullable|integer',
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $jenisPenjamin  = $request->input('jenisPenjamin');
+        $keadaanPulang  = $request->input('keadaanPulang');
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
+
+        // Variable default untuk label
+        $penjamin = 'Semua Penjamin';
+        $keadaan  = 'Semua Keadaan Pulang';
+
+        // Query utama
+        $query = DB::connection('mysql7')->table('layanan.pasien_pulang as pulang')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'pulang.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pulang.DOKTER')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('master.referensi as refKeadaan', function ($join) {
+                $join->on('refKeadaan.ID', '=', 'pulang.KEADAAN')
+                    ->where('refKeadaan.JENIS', '=', 46);
+            })
+            ->selectRaw('
+                pulang.ID as idPulang,
+                pulang.TANGGAL as tanggal,
+                pulang.KUNJUNGAN as kunjungan,
+                pegawai.NAMA as dokter,
+                pegawai.GELAR_DEPAN as gelarDepan,
+                pegawai.GELAR_BELAKANG as gelarBelakang,
+                pasien.NORM as norm,
+                pasien.NAMA as namaPasien,
+                refKeadaan.DESKRIPSI as keadaan
+            ');
+
+        // Filter berdasarkan jenis penjamin
+        if ($jenisPenjamin) {
+            $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'pulang.NOPEN');
+
+            // BPJS
+            if ($jenisPenjamin == 2) {
+                $query->where(function ($query) {
+                    $query->where('jenisPenjamin.JENIS', 2)
+                        ->whereNotNull('jenisPenjamin.NOMOR')
+                        ->where('jenisPenjamin.NOMOR', '!=', '');
+                });
+                $penjamin = 'BPJS KESEHATAN';
+
+                // Tambahkan NOMOR untuk BPJS sebagai 'nomorSEP'
+                $query->addSelect('jenisPenjamin.NOMOR as nomorSEP');
+            }
+
+            // Non-BPJS
+            if ($jenisPenjamin == 1) {
+                $query->where('jenisPenjamin.JENIS', 1)
+                    ->where('jenisPenjamin.NOMOR', '=', ''); // Non BPJS
+                $penjamin = 'Non BPJS KESEHATAN';
+            }
+        }
+
+        // Filter berdasarkan keadaan pulang
+        if ($keadaanPulang) {
+            $query->where('pulang.KEADAAN', '=', $keadaanPulang);
+            $keadaan = DB::connection('mysql7')->table('master.referensi')
+                ->where('ID', $keadaanPulang)
+                ->where('JENIS', '=', 46)
+                ->value('DESKRIPSI');
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('pulang.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('pulang.TANGGAL')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Layanan/Pulang/Print", [
+            'data'          => $data,
+            'dariTanggal'   => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'jenisPenjamin' => $penjamin,
+            'keadaanPulang' => $keadaan,
         ]);
     }
 }

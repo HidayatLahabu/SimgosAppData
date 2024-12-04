@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan, jenisPenjamin }) {
+export default function Print({ data, dariTanggal, sampaiTanggal, keadaanPulang, jenisPenjamin }) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');
@@ -24,7 +24,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     JENIS PENJAMIN : {jenisPenjamin}
                                 </h2>
                                 <h2 className="text-center font-bold text-2xl uppercase">
-                                    JENIS KUNJUNGAN : {jenisKunjungan}
+                                    KEADAAN PULANG : {keadaanPulang}
                                 </h2>
                                 <p className="text-center font-bold text-2xl">
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
@@ -34,27 +34,26 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     <thead className="text-sm font-bold text-gray-900 bg-white dark:text-gray-900 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">ID HASIL</th>
+                                            <th className="px-3 py-2">ID PULANG</th>
                                             <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
                                             {jenisPenjamin === 'BPJS KESEHATAN' && (
                                                 <th className="px-3 py-2">NOMOR SEP</th>
                                             )}
-                                            <th className="px-3 py-2">TINDAKAN</th>
-                                            <th className="px-3 py-2">HASIL</th>
-                                            <th className="px-3 py-2">PELAKSANA</th>
+                                            <th className="px-3 py-2">KEADAAN</th>
+                                            <th className="px-3 py-2">DPJP</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => (
-                                            <tr key={item.id} className="border-b bg-white dark:border-gray-500">
+                                            <tr key={item.idPulang} className="border-b bg-white dark:border-gray-500">
                                                 <td className="px-3 py-2 text-nowrap">{key + 1}</td>
                                                 <td className="px-3 py-2 text-nowrap">
-                                                    {item.idHasil}
+                                                    {item.idPulang}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
-                                                    {item.tanggalHasil}
+                                                    {item.tanggal}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
                                                     {item.norm}
@@ -66,13 +65,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                     <td className="px-3 py-2 text-nowrap">{item.nomorSEP}</td>
                                                 )}
                                                 <td className="px-3 py-2 text-nowrap">
-                                                    {item.namaTindakan}
-                                                </td>
-                                                <td className="px-3 py-2 text-wrap">
-                                                    {item.hasil} {item.satuan}
+                                                    {item.keadaan}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
-                                                    {item.pelaksana}
+                                                    {item.gelarDepan} <span className='uppercase'>{item.dokter}</span> {item.gelarBelakang}
                                                 </td>
                                             </tr>
                                         ))}

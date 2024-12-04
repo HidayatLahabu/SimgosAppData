@@ -284,7 +284,6 @@ class LaboratoriumController extends Controller
                 'hasilLab.SATUAN as satuan',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
-                'jenisPenjamin.NOMOR as nomorSEP',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilLab.TINDAKAN_MEDIS')
@@ -302,7 +301,7 @@ class LaboratoriumController extends Controller
             $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
                 ->where('jenisPenjamin.JENIS', 1)
                 ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
-            $penjamin = 'Non BPJS';
+            $penjamin = 'Non BPJS KESEHATAN';
 
             // Filter berdasarkan jenis kunjungan
             if ($jenisKunjungan == 1) {
@@ -320,7 +319,10 @@ class LaboratoriumController extends Controller
                         ->whereNotNull('jenisPenjamin.NOMOR')
                         ->where('jenisPenjamin.NOMOR', '!=', '');
                 }); // Pasien BPJS
-            $penjamin = 'BPJS';
+            $penjamin = 'BPJS KESEHATAN';
+
+            // Tambahkan kolom nomor SEP untuk pasien BPJS
+            $query->addSelect('jenisPenjamin.NOMOR as nomorSEP');
 
             // Filter berdasarkan jenis kunjungan
             if ($jenisKunjungan == 1) {
