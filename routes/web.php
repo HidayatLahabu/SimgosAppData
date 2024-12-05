@@ -62,6 +62,7 @@ use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
+use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
@@ -286,6 +287,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/antrian/{filter}', [AntrianRuanganController::class, 'filterByStatus'])
             ->name('antrian.filterByStatus')
             ->where('filter', 'batal|belumDiterima|diterima');
+
+        Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
+        Route::get('reservasi/detail/{id}', [ReservasiController::class, 'detail'])->name('reservasi.detail');
+        Route::get('/reservasi/{filter}', [ReservasiController::class, 'filterByStatus'])
+            ->name('reservasi.filterByStatus')
+            ->where('filter', 'batal|reservasi|selesai');
     });
 });
 

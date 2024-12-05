@@ -81,6 +81,13 @@ export default function NavigationPendaftaran() {
                     >
                         Antrian Ruangan
                     </NavLink>
+                    <NavLink
+                        href={route('reservasi.index')}
+                        active={route().current('reservasi.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Reservasi
+                    </NavLink>
                 </div>
             )}
         </div>
