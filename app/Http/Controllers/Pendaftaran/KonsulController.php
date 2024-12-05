@@ -46,53 +46,31 @@ class KonsulController extends Controller
         // Convert data to array
         $dataArray = $data->toArray();
 
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Konsul/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all()
         ]);
     }
 
-    public function detail($id)
+    protected function rataRata()
     {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
-            ->select([
-                'konsul.NOMOR as NOMOR',
-                'konsul.TANGGAL as TANGGAL',
-                'konsul.KUNJUNGAN as KUNJUNGAN',
-                'pendaftaran.NOMOR as PENDAFTARAN',
-                'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA',
-                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
-                'konsul.ALASAN as ALASAN',
-                'konsul.PERMINTAAN_TINDAKAN as PERMINTAAN_TINDAKAN',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
-                'konsul.STATUS as STATUS_KONSUL'
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'konsul.KUNJUNGAN')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'konsul.TUJUAN')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'konsul.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->where('konsul.NOMOR', $id)
-            ->distinct()
+        return DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
+            ->selectRaw('
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE(konsul.TANGGAL))) AS rata_rata_per_hari,
+            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(konsul.TANGGAL, 1))) AS rata_rata_per_minggu,
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(konsul.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(konsul.TANGGAL))) AS rata_rata_per_tahun
+        ')
+            ->whereIn('STATUS', [1, 2])
             ->first();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('konsul.index')->with('error', 'Data not found.');
-        }
-
-        // Return Inertia view with the encounter data
-        return inertia("Pendaftaran/Konsul/Detail", [
-            'detail' => $query,
-        ]);
     }
 
     public function filterByTime($filter)
@@ -176,15 +154,58 @@ class KonsulController extends Controller
         // Convert data to array
         $dataArray = $data->toArray();
 
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Konsul/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all(),
             'header' => $header,
             'totalCount' => $count,
+        ]);
+    }
+
+    public function detail($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
+            ->select([
+                'konsul.NOMOR as NOMOR',
+                'konsul.TANGGAL as TANGGAL',
+                'konsul.KUNJUNGAN as KUNJUNGAN',
+                'pendaftaran.NOMOR as PENDAFTARAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA',
+                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
+                'konsul.ALASAN as ALASAN',
+                'konsul.PERMINTAAN_TINDAKAN as PERMINTAAN_TINDAKAN',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                'konsul.STATUS as STATUS_KONSUL'
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'konsul.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'konsul.TUJUAN')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'konsul.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->where('konsul.NOMOR', $id)
+            ->distinct()
+            ->first();
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('konsul.index')->with('error', 'Data not found.');
+        }
+
+        // Return Inertia view with the encounter data
+        return inertia("Pendaftaran/Konsul/Detail", [
+            'detail' => $query,
         ]);
     }
 }

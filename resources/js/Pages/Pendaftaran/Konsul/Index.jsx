@@ -6,7 +6,7 @@ import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
 
-export default function Index({ auth, dataTable, header, totalCount, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -48,6 +48,18 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Konsul {header} {totalCount} Pasien</h1>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
+                                    <thead className="text-base text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-yellow-400 border-b-2 border-gray-500">
+                                        <tr>
+                                            <th colSpan="8" className="px-3 py-2 text-center">
+                                                <div className="grid grid-cols-4 gap-2">
+                                                    <div>RATA-RATA PER HARI : {rataRata.rata_rata_per_hari} PASIEN</div>
+                                                    <div>RATA-RATA PER MINGGU : {rataRata.rata_rata_per_minggu} PASIEN</div>
+                                                    <div>RATA-RATA PER BULAN : {rataRata.rata_rata_per_bulan} PASIEN</div>
+                                                    <div>RATA-RATA PER TAHUN : {rataRata.rata_rata_per_tahun} PASIEN</div>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </thead>
                                     <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th colSpan={8} className="px-3 py-2">
@@ -67,7 +79,7 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-400 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">NOMOR</th>
                                             <th className="px-3 py-2">NORM</th>

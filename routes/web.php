@@ -283,6 +283,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
         Route::get('antrian/detail/{id}', [AntrianRuanganController::class, 'detail'])->name('antrian.detail');
+        Route::get('/antrian/{filter}', [AntrianRuanganController::class, 'filterByStatus'])
+            ->name('antrian.filterByStatus')
+            ->where('filter', 'batal|belumDiterima|diterima');
     });
 });
 

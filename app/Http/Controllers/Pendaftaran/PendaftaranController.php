@@ -45,13 +45,125 @@ class PendaftaranController extends Controller
         // Convert data to array
         $dataArray = $data->toArray();
 
-        // Return Inertia view with paginated data
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
+        // Return Inertia view with paginated data and rata-rata
         return inertia("Pendaftaran/Pendaftaran/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all()
+        ]);
+    }
+
+    protected function rataRata()
+    {
+        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->selectRaw('
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE(pendaftaran.TANGGAL))) AS rata_rata_per_hari,
+            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(pendaftaran.TANGGAL, 1))) AS rata_rata_per_minggu,
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(pendaftaran.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(pendaftaran.TANGGAL))) AS rata_rata_per_tahun
+        ')
+            ->whereIn('STATUS', [1, 2])
+            ->first();
+    }
+
+    public function filterByTime($filter)
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Determine the date filter based on the type
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select(
+                'pendaftaran.NOMOR as nomor',
+                'pendaftaran.NORM as norm',
+                'pasien.NAMA as nama',
+                'pendaftaran.TANGGAL as tanggal',
+                'penjamin.NOMOR as penjamin',
+                'pendaftaran.STATUS as status',
+            )
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
+            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->where('pasien.STATUS', 1);
+
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
+        switch ($filter) {
+            case 'hariIni':
+                $query->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
+                $countQuery->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                break;
+
+            case 'mingguIni':
+                $query->whereBetween('pendaftaran.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $countQuery->whereBetween('pendaftaran.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                break;
+
+            case 'bulanIni':
+                $query->whereMonth('pendaftaran.TANGGAL', now()->month)
+                    ->whereYear('pendaftaran.TANGGAL', now()->year);
+                $countQuery->whereMonth('pendaftaran.TANGGAL', now()->month)
+                    ->whereYear('pendaftaran.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                break;
+
+            case 'tahunIni':
+                $query->whereYear('pendaftaran.TANGGAL', now()->year);
+                $countQuery->whereYear('pendaftaran.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                break;
+
+            default:
+                abort(404, 'Filter not found');
+        }
+
+        // Get count
+        $count = $countQuery->count();
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate the results
+        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
+        // Return Inertia view with paginated data and rata-rata
+        return inertia("Pendaftaran/Pendaftaran/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
         ]);
     }
 
@@ -162,7 +274,6 @@ class PendaftaranController extends Controller
         ]);
     }
 
-    //get data table untuk detail kunjungan
     protected function getKunjungan($noPendaftaran)
     {
         return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
@@ -349,97 +460,6 @@ class PendaftaranController extends Controller
         // Return Inertia view with the encounter data
         return inertia("Pendaftaran/Pendaftaran/Bpjs", [
             'detail' => $query,
-        ]);
-    }
-
-    public function filterByTime($filter)
-    {
-        // Get the search term from the request
-        $searchSubject = request('search') ? strtolower(request('search')) : null;
-
-        // Determine the date filter based on the type
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
-            ->select(
-                'pendaftaran.NOMOR as nomor',
-                'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
-                'pendaftaran.TANGGAL as tanggal',
-                'penjamin.NOMOR as penjamin',
-                'pendaftaran.STATUS as status',
-            )
-            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
-            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
-            ->where('pasien.STATUS', 1);
-
-        // Clone query for count calculation
-        $countQuery = clone $query;
-
-        switch ($filter) {
-            case 'hariIni':
-                $query->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
-                $countQuery->whereDate('pendaftaran.TANGGAL', now()->format('Y-m-d'));
-                $header = 'HARI INI';
-                break;
-
-            case 'mingguIni':
-                $query->whereBetween('pendaftaran.TANGGAL', [
-                    now()->startOfWeek()->format('Y-m-d'),
-                    now()->endOfWeek()->format('Y-m-d')
-                ]);
-                $countQuery->whereBetween('pendaftaran.TANGGAL', [
-                    now()->startOfWeek()->format('Y-m-d'),
-                    now()->endOfWeek()->format('Y-m-d')
-                ]);
-                $header = 'MINGGU INI';
-                break;
-
-            case 'bulanIni':
-                $query->whereMonth('pendaftaran.TANGGAL', now()->month)
-                    ->whereYear('pendaftaran.TANGGAL', now()->year);
-                $countQuery->whereMonth('pendaftaran.TANGGAL', now()->month)
-                    ->whereYear('pendaftaran.TANGGAL', now()->year);
-                $header = 'BULAN INI';
-                break;
-
-            case 'tahunIni':
-                $query->whereYear('pendaftaran.TANGGAL', now()->year);
-                $countQuery->whereYear('pendaftaran.TANGGAL', now()->year);
-                $header = 'TAHUN INI';
-                break;
-
-            default:
-                abort(404, 'Filter not found');
-        }
-
-        // Get count
-        $count = $countQuery->count();
-
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%']);
-            });
-        }
-
-        // Paginate the results
-        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
-
-        // Convert data to array
-        $dataArray = $data->toArray();
-
-        // Return Inertia view with paginated data
-        return inertia("Pendaftaran/Pendaftaran/Index", [
-            'dataTable' => [
-                'data' => $dataArray['data'], // Only the paginated data
-                'links' => $dataArray['links'], // Pagination links
-            ],
-            'queryParams' => request()->all(),
-            'header' => $header,
-            'totalCount' => $count,
         ]);
     }
 }

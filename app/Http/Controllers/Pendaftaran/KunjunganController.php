@@ -45,17 +45,143 @@ class KunjunganController extends Controller
         // Convert data to array
         $dataArray = $data->toArray();
 
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Kunjungan/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all()
         ]);
     }
 
-    //get detail kunjungan
+    protected function rataRata()
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->selectRaw('
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE(kunjungan.MASUK))) AS rata_rata_per_hari,
+            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(kunjungan.MASUK, 1))) AS rata_rata_per_minggu,
+            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(kunjungan.MASUK, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(kunjungan.MASUK))) AS rata_rata_per_tahun
+        ')
+            ->whereIn('STATUS', [1, 2])
+            ->first();
+    }
+
+    public function filterByTime($filter)
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select(
+                'kunjungan.NOMOR as nomor',
+                'pasien.NAMA as nama',
+                'pasien.NORM as norm',
+                'ruangan.DESKRIPSI as ruangan',
+                'kunjungan.MASUK as masuk',
+                'kunjungan.KELUAR as keluar',
+                'kunjungan.STATUS as status',
+            )
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->where('pasien.STATUS', 1);
+
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
+        switch ($filter) {
+            case 'hariIni':
+                $query->whereDate('kunjungan.MASUK', now()->format('Y-m-d'));
+                $countQuery->whereDate('kunjungan.MASUK', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                break;
+
+            case 'mingguIni':
+                $query->whereBetween('kunjungan.MASUK', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $countQuery->whereBetween('kunjungan.MASUK', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                break;
+
+            case 'bulanIni':
+                $query->whereMonth('kunjungan.MASUK', now()->month)
+                    ->whereYear('kunjungan.MASUK', now()->year);
+                $countQuery->whereMonth('kunjungan.MASUK', now()->month)
+                    ->whereYear('kunjungan.MASUK', now()->year);
+                $header = 'BULAN INI';
+                break;
+
+            case 'tahunIni':
+                $query->whereYear('kunjungan.MASUK', now()->year);
+                $countQuery->whereYear('kunjungan.MASUK', now()->year);
+                $header = 'TAHUN INI';
+                break;
+
+            default:
+                abort(404, 'Filter not found');
+        }
+
+        // Get count
+        $count = $countQuery->count();
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate the results
+        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate the results
+        $data = $query->orderByDesc('kunjungan.MASUK')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Hitung rata-rata
+        $rataRata = $this->rataRata();
+
+        // Return Inertia view with paginated data
+        return inertia("Pendaftaran/Kunjungan/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'rataRata' => $rataRata, // Pass rata-rata data to frontend
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+        ]);
+    }
+
     public function detail($id)
     {
         // Fetch the specific data
@@ -120,7 +246,6 @@ class KunjunganController extends Controller
         ]);
     }
 
-    //get data table untuk detail kunjungan
     protected function getKunjungan($noPendaftaran)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
@@ -187,7 +312,6 @@ class KunjunganController extends Controller
         // Fetch tanda vital data
         $tandaVital = $this->getTandaVital($kunjungan);
         $tandaVitalId = $tandaVital ? $tandaVital->id : null;
-
 
         return inertia("Pendaftaran/Kunjungan/TableRme", [
             'dataTable'         => $query,
@@ -368,7 +492,6 @@ class KunjunganController extends Controller
         ]);
     }
 
-    //get data table untuk detail kunjungan
     protected function getAskep($noKunjungan)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
@@ -732,202 +855,6 @@ class KunjunganController extends Controller
             'detail'            => $query,
             'nomorKunjungan'    => $kunjungan,
             'judulRme'          => 'TANDA VITAL',
-        ]);
-    }
-
-    public function laboratorium($id)
-    {
-        // Fetch data utama (main lab order details)
-        $queryDetail = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select(
-                'order.KUNJUNGAN as NOMOR_KUNJUNGAN',
-                'order.NOMOR as NOMOR_ORDER',
-                'order.TANGGAL as TANGGAL_ORDER',
-                'pasien.NORM',
-                'pasien.NAMA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
-                'ruangan.DESKRIPSI as TUJUAN',
-                'order.CITO',
-                'pengguna.NAMA as OLEH',
-                'order.ALASAN',
-                'order.KETERANGAN',
-                'order.ADA_PENGANTAR_PA',
-                'order.NOMOR_SPESIMEN',
-                'order.SPESIMEN_KLINIS_ASAL_SUMBER',
-                'order.SPESIMEN_KLINIS_CARA_PENGAMBILAN',
-                'order.SPESIMEN_KLINIS_WAKTU_PENGAMBILAN',
-                'order.SPESIMEN_KLINIS_KONDISI_PENGAMBILAN',
-                'order.SPESIMEN_KLINIS_JUMLAH',
-                'order.SPESIMEN_KLINIS_VOLUME',
-                'order.FIKSASI_WAKTU',
-                'order.FIKSASI_CAIRAN',
-                'order.FIKSASI_VOLUME_CAIRAN',
-                'order.SPESIMEN_KLINIS_PETUGAS_PENGAMBIL',
-                'order.SPESIMEN_KLINIS_PETUGAS_PENGANTAR',
-                'order.STATUS_PUASA_PASIEN',
-                'order.STATUS',
-            )
-            ->leftJoin('layanan.order_lab as order', 'order.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'order.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'order.TUJUAN')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'order.OLEH')
-            ->where('kunjungan.NOMOR', $id)
-            ->first();
-
-        $queryHasil = DB::connection('mysql7')->table('layanan.order_detil_lab as orderDetail')
-            ->select(
-                'orderDetail.ORDER_ID',
-                'tindakan.NAMA as TINDAKAN',
-                'parameter.PARAMETER as PARAMETER',
-                'hasilLab.HASIL',
-                'hasilLab.NILAI_NORMAL',
-                'hasilLab.SATUAN',
-                'hasilLab.STATUS'
-            )
-            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'orderDetail.TINDAKAN')
-            ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetail.REF')
-            ->leftJoin('master.parameter_tindakan_lab as parameter', 'parameter.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
-            ->where('orderDetail.ORDER_ID', $id)
-            ->get();
-
-        // Fetch data catatan (main lab order details)
-        $catatanID = $queryDetail->NOMOR_KUNJUNGAN;
-        $queryCatatan = DB::connection('mysql7')->table('pendaftaran.kunjungan as kunjungan')
-            ->select(
-                'catatan.KUNJUNGAN',
-                'catatan.TANGGAL',
-                'catatan.CATATAN',
-                DB::raw('CONCAT(dokterLab.GELAR_DEPAN, " ", dokterLab.NAMA, " ", dokterLab.GELAR_BELAKANG) as DOKTER_LAB'),
-                'catatan.STATUS',
-            )
-            ->leftJoin('layanan.catatan_hasil_lab as catatan', 'catatan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('layanan.order_lab as order', 'order.NOMOR', '=', 'kunjungan.REF')
-            ->leftJoin('master.dokter as pegawaiLab', 'pegawaiLab.ID', '=', 'catatan.DOKTER')
-            ->leftJoin('master.pegawai as dokterLab', 'dokterLab.NIP', '=', 'pegawaiLab.NIP')
-            ->where('kunjungan.NOMOR', $catatanID)
-            ->first();
-
-        $nomorKunjungan = $queryDetail->NOMOR_KUNJUNGAN;
-
-        // Error handling: No data found
-        if (!$queryDetail) {
-            return redirect()->route('kunjungan.detail', $nomorKunjungan)->with('error', 'Data tidak ditemukan.');
-        }
-
-        // Return both data to the view
-        return inertia("Layanan/Laboratorium/Detail", [
-            'detail' => $queryDetail,
-            'detailHasil' => $queryHasil,
-            'detailCatatan' => $queryCatatan,
-        ]);
-    }
-
-    public function filterByTime($filter)
-    {
-        // Get the search term from the request
-        $searchSubject = request('search') ? strtolower(request('search')) : null;
-
-        // Start building the query using the query builder
-        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select(
-                'kunjungan.NOMOR as nomor',
-                'pasien.NAMA as nama',
-                'pasien.NORM as norm',
-                'ruangan.DESKRIPSI as ruangan',
-                'kunjungan.MASUK as masuk',
-                'kunjungan.KELUAR as keluar',
-                'kunjungan.STATUS as status',
-            )
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
-            ->where('pasien.STATUS', 1);
-
-        // Clone query for count calculation
-        $countQuery = clone $query;
-
-        switch ($filter) {
-            case 'hariIni':
-                $query->whereDate('kunjungan.MASUK', now()->format('Y-m-d'));
-                $countQuery->whereDate('kunjungan.MASUK', now()->format('Y-m-d'));
-                $header = 'HARI INI';
-                break;
-
-            case 'mingguIni':
-                $query->whereBetween('kunjungan.MASUK', [
-                    now()->startOfWeek()->format('Y-m-d'),
-                    now()->endOfWeek()->format('Y-m-d')
-                ]);
-                $countQuery->whereBetween('kunjungan.MASUK', [
-                    now()->startOfWeek()->format('Y-m-d'),
-                    now()->endOfWeek()->format('Y-m-d')
-                ]);
-                $header = 'MINGGU INI';
-                break;
-
-            case 'bulanIni':
-                $query->whereMonth('kunjungan.MASUK', now()->month)
-                    ->whereYear('kunjungan.MASUK', now()->year);
-                $countQuery->whereMonth('kunjungan.MASUK', now()->month)
-                    ->whereYear('kunjungan.MASUK', now()->year);
-                $header = 'BULAN INI';
-                break;
-
-            case 'tahunIni':
-                $query->whereYear('kunjungan.MASUK', now()->year);
-                $countQuery->whereYear('kunjungan.MASUK', now()->year);
-                $header = 'TAHUN INI';
-                break;
-
-            default:
-                abort(404, 'Filter not found');
-        }
-
-        // Get count
-        $count = $countQuery->count();
-
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%']);
-            });
-        }
-
-        // Paginate the results
-        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
-
-        // Convert data to array
-        $dataArray = $data->toArray();
-
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
-            });
-        }
-
-        // Paginate the results
-        $data = $query->orderByDesc('kunjungan.MASUK')->paginate(10)->appends(request()->query());
-
-        // Convert data to array
-        $dataArray = $data->toArray();
-
-        // Return Inertia view with paginated data
-        return inertia("Pendaftaran/Kunjungan/Index", [
-            'dataTable' => [
-                'data' => $dataArray['data'], // Only the paginated data
-                'links' => $dataArray['links'], // Pagination links
-            ],
-            'queryParams' => request()->all(),
-            'header' => $header,
-            'totalCount' => $count,
         ]);
     }
 }
