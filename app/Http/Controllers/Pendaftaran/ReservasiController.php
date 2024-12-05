@@ -61,8 +61,8 @@ class ReservasiController extends Controller
         // Validasi filter
         $filters = [
             'batal' => ['status' => 0, 'header' => 'BATAL RESERVASI'],
-            'belumDiterima' => ['status' => 1, 'header' => 'RESERVASI'],
-            'diterima' => ['status' => 2, 'header' => 'SELESAI'],
+            'reservasi' => ['status' => 1, 'header' => 'RESERVASI'],
+            'selesai' => ['status' => 2, 'header' => 'SELESAI'],
         ];
 
         if (!isset($filters[$filter])) {
