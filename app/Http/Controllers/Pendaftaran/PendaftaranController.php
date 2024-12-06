@@ -40,7 +40,7 @@ class PendaftaranController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -146,7 +146,7 @@ class PendaftaranController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();

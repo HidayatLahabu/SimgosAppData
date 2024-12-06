@@ -40,7 +40,7 @@ class MutasiController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('mutasi.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('mutasi.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -147,7 +147,7 @@ class MutasiController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('mutasi.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('mutasi.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();

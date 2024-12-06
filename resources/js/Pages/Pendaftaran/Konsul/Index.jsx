@@ -47,19 +47,25 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Konsul {header} {totalCount} Pasien</h1>
+                                <div className="flex flex-wrap gap-4 justify-between mb-4">
+                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
+                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER HARI</h2>
+                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_hari} PASIEN</p>
+                                    </div>
+                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
+                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER MINGGU</h2>
+                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_minggu} PASIEN</p>
+                                    </div>
+                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
+                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER BULAN</h2>
+                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_bulan} PASIEN</p>
+                                    </div>
+                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
+                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER TAHUN</h2>
+                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_tahun} PASIEN</p>
+                                    </div>
+                                </div>
                                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-base text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-yellow-400 border-b-2 border-gray-500">
-                                        <tr>
-                                            <th colSpan="8" className="px-3 py-2 text-center">
-                                                <div className="grid grid-cols-4 gap-2">
-                                                    <div>RATA-RATA PER HARI : {rataRata.rata_rata_per_hari} PASIEN</div>
-                                                    <div>RATA-RATA PER MINGGU : {rataRata.rata_rata_per_minggu} PASIEN</div>
-                                                    <div>RATA-RATA PER BULAN : {rataRata.rata_rata_per_bulan} PASIEN</div>
-                                                    <div>RATA-RATA PER TAHUN : {rataRata.rata_rata_per_tahun} PASIEN</div>
-                                                </div>
-                                            </th>
-                                        </tr>
-                                    </thead>
                                     <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
                                             <th colSpan={8} className="px-3 py-2">

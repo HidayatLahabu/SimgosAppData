@@ -22,7 +22,8 @@ class ReservasiController extends Controller
                 'ruangan.DESKRIPSI as ruangan',
                 'kamar.KAMAR as kamar',
                 'tempatTidur.TEMPAT_TIDUR as tempatTidur',
-                'reservasi.STATUS as status'
+                'reservasi.STATUS as status',
+                'reservasi.KONTAK_INFO as kontak',
             )
             ->leftJoin('master.ruang_kamar_tidur AS tempatTidur', 'tempatTidur.ID', '=', 'reservasi.RUANG_KAMAR_TIDUR')
             ->leftJoin('master.ruang_kamar as kamar', 'kamar.ID', '=', 'tempatTidur.RUANG_KAMAR')
@@ -41,10 +42,12 @@ class ReservasiController extends Controller
         $data = $query->orderByDesc('reservasi.TANGGAL')
             ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('kamar.KAMAR')
-            ->paginate(10)->appends(request()->query());
+            ->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
+
+        $dataReservasi = $this->hitungReservasi();
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Reservasi/Index", [
@@ -52,6 +55,7 @@ class ReservasiController extends Controller
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'reservasiData' => $dataReservasi,
             'queryParams' => request()->all(),
         ]);
     }
@@ -60,8 +64,8 @@ class ReservasiController extends Controller
     {
         // Validasi filter
         $filters = [
-            'batal' => ['status' => 0, 'header' => 'BATAL RESERVASI'],
-            'reservasi' => ['status' => 1, 'header' => 'RESERVASI'],
+            'batal' => ['status' => 0, 'header' => 'BATAL'],
+            'reservasi' => ['status' => 1, 'header' => 'DALAM PROSES'],
             'selesai' => ['status' => 2, 'header' => 'SELESAI'],
         ];
 
@@ -81,15 +85,13 @@ class ReservasiController extends Controller
                 'ruangan.DESKRIPSI as ruangan',
                 'kamar.KAMAR as kamar',
                 'tempatTidur.TEMPAT_TIDUR as tempatTidur',
-                'reservasi.STATUS as status'
+                'reservasi.STATUS as status',
+                'reservasi.KONTAK_INFO as kontak',
             )
             ->leftJoin('master.ruang_kamar_tidur AS tempatTidur', 'tempatTidur.ID', '=', 'reservasi.RUANG_KAMAR_TIDUR')
             ->leftJoin('master.ruang_kamar as kamar', 'kamar.ID', '=', 'tempatTidur.RUANG_KAMAR')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kamar.RUANGAN')
             ->where('reservasi.STATUS', $filters[$filter]['status']);
-
-        // Hitung total
-        $count = $query->count();
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -104,10 +106,12 @@ class ReservasiController extends Controller
         $data = $query->orderByDesc('reservasi.TANGGAL')
             ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('kamar.KAMAR')
-            ->paginate(10)->appends(request()->query());
+            ->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
+
+        $dataReservasi = $this->hitungReservasi();
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Reservasi/Index", [
@@ -115,10 +119,22 @@ class ReservasiController extends Controller
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
-            'queryParams' => request()->all(),
+            'filter' => $filter,
             'header' => $filters[$filter]['header'],
-            'totalCount' => $count,
-            'text' => 'PASIEN',
+            'reservasiData' => $dataReservasi,
+            'queryParams' => request()->all(),
         ]);
+    }
+
+    protected function hitungReservasi()
+    {
+        return DB::connection('mysql5')->table('pendaftaran.reservasi as reservasi')
+            ->selectRaw('
+            COUNT(*) AS total_reservasi,
+            SUM(CASE WHEN STATUS = 0 THEN 1 ELSE 0 END) AS total_batal_reservasi,
+            SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END) AS total_proses_reservasi,
+            SUM(CASE WHEN STATUS = 2 THEN 1 ELSE 0 END) AS total_selesai_reservasi
+        ')
+            ->first();
     }
 }

@@ -41,7 +41,7 @@ class KonsulController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('konsul.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('konsul.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -149,7 +149,7 @@ class KonsulController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('konsul.TANGGAL')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('konsul.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();

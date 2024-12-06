@@ -22,7 +22,8 @@ class AntrianRuanganController extends Controller
                 'pasien.NAMA as nama',
                 'ruangan.DESKRIPSI as ruangan',
                 'antrian.NOMOR as urut',
-                'antrian.STATUS as status'
+                'antrian.STATUS as status',
+                'antrian.REF as pendaftaran',
             )
             ->leftJoin('pendaftaran.pendaftaran AS pendaftaran', 'pendaftaran.NOMOR', '=', 'antrian.REF')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
@@ -42,10 +43,12 @@ class AntrianRuanganController extends Controller
         $data = $query->orderByDesc('antrian.TANGGAL')
             ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('antrian.NOMOR')
-            ->paginate(10)->appends(request()->query());
+            ->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
+
+        $dataAntrian = $this->hitungAntrian();
 
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Antrian/Index", [
@@ -53,6 +56,7 @@ class AntrianRuanganController extends Controller
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'antrianData' => $dataAntrian,
             'queryParams' => request()->all()
         ]);
     }
@@ -63,7 +67,7 @@ class AntrianRuanganController extends Controller
         $filters = [
             'batal' => ['status' => 0, 'header' => 'BATAL'],
             'belumDiterima' => ['status' => 1, 'header' => 'BELUM DITERIMA'],
-            'diterima' => ['status' => 2, 'header' => 'DITERIMA'],
+            'diterima' => ['status' => 2, 'header' => 'SUDAH DITERIMA'],
         ];
 
         if (!isset($filters[$filter])) {
@@ -81,16 +85,14 @@ class AntrianRuanganController extends Controller
                 'pasien.NAMA as nama',
                 'ruangan.DESKRIPSI as ruangan',
                 'antrian.NOMOR as urut',
-                'antrian.STATUS as status'
+                'antrian.STATUS as status',
+                'antrian.REF as pendaftaran',
             )
             ->leftJoin('pendaftaran.pendaftaran AS pendaftaran', 'pendaftaran.NOMOR', '=', 'antrian.REF')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'antrian.RUANGAN')
             ->where('pasien.STATUS', 1)
             ->where('antrian.STATUS', $filters[$filter]['status']);
-
-        // Hitung total
-        $count = $query->count();
 
         // Filter pencarian
         if ($searchSubject) {
@@ -105,20 +107,37 @@ class AntrianRuanganController extends Controller
         $data = $query->orderByDesc('antrian.TANGGAL')
             ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('antrian.NOMOR')
-            ->paginate(10)->appends(request()->query());
+            ->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
+
+        $dataAntrian = $this->hitungAntrian();
 
         return inertia("Pendaftaran/Antrian/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
-            'queryParams' => request()->all(),
+            'filter' => $filter,
             'header' => $filters[$filter]['header'],
-            'totalCount' => $count,
-            'text' => 'PASIEN',
+            'antrianData' => $dataAntrian,
+            'queryParams' => request()->all(),
         ]);
+    }
+
+    protected function hitungAntrian()
+    {
+        return DB::connection('mysql5')->table('pendaftaran.antrian_ruangan as antrian')
+            ->selectRaw('
+            COUNT(*) AS total_antrian,
+            SUM(CASE WHEN antrian.STATUS = 0 THEN 1 ELSE 0 END) AS total_batal,
+            SUM(CASE WHEN antrian.STATUS = 1 THEN 1 ELSE 0 END) AS total_belum_diterima,
+            SUM(CASE WHEN antrian.STATUS = 2 THEN 1 ELSE 0 END) AS total_diterima
+        ')
+            ->leftJoin('pendaftaran.pendaftaran AS pendaftaran', 'pendaftaran.NOMOR', '=', 'antrian.REF')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->where('pasien.STATUS', 1)
+            ->first();
     }
 }
