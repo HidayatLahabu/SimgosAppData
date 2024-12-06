@@ -132,7 +132,7 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
                                                     {filter ? (
                                                         <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kontak}</td>
                                                     ) : (
-                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.status === 0 ? 'Batal Reservasi' : dataTable.status === 1 ? 'Reservasi' : 'Selesai'}</td>
+                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.status === 0 ? 'Batal Reservasi' : dataTable.status === 1 ? 'Proses Reservasi' : 'Selesai Reservasi'}</td>
                                                     )}
                                                 </tr>
                                             ))
