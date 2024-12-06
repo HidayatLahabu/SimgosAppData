@@ -65,8 +65,8 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                         <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_tahun} PASIEN</p>
                                     </div>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
                                         <tr>
                                             <th colSpan={8} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
@@ -85,33 +85,33 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">MASUK</th>
-                                            <th className="px-3 py-2">KELUAR</th>
-                                            <th className="px-3 py-2">RUANGAN</th>
-                                            <th className="px-3 py-2">STATUS</th>
-                                            <th className="px-3 py-2 text-center">MENU</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">MASUK</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3">{data.nomor}</td>
-                                                    <td className="px-3 py-3">{data.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3">{data.masuk}</td>
-                                                    <td className="px-3 py-3">{data.keluar}</td>
-                                                    <td className="px-3 py-3">{data.ruangan}</td>
-                                                    <td className="px-3 py-3">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.nama}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.masuk}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.keluar}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.ruangan}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("kunjungan.detail", { id: data.nomor })}

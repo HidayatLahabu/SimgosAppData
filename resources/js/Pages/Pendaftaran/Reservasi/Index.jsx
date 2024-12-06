@@ -86,9 +86,8 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
                                         </p>
                                     </a>
                                 </div>
-
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
@@ -101,18 +100,18 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">ATAS NAMA</th>
-                                            <th className="px-3 py-2">RUANGAN</th>
-                                            <th className="px-3 py-2">KAMAR</th>
-                                            <th className="px-3 py-2">TEMPAT TIDUR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ATAS NAMA</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">KAMAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TEMPAT TIDUR</th>
                                             {filter ? (
-                                                <th className="px-3 py-2">NOMOR KONTAK</th>
+                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR KONTAK</th>
                                             ) : (
-                                                <th className="px-3 py-2">STATUS</th>
+                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
                                             )}
                                         </tr>
                                     </thead>
@@ -120,20 +119,20 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.pasien}</td>
-                                                    <td className="px-3 py-3">{dataTable.ruangan}</td>
-                                                    <td className="px-3 py-3">{dataTable.kamar}</td>
-                                                    <td className="px-3 py-3">{dataTable.tempatTidur}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{dataTable.pasien}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.ruangan}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kamar}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tempatTidur}</td>
                                                     {filter ? (
-                                                        <td className="px-3 py-3">{dataTable.kontak}</td>
+                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kontak}</td>
                                                     ) : (
-                                                        <td className="px-3 py-3">{dataTable.status === 0 ? 'Batal Reservasi' : dataTable.status === 1 ? 'Reservasi' : 'Selesai'}</td>
+                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.status === 0 ? 'Batal Reservasi' : dataTable.status === 1 ? 'Reservasi' : 'Selesai'}</td>
                                                     )}
                                                 </tr>
                                             ))
