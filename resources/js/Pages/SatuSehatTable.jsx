@@ -7,40 +7,91 @@ export default function SatuSehatTable({ items = [] }) {
     // Check if items is defined and is an array
     if (!Array.isArray(items)) {
         console.error('Expected items to be an array but received:', items);
-        return <div>Error: Data not available</div>;
+        return <div className="text-red-500 text-center mt-5">Error: Data not available</div>;
     }
 
     // Sorting the items array by 'NAMA'
-    const sortedItems = [...items].sort((a, b) => {
-        return a.NAMA.localeCompare(b.NAMA);
-    });
+    const sortedItems = [...items].sort((a, b) => a.NAMA.localeCompare(b.NAMA));
 
     return (
         <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                    <h1 className="uppercase text-center font-bold text-2xl pb-2">DATA SATU SEHAT</h1>
+                    <h1 className="uppercase text-center font-extrabold text-3xl text-indigo-700 dark:text-gray-200 mb-4">
+                        Data SatuSehat
+                    </h1>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full table-auto w-full border">
-                            <thead>
-                                <tr className='uppercase dark:bg-indigo-700'>
-                                    <th className="border px-4 py-2">Nama</th>
-                                    <th className="border px-4 py-2">Total</th>
-                                    <th className="border px-4 py-2">Memiliki ID</th>
-                                    <th className="border px-4 py-2">Tidak Memiliki ID</th>
-                                    <th className="border px-4 py-2">Persentase</th>
-                                    <th className="border px-4 py-2">Tanggal Sinkronisasi</th>
+                        <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
+                            <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase">
+                                <tr>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-left">
+                                        Parameter SatuSehat
+                                    </th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
+                                        Total
+                                    </th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
+                                        Memiliki ID
+                                    </th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
+                                        Tidak Memiliki ID
+                                    </th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
+                                        Persentase
+                                    </th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
+                                        Tanggal Sinkronisasi
+                                    </th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 {sortedItems.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className="border px-4 py-2">{item.NAMA}</td>
-                                        <td className="border px-4 py-2 text-center">{item.TOTAL}</td>
-                                        <td className="border px-4 py-2 text-center">{item.MEMILIKI_ID}</td>
-                                        <td className="border px-4 py-2 text-center">{item.TIDAK_MEMILIKI_ID}</td>
-                                        <td className="border px-4 py-2 text-center">{parseFloat(item.PERSEN).toFixed(2)} %</td>
-                                        <td className="border px-4 py-2 text-center">{item.LAST_UPDATE}</td>
+                                    <tr
+                                        key={index}
+                                        className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                            ? 'bg-gray-50 dark:bg-indigo-950'
+                                            : 'bg-gray-50 dark:bg-indigo-950'
+                                            }`}
+                                    >
+                                        <td className="border border-gray-600 px-4 py-2 font-medium text-gray-700 dark:text-gray-300">
+                                            {item.NAMA}
+                                        </td>
+                                        <td className="border text-gray-300 border-gray-600 px-4 py-2 text-center">
+                                            {item.TOTAL.toLocaleString()}
+                                        </td>
+                                        <td
+                                            className={`border border-gray-600 px-4 py-2 text-center ${item.MEMILIKI_ID > 0
+                                                ? 'text-green-600 dark:text-green-400'
+                                                : 'text-red-500 dark:text-red-600'
+                                                }`}
+                                        >
+                                            {item.MEMILIKI_ID.toLocaleString()}
+                                        </td>
+                                        <td className="border border-gray-600 px-4 py-2 text-center text-yellow-600 dark:text-yellow-400">
+                                            {item.TIDAK_MEMILIKI_ID.toLocaleString()}
+                                        </td>
+                                        <td className="border border-gray-600 px-4 py-2 text-center">
+                                            <span
+                                                className={`py-1 px-2 rounded ${item.PERSEN >= 75
+                                                    ? 'bg-green-100 text-green-500 dark:bg-green-700 dark:text-green-300'
+                                                    : item.PERSEN >= 50
+                                                        ? 'bg-yellow-100 text-yellow-500 dark:bg-yellow-700 dark:text-yellow-300'
+                                                        : 'bg-red-100 text-red-500 dark:bg-red-700 dark:text-red-300'
+                                                    }`}
+                                            >
+                                                {parseFloat(item.PERSEN).toFixed(2)} %
+                                            </span>
+                                        </td>
+                                        <td className="border border-gray-600 px-4 py-2 text-center">
+                                            {item.LAST_UPDATE && !isNaN(new Date(item.LAST_UPDATE))
+                                                ? new Date(item.LAST_UPDATE).toLocaleDateString('id-ID', {
+                                                    day: '2-digit',
+                                                    month: 'long',
+                                                    year: 'numeric',
+                                                })
+                                                : 'Belum Sinkronisasi'}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

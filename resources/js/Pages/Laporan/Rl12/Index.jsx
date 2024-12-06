@@ -2,21 +2,18 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { formatDate } from '@/utils/formatDate';
+import { formatNumber } from '@/utils/formatNumber';
 
 export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
-    // Debugging: log items to see what data is being received
     console.log('Received items:', items);
 
-    // Check if items is defined and is an array
     if (!Array.isArray(items)) {
         console.error('Expected items to be an array but received:', items);
         return <div>Error: Data not available</div>;
     }
 
-    // Assuming that 'items' is an array with the first element being the object containing the data
-    const data = items[0] || {}; // Access the first item in the array
+    const data = items[0] || {};
 
-    // Object to map original field names to the desired names
     const fieldMap = {
         KODERS: "Kode Rumah Sakit",
         NAMAINST: "Nama Instansi",
@@ -56,38 +53,83 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
         JMLKUNJUNGAN: "Jumlah Kunjungan",
     };
 
-    return (
+    const sections = {
+        "Informasi Umum": ["KODERS", "NAMAINST", "KODEPROP", "KOTA", "TAHUN", "JMLTT"],
+        "Data Pasien dan Perawatan": ["AWAL", "MASUK", "PINDAHAN", "DIPINDAHKAN", "HIDUP", "MATI", "MATIKURANG48", "MATILEBIH48", "NDR", "NDRLK", "NDRPR", "GDR", "GDRLK", "GDRPR", "LD"],
+        "Data Tempat Tidur dan BOR": ["BOR", "BORLK", "BORPR", "AVLOS", "AVLOSLK", "AVLOSPR", "BTO", "BTOLK", "BTOPR", "TOI", "TOILK", "TOIPR", "JMLKUNJUNGAN", "HP", "SISA"],
+    };
 
-        <AuthenticatedLayout
-            user={auth.user}
-        >
-            <Head title="Beranda" />
+    return (
+        <AuthenticatedLayout user={auth.user}>
+            <Head title="Laporan RL 1.2" />
 
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">LAPORAN RL 1.2</h1>
-                            <p className="text-center pb-4">
+                            <p className="text-center pb-2">
                                 <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} - {formatDate(tgl_akhir)}
                             </p>
-                            <div className="overflow-x-auto">
-                                <table className="min-w-full table-auto w-full border">
-                                    <thead>
-                                        <tr className='uppercase dark:bg-indigo-700'>
-                                            <th className="border px-4 py-2">Nama/Uraian</th>
-                                            <th className="border px-4 py-2">Nilai/Keterangan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {Object.entries(data).map(([key, value], index) => (
-                                            <tr key={index}>
-                                                <td className="border px-4 py-2">{fieldMap[key] || key}</td>
-                                                <td className="border px-4 py-2 text-center">{value}</td>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
+
+                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                        <thead>
+                                            <tr>
+                                                <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                                    Informasi Organisasi
+                                                </th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {sections["Informasi Umum"].map((key) => (
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
+                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                    <td className="px-4 py-1">{data[key] || '-'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
+                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                        <thead>
+                                            <tr>
+                                                <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                                    Data Pasien dan Perawatan
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {sections["Data Pasien dan Perawatan"].map((key) => (
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
+                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                    <td className="px-4 py-1">{typeof data[key] === 'number' ? formatNumber(data[key]) : data[key] || '-'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
+                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                        <thead>
+                                            <tr>
+                                                <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                                    Data Tempat Tidur dan Hunian
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {sections["Data Tempat Tidur dan BOR"].map((key) => (
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
+                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                    <td className="px-4 py-1">{typeof data[key] === 'number' ? formatNumber(data[key]) : data[key] || '-'}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

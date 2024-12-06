@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/react';
 import { formatDate } from '@/utils/formatDate';
 import { formatNumber } from '@/utils/formatNumber';
 
-export default function LaporanRl12({ auth, items, tgl_awal, tgl_akhir }) {
+export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
 
     // Check if items is defined and is an array
     if (!Array.isArray(items)) {
@@ -15,7 +15,7 @@ export default function LaporanRl12({ auth, items, tgl_awal, tgl_akhir }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Laporan RL 1.2" />
+            <Head title="Laporan RL 5.1" />
 
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
@@ -28,7 +28,7 @@ export default function LaporanRl12({ auth, items, tgl_awal, tgl_akhir }) {
                             <div className="overflow-x-auto">
                                 <table className="min-w-full table-auto w-full border">
                                     <thead>
-                                        <tr className='uppercase dark:bg-indigo-700'>
+                                        <tr className='uppercase dark:bg-indigo-700 text-yellow-500'>
                                             <th className="border px-4 py-2 text-left">KODE RS</th>
                                             <th className="border px-4 py-2 text-left">NAMA RUMAH SAKIT</th>
                                             <th className="border px-4 py-2 text-left">KOTA/KABUPATEN</th>

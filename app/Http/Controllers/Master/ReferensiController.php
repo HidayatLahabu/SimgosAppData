@@ -21,6 +21,7 @@ class ReferensiController extends Controller
                 'referensi.TABEL_ID as tabel_id',
                 'referensi.ID as id',
                 'referensi.DESKRIPSI as deskripsi',
+                'referensi.JENIS as idJenis',
                 'jenis.DESKRIPSI as jenis'
             )
             ->leftJoin('master.jenis_referensi as jenis', 'referensi.JENIS', '=', 'jenis.ID')

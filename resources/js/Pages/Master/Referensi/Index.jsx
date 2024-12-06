@@ -64,6 +64,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr className="text-nowrap">
                                             <th className="px-3 py-2">TABLE ID</th>
+                                            <th className="px-3 py-2">ID JENIS</th>
                                             <th className="px-3 py-2">JENIS</th>
                                             <th className="px-3 py-2">ID</th>
                                             <th className="px-3 py-2">DESKRIPSI</th>
@@ -72,8 +73,13 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.tabel_id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${dataTable.tabel_id}-${index}`}
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                        ? 'bg-gray-50 dark:bg-indigo-950'
+                                                        : 'bg-gray-50 dark:bg-indigo-950'
+                                                        }`}>
                                                     <td className="px-3 py-3">{dataTable.tabel_id}</td>
+                                                    <td className="px-3 py-3">{dataTable.idJenis}</td>
                                                     <td className="px-3 py-3">{dataTable.jenis}</td>
                                                     <td className="px-3 py-3">{dataTable.id}</td>
                                                     <td className="px-3 py-3">{dataTable.deskripsi}</td>

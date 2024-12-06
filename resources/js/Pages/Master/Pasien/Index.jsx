@@ -76,7 +76,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <tr key={`${data.nomor}-${index}`}
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                        ? 'bg-gray-50 dark:bg-indigo-950'
+                                                        : 'bg-gray-50 dark:bg-indigo-950'
+                                                        }`}>
                                                     <td className="px-3 py-3">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
                                                     <td className="px-3 py-3">{formatDate(data.tanggal)}</td>

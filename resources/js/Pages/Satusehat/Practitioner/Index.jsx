@@ -73,7 +73,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.refId}-${index}`}
-                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                        ? 'bg-gray-50 dark:bg-indigo-950'
+                                                        : 'bg-gray-50 dark:bg-indigo-950'
+                                                        }`}>
                                                     <td className="px-3 py-3">{data.id}</td>
                                                     <td className="px-3 py-3">{data.name}</td>
                                                     <td className="px-3 py-3">{data.refId}</td>

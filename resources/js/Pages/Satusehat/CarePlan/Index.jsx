@@ -67,13 +67,6 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
-
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr>
                                             <th className="px-3 py-2">ID</th>
                                             <th className="px-3 py-2">AUTHOR</th>
                                             <th className="px-3 py-2">TITLE</th>
@@ -86,7 +79,10 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.nopen}-${index}`}
-                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                        ? 'bg-gray-50 dark:bg-indigo-950'
+                                                        : 'bg-gray-50 dark:bg-indigo-950'
+                                                        }`}>
                                                     <td className="px-3 py-3">{data.id}</td>
                                                     <td className="px-3 py-3">{data.author}</td>
                                                     <td className="px-3 py-3">{data.title}</td>
