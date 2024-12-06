@@ -101,7 +101,7 @@ export default function Index({ auth, dataTable, antrianData, filter, header, qu
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-400 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2">ID ANTRIAN</th>
                                             <th className="px-3 py-2">NORM</th>

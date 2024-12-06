@@ -22,7 +22,7 @@ export default function SatuSehatTable({ items = [] }) {
                     </h1>
                     <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
-                            <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase">
+                            <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase text-gray-100">
                                 <tr>
                                     <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-left">
                                         Parameter SatuSehat
@@ -46,55 +46,86 @@ export default function SatuSehatTable({ items = [] }) {
                             </thead>
 
                             <tbody>
-                                {sortedItems.map((item, index) => (
-                                    <tr
-                                        key={index}
-                                        className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
-                                            ? 'bg-gray-50 dark:bg-indigo-950'
-                                            : 'bg-gray-50 dark:bg-indigo-950'
-                                            }`}
-                                    >
-                                        <td className="border border-gray-600 px-4 py-2 font-medium text-gray-700 dark:text-gray-300">
-                                            {item.NAMA}
-                                        </td>
-                                        <td className="border text-gray-300 border-gray-600 px-4 py-2 text-center">
-                                            {item.TOTAL.toLocaleString()}
-                                        </td>
-                                        <td
-                                            className={`border border-gray-600 px-4 py-2 text-center ${item.MEMILIKI_ID > 0
-                                                ? 'text-green-600 dark:text-green-400'
-                                                : 'text-red-500 dark:text-red-600'
+                                {sortedItems.map((item, index) => {
+                                    return (
+                                        <tr
+                                            key={index}
+                                            className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                ? 'bg-gray-50 dark:bg-indigo-950'
+                                                : 'bg-gray-50 dark:bg-indigo-950'
                                                 }`}
                                         >
-                                            {item.MEMILIKI_ID.toLocaleString()}
-                                        </td>
-                                        <td className="border border-gray-600 px-4 py-2 text-center text-yellow-600 dark:text-yellow-400">
-                                            {item.TIDAK_MEMILIKI_ID.toLocaleString()}
-                                        </td>
-                                        <td className="border border-gray-600 px-4 py-2 text-center">
-                                            <span
-                                                className={`py-1 px-2 rounded ${item.PERSEN >= 75
-                                                    ? 'bg-green-100 text-green-500 dark:bg-green-700 dark:text-green-300'
-                                                    : item.PERSEN >= 50
-                                                        ? 'bg-yellow-100 text-yellow-500 dark:bg-yellow-700 dark:text-yellow-300'
-                                                        : 'bg-red-100 text-red-500 dark:bg-red-700 dark:text-red-300'
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 font-medium ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
                                                     }`}
                                             >
-                                                {parseFloat(item.PERSEN).toFixed(2)} %
-                                            </span>
-                                        </td>
-                                        <td className="border border-gray-600 px-4 py-2 text-center">
-                                            {item.LAST_UPDATE && !isNaN(new Date(item.LAST_UPDATE))
-                                                ? new Date(item.LAST_UPDATE).toLocaleDateString('id-ID', {
-                                                    day: '2-digit',
-                                                    month: 'long',
-                                                    year: 'numeric',
-                                                })
-                                                : 'Belum Sinkronisasi'}
-                                        </td>
-                                    </tr>
-                                ))}
+                                                {item.NAMA}
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
+                                                    }`}
+                                            >
+                                                {item.TOTAL.toLocaleString()}
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
+                                                    }`}
+                                            >
+                                                {item.MEMILIKI_ID.toLocaleString()}
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
+                                                    }`}
+                                            >
+                                                {item.TIDAK_MEMILIKI_ID.toLocaleString()}
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
+                                                    }`}
+                                            >
+                                                <span>{parseFloat(item.PERSEN).toFixed(2)} %</span>
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
+                                                    ? 'text-green-500'
+                                                    : item.PERSEN == 0
+                                                        ? 'text-red-500'
+                                                        : 'text-yellow-500'
+                                                    }`}
+                                            >
+                                                {item.LAST_UPDATE && !isNaN(new Date(item.LAST_UPDATE))
+                                                    ? new Date(item.LAST_UPDATE).toLocaleDateString('id-ID', {
+                                                        day: '2-digit',
+                                                        month: 'long',
+                                                        year: 'numeric',
+                                                    })
+                                                    : 'Belum Sinkronisasi'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
+
                         </table>
                     </div>
                 </div>
