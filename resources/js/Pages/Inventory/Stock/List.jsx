@@ -1,7 +1,6 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
-import TextInput from "@/Components/TextInput";
+import { Head } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
 
 export default function Index({ auth, stockDetail }) {
