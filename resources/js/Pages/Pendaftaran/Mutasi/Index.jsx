@@ -87,31 +87,31 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">RUANGAN TUJUAN</th>
-                                            <th className="px-3 py-2">RESERVASI</th>
-                                            <th className="px-3 py-2">STATUS</th>
-                                            <th className="px-3 py-2 text-center">MENU</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN TUJUAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RESERVASI</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <tr key={`${data.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3">{data.nomor}</td>
-                                                    <td className="px-3 py-3">{data.norm}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
                                                     <td className="px-3 py-3 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3">{data.tanggal}</td>
-                                                    <td className="px-3 py-3">{data.tujuan}</td>
-                                                    <td className="px-3 py-3">{data.reservasi}</td>
-                                                    <td className="px-3 py-3">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tanggal}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tujuan}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.reservasi}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("mutasi.detail", { id: data.nomor })}
