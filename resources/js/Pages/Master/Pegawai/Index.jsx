@@ -3,9 +3,21 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "NAMA" },
+        { name: "NIP" },
+        { name: "NIK" },
+        { name: "PROFESI" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -46,49 +58,43 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pegawai</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={5} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pegawai"
+                                                    placeholder="Cari data berdasarkan nama pegawai"
                                                     onChange={e => onInputChange('nama', e)}
                                                     onKeyPress={e => onKeyPress('nama', e)}
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">NAMA PEGAWAI</th>
-                                            <th className="px-3 py-2">NIP PEGAWAI</th>
-                                            <th className="px-3 py-2">NIK PENGGUNA</th>
-                                            <th className="px-3 py-2">PROFESI</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.id}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3">{dataTable.id}</td>
-                                                    <td className="px-3 py-3">{dataTable.depan} <span className='uppercase'>{dataTable.nama}</span> {dataTable.belakang}</td>
-                                                    <td className="px-3 py-3">{dataTable.nip ? dataTable.nip : ''}</td>
-                                                    <td className="px-3 py-3">
-                                                        {dataTable.nik ? (
-                                                            dataTable.nik
-                                                        ) : (
-                                                            <span className="text-red-500">Belum ada NIK</span>
-                                                        )}
-                                                    </td>
-                                                    <td className="px-3 py-3">{dataTable.profesi}</td>
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.id} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.depan} <span className='uppercase'>{data.nama}</span> {data.belakang}</TableCell>
+                                                    <TableCell>{data.nip ? data.nip : ''}</TableCell>
+                                                    <TableCell>{data.nik ? (
+                                                        data.nik
+                                                    ) : (
+                                                        <span className="text-red-500">Belum ada NIK</span>
+                                                    )}</TableCell>
+                                                    <TableCell>{data.profesi}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -96,7 +102,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>
