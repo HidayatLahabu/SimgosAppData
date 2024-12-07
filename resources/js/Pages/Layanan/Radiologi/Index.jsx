@@ -6,8 +6,25 @@ import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 import Cetak from "./Cetak"
 import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "NOMOR ORDER" },
+        { name: "TANGGAL" },
+        { name: "ORDER OLEH" },
+        { name: "STATUS KUNJUNGAN" },
+        { name: "STATUS ORDER" },
+        { name: "STATUS HASIL" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -48,8 +65,8 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Order Radiologi {header} {totalCount} {text}</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={9} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
@@ -67,42 +84,34 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                 </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR ORDER</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ORDER OLEH</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS<br />KUNJUNGAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS<br />ORDER</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS<br />HASIL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tanggal}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.gelarDepan} <span className='uppercase'>{data.dokter}</span>  {data.gelarBelakang}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Sudah Final' : ''}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Sudah Final' : 'Belum Ada Hasil'}</td>
+                                                <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.nomor}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}</TableCell>
+                                                    <TableCell>{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</TableCell>
+                                                    <TableCell>{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Sudah Final' : ''}</TableCell>
+                                                    <TableCell>{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Sudah Final' : 'Belum Ada Hasil'}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananRad.detail", { id: data.nomor })}
                                                         />
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -110,7 +119,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>
