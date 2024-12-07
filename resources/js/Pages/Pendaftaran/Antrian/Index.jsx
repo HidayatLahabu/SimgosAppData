@@ -3,10 +3,24 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
-import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
-export default function Index({ auth, dataTable, antrianData, filter, header, queryParams = {} }) {
+export default function Index({ auth, dataTable, antrianData, header, queryParams = {} }) {
+
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "NOMOR" },
+        { name: "TANGGAL" },
+        { name: "RUANGAN TUJUAN" },
+        { name: "NOMOR URUT" },
+        { name: "PENDAFTARAN" },
+        { name: "STATUS" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -86,10 +100,10 @@ export default function Index({ auth, dataTable, antrianData, filter, header, qu
                                         </p>
                                     </a>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.search || ''}
@@ -99,50 +113,37 @@ export default function Index({ auth, dataTable, antrianData, filter, header, qu
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ID ANTRIAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NO URUT</th>
-                                            {filter ? (
-                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">PENDAFTARAN</th>
-                                            ) : (
-                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
-                                            )}
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.nomor}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{formatDate(dataTable.tanggal)}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.ruangan}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.urut}</td>
-                                                    {filter ? (
-                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.pendaftaran}</td>
-                                                    ) : (
-                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.status === 0 ? 'Batal' : dataTable.status === 1 ? 'Belum Diterima' : 'Diterima'}</td>
-                                                    )}
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.nomor}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.ruangan}</TableCell>
+                                                    <TableCell>{data.urut}</TableCell>
+                                                    <TableCell>{data.pendaftaran}</TableCell>
+                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Belum Diterima' : 'Sudah Diterima'}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

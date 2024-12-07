@@ -3,10 +3,24 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
-import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
-export default function Index({ auth, dataTable, reservasiData, filter, header, queryParams = {} }) {
+export default function Index({ auth, dataTable, reservasiData, header, queryParams = {} }) {
+
+    const headers = [
+        { name: "NOMOR" },
+        { name: "TANGGAL" },
+        { name: "ATAS NAMA" },
+        { name: "RUANGAN" },
+        { name: "KAMAR" },
+        { name: "TEMPAT TIDUR" },
+        { name: "NOMOR KONTAK" },
+        { name: "STATUS" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -17,7 +31,7 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('antrian.index'), updatedParams, {
+        router.get(route('reservasi.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -86,63 +100,50 @@ export default function Index({ auth, dataTable, reservasiData, filter, header, 
                                         </p>
                                     </a>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor antrian, NORM, atau nama pasien"
+                                                    placeholder="Cari data berdasarkan atas nama, ruangan atau kamar"
                                                     onChange={e => onInputChange('search', e)}
                                                     onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ATAS NAMA</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">KAMAR</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TEMPAT TIDUR</th>
-                                            {filter ? (
-                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR KONTAK</th>
-                                            ) : (
-                                                <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
-                                            )}
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.nomor}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{dataTable.pasien}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.ruangan}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kamar}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tempatTidur}</td>
-                                                    {filter ? (
-                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kontak}</td>
-                                                    ) : (
-                                                        <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.status === 0 ? 'Batal Reservasi' : dataTable.status === 1 ? 'Proses Reservasi' : 'Selesai Reservasi'}</td>
-                                                    )}
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.nomor}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell className='uppercase'>{data.pasien}</TableCell>
+                                                    <TableCell>{data.ruangan}</TableCell>
+                                                    <TableCell>{data.kamar}</TableCell>
+                                                    <TableCell>{data.tempatTidur}</TableCell>
+                                                    <TableCell>{data.kontak}</TableCell>
+                                                    <TableCell>{data.status === 0 ? 'Batal Reservasi' : data.status === 1 ? 'Proses Reservasi' : 'Selesai Reservasi'}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>
