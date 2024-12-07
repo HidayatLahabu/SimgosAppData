@@ -48,8 +48,8 @@ export default function Index({ auth, dataTable, header, totalCount, text, keada
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Pulang {header} {totalCount} {text}</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
                                         <tr>
                                             <th colSpan={9} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
@@ -68,31 +68,31 @@ export default function Index({ auth, dataTable, header, totalCount, text, keada
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2">KUNJUNGAN</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">KEADAAN</th>
-                                            <th className="px-3 py-2">DPJP</th>
-                                            <th className="px-3 py-2 text-center">MENU</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR KUNJUNGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">KEADAAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">DPJP</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.id}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3">{dataTable.kunjungan}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.keadaan}</td>
-                                                    <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.kunjungan}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.keadaan}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananPulang.detail", { id: dataTable.id })}

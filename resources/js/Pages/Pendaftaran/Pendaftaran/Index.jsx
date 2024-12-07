@@ -74,7 +74,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TextInput
                                                         className="flex-1"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan nomor pendaftaran, NORM, atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor pendaftaran"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -88,10 +88,10 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">PENJAMIN</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">STATUS</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
@@ -105,10 +105,10 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tanggal}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nama}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tanggal}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.penjamin}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</td>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">

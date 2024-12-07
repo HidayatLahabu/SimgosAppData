@@ -59,8 +59,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 font-medium ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 {item.NAMA}
@@ -69,8 +69,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 {item.TOTAL.toLocaleString()}
@@ -79,8 +79,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 {item.MEMILIKI_ID.toLocaleString()}
@@ -89,8 +89,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 {item.TIDAK_MEMILIKI_ID.toLocaleString()}
@@ -99,8 +99,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 <span>{parseFloat(item.PERSEN).toFixed(2)} %</span>
@@ -109,8 +109,8 @@ export default function SatuSehatTable({ items = [] }) {
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
                                                     ? 'text-green-500'
                                                     : item.PERSEN == 0
-                                                        ? 'text-red-500'
-                                                        : 'text-yellow-500'
+                                                        ? 'text-red-400'
+                                                        : 'text-yellow-400'
                                                     }`}
                                             >
                                                 {item.LAST_UPDATE && !isNaN(new Date(item.LAST_UPDATE))

@@ -73,7 +73,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan nomor konsul, NORM, atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor konsul"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -87,9 +87,9 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                     </thead>
                                     <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN ASAL</th>
                                             <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">RUANGAN TUJUAN</th>
@@ -105,9 +105,9 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.nama}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.nomor}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tanggal}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.asal}</td>
                                                     <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tujuan}</td>

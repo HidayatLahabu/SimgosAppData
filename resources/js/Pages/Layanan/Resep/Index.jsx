@@ -45,8 +45,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Order Resep</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
+                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
                                         <tr>
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
@@ -59,30 +59,30 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500 border-b-2 border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">ORDER OLEH</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">JENIS PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ORDER OLEH</th>
+                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">JENIS PASIEN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((dataTable, index) => (
                                                 <tr key={`${dataTable.nomor}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
+                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
                                                         ? 'bg-gray-50 dark:bg-indigo-950'
                                                         : 'bg-gray-50 dark:bg-indigo-950'
                                                         }`}>
-                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
-                                                    <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.norm}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{dataTable.nama}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.nomor}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.tanggal}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</td>
+                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">
                                                         {dataTable.noKartu ? (
                                                             <span>BPJS</span>
                                                         ) : (
