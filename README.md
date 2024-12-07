@@ -38,7 +38,7 @@ Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur unt
 
 Kustomisasi:
 
-    7. Untuk mengubah nama rumah sakit, perbarui nilai HOSPITAL_NAME dalam file .env.
+    7. Untuk mengubah nama tampilan nama rumah sakit, klinik atau organisasi pengguna, dapat dilakukan dengan merubah value HOSPITAL_NAME pada file .env
 
 Memperbarui Aplikasi:
 
