@@ -74,7 +74,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
 
-                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                    <table className="min-w-full table-auto mt-2 border border-gray-500 dark:border-gray-600">
                                         <thead>
                                             <tr>
                                                 <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
@@ -84,7 +84,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                         </thead>
                                         <tbody>
                                             {sections["Informasi Umum"].map((key) => (
-                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600">
                                                     <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
                                                     <td className="px-4 py-1">{data[key] || '-'}</td>
                                                 </tr>
@@ -93,7 +93,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                     </table>
                                 </div>
                                 <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
-                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                    <table className="min-w-full table-auto mt-2 border border-gray-500 dark:border-gray-600">
                                         <thead>
                                             <tr>
                                                 <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
@@ -103,8 +103,8 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                         </thead>
                                         <tbody>
                                             {sections["Data Pasien dan Perawatan"].map((key) => (
-                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
-                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600">
+                                                    <td className="px-4 py-1 font-medium border border-gray-500 dark:border-gray-600">{fieldMap[key]}</td>
                                                     <td className="px-4 py-1">{typeof data[key] === 'number' ? formatNumber(data[key]) : data[key] || '-'}</td>
                                                 </tr>
                                             ))}
@@ -112,7 +112,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                     </table>
                                 </div>
                                 <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
-                                    <table className="min-w-full table-auto mt-2 border border-collapse border-gray-400">
+                                    <table className="min-w-full table-auto mt-2 border border-gray-500 dark:border-gray-600">
                                         <thead>
                                             <tr>
                                                 <th colSpan="2" className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
@@ -122,8 +122,8 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                         </thead>
                                         <tbody>
                                             {sections["Data Tempat Tidur dan BOR"].map((key) => (
-                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-collapse border-gray-400">
-                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600">
+                                                    <td className="px-4 py-1 font-medium border border-gray-500 dark:border-gray-600">{fieldMap[key]}</td>
                                                     <td className="px-4 py-1">{typeof data[key] === 'number' ? formatNumber(data[key]) : data[key] || '-'}</td>
                                                 </tr>
                                             ))}
