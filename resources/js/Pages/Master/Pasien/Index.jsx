@@ -70,7 +70,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan NORM atau nama pasien"
+                                                    placeholder="Cari data berdasarkan NORM, nama pasien, kartu asuransi atau NIK"
                                                     onChange={e => onInputChange('search', e)}
                                                     onKeyPress={e => onKeyPress('search', e)}
                                                 />

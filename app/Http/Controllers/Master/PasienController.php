@@ -31,7 +31,9 @@ class PasienController extends Controller
         // Add search filter if provided
         if ($searchSubject) {
             $query->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+                ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(kip.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(peserta.noKartu) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results
