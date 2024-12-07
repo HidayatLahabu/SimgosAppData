@@ -86,7 +86,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <TableRow key={data.refId} isEven={index % 2 === 0}>
+                                                <TableRow key={data.id} isEven={index % 2 === 0}>
                                                     <TableCell>{data.id}</TableCell>
                                                     <TableCell>{data.barang}</TableCell>
                                                     <TableCell>{data.bzaDisplay}</TableCell>

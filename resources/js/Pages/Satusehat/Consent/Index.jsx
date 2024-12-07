@@ -5,8 +5,22 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "BODY SEND" },
+        { name: "NORM" },
+        { name: "REF ID" },
+        { name: "SEND DATE" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -56,8 +70,8 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Consent {header} {totalCount} {text}</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={8} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
@@ -75,36 +89,31 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                 </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ID</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">BODY SEND</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">REF ID</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">SEND DATE</th>
-                                            <th className="px-3 py-2 border text-center border-gray-500 dark:border-gray-600">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.refId}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.id}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.bodySend}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.refId}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.sendDate}</td>
+                                                <TableRow key={data.refId} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.bodySend}</TableCell>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell>{data.refId}</TableCell>
+                                                    <TableCell>{data.sendDate}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("consent.detail", { id: data.refId })}
                                                         />
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -112,7 +121,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>
