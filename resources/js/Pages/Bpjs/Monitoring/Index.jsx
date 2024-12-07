@@ -5,8 +5,23 @@ import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, header, text, totalCount, queryParams = {} }) {
+
+    const headers = [
+        { name: "NAMA PASIEN" },
+        { name: "NAMA DOKTER" },
+        { name: "NOMOR KONTROL" },
+        { name: "TANGGAL TERBIT" },
+        { name: "JENIS KONTROL" },
+        { name: "NOMOR SEP" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -47,15 +62,15 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Monitoring Rencana Kontrol {header} {totalCount} {text}</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan nomor kontrol, nomor SEP, nama pasien atau nama dokter"
+                                                        placeholder="Cari data berdasarkan nama pasien, nama dokter, nomor kontrol atau nomor SEP"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -66,38 +81,32 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                                 </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA DOKTER</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL TERBIT</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">JENIS KONTROL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR SEP</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.noSuratKontrol}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.namaDokter}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.noSuratKontrol}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.tglTerbitKontrol}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.namaJnsKontrol}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.noSepAsalKontrol}</td>
+                                                <TableRow key={data.noSuratKontrol} isEven={index % 2 === 0}>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell className='uppercase'>{data.namaDokter}</TableCell>
+                                                    <TableCell>{data.noSuratKontrol}</TableCell>
+                                                    <TableCell>{data.tglTerbitKontrol}</TableCell>
+                                                    <TableCell>{data.namaJnsKontrol}</TableCell>
+                                                    <TableCell>{data.noSepAsalKontrol}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("monitoringRekon.detail", { id: data.noSuratKontrol })}
                                                         />
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -105,7 +114,7 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

@@ -3,10 +3,24 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "NOMOR KONTROL" },
+        { name: "TANGGAL KONTROL" },
+        { name: "NOMOR SEP" },
+        { name: "TUJUAN" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -47,8 +61,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Rencana Kontrol</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
@@ -60,38 +74,32 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NORM</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR KONTROL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TANGGAL KONTROL</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NOMOR SEP</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">TUJUAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.noSurat}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.norm}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600 uppercase">{data.nama}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.noSurat}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{formatDate(data.tanggal)}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.noSep}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">POLI {data.poliTujuan}</td>
+                                                <TableRow key={data.noSurat} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.noSurat}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.noSep}</TableCell>
+                                                    <TableCell>{data.poliTujuan}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("rekonBpjs.detail", { id: data.noSurat })}
                                                         />
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -99,7 +107,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>
