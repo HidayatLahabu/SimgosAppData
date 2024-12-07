@@ -4,8 +4,22 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "NAME" },
+        { name: "PART OF" },
+        { name: "REF ID" },
+        { name: "SEND DATE" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (name, value) => {
@@ -49,8 +63,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Organization</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
-                                    <thead className="text-sm text-nowrap font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
@@ -61,36 +75,31 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-yellow-500">
-                                        <tr className="text-nowrap">
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">ID</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">NAMA</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">PART OF</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">REF ID</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600">SEND DATE</th>
-                                            <th className="px-3 py-2 border border-gray-500 dark:border-gray-600 text-center">MENU</th>
+                                    </TableHeader>
+                                    <TableHeader>
+                                        <tr>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.refId}-${index}`}
-                                                    className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 ${index % 2 === 0
-                                                        ? 'bg-gray-50 dark:bg-indigo-950'
-                                                        : 'bg-gray-50 dark:bg-indigo-950'
-                                                        }`}>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.id}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.name}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.partOf}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.refId}</td>
-                                                    <td className="px-3 py-3 border border-gray-500 dark:border-gray-600">{data.sendDate}</td>
+                                                <TableRow key={data.refId} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.name}</TableCell>
+                                                    <TableCell>{data.partOf}</TableCell>
+                                                    <TableCell>{data.refId}</TableCell>
+                                                    <TableCell>{data.sendDate}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("organization.detail", { id: data.refId })}
                                                         />
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -98,7 +107,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

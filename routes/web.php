@@ -188,7 +188,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('conditionTumor/detail/{id}', [ConditionPenilaianTumorController::class, 'detail'])->name('conditionTumor.detail');
 
         Route::get('imagingStudy', [ImagingStudyController::class, 'index'])->name('imagingStudy.index');
-        Route::get('imagingStudy/detail/{id}', [ImagingStudyController::class, 'detail'])->name('imagingStudy.detail');
+        Route::get('/imagingStudy/{filter}', [ImagingStudyController::class, 'filterByTime'])
+            ->name('imagingStudy.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
 
         Route::get('tindakanToLoinc', [TindakanToLoincController::class, 'index'])->name('tindakanToLoinc.index');
         Route::get('tindakanToLoinc/detail/{id}', [TindakanToLoincController::class, 'detail'])->name('tindakanToLoinc.detail');

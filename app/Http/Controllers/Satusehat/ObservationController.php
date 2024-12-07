@@ -15,13 +15,10 @@ class ObservationController extends Controller
 
         // Apply search filter if 'subject' query parameter is present
         if (request('search')) {
-            $searchSubject = strtolower(request('search')); // Convert search term to lowercase
-            // $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchName . '%']); 
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(nopen) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%']);
-            });
+            $searchSubject = strtolower(request('search'));
+            $query->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(nopen) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results
@@ -102,15 +99,11 @@ class ObservationController extends Controller
         // Get count
         $count = $countQuery->count();
 
-        // Apply search filter if 'name' query parameter is present
         if (request('search')) {
-            $searchSubject = strtolower(request('search')); // Convert search term to lowercase
-            // $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchName . '%']); 
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(nopen) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%']);
-            });
+            $searchSubject = strtolower(request('search'));
+            $query->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(nopen) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results
@@ -145,7 +138,7 @@ class ObservationController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatObservationModel::where('nopen', $id)->first();
+        $query = SatusehatObservationModel::where('refId', $id)->first();
 
         // Check if the record exists
         if (!$query) {
