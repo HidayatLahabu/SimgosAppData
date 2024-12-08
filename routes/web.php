@@ -290,6 +290,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/antrian/{filter}', [AntrianRuanganController::class, 'filterByStatus'])
             ->name('antrian.filterByStatus')
             ->where('filter', 'batal|belumDiterima|diterima');
+        Route::get('/antrian/{filterKunjungan}', [AntrianRuanganController::class, 'filterByKunjungan'])
+            ->name('antrian.filterByKunjungan')
+            ->where('filterKunjungan', 'rajal|ranap|darurat');
 
         Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
         Route::get('reservasi/detail/{id}', [ReservasiController::class, 'detail'])->name('reservasi.detail');

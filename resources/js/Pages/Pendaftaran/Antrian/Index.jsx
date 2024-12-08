@@ -3,18 +3,19 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import ButtonTime from '@/Components/ButtonTime';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function Index({ auth, dataTable, antrianData, header, queryParams = {} }) {
+export default function Index({ auth, dataTable, antrianData, filterKunjungan, header, headerKunjungan, queryParams = {} }) {
 
     const headers = [
         { name: "NORM" },
         { name: "NAMA PASIEN" },
-        { name: "NOMOR" },
+        { name: "NOMOR ANTRIAN" },
         { name: "TANGGAL" },
         { name: "RUANGAN TUJUAN" },
         { name: "NOMOR URUT" },
@@ -60,7 +61,7 @@ export default function Index({ auth, dataTable, antrianData, header, queryParam
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Antrian Ruangan {header}</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Antrian Ruangan {header} {filterKunjungan && headerKunjungan}</h1>
 
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
                                     <a
@@ -104,13 +105,18 @@ export default function Index({ auth, dataTable, antrianData, header, queryParam
                                     <TableHeader>
                                         <tr>
                                             <th colSpan={8} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor antrian, NORM, atau nama pasien"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor antrian"
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "rajal")} text="Rawat Jalan" />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "ranap")} text="Rawat Inap" />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "darurat")} text="Rawat Darurat" />
+                                                </div>
                                             </th>
                                         </tr>
                                     </TableHeader>
