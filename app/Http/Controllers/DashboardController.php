@@ -2,9 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Models\LayananResepModel;
+use App\Models\BpjsKunjunganModel;
+use Illuminate\Support\Facades\DB;
+use App\Models\BpjsRujukanMasukModel;
+use App\Models\LayananRadiologiModel;
+use App\Models\PendaftaranKonsulModel;
+use App\Models\PendaftaranMutasiModel;
+use App\Models\LayananLaboratoriumModel;
+use App\Models\PendaftaranKunjunganModel;
+use App\Models\PendaftaranPendaftaranModel;
 
 class DashboardController extends Controller
 {
@@ -15,7 +25,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Define the SQL query as a plain string
+        //get data satusehat
         $query = "
             SELECT
                 'Organization' NAMA,
@@ -360,9 +370,93 @@ class DashboardController extends Controller
         // Execute the query using the mysql4 connection
         $data = DB::connection('mysql4')->select($query);
 
+        // Hitung pendaftaran hari ini
+        $pendaftaran = $this->getPendaftaran();
+
+        // Hitung kunjungan hari ini
+        $kunjungan = $this->getKunjungan();
+
+        // Hitung konsul hari ini
+        $konsul = $this->getKonsul();
+
+        // Hitung mutasi hari ini
+        $mutasi = $this->getMutasi();
+
+        // Hitung mutasi hari ini
+        $kunjunganBpjs = $this->getKunjunganBpjs();
+
+        // Hitung mutasi hari ini
+        $laboratorium = $this->getOrderLaboratorium();
+
+        // Hitung mutasi hari ini
+        $radiologi = $this->getOrderRadiologi();
+
+        // Hitung mutasi hari ini
+        $resep = $this->getOrderResep();
+
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
-            'items' => $data
+            'items' => $data,
+            'pendaftaran' => $pendaftaran,
+            'kunjungan' => $kunjungan,
+            'konsul' => $konsul,
+            'mutasi' => $mutasi,
+            'kunjunganBpjs' => $kunjunganBpjs,
+            'laboratorium' => $laboratorium,
+            'radiologi' => $radiologi,
+            'resep' => $resep,
         ]);
+    }
+
+    protected function getPendaftaran()
+    {
+        return PendaftaranPendaftaranModel::where('STATUS', 1)
+            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getKunjungan()
+    {
+        return PendaftaranKunjunganModel::whereIn('STATUS', [1, 2])
+            ->whereDate('MASUK', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getKonsul()
+    {
+        return PendaftaranKonsulModel::whereIn('STATUS', [1, 2])
+            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getMutasi()
+    {
+        return PendaftaranMutasiModel::whereIn('STATUS', [1, 2])
+            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getKunjunganBpjs()
+    {
+        return BpjsKunjunganModel::whereDate('tglSEP', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getOrderLaboratorium()
+    {
+        return LayananLaboratoriumModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getOrderRadiologi()
+    {
+        return LayananRadiologiModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
+    }
+
+    protected function getOrderResep()
+    {
+        return LayananResepModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->count();
     }
 }

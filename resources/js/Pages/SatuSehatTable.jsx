@@ -1,8 +1,6 @@
 import React from 'react';
 
 export default function SatuSehatTable({ items = [] }) {
-    // Debugging: log items to see what data is being received
-    console.log('Received items:', items);
 
     // Check if items is defined and is an array
     if (!Array.isArray(items)) {
@@ -17,7 +15,7 @@ export default function SatuSehatTable({ items = [] }) {
         <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                    <h1 className="uppercase text-center font-extrabold text-3xl text-indigo-700 dark:text-gray-200 mb-4">
+                    <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-gray-200 mb-4">
                         Data SatuSehat
                     </h1>
                     <div className="overflow-x-auto">

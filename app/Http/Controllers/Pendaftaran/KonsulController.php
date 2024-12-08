@@ -166,7 +166,7 @@ class KonsulController extends Controller
             'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all(),
             'header' => $header,
-            'totalCount' => $count,
+            'totalCount' => number_format($count, 0, ',', '.'),
         ]);
     }
 

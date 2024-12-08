@@ -40,7 +40,7 @@ class PendaftaranController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('pendaftaran.NOMOR')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('pendaftaran.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -163,7 +163,7 @@ class PendaftaranController extends Controller
             'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'queryParams' => request()->all(),
             'header' => $header,
-            'totalCount' => $count,
+            'totalCount' => number_format($count, 0, ',', '.'),
         ]);
     }
 

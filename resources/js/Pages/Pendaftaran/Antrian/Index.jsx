@@ -9,6 +9,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import CardLink from "@/Components/CardLink";
 
 export default function Index({ auth, dataTable, antrianData, filterKunjungan, header, headerKunjungan, queryParams = {} }) {
 
@@ -62,44 +63,27 @@ export default function Index({ auth, dataTable, antrianData, filterKunjungan, h
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Antrian Ruangan {header} {filterKunjungan && headerKunjungan}</h1>
-
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
-                                    <a
+                                    <CardLink
                                         href={route("antrian.index")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">JUMLAH DATA ANTRIAN</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {antrianData.total_antrian} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="JUMLAH DATA ANTRIAN"
+                                        value={antrianData.total_antrian}
+                                    />
+                                    <CardLink
                                         href={route("antrian.filterByStatus", "batal")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">ANTRIAN BATAL</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {antrianData.total_batal} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="ANTRIAN BATAL"
+                                        value={antrianData.total_batal}
+                                    />
+                                    <CardLink
                                         href={route("antrian.filterByStatus", "belumDiterima")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">ANTRIAN BELUM DITERIMA</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {antrianData.total_belum_diterima} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="ANTRIAN BELUM DITERIMA"
+                                        value={antrianData.total_belum_diterima}
+                                    />
+                                    <CardLink
                                         href={route("antrian.filterByStatus", "diterima")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">ANTRIAN  SUDAH DITERIMA</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {antrianData.total_diterima} PASIEN
-                                        </p>
-                                    </a>
+                                        title="ANTRIAN SUDAH DITERIMA"
+                                        value={antrianData.total_diterima}
+                                    />
                                 </div>
                                 <Table>
                                     <TableHeader>

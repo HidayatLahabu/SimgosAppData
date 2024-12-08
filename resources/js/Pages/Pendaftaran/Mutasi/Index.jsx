@@ -10,6 +10,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import Card from "@/Components/Card";
 
 export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
 
@@ -64,22 +65,10 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Mutasi {header} {totalCount} Pasien</h1>
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
-                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER HARI</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_hari} PASIEN</p>
-                                    </div>
-                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER MINGGU</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_minggu} PASIEN</p>
-                                    </div>
-                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER BULAN</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_bulan} PASIEN</p>
-                                    </div>
-                                    <div className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700">
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">RATA-RATA PER TAHUN</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">{rataRata.rata_rata_per_tahun} PASIEN</p>
-                                    </div>
+                                    <Card title="RATA-RATA PER HARI" value={rataRata.rata_rata_per_hari} />
+                                    <Card title="RATA-RATA PER MINGGU" value={rataRata.rata_rata_per_minggu} />
+                                    <Card title="RATA-RATA PER BULAN" value={rataRata.rata_rata_per_bulan} />
+                                    <Card title="RATA-RATA PER TAHUN" value={rataRata.rata_rata_per_tahun} />
                                 </div>
                                 <Table>
                                     <TableHeader>

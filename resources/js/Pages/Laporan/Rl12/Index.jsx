@@ -85,7 +85,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
                                         <tbody>
                                             {sections["Informasi Umum"].map((key) => (
                                                 <tr key={key} className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600">
-                                                    <td className="px-4 py-1 font-medium border border-collapse border-gray-400">{fieldMap[key]}</td>
+                                                    <td className="px-4 py-1 font-medium border border-gray-500 dark:border-gray-600">{fieldMap[key]}</td>
                                                     <td className="px-4 py-1">{data[key] || '-'}</td>
                                                 </tr>
                                             ))}

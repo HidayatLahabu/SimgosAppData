@@ -8,6 +8,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import CardLink from "@/Components/CardLink";
 
 export default function Index({ auth, dataTable, reservasiData, header, queryParams = {} }) {
 
@@ -61,45 +62,29 @@ export default function Index({ auth, dataTable, reservasiData, header, queryPar
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Reservasi {header}</h1>
-
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
-                                    <a
+                                    <CardLink
                                         href={route("reservasi.index")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">JUMLAH DATA RESERVASI</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {reservasiData.total_reservasi} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="JUMLAH DATA RESERVASI"
+                                        value={reservasiData.total_reservasi}
+                                    />
+                                    <CardLink
                                         href={route("reservasi.filterByStatus", "batal")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">BATAL RESERVASI</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {reservasiData.total_batal_reservasi} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="BATAL RESERVASI"
+                                        value={reservasiData.total_batal_reservasi}
+                                    />
+                                    <CardLink
                                         href={route("reservasi.filterByStatus", "reservasi")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">PROSES RESERVASI</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {reservasiData.total_proses_reservasi} PASIEN
-                                        </p>
-                                    </a>
-                                    <a
+                                        title="PROSES RESERVASI"
+                                        value={reservasiData.total_proses_reservasi}
+                                    />
+                                    <CardLink
                                         href={route("reservasi.filterByStatus", "selesai")}
-                                        className="flex-1 p-4 bg-white dark:bg-indigo-800 text-center rounded-lg shadow-sm border border-gray-300 dark:border-gray-700 block"
-                                    >
-                                        <h2 className="text-lg font-bold text-gray-700 dark:text-yellow-400">SELESAI RESERVASI</h2>
-                                        <p className="text-2xl font-semibold text-indigo-600 dark:text-white mt-2">
-                                            {reservasiData.total_selesai_reservasi} PASIEN
-                                        </p>
-                                    </a>
+                                        title="SELESAI RESERVASI"
+                                        value={reservasiData.total_selesai_reservasi}
+                                    />
                                 </div>
+
                                 <Table>
                                     <TableHeader>
                                         <tr>

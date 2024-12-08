@@ -101,7 +101,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, keada
                                                     <TableCell>{data.kunjungan}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.keadaan}</TableCell>
-                                                    <TableCell>{dataTable.gelarDepan} <span className='uppercase'>{dataTable.dokter}</span>  {dataTable.gelarBelakang}</TableCell>
+                                                    <TableCell>{data.gelarDepan}. <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("layananPulang.detail", { id: data.id })}
