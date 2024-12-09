@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Layanan;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class LaboratoriumController extends Controller
 {
@@ -269,6 +270,8 @@ class LaboratoriumController extends Controller
         $jenisKunjungan = $request->input('jenisKunjungan');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
 
         // Variable default untuk label
         $penjamin = 'Semua Penjamin';

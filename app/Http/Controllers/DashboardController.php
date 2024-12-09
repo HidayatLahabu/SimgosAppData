@@ -411,52 +411,76 @@ class DashboardController extends Controller
     protected function getPendaftaran()
     {
         return PendaftaranPendaftaranModel::where('STATUS', 1)
-            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
             ->count();
     }
 
     protected function getKunjungan()
     {
         return PendaftaranKunjunganModel::whereIn('STATUS', [1, 2])
-            ->whereDate('MASUK', now()->format('Y-m-d'))
+            ->whereBetween('MASUK', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
             ->count();
     }
 
     protected function getKonsul()
     {
         return PendaftaranKonsulModel::whereIn('STATUS', [1, 2])
-            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
             ->count();
     }
 
     protected function getMutasi()
     {
         return PendaftaranMutasiModel::whereIn('STATUS', [1, 2])
-            ->whereDate('TANGGAL', now()->format('Y-m-d'))
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
             ->count();
     }
 
     protected function getKunjunganBpjs()
     {
-        return BpjsKunjunganModel::whereDate('tglSEP', now()->format('Y-m-d'))
+        return BpjsKunjunganModel::whereBetween('tglSEP', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
             ->count();
     }
 
     protected function getOrderLaboratorium()
     {
-        return LayananLaboratoriumModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+        return LayananLaboratoriumModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
             ->count();
     }
 
     protected function getOrderRadiologi()
     {
-        return LayananRadiologiModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+        return LayananRadiologiModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
             ->count();
     }
 
     protected function getOrderResep()
     {
-        return LayananResepModel::whereDate('TANGGAL', now()->format('Y-m-d'))
+        return LayananResepModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
             ->count();
     }
 }

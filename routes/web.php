@@ -253,7 +253,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('pendaftaran.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
-
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
         Route::get('kunjungan/tableRme/{id}', [KunjunganController::class, 'tableRme'])->name('kunjungan.tableRme');
@@ -272,6 +271,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])
             ->name('kunjungan.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+        Route::get('/kunjungan-print', [KunjunganController::class, 'print'])->name('kunjungan.print');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');

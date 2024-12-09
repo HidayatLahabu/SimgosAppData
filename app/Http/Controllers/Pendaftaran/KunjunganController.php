@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Pendaftaran;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\MasterRuanganModel;
 use App\Models\PendaftaranKunjunganModel;
 
 class KunjunganController extends Controller
@@ -48,6 +50,12 @@ class KunjunganController extends Controller
         // Hitung rata-rata
         $rataRata = $this->rataRata();
 
+        $ruangan = MasterRuanganModel::where('JENIS', 5)
+            ->whereIn('JENIS_KUNJUNGAN', [1, 2, 3, 4, 5])
+            ->where('STATUS', 1)
+            ->orderBy('DESKRIPSI')
+            ->get();
+
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Kunjungan/Index", [
             'dataTable' => [
@@ -55,6 +63,7 @@ class KunjunganController extends Controller
                 'links' => $dataArray['links'], // Pagination links
             ],
             'rataRata' => $rataRata, // Pass rata-rata data to frontend
+            'ruangan' => $ruangan,
             'queryParams' => request()->all()
         ]);
     }
@@ -855,6 +864,81 @@ class KunjunganController extends Controller
             'detail'            => $query,
             'nomorKunjungan'    => $kunjungan,
             'judulRme'          => 'TANDA VITAL',
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan' => 'nullable|string',
+            'statusKunjungan' => 'nullable|integer|in:0,1,2',
+            'dari_tanggal' => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan = $request->input('ruangan');
+        $statusKunjungan = $request->input('statusKunjungan');
+        $dariTanggal = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variabel default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaStatusKunjungan = 'Semua Status Kunjungan';
+
+        // Query utama
+        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select(
+                'kunjungan.NOMOR as nomor',
+                'pasien.NAMA as nama',
+                'pasien.NORM as norm',
+                'ruangan.DESKRIPSI as ruangan',
+                'kunjungan.MASUK as masuk',
+                'kunjungan.KELUAR as keluar',
+                'kunjungan.STATUS as status'
+            )
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->where('pasien.STATUS', 1);
+
+        // Filter berdasarkan ruangan
+        if (!empty($ruangan)) {
+            $query->where('ruangan.ID', $ruangan);
+
+            // Mendapatkan nama ruangan yang sesuai dari hasil query
+            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
+                ->where('ID', $ruangan)
+                ->value('DESKRIPSI'); // Ambil nilai DESKRIPSI dari tabel ruangan
+        }
+
+        // Filter berdasarkan jenis kunjungan
+        if ($statusKunjungan == 1) {
+            $query->where('kunjungan.STATUS', 1); // Exclude Rawat Jalan
+            $namaStatusKunjungan = 'Sedang Dilayani';
+        } elseif ($statusKunjungan == 2) {
+            $query->where('kunjungan.STATUS', 2); // Exclude Rawat Jalan
+            $namaStatusKunjungan = 'Selesai';
+        } else {
+            $query->where('kunjungan.STATUS', 0); // Exclude Rawat Jalan
+            $namaStatusKunjungan = 'Batal Kunjungan';
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('kunjungan.MASUK', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('kunjungan.MASUK')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Pendaftaran/Kunjungan/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaStatusKunjungan' => $namaStatusKunjungan,
         ]);
     }
 }

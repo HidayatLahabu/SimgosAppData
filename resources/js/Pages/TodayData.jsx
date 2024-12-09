@@ -28,14 +28,14 @@ export default function TodayData({
                         Data Hari Ini <br /> <span className='text-lg'>{formattedDate}</span>
                     </h1>
                     <div className="flex flex-wrap gap-4 justify-between mb-4">
-                        <Card title="PENDAFTARAN" value={pendaftaran} />
-                        <Card title="KUNJUNGAN" value={kunjungan} />
-                        <Card title="KONSUL" value={konsul} />
-                        <Card title="MUTASI" value={mutasi} />
-                        <Card title="PASIEN BPJS" value={kunjunganBpjs} />
-                        <Card title="LABORATORIUM" value={laboratorium} />
-                        <Card title="RADIOLOGI" value={radiologi} />
-                        <Card title="RESEP" value={resep} />
+                        <Card title="PENDAFTARAN" titleSize="text-normal" valueSize="text-normal" value={pendaftaran} />
+                        <Card title="KUNJUNGAN" titleSize="text-normal" valueSize="text-normal" value={kunjungan} />
+                        <Card title="KONSUL" titleSize="text-normal" valueSize="text-normal" value={konsul} />
+                        <Card title="MUTASI" titleSize="text-normal" valueSize="text-normal" value={mutasi} />
+                        <Card title="PASIEN BPJS" titleSize="text-normal" valueSize="text-normal" value={kunjunganBpjs} />
+                        <Card title="LABORATORIUM" titleSize="text-normal" valueSize="text-normal" value={laboratorium} />
+                        <Card title="RADIOLOGI" titleSize="text-normal" valueSize="text-normal" value={radiologi} />
+                        <Card title="RESEP" titleSize="text-normal" valueSize="text-normal" value={resep} />
                     </div>
                 </div>
             </div>

@@ -11,8 +11,9 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import Card from "@/Components/Card";
+import Cetak from "./Cetak"
 
-export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 
     const headers = [
         { name: "NORM" },
@@ -20,7 +21,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
         { name: "NOMOR" },
         { name: "MASUK" },
         { name: "KELUAR" },
-        { name: "RUANGAN" },
+        { name: "RUANGAN TUJUAN" },
         { name: "STATUS" },
         { name: "MENU", className: "text-center" },
     ];
@@ -109,7 +110,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TableCell>{data.masuk}</TableCell>
                                                     <TableCell>{data.keluar}</TableCell>
                                                     <TableCell>{data.ruangan}</TableCell>
-                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</TableCell>
+                                                    <TableCell>{data.status === 0 ? 'Batal Kunjungan' : data.status === 1 ? 'Sedang Dilayani' : 'Selesai'}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("kunjungan.detail", { id: data.nomor })}
@@ -130,6 +131,11 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                     </div>
                 </div>
             </div>
+
+            <div className="w-full">
+                <Cetak ruangan={ruangan} queryParams={queryParams || {}} />
+            </div>
+
         </AuthenticatedLayout>
     );
 }
