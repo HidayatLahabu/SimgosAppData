@@ -69,15 +69,6 @@ export default function Cetak({ ruangan = [] }) {
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
                                 <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
-                                {/* <TextInput
-                                    id="ruangan"
-                                    name="ruangan"
-                                    className="w-full"
-                                    value={data.ruangan}
-                                    onChange={handleInputChange}
-                                    placeholder="Masukkan nama ruangan minimal 3 karakter"
-                                    minLength={3}
-                                /> */}
                                 <SelectTwoInput
                                     id="ruangan"
                                     name="ruangan"

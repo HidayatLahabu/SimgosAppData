@@ -912,18 +912,20 @@ class KunjunganController extends Controller
             // Mendapatkan nama ruangan yang sesuai dari hasil query
             $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
                 ->where('ID', $ruangan)
-                ->value('DESKRIPSI'); // Ambil nilai DESKRIPSI dari tabel ruangan
+                ->value('DESKRIPSI');
         }
 
         // Filter berdasarkan jenis kunjungan
-        if ($statusKunjungan == 1) {
-            $query->where('kunjungan.STATUS', 1); // Exclude Rawat Jalan
+        if ($statusKunjungan === null) {
+            $query->whereIn('kunjungan.STATUS', [0, 1, 2]);
+        } elseif ($statusKunjungan == 1) {
+            $query->where('kunjungan.STATUS', 1); // Sedang Dilayani
             $namaStatusKunjungan = 'Sedang Dilayani';
         } elseif ($statusKunjungan == 2) {
-            $query->where('kunjungan.STATUS', 2); // Exclude Rawat Jalan
+            $query->where('kunjungan.STATUS', 2); // Selesai
             $namaStatusKunjungan = 'Selesai';
         } else {
-            $query->where('kunjungan.STATUS', 0); // Exclude Rawat Jalan
+            $query->where('kunjungan.STATUS', 0); // Batal Kunjungan
             $namaStatusKunjungan = 'Batal Kunjungan';
         }
 
