@@ -27,6 +27,7 @@ export default function DetailPoa({ detailPoa = {} }) {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
                                 <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                     <tr>
+                                        <th className="px-3 py-2">NO</th>
                                         <th className="px-3 py-2">URAIAN</th>
                                         <th className="px-3 py-2">VALUE</th>
                                     </tr>
@@ -35,8 +36,9 @@ export default function DetailPoa({ detailPoa = {} }) {
                                     {Object.keys(detailPoa).length > 0 ? (
                                         fieldMappings.map((field, index) => (
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                                <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 font-bold w-56">{field.label}</td>
-                                                <td className="px-3 py-3 w-56">{detailPoa[field.key] || '-'}</td>
+                                                <td className="px-3 py-3">{detailPoa[field.key] || '-'}</td>
                                             </tr>
                                         ))
                                     ) : (
