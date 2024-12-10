@@ -8,6 +8,12 @@ Breaking changes are marked with ⚠️.
 
 ## [Unreleased]
 
+## [v2.4.1] - 2024-11-21
+
+**Fixed**
+
+- Fix `qs` type dependencies
+
 ## [v2.4.0] - 2024-11-09
 
 **Added**
@@ -445,8 +451,9 @@ See [UPGRADING](UPGRADING.md#upgrading-from-1x-to-2x) for detailed upgrade instr
 
 For previous changes see the [Releases](https://github.com/tighten/ziggy/releases) page.
 
-[Unreleased]: https://github.com/tighten/ziggy/compare/v2.4.0...HEAD
-[v2.3.1]: https://github.com/tighten/ziggy/compare/v2.3.1...v2.4.0
+[Unreleased]: https://github.com/tighten/ziggy/compare/v2.4.1...HEAD
+[v2.4.1]: https://github.com/tighten/ziggy/compare/v2.4.0...v2.4.1
+[v2.4.0]: https://github.com/tighten/ziggy/compare/v2.3.1...v2.4.0
 [v2.3.1]: https://github.com/tighten/ziggy/compare/v2.3.0...v2.3.1
 [v2.3.0]: https://github.com/tighten/ziggy/compare/v2.2.1...v2.3.0
 [v2.2.1]: https://github.com/tighten/ziggy/compare/v2.2.0...v2.2.1
