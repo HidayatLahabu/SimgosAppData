@@ -12,7 +12,6 @@ export default function TodayData({
     resep,
     pulang,
 }) {
-
     const today = new Date();
     const formattedDate = today.toLocaleDateString('id-ID', {
         weekday: 'long',
@@ -28,7 +27,7 @@ export default function TodayData({
                     <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-gray-200 mb-4">
                         Data Hari Ini <br /> <span className='text-lg'>{formattedDate}</span>
                     </h1>
-                    <div className="flex flex-wrap gap-4 justify-between mb-4">
+                    <div className="flex flex-wrap gap-2 justify-between mb-4">
                         <Card title="PENDAFTARAN" titleSize="text-normal" valueSize="text-normal" value={pendaftaran} />
                         <Card title="KUNJUNGAN" titleSize="text-normal" valueSize="text-normal" value={kunjungan} />
                         <Card title="KONSUL" titleSize="text-normal" valueSize="text-normal" value={konsul} />

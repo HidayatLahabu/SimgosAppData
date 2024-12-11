@@ -49,7 +49,7 @@ export default function MonthlyKonsulTable({ konsulBulanan = [] }) {
                                 ) : (
                                     <tr>
                                         <td colSpan="2" className="text-center px-4 py-2 text-gray-500">
-                                            No data available.
+                                            Tidak ada data.
                                         </td>
                                     </tr>
                                 )}
