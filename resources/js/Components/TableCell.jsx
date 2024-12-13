@@ -1,16 +1,17 @@
-// TableCell.jsx
+import sanitizeHtml from 'sanitize-html';
+
 export default function TableCell({ children, className = "" }) {
-    // Fungsi untuk menghapus tag HTML dari teks
+    // Function to clean HTML using sanitize-html
     const cleanText = (text) => {
         if (typeof text === 'string') {
-            return text.replace(/<[^>]+>/g, '');  // Hapus tag HTML
+            return sanitizeHtml(text);  // Use sanitizeHtml to clean the content
         }
         return text;
     };
 
     return (
         <td className={`px-3 py-3 border border-gray-500 dark:border-gray-600 ${className}`}>
-            {cleanText(children)}
+            {cleanText(children)}  {/* Render sanitized content */}
         </td>
     );
 }
