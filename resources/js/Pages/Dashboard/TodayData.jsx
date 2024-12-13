@@ -18,6 +18,10 @@ export default function TodayData({
         day: 'numeric',
         month: 'long',
         year: 'numeric',
+    }) + ' ' + today.toLocaleTimeString('id-ID', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
     });
 
     return (
