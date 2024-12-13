@@ -10,6 +10,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -97,11 +98,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell>{data.bpjs ? data.bpjs : ''}</TableCell>
                                                     <TableCell>{data.nik ? data.nik : ''}</TableCell>
                                                     <TableCell>{data.terdaftar}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("pasien.detail", { id: data.norm })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

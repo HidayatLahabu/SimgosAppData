@@ -12,6 +12,7 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import Card from "@/Components/Card";
 import Cetak from "./Cetak"
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 
@@ -110,12 +111,14 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, r
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.asal}</TableCell>
                                                     <TableCell>{data.tujuan}</TableCell>
-                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Belum Diterima' : 'Sudah Diterima'}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCell>
+                                                        {data.status === 0 ? 'Batal' : data.status === 1 ? 'Belum Diterima' : 'Sudah Diterima'}
+                                                    </TableCell>
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("konsul.detail", { id: data.nomor })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

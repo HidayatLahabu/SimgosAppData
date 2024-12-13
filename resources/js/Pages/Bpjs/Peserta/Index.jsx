@@ -9,6 +9,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -104,11 +105,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell>{data.nik}</TableCell>
                                                     <TableCell>{data.nmJenisPeserta}</TableCell>
                                                     <TableCell>{data.ketStatusPeserta}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("pesertaBpjs.detail", { id: data.noKartu })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

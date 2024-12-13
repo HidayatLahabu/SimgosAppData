@@ -11,6 +11,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
@@ -102,15 +103,23 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>{data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}</TableCell>
-                                                    <TableCell>{data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}</TableCell>
-                                                    <TableCell>{data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Sudah Final' : ''}</TableCell>
-                                                    <TableCell>{data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Sudah Final' : 'Belum Ada Hasil'}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCell>
+                                                        {data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {data.statusOrder === 0 ? 'Batal' : data.statusOrder === 1 ? 'Belum Final' : data.statusOrder === 2 ? 'Sudah Final' : ''}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {data.statusHasil === 1 ? 'Belum Final' : data.statusHasil === 2 ? 'Sudah Final' : 'Belum Ada Hasil'}
+                                                    </TableCell>
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("layananRad.detail", { id: data.nomor })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

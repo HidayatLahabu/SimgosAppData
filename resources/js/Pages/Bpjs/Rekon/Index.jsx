@@ -9,6 +9,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
@@ -94,11 +95,11 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.noSep}</TableCell>
                                                     <TableCell>{data.poliTujuan}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("rekonBpjs.detail", { id: data.noSurat })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

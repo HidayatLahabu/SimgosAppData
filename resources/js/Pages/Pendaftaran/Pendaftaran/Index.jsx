@@ -11,6 +11,7 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import Card from "@/Components/Card";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
 
@@ -18,7 +19,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
         { name: "NORM" },
         { name: "NAMA PASIEN" },
         { name: "NOMOR" },
-        { name: "TANGGAL" },
+        { name: "TANGGAL", className: "text-center" },
         { name: "PENJAMIN" },
         { name: "STATUS" },
         { name: "MENU", className: "text-center" },
@@ -105,14 +106,16 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.nomor}</TableCell>
-                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell className='text-center'>{data.tanggal}</TableCell>
                                                     <TableCell>{data.penjamin}</TableCell>
-                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCell>
+                                                        {data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}
+                                                    </TableCell>
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("pendaftaran.detail", { id: data.nomor })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (

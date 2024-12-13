@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) {
     const headers = [
@@ -44,27 +45,27 @@ export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) 
                                                 <TableCell>{index + 1}</TableCell>
                                                 <TableCell>{kunjungan.nomor}</TableCell>
                                                 <TableCell>{kunjungan.pendaftaran}</TableCell>
-                                                <TableCell className='text-center'>{kunjungan.masuk}</TableCell>
-                                                <TableCell className='text-center'>{kunjungan.keluar}</TableCell>
+                                                <TableCell className="text-center">{kunjungan.masuk}</TableCell>
+                                                <TableCell className="text-center">{kunjungan.keluar}</TableCell>
                                                 <TableCell>{kunjungan.ruangan}</TableCell>
                                                 <TableCell>
-                                                    {kunjungan.keluar ? 'Selesai' : 'Sedang Dilayani'}
+                                                    {kunjungan.keluar ? 'Selesai' : (kunjungan.keluar === null || kunjungan.keluar === undefined ? '' : 'Sedang Dilayani')}
                                                 </TableCell>
-                                                <td className="px-3 py-3">
+                                                <TableCellMenu>
                                                     {kunjungan.nomor ? (
-                                                        <ButtonDetail href={route("kunjungan.tableRme", { id: kunjungan.nomor })} />
+                                                        <ButtonDetail className="text-center" href={route("kunjungan.tableRme", { id: kunjungan.nomor })} />
                                                     ) : (
                                                         <span className="text-gray-500">No detail available</span>
                                                     )}
-                                                </td>
+                                                </TableCellMenu>
                                             </TableRow>
                                         ))
                                     ) : (
-                                        <tr>
-                                            <td colSpan="8" className="text-center px-3 py-3">
+                                        <TableRow>
+                                            <TableCell colSpan="8" className="text-center px-3 py-3">
                                                 No data available
-                                            </td>
-                                        </tr>
+                                            </TableCell>
+                                        </TableRow>
                                     )}
                                 </tbody>
                             </Table>

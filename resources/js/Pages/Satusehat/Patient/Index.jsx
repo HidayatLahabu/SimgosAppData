@@ -10,6 +10,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
@@ -118,11 +119,11 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell>{data.refId}</TableCell>
                                                     <TableCell>{data.nik}</TableCell>
                                                     <TableCell>{data.getDate}</TableCell>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("patient.detail", { id: data.refId })}
                                                         />
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (
