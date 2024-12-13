@@ -15,6 +15,11 @@ export default function MonthlyKonsulTable({ konsulBulanan = [] }) {
     // Ensure items is always an array
     const sortedItems = Array.isArray(items) ? [...items] : [];
 
+    // Find the maximum value for JUMLAH
+    const maxJumlah = sortedItems.length > 0
+        ? Math.max(...sortedItems.map((item) => item.JUMLAH))
+        : null;
+
     return (
         <div className="max-w-full mx-auto sm:px-1 lg:px-1 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
@@ -40,8 +45,16 @@ export default function MonthlyKonsulTable({ konsulBulanan = [] }) {
                                                 : 'bg-gray-50 dark:bg-indigo-950'
                                                 }`}
                                         >
-                                            <td className="border border-gray-600 px-4 py-2">{data.BULAN}</td>
-                                            <td className="border border-gray-600 px-4 py-2 text-center">
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 ${data.JUMLAH === maxJumlah ? 'text-green-500 font-bold' : ''
+                                                    }`}
+                                            >
+                                                {data.BULAN}
+                                            </td>
+                                            <td
+                                                className={`border border-gray-600 px-4 py-2 text-center ${data.JUMLAH === maxJumlah ? 'text-green-500 font-bold' : ''
+                                                    }`}
+                                            >
                                                 {data.JUMLAH.toLocaleString()}
                                             </td>
                                         </tr>

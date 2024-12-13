@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Pendaftaran;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\MasterRuanganModel;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class MutasiController extends Controller
 {
@@ -48,13 +50,20 @@ class MutasiController extends Controller
         // Hitung rata-rata
         $rataRata = $this->rataRata();
 
+        $ruangan = MasterRuanganModel::where('JENIS', 5)
+            ->whereIn('JENIS_KUNJUNGAN', [1, 2, 3, 4, 5])
+            ->where('STATUS', 1)
+            ->orderBy('DESKRIPSI')
+            ->get();
+
         // Return Inertia view with paginated data
         return inertia("Pendaftaran/Mutasi/Index", [
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
-            'rataRata' => $rataRata, // Pass rata-rata data to frontend
+            'rataRata' => $rataRata,
+            'ruangan' => $ruangan,
             'queryParams' => request()->all()
         ]);
     }
@@ -212,6 +221,84 @@ class MutasiController extends Controller
         // Return Inertia view with the encounter data
         return inertia("Pendaftaran/Mutasi/Detail", [
             'detail' => $query,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan' => 'nullable|string',
+            'statusMutasi' => 'nullable|integer|in:0,1,2',
+            'dari_tanggal' => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan = $request->input('ruangan');
+        $statusMutasi = $request->input('statusMutasi');
+        $dariTanggal = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variabel default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaStatusMutasi = 'Semua Status Mutasi';
+
+        // Query utama
+        $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
+            ->select(
+                'mutasi.NOMOR as nomor',
+                'pasien.NAMA as nama',
+                'pasien.NORM as norm',
+                'ruanganTujuan.DESKRIPSI as tujuan',
+                'mutasi.TANGGAL as tanggal',
+                'mutasi.RESERVASI as reservasi',
+                'mutasi.STATUS as status',
+            )
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'mutasi.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.ruangan as ruanganTujuan', 'ruanganTujuan.ID', '=', 'mutasi.TUJUAN')
+            ->where('pasien.STATUS', 1);
+
+        // Filter berdasarkan ruangan
+        if (!empty($ruangan)) {
+            $query->where('ruanganTujuan.ID', $ruangan);
+
+            // Mendapatkan nama ruangan yang sesuai dari hasil query
+            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
+                ->where('ID', $ruangan)
+                ->value('DESKRIPSI');
+        }
+
+        // Filter berdasarkan jenis kunjungan
+        if ($statusMutasi === null) {
+            $query->whereIn('mutasi.STATUS', [0, 1, 2]);
+        } elseif ($statusMutasi == 1) {
+            $query->where('mutasi.STATUS', 1); // Sedang Dilayani
+            $namaStatusMutasi = 'Belum Diterima';
+        } elseif ($statusMutasi == 2) {
+            $query->where('mutasi.STATUS', 2); // Selesai
+            $namaStatusMutasi = 'Sudah Diterima';
+        } else {
+            $query->where('mutasi.STATUS', 0); // Batal Kunjungan
+            $namaStatusMutasi = 'Batal Mutasi';
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('mutasi.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('mutasi.TANGGAL')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Pendaftaran/Mutasi/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaStatusMutasi' => $namaStatusMutasi,
         ]);
     }
 }

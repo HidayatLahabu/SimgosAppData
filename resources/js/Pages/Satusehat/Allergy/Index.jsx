@@ -3,7 +3,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";

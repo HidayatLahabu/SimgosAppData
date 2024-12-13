@@ -79,6 +79,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                             </th>
                                         </tr>
                                     </TableHeader>
+
                                     <TableHeader>
                                         <tr>
                                             {headers.map((header, index) => (

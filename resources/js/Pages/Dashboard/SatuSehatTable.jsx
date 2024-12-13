@@ -1,6 +1,18 @@
 import React from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
 
 export default function SatuSehatTable({ items = [] }) {
+
+    const headers = [
+        { name: "PARAMETER SATUSEHAT" },
+        { name: "TOTAL DATA", className: "text-center" },
+        { name: "MEMILIKI ID", className: "text-center" },
+        { name: "TIDAK MEMILIKI ID", className: "text-center" },
+        { name: "PERSENTASE", className: "text-center" },
+        { name: "TANGGAL SINKRONISASI", className: "text-center" },
+    ];
 
     // Check if items is defined and is an array
     if (!Array.isArray(items)) {
@@ -19,29 +31,16 @@ export default function SatuSehatTable({ items = [] }) {
                         Data SatuSehat
                     </h1>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
-                            <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase text-gray-100">
+                        <Table>
+                            <TableHeader>
                                 <tr>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-left">
-                                        Parameter SatuSehat
-                                    </th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
-                                        Total
-                                    </th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
-                                        Memiliki ID
-                                    </th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
-                                        Tidak Memiliki ID
-                                    </th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
-                                        Persentase
-                                    </th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">
-                                        Tanggal Sinkronisasi
-                                    </th>
+                                    {headers.map((header, index) => (
+                                        <TableHeaderCell key={index} className={header.className || ""}>
+                                            {header.name}
+                                        </TableHeaderCell>
+                                    ))}
                                 </tr>
-                            </thead>
+                            </TableHeader>
                             <tbody>
                                 {sortedItems.map((item, index) => {
                                     return (
@@ -122,10 +121,10 @@ export default function SatuSehatTable({ items = [] }) {
                                     );
                                 })}
                             </tbody>
-                        </table>
+                        </Table>
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

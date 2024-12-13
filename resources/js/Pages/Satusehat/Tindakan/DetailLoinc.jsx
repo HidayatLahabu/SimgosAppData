@@ -1,9 +1,21 @@
 import React from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function DetailLoinc({ detailLoinc = {} }) {
+
+    const headers = [
+        { name: "NO", className: "w-[10%]" },
+        { name: "COLUMN NAME", className: "w-[30%]" },
+        { name: "VALUE", className: "w-[60%]" },
+    ];
+
     // Function to map labels with data
     const fieldMappings = [
-        { label: 'ID', key: 'id' },
+        { label: 'ID LOINC', key: 'id' },
         { label: 'KATEGORI PEMERIKSAAN', key: 'kategori_pemeriksaan' },
         { label: 'NAMA PEMERIKSAAN', key: 'nama_pemeriksaan' },
         { label: 'PERMINTAAN HASIL', key: 'permintaan_hasil' },
@@ -28,6 +40,34 @@ export default function DetailLoinc({ detailLoinc = {} }) {
         { label: 'VERSION LAST CHANGE', key: 'version_last_change' },
     ];
 
+    // Split fieldMappings into two tables
+    const middleIndex = Math.ceil(fieldMappings.length / 2);
+    const firstTableData = fieldMappings.slice(0, middleIndex);
+    const secondTableData = fieldMappings.slice(middleIndex);
+
+    const renderTable = (data, tableIndex) => (
+        <Table>
+            <TableHeader>
+                <tr>
+                    {headers.map((header, index) => (
+                        <TableHeaderCell key={`${tableIndex}-${index}`} className={header.className || ""}>
+                            {header.name}
+                        </TableHeaderCell>
+                    ))}
+                </tr>
+            </TableHeader>
+            <tbody>
+                {data.map((field, index) => (
+                    <TableRow key={`${tableIndex}-${index}`}>
+                        <TableCell className="text-xs">{index + 1}</TableCell>
+                        <TableCell className="text-xs text-wrap">{field.label}</TableCell>
+                        <TableCell className="text-xs text-wrap">{detailLoinc[field.key] || '-'}</TableCell>
+                    </TableRow>
+                ))}
+            </tbody>
+        </Table>
+    );
+
     return (
         <div className="py-5">
             <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -37,30 +77,14 @@ export default function DetailLoinc({ detailLoinc = {} }) {
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DATA DETAIL LOINC TERMINOLOGI
                             </h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                    <tr>
-                                        <th className="px-3 py-2">URAIAN</th>
-                                        <th className="px-3 py-2">VALUE</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {Object.keys(detailLoinc).length > 0 ? (
-                                        fieldMappings.map((field, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 font-bold w-56">{field.label}</td>
-                                                <td className="px-3 py-3 w-56">{detailLoinc[field.key] || '-'}</td>
-                                            </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="2" className="text-center px-3 py-3">
-                                                No data available
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    {renderTable(firstTableData, 0)}
+                                </div>
+                                <div>
+                                    {renderTable(secondTableData, 1)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -11,8 +11,9 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import Card from "@/Components/Card";
+import Cetak from "./Cetak"
 
-export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 
     const headers = [
         { name: "NORM" },
@@ -109,7 +110,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.asal}</TableCell>
                                                     <TableCell>{data.tujuan}</TableCell>
-                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}</TableCell>
+                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Belum Diterima' : 'Sudah Diterima'}</TableCell>
                                                     <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
                                                         <ButtonDetail
                                                             href={route("konsul.detail", { id: data.nomor })}
@@ -130,6 +131,11 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                     </div>
                 </div>
             </div>
+
+            <div className="w-full">
+                <Cetak ruangan={ruangan} queryParams={queryParams || {}} />
+            </div>
+
         </AuthenticatedLayout>
     );
 }
