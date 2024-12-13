@@ -53,6 +53,6 @@ Tip : Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara 
 Notes : Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
 
 Lisensi
-Aplikasi ini memungkinkan penggunaan bebas dengan syarat identitas pengembang (seperti footer) tetap dipertahankan. Detail lengkapnya dapat dilihat di LICENSE.
+Aplikasi ini memungkinkan penggunaan bebas dengan harapan identitas pengembang (seperti footer) tetap dipertahankan. Detail lengkapnya dapat dilihat di LICENSE.
 
 
