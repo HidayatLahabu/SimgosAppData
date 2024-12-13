@@ -264,6 +264,7 @@ class KunjunganController extends Controller
                 'kunjungan.MASUK as masuk',
                 'kunjungan.KELUAR as keluar',
                 'ruangan.DESKRIPSI as ruangan',
+                'kunjungan.STATUS as status',
             ])
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
             ->where('kunjungan.NOPEN', $noPendaftaran)

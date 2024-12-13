@@ -3,8 +3,23 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaftaran, namaPasien, normPasien }) {
+
+    const headers = [
+        { name: "NO" },
+        { name: "NOMOR KUNJUNGAN" },
+        { name: "ID CPPT" },
+        { name: "TANGGAL", className: "text-center" },
+        { name: "OLEH" },
+        { name: "STATUS" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -32,26 +47,28 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                         NORM : {normPasien}
                                     </div>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR KUNJUNGAN</th>
-                                            <th className="px-3 py-2">ID CPPT</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">OLEH</th>
-                                            <th className="px-3 py-2">STATUS</th>
-                                            <th className="px-3 py-2">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.length > 0 ? (
                                             dataTable.map((item, index) => (
-                                                <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{item.kunjungan}</td>
-                                                    <td className="px-3 py-3">{item.id}</td>
-                                                    <td className="px-3 py-3">{item.tanggal}</td>
-                                                    <td className="px-3 py-3">{item.oleh}</td>
-                                                    <td className="px-3 py-3">{item.status}</td>
+                                                <TableRow key={index}>
+                                                    <TableCell>{index + 1}</TableCell>
+                                                    <TableCell>{item.kunjungan}</TableCell>
+                                                    <TableCell>{item.id}</TableCell>
+                                                    <TableCell className='text-center'>{item.tanggal}</TableCell>
+                                                    <TableCell>{item.oleh}</TableCell>
+                                                    <TableCell>
+                                                        {item.status ? 'Selesai' : 'Sedang Dilayani'}
+                                                    </TableCell>
                                                     <td className="px-3 py-3">
                                                         {item.id ? (
                                                             <ButtonDetail href={route("kunjungan.detailCppt", { id: item.id })} />
@@ -59,7 +76,7 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                                             <span className="text-gray-500">No detail available</span>
                                                         )}
                                                     </td>
-                                                </tr>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr>
@@ -69,7 +86,7 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                             </div>
                         </div>
                     </div>

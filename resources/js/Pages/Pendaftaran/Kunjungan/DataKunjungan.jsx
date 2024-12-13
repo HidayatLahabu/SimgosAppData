@@ -1,7 +1,22 @@
 import React from 'react';
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) {
+    const headers = [
+        { name: "NO" },
+        { name: "NOMOR KUNJUNGAN" },
+        { name: "NOMOR PENDAFTARAN" },
+        { name: "TANGGAL MASUK", className: "text-center" },
+        { name: "TANGGAL KELUAR", className: "text-center" },
+        { name: "RUANGAN TUJUAN" },
+        { name: "STATUS" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     return (
         <div className="py-5">
@@ -12,28 +27,29 @@ export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) 
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DAFTAR KUNJUNGAN <br />DENGAN NOMOR PENDAFTARAN : {nomorPendaftaran}
                             </h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                            <Table>
+                                <TableHeader>
                                     <tr>
-                                        <th className="px-3 py-2">NO</th>
-                                        <th className="px-3 py-2">NOMOR KUNJUNGAN</th>
-                                        <th className="px-3 py-2">NOMOR PENDAFTARAN</th>
-                                        <th className="px-3 py-2">TANGGAL MASUK</th>
-                                        <th className="px-3 py-2">TANGGAL KELUAR</th>
-                                        <th className="px-3 py-2">RUANGAN TUJUAN</th>
-                                        <th className="px-3 py-2">MENU</th>
+                                        {headers.map((header, index) => (
+                                            <TableHeaderCell key={index} className={header.className || ""}>
+                                                {header.name}
+                                            </TableHeaderCell>
+                                        ))}
                                     </tr>
-                                </thead>
+                                </TableHeader>
                                 <tbody>
                                     {dataKunjungan.length > 0 ? (
                                         dataKunjungan.map((kunjungan, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3">{index + 1}</td>
-                                                <td className="px-3 py-3">{kunjungan.nomor}</td>
-                                                <td className="px-3 py-3">{kunjungan.pendaftaran}</td>
-                                                <td className="px-3 py-3">{kunjungan.masuk}</td>
-                                                <td className="px-3 py-3">{kunjungan.keluar}</td>
-                                                <td className="px-3 py-3">{kunjungan.ruangan}</td>
+                                            <TableRow key={index}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{kunjungan.nomor}</TableCell>
+                                                <TableCell>{kunjungan.pendaftaran}</TableCell>
+                                                <TableCell className='text-center'>{kunjungan.masuk}</TableCell>
+                                                <TableCell className='text-center'>{kunjungan.keluar}</TableCell>
+                                                <TableCell>{kunjungan.ruangan}</TableCell>
+                                                <TableCell>
+                                                    {kunjungan.keluar ? 'Selesai' : 'Sedang Dilayani'}
+                                                </TableCell>
                                                 <td className="px-3 py-3">
                                                     {kunjungan.nomor ? (
                                                         <ButtonDetail href={route("kunjungan.tableRme", { id: kunjungan.nomor })} />
@@ -41,7 +57,7 @@ export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) 
                                                         <span className="text-gray-500">No detail available</span>
                                                     )}
                                                 </td>
-                                            </tr>
+                                            </TableRow>
                                         ))
                                     ) : (
                                         <tr>
@@ -51,7 +67,7 @@ export default function DataKunjungan({ nomorPendaftaran, dataKunjungan = {} }) 
                                         </tr>
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     </div>
                 </div>
