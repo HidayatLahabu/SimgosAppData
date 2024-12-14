@@ -8,6 +8,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaftaran, namaPasien, normPasien }) {
 
@@ -69,13 +70,13 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                                     <TableCell>
                                                         {item.status ? 'Selesai' : 'Sedang Dilayani'}
                                                     </TableCell>
-                                                    <td className="px-3 py-3">
+                                                    <TableCellMenu>
                                                         {item.id ? (
                                                             <ButtonDetail href={route("kunjungan.detailCppt", { id: item.id })} />
                                                         ) : (
                                                             <span className="text-gray-500">No detail available</span>
                                                         )}
-                                                    </td>
+                                                    </TableCellMenu>
                                                 </TableRow>
                                             ))
                                         ) : (
