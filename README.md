@@ -38,7 +38,8 @@ Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur unt
 
 Kustomisasi:
 
-    7. Untuk mengubah nama tampilan nama rumah sakit, klinik atau organisasi pengguna, dapat dilakukan dengan merubah value HOSPITAL_NAME pada file .env
+    7. Untuk mengubah nama tampilan nama rumah sakit, klinik atau organisasi pengguna, dapat dilakukan 
+       dengan merubah value HOSPITAL_NAME pada file .env
     8. Untuk penyesuaian timezone, lakukan perubahan APP_TIMEZONE value pada file .env 
 
 Memperbarui Aplikasi:
