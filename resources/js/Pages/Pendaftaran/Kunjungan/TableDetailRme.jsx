@@ -6,10 +6,23 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function TableDetailRme({ anamnesisDiperoleh, askep, cppt, diagnosa, jadwalKontrol, riwayatPenyakit, keluhanUtama, tandaVital }) {
+export default function TableDetailRme({
+    anamnesisDiperoleh,
+    askep,
+    cppt,
+    diagnosa,
+    jadwalKontrol,
+    riwayatAlergi,
+    riwayatLainnya,
+    riwayatPemberianObat,
+    riwayatPerjalananPenyakit,
+    riwayatPenyakit,
+    keluhanUtama,
+    tandaVital }) {
+
     const headers = [
         { name: "MEDICAL RECORD", className: "text-left" },
-        { name: "MENU", className: "text-left" },
+        { name: "INPUT DATA", className: "text-left" },
     ];
 
     const rows = [
@@ -19,6 +32,10 @@ export default function TableDetailRme({ anamnesisDiperoleh, askep, cppt, diagno
         { label: "DIAGNOSA", data: diagnosa, routeName: "kunjungan.diagnosa" },
         { label: "JADWAL KONTROL", data: jadwalKontrol, routeName: "kunjungan.jadwalKontrol" },
         { label: "KELUHAN UTAMA", data: keluhanUtama, routeName: "kunjungan.keluhanUtama" },
+        { label: "RIWAYAT ALERGI", data: riwayatAlergi, routeName: "kunjungan.riwayatAlergi" },
+        { label: "RIWAYAT LAINNYA", data: riwayatLainnya, routeName: "kunjungan.riwayatLainnya" },
+        { label: "RIWAYAT PEMBERIAN OBAT", data: riwayatPemberianObat, routeName: "kunjungan.riwayatPemberianObat" },
+        { label: "RIWAYAT PERJALANAN PENYAKIT", data: riwayatPerjalananPenyakit, routeName: "kunjungan.riwayatPerjalananPenyakit" },
         { label: "RIWAYAT PENYAKIT SEKARANG", data: riwayatPenyakit, routeName: "kunjungan.riwayatPenyakit" },
         { label: "TANDA VITAL", data: tandaVital, routeName: "kunjungan.tandaVital" },
     ];

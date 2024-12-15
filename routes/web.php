@@ -264,9 +264,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
         Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
         Route::get('kunjungan/keluhanUtama/{id}', [KunjunganController::class, 'keluhanUtama'])->name('kunjungan.keluhanUtama');
+        Route::get('kunjungan/riwayatPemberianObat/{id}', [KunjunganController::class, 'riwayatPemberianObat'])->name('kunjungan.riwayatPemberianObat');
+        Route::get('kunjungan/riwayatLainnya/{id}', [KunjunganController::class, 'riwayatLainnya'])->name('kunjungan.riwayatLainnya');
+        Route::get('kunjungan/riwayatAlergi/{id}', [KunjunganController::class, 'riwayatAlergi'])->name('kunjungan.riwayatAlergi');
+        Route::get('kunjungan/riwayatPerjalananPenyakit/{id}', [KunjunganController::class, 'riwayatPerjalananPenyakit'])->name('kunjungan.riwayatPerjalananPenyakit');
         Route::get('kunjungan/riwayatPenyakit/{id}', [KunjunganController::class, 'riwayatPenyakit'])->name('kunjungan.riwayatPenyakit');
         Route::get('kunjungan/tandaVital/{id}', [KunjunganController::class, 'tandaVital'])->name('kunjungan.tandaVital');
-        Route::get('kunjungan/detailTandaVital/{id}', [KunjunganController::class, 'detailTandaVital'])->name('kunjungan.detailTandaVital');
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');

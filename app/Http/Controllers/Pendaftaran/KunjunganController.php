@@ -312,253 +312,65 @@ class KunjunganController extends Controller
         $keluar      = $query->keluar;
         $dpjp        = $query->dpjp;
 
-
-        // Fetch anamnesis data
         $anamnesisDiperoleh = $this->getAnamnesisDiperoleh($kunjungan);
         $anamnesisDiperolehId = $anamnesisDiperoleh ? $anamnesisDiperoleh->id : null;
 
-        // Fetch asuhan keperawatan data
         $askep = $this->getAskep($kunjungan);
         $askepId = $askep ? $askep->id : null;
 
-        // Fetch CPPT data
         $cppt = $this->getCppt($kunjungan);
         $cpptId = $cppt ? $cppt->id : null;
 
-        // Fetch diagnosa data
         $diagnosa = $this->getDiagnosa($pendaftaran);
         $diagnosaId = $diagnosa ? $diagnosa->id : null;
 
-        // Fetch jadwal kontrol data
         $jadwalKontrol = $this->getJadwalKontrol($kunjungan);
         $jadwalKontrolId = $jadwalKontrol ? $jadwalKontrol->id : null;
 
-        // Fetch tanda vital data
         $keluhanUtama = $this->getKeluhanUtama($kunjungan);
         $keluhanUtamaId = $keluhanUtama ? $keluhanUtama->id : null;
 
-        // Fetch anamnesis data
+        $riwayatAlergi = $this->getRiwayatAlergi($kunjungan);
+        $riwayatAlergiId = $riwayatAlergi ? $riwayatAlergi->id : null;
+
+        $riwayatLainnya = $this->getRiwayatLainnya($kunjungan);
+        $riwayatLainnyaId = $riwayatLainnya ? $riwayatLainnya->id : null;
+
+        $riwayatPemberianObat = $this->getRiwayatPemberianObat($kunjungan);
+        $riwayatPemberianObatId = $riwayatPemberianObat ? $riwayatPemberianObat->id : null;
+
+        $riwayatPerjalananPenyakit = $this->getRiwayatPerjalananPenyakit($kunjungan);
+        $riwayatPerjalananPenyakitId = $riwayatPerjalananPenyakit ? $riwayatPerjalananPenyakit->id : null;
+
         $riwayatPenyakit = $this->getRiwayatPenyakit($kunjungan);
         $riwayatPenyakitId = $riwayatPenyakit ? $riwayatPenyakit->id : null;
 
-
-        // Fetch tanda vital data
         $tandaVital = $this->getTandaVital($kunjungan);
         $tandaVitalId = $tandaVital ? $tandaVital->id : null;
 
         return inertia("Pendaftaran/Kunjungan/TableRme", [
-            'dataTable'             => $query,
-            'nomorKunjungan'        => $kunjungan,
-            'nomorPendaftaran'      => $pendaftaran,
-            'namaPasien'            => $pasien,
-            'normPasien'            => $norm,
-            'ruanganTujuan'         => $ruangan,
-            'statusKunjungan'       => $status,
-            'tanggalMasuk'          => $masuk,
-            'tanggalKeluar'         => $keluar,
-            'dpjp'                  => $dpjp,
-            'anamnesisDiperoleh'    => $anamnesisDiperolehId,
-            'askep'                 => $askepId,
-            'cppt'                  => $cpptId,
-            'diagnosa'              => $diagnosaId,
-            'jadwalKontrol'         => $jadwalKontrolId,
-            'keluhanUtama'          => $keluhanUtamaId,
-            'riwayatPenyakit'       => $riwayatPenyakitId,
-            'tandaVital'            => $tandaVitalId,
-        ]);
-    }
-
-    protected function getDiagnosa($noPendaftaran)
-    {
-        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'kunjungan.NOMOR as nomor',
-                'diagnosa.NOPEN as id',
-            ])
-            ->leftJoin('medicalrecord.diagnosa as diagnosa', 'diagnosa.NOPEN', '=', 'kunjungan.NOPEN')
-            ->where('kunjungan.NOPEN', $noPendaftaran)
-            ->first();
-    }
-
-    public function diagnosa($id)
-    {
-
-        $dataKunjungan = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
-            ->select([
-                'kunjungan.NOMOR as nomorKunjungan',
-                'kunjungan.NOPEN as nomorPendaftaran',
-                'pasien.NORM as norm',
-                'pasien.NAMA as namaPasien',
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'diagnosa.NOPEN')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'diagnosa.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->where('diagnosa.NOPEN', $id)
-            ->distinct()
-            ->first();
-
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
-            ->select([
-                'diagnosa.NOPEN as pendaftaran',
-                'diagnosa.ID as id',
-                'diagnosa.TANGGAL as tanggal',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
-                'diagnosa.STATUS as status',
-            ])
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('diagnosa.NOPEN', $id)
-            ->get();
-
-        // Get nomor pendaftaran
-        $nomorPendaftaran = $dataKunjungan->nomorPendaftaran;
-        $nomorKunjungan   = $dataKunjungan->nomorKunjungan;
-        $namaPasien       = $dataKunjungan->namaPasien;
-        $normPasien       = $dataKunjungan->norm;
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('kunjungan.detail', $nomorKunjungan)->with('error', 'Data not found.');
-        }
-
-        return inertia("Pendaftaran/Kunjungan/TableDiagnosa", [
-            'dataTable'         => $query,
-            'nomorKunjungan'    => $nomorKunjungan,
-            'nomorPendaftaran'  => $nomorPendaftaran,
-            'namaPasien'        => $namaPasien,
-            'normPasien'        => $normPasien,
-        ]);
-    }
-
-    public function detailDiagnosa($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
-            ->select([
-                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
-                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
-                'diagnosa.ID as ID',
-                'diagnosa.KODE as KODE',
-                'diagnosa.DIAGNOSA as DIAGNOSA',
-                'diagnosa.UTAMA as UTAMA',
-                'diagnosa.INACBG as INACBG',
-                'diagnosa.BARU as BARU',
-                'diagnosa.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'diagnosa.STATUS as STATUS',
-                'diagnosa.INA_GROUPER as INA_GROUPER',
-            ])
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'diagnosa.NOPEN')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('diagnosa.ID', $id)
-            ->distinct()
-            ->first();
-
-        $kunjungan = $query->NOMOR_KUNJUNGAN;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'            => $query,
-            'nomorKunjungan'    => $kunjungan,
-            'judulRme'          => 'DIAGNOSA',
-        ]);
-    }
-
-    protected function getKeluhanUtama($noKunjungan)
-    {
-        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'kunjungan.NOMOR as nomor',
-                'keluhanUtama.ID as id',
-            ])
-            ->leftJoin('medicalrecord.keluhan_utama as keluhanUtama', 'keluhanUtama.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->where('kunjungan.NOMOR', $noKunjungan)
-            ->first();
-    }
-
-    public function keluhanUtama($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.keluhan_utama as keluhanUtama')
-            ->select([
-                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
-                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
-                'keluhanUtama.ID as ID',
-                'keluhanUtama.DESKRIPSI as DESKRIPSI',
-                'keluhanUtama.SNOMED_CT_ID as SNOMED',
-                'keluhanUtama.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'keluhanUtama.STATUS as STATUS',
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'keluhanUtama.KUNJUNGAN')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'keluhanUtama.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('keluhanUtama.ID', $id)
-            ->distinct()
-            ->first();
-
-        $kunjungan = $query->NOMOR_KUNJUNGAN;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'            => $query,
-            'nomorKunjungan'    => $kunjungan,
-            'judulRme'          => 'KELUHAN UTAMA',
-        ]);
-    }
-
-    protected function getRiwayatPenyakit($noKunjungan)
-    {
-        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'kunjungan.NOMOR as nomor',
-                'anamnesis.ID as id',
-            ])
-            ->leftJoin('medicalrecord.anamnesis as anamnesis', 'anamnesis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->where('kunjungan.NOMOR', $noKunjungan)
-            ->first();
-    }
-
-    public function riwayatPenyakit($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.anamnesis as anamnesis')
-            ->select([
-                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
-                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
-                'anamnesis.ID as ID',
-                'anamnesis.DESKRIPSI as DESKRIPSI',
-                'anamnesis.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'anamnesis.STATUS as STATUS',
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'anamnesis.KUNJUNGAN')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('medicalrecord.rpp as rpp', 'rpp.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'anamnesis.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('anamnesis.ID', $id)
-            ->distinct()
-            ->first();
-
-        $kunjungan = $query->NOMOR_KUNJUNGAN;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'            => $query,
-            'nomorKunjungan'    => $kunjungan,
-            'judulRme'          => 'RIWAYAT PENYAKIT SEKARANG',
+            'dataTable'                 => $query,
+            'nomorKunjungan'            => $kunjungan,
+            'nomorPendaftaran'          => $pendaftaran,
+            'namaPasien'                => $pasien,
+            'normPasien'                => $norm,
+            'ruanganTujuan'             => $ruangan,
+            'statusKunjungan'           => $status,
+            'tanggalMasuk'              => $masuk,
+            'tanggalKeluar'             => $keluar,
+            'dpjp'                      => $dpjp,
+            'anamnesisDiperoleh'        => $anamnesisDiperolehId,
+            'askep'                     => $askepId,
+            'cppt'                      => $cpptId,
+            'diagnosa'                  => $diagnosaId,
+            'jadwalKontrol'             => $jadwalKontrolId,
+            'keluhanUtama'              => $keluhanUtamaId,
+            'riwayatAlergi'             => $riwayatAlergiId,
+            'riwayatLainnya'            => $riwayatLainnyaId,
+            'riwayatPemberianObat'      => $riwayatPemberianObatId,
+            'riwayatPerjalananPenyakit' => $riwayatPerjalananPenyakitId,
+            'riwayatPenyakit'           => $riwayatPenyakitId,
+            'tandaVital'                => $tandaVitalId,
         ]);
     }
 
@@ -801,6 +613,108 @@ class KunjunganController extends Controller
         ]);
     }
 
+    protected function getDiagnosa($noPendaftaran)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'diagnosa.NOPEN as id',
+            ])
+            ->leftJoin('medicalrecord.diagnosa as diagnosa', 'diagnosa.NOPEN', '=', 'kunjungan.NOPEN')
+            ->where('kunjungan.NOPEN', $noPendaftaran)
+            ->first();
+    }
+
+    public function diagnosa($id)
+    {
+
+        $dataKunjungan = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
+            ->select([
+                'kunjungan.NOMOR as nomorKunjungan',
+                'kunjungan.NOPEN as nomorPendaftaran',
+                'pasien.NORM as norm',
+                'pasien.NAMA as namaPasien',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'diagnosa.NOPEN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'diagnosa.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->where('diagnosa.NOPEN', $id)
+            ->distinct()
+            ->first();
+
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
+            ->select([
+                'diagnosa.NOPEN as pendaftaran',
+                'diagnosa.ID as id',
+                'diagnosa.TANGGAL as tanggal',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                'diagnosa.STATUS as status',
+            ])
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('diagnosa.NOPEN', $id)
+            ->get();
+
+        // Get nomor pendaftaran
+        $nomorPendaftaran = $dataKunjungan->nomorPendaftaran;
+        $nomorKunjungan   = $dataKunjungan->nomorKunjungan;
+        $namaPasien       = $dataKunjungan->namaPasien;
+        $normPasien       = $dataKunjungan->norm;
+
+        // Check if the record exists
+        if (!$query) {
+            // Handle the case where the encounter was not found
+            return redirect()->route('kunjungan.detail', $nomorKunjungan)->with('error', 'Data not found.');
+        }
+
+        return inertia("Pendaftaran/Kunjungan/TableDiagnosa", [
+            'dataTable'         => $query,
+            'nomorKunjungan'    => $nomorKunjungan,
+            'nomorPendaftaran'  => $nomorPendaftaran,
+            'namaPasien'        => $namaPasien,
+            'normPasien'        => $normPasien,
+        ]);
+    }
+
+    public function detailDiagnosa($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'diagnosa.ID as ID',
+                'diagnosa.KODE as KODE',
+                'diagnosa.DIAGNOSA as DIAGNOSA',
+                'diagnosa.UTAMA as UTAMA',
+                'diagnosa.INACBG as INACBG',
+                'diagnosa.BARU as BARU',
+                'diagnosa.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'diagnosa.STATUS as STATUS',
+                'diagnosa.INA_GROUPER as INA_GROUPER',
+            ])
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'diagnosa.NOPEN')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('diagnosa.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'DIAGNOSA',
+        ]);
+    }
+
     protected function getJadwalKontrol($noKunjungan)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
@@ -863,70 +777,308 @@ class KunjunganController extends Controller
         ]);
     }
 
+    protected function getKeluhanUtama($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'keluhanUtama.ID as id',
+            ])
+            ->leftJoin('medicalrecord.keluhan_utama as keluhanUtama', 'keluhanUtama.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function keluhanUtama($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.keluhan_utama as keluhanUtama')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'keluhanUtama.ID as ID',
+                'keluhanUtama.DESKRIPSI as DESKRIPSI',
+                'keluhanUtama.SNOMED_CT_ID as SNOMED',
+                'keluhanUtama.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'keluhanUtama.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'keluhanUtama.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'keluhanUtama.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('keluhanUtama.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'KELUHAN UTAMA',
+        ]);
+    }
+
+    protected function getRiwayatAlergi($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'riwayatAlergi.ID as id',
+            ])
+            ->leftJoin('medicalrecord.riwayat_alergi as riwayatAlergi', 'riwayatAlergi.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatAlergi($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.riwayat_alergi as riwayatAlergi')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'riwayatAlergi.ID as ID',
+                'riwayatAlergi.JENIS as JENIS',
+                'riwayatAlergi.DESKRIPSI as DESKRIPSI',
+                'riwayatAlergi.KODE_REFERENSI as KODE_REFERENSI',
+                'riwayatAlergi.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'riwayatAlergi.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'riwayatAlergi.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatAlergi.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('riwayatAlergi.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'RIWAYAT ALERGI',
+        ]);
+    }
+
+    protected function getRiwayatLainnya($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'riwayatLainnya.ID as id',
+            ])
+            ->leftJoin('medicalrecord.riwayat_lainnya as riwayatLainnya', 'riwayatLainnya.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatLainnya($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.riwayat_lainnya as riwayatLainnya')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'riwayatLainnya.ID as ID',
+                'riwayatLainnya.MEROKOK as MEROKOK',
+                'riwayatLainnya.TERPAPAR_ASAP_ROKOK as TERPAPAR_ASAP_ROKOK',
+                'riwayatLainnya.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'riwayatLainnya.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'riwayatLainnya.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatLainnya.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('riwayatLainnya.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'RIWAYAT LAINNYA',
+        ]);
+    }
+
+    protected function getRiwayatPemberianObat($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'riwayatPemberianObat.ID as id',
+            ])
+            ->leftJoin('medicalrecord.riwayat_pemberian_obat as riwayatPemberianObat', 'riwayatPemberianObat.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatPemberianObat($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.riwayat_pemberian_obat as riwayatPemberianObat')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'riwayatPemberianObat.ID as ID',
+                'riwayatPemberianObat.OBAT as OBAT',
+                'riwayatPemberianObat.DOSIS as DOSIS',
+                'frekuensiAturanResep.FREKUENSI as FREKUENSI',
+                'frekuensiAturanResep.SIGNA1 as SIGNA1',
+                'frekuensiAturanResep.SIGNA2 as SIGNA2',
+                'frekuensiAturanResep.KETERANGAN as KETERANGAN',
+                'ruteObat.DESKRIPSI as RUTE',
+                'riwayatPemberianObat.LAMA_PENGGUNAAN as LAMA_PENGGUNAAN',
+                'riwayatPemberianObat.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'riwayatPemberianObat.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'riwayatPemberianObat.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatPemberianObat.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->leftJoin('master.frekuensi_aturan_resep as frekuensiAturanResep', 'frekuensiAturanResep.ID', '=', 'riwayatPemberianObat.FREKUENSI')
+            ->leftJoin('master.referensi as ruteObat', function ($join) {
+                $join->on('riwayatPemberianObat.RUTE', '=', 'ruteObat.ID')
+                    ->where('ruteObat.JENIS', '=', 217);
+            })
+            ->where('riwayatPemberianObat.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'RIWAYAT PEMBERIAN OBAT',
+        ]);
+    }
+
+    protected function getRiwayatPenyakit($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'anamnesis.ID as id',
+            ])
+            ->leftJoin('medicalrecord.anamnesis as anamnesis', 'anamnesis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatPenyakit($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.anamnesis as anamnesis')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'anamnesis.ID as ID',
+                'anamnesis.DESKRIPSI as DESKRIPSI',
+                'anamnesis.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'anamnesis.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'anamnesis.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('medicalrecord.rpp as rpp', 'rpp.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'anamnesis.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('anamnesis.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'RIWAYAT PENYAKIT SEKARANG',
+        ]);
+    }
+
+    protected function getRiwayatPerjalananPenyakit($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'rpp.ID as id',
+            ])
+            ->leftJoin('medicalrecord.rpp as rpp', 'rpp.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatPerjalananPenyakit($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.rpp as rpp')
+            ->select([
+                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
+                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
+                'pasien.NORM as NORM',
+                'pasien.NAMA as NAMA_PASIEN',
+                'rpp.ID as ID',
+                'rpp.SNOMED_CT_ID as SNOMED_CT_ID',
+                'rpp.DESKRIPSI as DESKRIPSI',
+                'rpp.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'rpp.STATUS as STATUS',
+            ])
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'rpp.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'rpp.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('rpp.ID', $id)
+            ->distinct()
+            ->first();
+
+        $kunjungan = $query->NOMOR_KUNJUNGAN;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'            => $query,
+            'nomorKunjungan'    => $kunjungan,
+            'judulRme'          => 'RIWAYAT PERJALANAN PENYAKIT',
+        ]);
+    }
+
     protected function getTandaVital($noKunjungan)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select([
                 'kunjungan.NOMOR as nomor',
-                'tandaVital.KUNJUNGAN as id',
+                'tandaVital.ID as id',
             ])
             ->leftJoin('medicalrecord.tanda_vital as tandaVital', 'tandaVital.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
+            ->where('tandaVital.KEADAAN_UMUM', '!=', '')
             ->first();
     }
 
     public function tandaVital($id)
-    {
-        $dataKunjungan = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'kunjungan.NOMOR as nomorKunjungan',
-                'kunjungan.NOPEN as nomorPendaftaran',
-                'pasien.NORM as norm',
-                'pasien.NAMA as namaPasien',
-            ])
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->where('kunjungan.NOMOR', $id)
-            ->distinct()
-            ->first();
-
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'tandaVital.KUNJUNGAN as kunjungan',
-                'tandaVital.ID as id',
-                'tandaVital.TANGGAL as tanggal',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
-                'tandaVital.STATUS as status',
-            ])
-            ->leftJoin('medicalrecord.tanda_vital as tandaVital', 'tandaVital.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'tandaVital.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('kunjungan.NOMOR', $id)
-            ->get();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('kunjungan.detail', $id)->with('error', 'Data not found.');
-        }
-
-        // Get nomor pendaftaran
-        $nomorPendaftaran = $dataKunjungan->nomorPendaftaran;
-        $nomorKunjungan   = $dataKunjungan->nomorKunjungan;
-        $namaPasien       = $dataKunjungan->namaPasien;
-        $normPasien       = $dataKunjungan->norm;
-
-        return inertia("Pendaftaran/Kunjungan/TableVital", [
-            'dataTable'         => $query,
-            'nomorKunjungan'    => $nomorKunjungan,
-            'nomorPendaftaran'  => $nomorPendaftaran,
-            'namaPasien'        => $namaPasien,
-            'normPasien'        => $normPasien,
-        ]);
-    }
-
-    public function detailTandaVital($id)
     {
         // Fetch the specific data
         $query = DB::connection('mysql5')->table('medicalrecord.tanda_vital as tandaVital')

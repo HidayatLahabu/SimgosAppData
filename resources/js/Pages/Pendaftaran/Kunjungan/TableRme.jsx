@@ -13,7 +13,6 @@ export default function TableRme({
     normPasien,
     ruanganTujuan,
     statusKunjungan,
-    tanggalMasuk,
     tanggalKeluar,
     dpjp,
     anamnesisDiperoleh,
@@ -22,6 +21,10 @@ export default function TableRme({
     diagnosa,
     jadwalKontrol,
     keluhanUtama,
+    riwayatAlergi,
+    riwayatLainnya,
+    riwayatPemberianObat,
+    riwayatPerjalananPenyakit,
     riwayatPenyakit,
     tandaVital,
 }) {
@@ -79,6 +82,10 @@ export default function TableRme({
                                     diagnosa={diagnosa}
                                     jadwalKontrol={jadwalKontrol}
                                     keluhanUtama={keluhanUtama}
+                                    riwayatAlergi={riwayatAlergi}
+                                    riwayatLainnya={riwayatLainnya}
+                                    riwayatPemberianObat={riwayatPemberianObat}
+                                    riwayatPerjalananPenyakit={riwayatPerjalananPenyakit}
                                     riwayatPenyakit={riwayatPenyakit}
                                     tandaVital={tandaVital}
                                 />
