@@ -35,10 +35,9 @@ Instruksi Deployment:
 Setup Database:
 
 Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur untuk database usersimgos. 
-Untuk menyiapkannya:
 
     6. Buat database usersimgos di server MySQL Anda.
-    Impor file usersimgos.sql menggunakan salah satu metode berikut:
+        Impor file usersimgos.sql menggunakan salah satu metode berikut:
         Terminal: Jalankan mysql -u [username] -p usersimgos < usersimgos.sql.
         Alat GUI: Gunakan DBeaver, HeidiSQL, atau aplikasi serupa.
 
