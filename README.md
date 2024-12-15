@@ -1,4 +1,6 @@
-SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini terintegrasi dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah usersimgos untuk informasi pengguna.
+SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini 
+terintegrasi dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah 
+usersimgos untuk informasi pengguna.
 
 Ikhtisar Deployment:
 
@@ -18,18 +20,22 @@ Instruksi Deployment:
         Sesuaikan file .env sesuai dengan petunjuk yang diberikan.
 
     3. Install Dependencies:
-        Jalankan composer install untuk menginstal dependensi PHP. Disarankan menggunakan PHP versi 8.2 ke atas
-        Jalankan npm install untuk menginstal dependensi Node.js. Disarankan menggunakan Node.js versi 18.20.4 dan NPM versi 10.7 ke atas
+        Jalankan composer install untuk menginstal dependensi PHP. Disarankan menggunakan 
+        PHP versi 8.2 ke atas
+        Jalankan npm install untuk menginstal dependensi Node.js. Disarankan menggunakan Node.js versi 18.20.4 
+        dan NPM versi 10.7 ke atas
 
     4. Generate Kunci Aplikasi:
         Jalankan php artisan key:generate.
 
     5. Bangun Aset Frontend:
-        Jalankan npm run build untuk mengompilasi aset untuk produksi. Langkah ini menghilangkan kebutuhan untuk menjalankan npm run dev di server.
+        Jalankan npm run build untuk mengompilasi aset untuk produksi. Langkah ini menghilangkan kebutuhan 
+        untuk menjalankan npm run dev di server.
 
 Setup Database:
 
-Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur untuk database usersimgos. Untuk menyiapkannya:
+Di folder database, Anda akan menemukan usersimgos.sql, yang berisi struktur untuk database usersimgos. 
+Untuk menyiapkannya:
 
     6. Buat database usersimgos di server MySQL Anda.
     Impor file usersimgos.sql menggunakan salah satu metode berikut:
@@ -56,6 +62,7 @@ Tip : Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara 
 Notes : Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
 
 Lisensi
-Aplikasi ini memungkinkan penggunaan bebas dengan harapan identitas pengembang (seperti footer) tetap dipertahankan. Detail lengkapnya dapat dilihat di LICENSE.
+Aplikasi ini memungkinkan penggunaan bebas dengan harapan identitas pengembang (seperti footer) 
+tetap dipertahankan. Detail lengkapnya dapat dilihat di LICENSE.
 
 
