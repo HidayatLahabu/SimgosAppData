@@ -1,14 +1,44 @@
 import React from 'react';
+import sanitizeHtml from 'sanitize-html';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
-export default function Detail({ auth, detail }) {
+export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
+
+    const headers = [
+        { name: "NO", className: "w-[5%]" },
+        { name: "COLUMN NAME", className: "w-[40%]" },
+        { name: "VALUE", className: "w-[auto]" },
+    ];
+
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
         uraian: key, // Keep the original column name as it is
         value: detail[key],
     }));
+
+    // Specify how many rows per table
+    const rowsPerTable = Math.ceil(detailData.length / 2);
+
+    // Split the data into groups
+    const tables = [];
+    for (let i = 0; i < detailData.length; i += rowsPerTable) {
+        tables.push(detailData.slice(i, i + rowsPerTable));
+    }
+
+    // Function to sanitize HTML and strip all tags
+    const sanitizeValue = (value) => {
+        return sanitizeHtml(value, {
+            allowedTags: [], // Remove all tags
+            allowedAttributes: {} // Remove all attributes
+        });
+    };
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -20,27 +50,53 @@ export default function Detail({ auth, detail }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("konsul.index")} />
+                                    <ButtonBack href={route("mutasi.index")} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL MUTASI</h1>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr>
-                                            <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">COLUMN</th>
-                                            <th className="px-3 py-2">VALUE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {detailData.map((detailItem, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <div className="flex flex-wrap gap-2">
+                                    {tables.map((tableData, tableIndex) => (
+                                        <div
+                                            key={tableIndex}
+                                            className="flex-1 shadow-md rounded-lg"
+                                        >
+                                            <Table>
+                                                <TableHeader>
+                                                    <tr>
+                                                        {headers.map((header, index) => (
+                                                            <TableHeaderCell
+                                                                key={index}
+                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                            >
+                                                                {header.name}
+                                                            </TableHeaderCell>
+                                                        ))}
+                                                    </tr>
+                                                </TableHeader>
+                                                <tbody>
+                                                    {tableData.map((detailItem, index) => (
+                                                        <TableRow key={index}>
+                                                            <TableCell>{index + 1 + tableIndex * rowsPerTable}</TableCell>
+                                                            <TableCell>{detailItem.uraian}</TableCell>
+                                                            <TableCell className="text-wrap">
+                                                                {detailItem.uraian === "STATUS_MUTASI" ? (
+                                                                    detailItem.value === 0 ? "Batal Mutasi" :
+                                                                        detailItem.value === 1 ? "Belum Diterima" :
+                                                                            detailItem.value === 2 ? "Sudah Diterima" :
+                                                                                detailItem.value
+                                                                ) : detailItem.uraian === "STATUS_RESERVASI" ? (
+                                                                    detailItem.value === 0 ? "Batal Reservasi" :
+                                                                        detailItem.value === 1 ? "Proses Reservasi" :
+                                                                            detailItem.value === 2 ? "Selesai Reservasi" :
+                                                                                detailItem.value
+                                                                ) : sanitizeValue(detailItem.value)}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </tbody>
+                                            </Table>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
