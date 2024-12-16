@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
-import { formatNumber } from '@/utils/formatNumber';
 
-export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien }) {
+export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan, jenisPenjamin }) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');
@@ -21,47 +20,59 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisPasien })
                                 <h1 className="text-center font-bold text-2xl">
                                     LAYANAN LABORATORIUM
                                 </h1>
+                                <h2 className="text-center font-bold text-2xl uppercase">
+                                    JENIS PENJAMIN : {jenisPenjamin}
+                                </h2>
+                                <h2 className="text-center font-bold text-2xl uppercase">
+                                    JENIS KUNJUNGAN : {jenisKunjungan}
+                                </h2>
                                 <p className="text-center font-bold text-2xl">
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
                                 </p>
 
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4">
+                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4">
                                     <thead className="text-sm font-bold text-gray-900 bg-white dark:text-gray-900 border-b-2 border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2 text-center">NO</th>
-                                            <th className="px-3 py-2 text-center">ORDER NOMOR</th>
-                                            <th className="px-3 py-2 text-center">TANGGAL</th>
+                                            <th className="px-3 py-2">NO</th>
+                                            <th className="px-3 py-2">ID HASIL</th>
+                                            <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 text-center">JENIS PASIEN</th>
+                                            {jenisPenjamin === 'BPJS KESEHATAN' && (
+                                                <th className="px-3 py-2">NOMOR SEP</th>
+                                            )}
                                             <th className="px-3 py-2">TINDAKAN</th>
-                                            <th className="px-3 py-2 text-right">TARIF</th>
-                                            <th className="px-3 py-2 text-right">STATUS HASIL</th>
+                                            <th className="px-3 py-2">HASIL</th>
+                                            <th className="px-3 py-2">PELAKSANA</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => (
                                             <tr key={item.id} className="border-b bg-white dark:border-gray-500">
-                                                <td className="px-2 py-2 text-center">{key + 1}</td>
-                                                <td className="px-3 py-2 text-center">
-                                                    {item.nomor}
+                                                <td className="px-3 py-2 text-nowrap">{key + 1}</td>
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.idHasil}
                                                 </td>
-                                                <td className="px-3 py-2 text-center">
-                                                    {formatDate(item.tanggal)}
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.tanggalHasil}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap">
                                                     {item.norm}
                                                 </td>
-                                                <td className="px-3 py-2">{item.nama}</td>
-                                                <td className="px-3 py-2 text-center">
-                                                    {jenisPasien}
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.namaPasien}
                                                 </td>
-                                                <td className="px-3 py-2">{item.tindakan}</td>
-                                                <td className="px-3 py-2 text-right">
-                                                    {formatNumber(item.tarif)}
+                                                {jenisPenjamin === 'BPJS KESEHATAN' && (
+                                                    <td className="px-3 py-2 text-nowrap">{item.nomorSEP}</td>
+                                                )}
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.namaTindakan}
                                                 </td>
-                                                <td className="px-3 py-2 text-right">
-                                                    {item.statusHasil}
+                                                <td className="px-3 py-2 text-wrap">
+                                                    {item.hasil} {item.satuan}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap">
+                                                    {item.pelaksana}
                                                 </td>
                                             </tr>
                                         ))}

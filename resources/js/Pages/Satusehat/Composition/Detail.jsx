@@ -2,13 +2,30 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
+import TableSatusehat from "@/Components/TableSatusehat";
 
 export default function Detail({ auth, detail }) {
+
+    const headers = [
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
+    ];
+
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
         uraian: key, // Keep the original column name as it is
         value: detail[key],
     }));
+
+    // Specify how many rows per table
+    const rowsPerTable = 10;
+
+    // Split the data into groups
+    const tables = [];
+    for (let i = 0; i < detailData.length; i += rowsPerTable) {
+        tables.push(detailData.slice(i, i + rowsPerTable));
+    }
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -23,24 +40,11 @@ export default function Detail({ auth, detail }) {
                                     <ButtonBack href={route("composition.index")} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL COMPOSITION</h1>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr>
-                                            <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">COLUMN</th>
-                                            <th className="px-3 py-2">VALUE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {detailData.map((detailItem, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <TableSatusehat
+                                    headers={headers}
+                                    tables={tables}
+                                    rowsPerTable={rowsPerTable}
+                                />
                             </div>
                         </div>
                     </div>

@@ -4,8 +4,21 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "SUBJECT" },
+        { name: "REF ID" },
+        { name: "NOPEN" },
+        { name: "SEND DATE" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (subject, value) => {
@@ -46,8 +59,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Condition Hasil PA</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
@@ -59,33 +72,26 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">SUBJECT</th>
-                                            <th className="px-3 py-2">REF ID</th>
-                                            <th className="px-3 py-2">NOPEN</th>
-                                            <th className="px-3 py-2">SEND DATE</th>
-                                            {/* <th className="px-3 py-2 text-center">MENU</th> */}
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.nopen}-${index}`}
-                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{data.id}</td>
-                                                    <td className="px-3 py-3">{data.subject}</td>
-                                                    <td className="px-3 py-3">{data.refId}</td>
-                                                    <td className="px-3 py-3">{data.nopen}</td>
-                                                    <td className="px-3 py-3">{data.sendDate}</td>
-                                                    {/* <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
-                                                        <ButtonDetail
-                                                            href={route("condition.detail", { id: data.nopen })}
-                                                        />
-                                                    </td> */}
-                                                </tr>
+                                                <TableRow key={data.nopen} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.subject}</TableCell>
+                                                    <TableCell>{data.refId}</TableCell>
+                                                    <TableCell>{data.nopen}</TableCell>
+                                                    <TableCell>{data.sendDate}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -93,7 +99,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

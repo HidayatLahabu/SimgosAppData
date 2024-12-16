@@ -3,8 +3,22 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "TANGGAL" },
+        { name: "PENGGUNA" },
+        { name: "AKSI" },
+        { name: "SEBELUM" },
+        { name: "SESUDAH" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (nama, value) => {
@@ -62,8 +76,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pengguna Akses Logs</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
@@ -75,28 +89,27 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">PENGGUNA</th>
-                                            <th className="px-3 py-2">AKSI</th>
-                                            <th className="px-3 py-2">SEBELUM</th>
-                                            <th className="px-3 py-2">SESUDAH</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.id}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.aksi}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sebelum)}</td>
-                                                    <td className="px-3 py-3 break-words max-w-xs">{truncateJson(dataTable.sesudah)}</td>
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.id} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell className='text-nowrap'>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.nama}</TableCell>
+                                                    <TableCell>{data.aksi}</TableCell>
+                                                    <TableCell>{data.sebelum}</TableCell>
+                                                    <TableCell className='break-words max-w-xs'>{data.sesudah}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -104,7 +117,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

@@ -17,13 +17,13 @@ class TindakanRuanganController extends Controller
         $query = DB::connection('mysql2')->table('master.tindakan_ruangan as tindakanRuangan')
             ->select(
                 'tindakanRuangan.ID as id',
+                'ruangan.DESKRIPSI as ruangan',
+                'referensi.DESKRIPSI as jenis',
                 'tindakan.NAMA as nama',
                 'tarif.TARIF as tarif',
-                'referensi.DESKRIPSI as jenis',
-                'ruangan.DESKRIPSI as ruangan',
-                'tindakanRuangan.RUANGAN as id_ruangan'
+                'tarif.TANGGAL_SK as tanggalSK',
+                'tarif.NOMOR_SK as nomorSK',
             )
-            ->distinct()
             ->leftJoin('master.tindakan as tindakan', 'tindakanRuangan.TINDAKAN', '=', 'tindakan.ID')
             ->leftJoin('master.ruangan as ruangan', 'tindakanRuangan.RUANGAN', '=', 'ruangan.ID')
             ->leftJoin('master.tarif_tindakan as tarif', 'tindakan.ID', '=', 'tarif.TINDAKAN')
@@ -32,7 +32,18 @@ class TindakanRuanganController extends Controller
             ->where('tindakan.STATUS', 1)
             ->where('tarif.STATUS', 1)
             ->where('referensi.JENIS', 74)
-            ->orderBy('tindakanRuangan.RUANGAN');
+            ->groupBy(
+                'tindakanRuangan.ID',
+                'ruangan.DESKRIPSI',
+                'referensi.DESKRIPSI',
+                'tindakan.NAMA',
+                'tarif.TARIF',
+                'tarif.TANGGAL_SK',
+                'tarif.NOMOR_SK'
+            )
+            ->orderBy('ruangan.DESKRIPSI')
+            ->orderBy('referensi.DESKRIPSI')
+            ->orderBy('tindakan.NAMA');
 
         // Add search filter if provided
         if ($searchSubject) {

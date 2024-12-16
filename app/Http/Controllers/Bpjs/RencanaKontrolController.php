@@ -11,7 +11,7 @@ class RencanaKontrolController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
@@ -20,16 +20,22 @@ class RencanaKontrolController extends Controller
                 'rekon.nomor as noSep',
                 'rekon.tglRencanaKontrol as tanggal',
                 'poli.nama as poliTujuan',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama'
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
-            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu');
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(rekon.noSurat) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(rekon.nomor) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhere('pasien.NORM', 'LIKE', '%' . $searchSubject . '%');
+            });
         }
 
         // Paginate the results
@@ -56,7 +62,7 @@ class RencanaKontrolController extends Controller
                 'rekon.noSurat',
                 'rekon.jnsKontrol',
                 'rekon.nomor',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama',
                 'rekon.tglRencanaKontrol',
                 'dpjp.nama as namaDokter',
@@ -68,6 +74,7 @@ class RencanaKontrolController extends Controller
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->where('rekon.noSurat', $id)
             ->distinct()
             ->first();

@@ -3,16 +3,31 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import { formatNumber } from "@/utils/formatNumber";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
+    const headers = [
+        { name: "ID" },
+        { name: "RUANGAN" },
+        { name: "NAMA BARANG" },
+        { name: "SATUAN" },
+        { name: "STOCK", className: "text-right" },
+        { name: "TANGGAL" },
+    ];
+
     // Function to handle search input changes
-    const searchFieldChanged = (field, value) => {
+    const searchFieldChanged = (nama, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[field] = value;
+            updatedParams[nama] = value;
         } else {
-            delete updatedParams[field];
+            delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('barangRuangan.index'), updatedParams, {
@@ -22,15 +37,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (field, e) => {
+    const onInputChange = (nama, e) => {
         const value = e.target.value;
-        searchFieldChanged(field, value);
+        searchFieldChanged(nama, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (field, e) => {
+    const onKeyPress = (nama, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(field, e.target.value);
+        searchFieldChanged(nama, e.target.value);
     };
 
     return (
@@ -45,44 +60,40 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Barang Ruangan</h1>
-                                <div className="mb-4">
-                                    <div className="flex space-x-4">
-                                        <TextInput
-                                            className="w-full"
-                                            defaultValue={queryParams.namaRuangan || ''}
-                                            placeholder="Cari ruangan"
-                                            onChange={e => onInputChange('namaRuangan', e)}
-                                            onKeyPress={e => onKeyPress('namaRuangan', e)}
-                                        />
-                                        <TextInput
-                                            className="w-full"
-                                            defaultValue={queryParams.namaBarang || ''}
-                                            placeholder="Cari barang"
-                                            onChange={e => onInputChange('namaBarang', e)}
-                                            onKeyPress={e => onKeyPress('namaBarang', e)}
-                                        />
-                                    </div>
-                                </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">RUANGAN</th>
-                                            <th className="px-3 py-2">NAMA BARANG</th>
-                                            <th className="px-3 py-2">SATUAN</th>
-                                            <th className="px-3 py-2 text-center">STOCK</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
+                                            <th colSpan={6} className="px-3 py-2">
+                                                <TextInput
+                                                    className="w-full"
+                                                    defaultValue={queryParams.nama || ''}
+                                                    placeholder="Cari nama barang"
+                                                    onChange={e => onInputChange('nama', e)}
+                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                />
+                                            </th>
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
+                                    <TableHeader>
+                                        <tr>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
+                                        </tr>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.namaRuangan}</td>
-                                                    <td className="px-3 py-3">{dataTable.namaBarang}</td>
-                                                    <td className="px-3 py-3">{dataTable.satuan}</td>
-                                                    <td className="px-3 py-3 text-center">{dataTable.stock}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.id} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell className='uppercase'>{data.namaRuangan}</TableCell>
+                                                    <TableCell className='uppercase'>{data.namaBarang}</TableCell>
+                                                    <TableCell>{data.satuan}</TableCell>
+                                                    <TableCell className='text-right'>{formatNumber(data.stock)}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -90,7 +101,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

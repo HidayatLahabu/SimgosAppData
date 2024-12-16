@@ -30,7 +30,13 @@ export default function DetailCatatan({ detailCatatan }) {
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
                                                 <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
+                                                <td className="px-3 py-3 break-words">
+                                                    {detailItem.uraian === "STATUS" ? (
+                                                        detailItem.value === 0 ? "Belum Final" :
+                                                            detailItem.value === 1 ? "Sudah Final" :
+                                                                detailItem.value
+                                                    ) : detailItem.value}
+                                                </td>
                                             </tr>
                                         ))
                                     ) : (

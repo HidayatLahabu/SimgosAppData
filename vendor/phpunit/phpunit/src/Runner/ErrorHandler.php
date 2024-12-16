@@ -32,6 +32,7 @@ use function defined;
 use function error_reporting;
 use function restore_error_handler;
 use function set_error_handler;
+use function sprintf;
 use PHPUnit\Event;
 use PHPUnit\Event\Code\IssueTrigger\IssueTrigger;
 use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
@@ -175,6 +176,7 @@ final class ErrorHandler
                     $ignoredByBaseline,
                     $ignoredByTest,
                     $this->trigger($test, true),
+                    $this->stackTrace(),
                 );
 
                 break;
@@ -269,10 +271,14 @@ final class ErrorHandler
         $triggeredInFirstPartyCode       = false;
         $triggerCalledFromFirstPartyCode = false;
 
-        if (isset($trace[0]['file']) &&
-            ($trace[0]['file'] === $test->file() ||
-            $this->sourceFilter->includes($this->source, $trace[0]['file']))) {
-            $triggeredInFirstPartyCode = true;
+        if (isset($trace[0]['file'])) {
+            if ($trace[0]['file'] === $test->file()) {
+                return IssueTrigger::test();
+            }
+
+            if ($this->sourceFilter->includes($this->source, $trace[0]['file'])) {
+                $triggeredInFirstPartyCode = true;
+            }
         }
 
         if (isset($trace[1]['file']) &&
@@ -353,7 +359,7 @@ final class ErrorHandler
     }
 
     /**
-     * @return list<array{file: string, line: int, class?: class-string, function?: string, type: string}>
+     * @return list<array{file: string, line: ?int, class?: class-string, function?: string, type: string}>
      */
     private function errorStackTrace(): array
     {
@@ -387,5 +393,35 @@ final class ErrorHandler
             $frame['class'] === $method['className'] &&
             isset($frame['function']) &&
             $frame['function'] === $method['methodName'];
+    }
+
+    /**
+     * @return non-empty-string
+     */
+    private function stackTrace(): string
+    {
+        $buffer      = '';
+        $excludeList = new ExcludeList(true);
+
+        foreach ($this->errorStackTrace() as $frame) {
+            /**
+             * @see https://github.com/sebastianbergmann/phpunit/issues/6043
+             */
+            if (!isset($frame['file'])) {
+                continue;
+            }
+
+            if ($excludeList->isExcluded($frame['file'])) {
+                continue;
+            }
+
+            $buffer .= sprintf(
+                "%s:%s\n",
+                $frame['file'],
+                $frame['line'] ?? '?',
+            );
+        }
+
+        return $buffer;
     }
 }

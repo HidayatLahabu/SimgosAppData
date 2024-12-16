@@ -21,6 +21,7 @@ class ReferensiController extends Controller
                 'referensi.TABEL_ID as tabel_id',
                 'referensi.ID as id',
                 'referensi.DESKRIPSI as deskripsi',
+                'referensi.JENIS as idJenis',
                 'jenis.DESKRIPSI as jenis'
             )
             ->leftJoin('master.jenis_referensi as jenis', 'referensi.JENIS', '=', 'jenis.ID')
@@ -28,7 +29,8 @@ class ReferensiController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->whereRaw('LOWER(jenis.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results

@@ -11,7 +11,7 @@ class PengajuanSepController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql6')->table('bpjs.pengajuan as pengajuan')
@@ -21,14 +21,19 @@ class PengajuanSepController extends Controller
                 'pengajuan.keterangan',
                 'pengajuan.tgl',
                 'pengajuan.tglAprove',
-                'peserta.norm',
+                'pasien.NORM as norm',
                 'peserta.nama'
             )
-            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu');
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pengajuan.noKartu) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhere('pasien.NORM', 'LIKE', '%' . $searchSubject . '%');
+            });
         }
 
         // Paginate the results
@@ -53,7 +58,7 @@ class PengajuanSepController extends Controller
         $query = DB::connection('mysql6')->table('bpjs.pengajuan as pengajuan')
             ->select(
                 'pengajuan.noKartu',
-                'peserta.norm as norm',
+                'pasien.NORM as norm',
                 'peserta.nama as nama',
                 'pengajuan.tglSep',
                 'pengajuan.jnsPelayanan',
@@ -66,6 +71,7 @@ class PengajuanSepController extends Controller
                 'pengajuan.status',
             )
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'pengajuan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->where('pengajuan.tgl', $id)
             ->distinct()
             ->first();

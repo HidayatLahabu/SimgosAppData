@@ -2,9 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Models\LayananResepModel;
+use App\Models\BpjsKunjunganModel;
+use Illuminate\Support\Facades\DB;
+use App\Models\BpjsRujukanMasukModel;
+use App\Models\LayananRadiologiModel;
+use App\Models\PendaftaranKonsulModel;
+use App\Models\PendaftaranMutasiModel;
+use App\Models\LayananLaboratoriumModel;
+use App\Models\LayananPulangModel;
+use App\Models\PendaftaranKunjunganModel;
+use App\Models\PendaftaranPendaftaranModel;
 
 class DashboardController extends Controller
 {
@@ -15,7 +26,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Define the SQL query as a plain string
+        //get data satusehat
         $query = "
             SELECT
                 'Organization' NAMA,
@@ -360,9 +371,315 @@ class DashboardController extends Controller
         // Execute the query using the mysql4 connection
         $data = DB::connection('mysql4')->select($query);
 
+        // Hitung pendaftaran hari ini
+        $pendaftaran = $this->getPendaftaran();
+
+        // Hitung kunjungan hari ini
+        $kunjungan = $this->getKunjungan();
+
+        // Hitung konsul hari ini
+        $konsul = $this->getKonsul();
+
+        // Hitung mutasi hari ini
+        $mutasi = $this->getMutasi();
+
+        // Hitung mutasi hari ini
+        $kunjunganBpjs = $this->getKunjunganBpjs();
+
+        // Hitung mutasi hari ini
+        $laboratorium = $this->getOrderLaboratorium();
+
+        // Hitung mutasi hari ini
+        $radiologi = $this->getOrderRadiologi();
+
+        // Hitung mutasi hari ini
+        $resep = $this->getOrderResep();
+
+        // Hitung mutasi hari ini
+        $pulang = $this->getPasienPulang();
+
+        //get data pendaftaran bulanan
+        $pendaftaranBulanan = $this->getMonthlyPendaftaran();
+
+        //get data kunjungan bulanan
+        $kunjunganBulanan = $this->getMonthlyKunjungan();
+
+        //get data konsul bulanan
+        $konsulBulanan = $this->getMonthlyKonsul();
+
+        //get data konsul bulanan
+        $mutasiBulanan = $this->getMonthlyMutasi();
+
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
-            'items' => $data
+            'items' => $data,
+            'pendaftaran' => $pendaftaran,
+            'kunjungan' => $kunjungan,
+            'konsul' => $konsul,
+            'mutasi' => $mutasi,
+            'kunjunganBpjs' => $kunjunganBpjs,
+            'laboratorium' => $laboratorium,
+            'radiologi' => $radiologi,
+            'resep' => $resep,
+            'pulang' => $pulang,
+            'pendaftaranBulanan' => $pendaftaranBulanan,
+            'kunjunganBulanan' => $kunjunganBulanan,
+            'konsulBulanan' => $konsulBulanan,
+            'mutasiBulanan' => $mutasiBulanan,
         ]);
+    }
+
+    protected function getPendaftaran()
+    {
+        return PendaftaranPendaftaranModel::where('STATUS', 1)
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
+            ->count();
+    }
+
+    protected function getKunjungan()
+    {
+        return PendaftaranKunjunganModel::whereIn('STATUS', [1, 2])
+            ->whereBetween('MASUK', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
+            ->count();
+    }
+
+    protected function getKonsul()
+    {
+        return PendaftaranKonsulModel::whereIn('STATUS', [1, 2])
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
+            ->count();
+    }
+
+    protected function getMutasi()
+    {
+        return PendaftaranMutasiModel::whereIn('STATUS', [1, 2])
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
+            ->count();
+    }
+
+    protected function getKunjunganBpjs()
+    {
+        return BpjsKunjunganModel::whereBetween('tglSEP', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
+            ->count();
+    }
+
+    protected function getOrderLaboratorium()
+    {
+        return LayananLaboratoriumModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
+            ->count();
+    }
+
+    protected function getOrderRadiologi()
+    {
+        return LayananRadiologiModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
+            ->count();
+    }
+
+    protected function getOrderResep()
+    {
+        return LayananResepModel::whereBetween('TANGGAL', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
+            ->count();
+    }
+
+    protected function getPasienPulang()
+    {
+        return LayananPulangModel::where('STATUS', 1)
+            ->whereBetween('TANGGAL', [
+                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+            ])
+            ->count();
+    }
+
+    protected function getMonthlyPendaftaran()
+    {
+        return PendaftaranPendaftaranModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            COUNT(*) AS JUMLAH
+        ")
+            ->where('STATUS', 1) // Hanya pendaftaran aktif
+            ->whereYear('TANGGAL', now()->year) // Filter untuk tahun berjalan
+            ->where('TANGGAL', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
+    }
+
+    protected function getMonthlyKunjungan()
+    {
+        return PendaftaranKunjunganModel::selectRaw("
+            CASE MONTH(MASUK)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            COUNT(*) AS JUMLAH
+        ")
+            ->whereIn('STATUS', [1, 2]) // Hanya pendaftaran aktif
+            ->whereYear('MASUK', now()->year) // Filter untuk tahun berjalan
+            ->where('MASUK', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->groupByRaw("
+            CASE MONTH(MASUK)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
+    }
+
+    protected function getMonthlyKonsul()
+    {
+        return PendaftaranKonsulModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            COUNT(*) AS JUMLAH
+        ")
+            ->whereIn('STATUS', [1, 2]) // Hanya pendaftaran aktif
+            ->whereYear('TANGGAL', now()->year) // Filter untuk tahun berjalan
+            ->where('TANGGAL', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
+    }
+
+    protected function getMonthlyMutasi()
+    {
+        return PendaftaranMutasiModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            COUNT(*) AS JUMLAH
+        ")
+            ->whereIn('STATUS', [1, 2]) // Hanya pendaftaran aktif
+            ->whereYear('TANGGAL', now()->year) // Filter untuk tahun berjalan
+            ->where('TANGGAL', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
     }
 }

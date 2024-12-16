@@ -28,11 +28,33 @@ export default function NavigationPendaftaran() {
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
         return route().current('pendaftaran.index') ||
+            route().current('pendaftaran.filterByTime', 'hariIni') ||
+            route().current('pendaftaran.filterByTime', 'mingguIni') ||
+            route().current('pendaftaran.filterByTime', 'bulanIni') ||
+            route().current('pendaftaran.filterByTime', 'tahunIni') ||
             route().current('kunjungan.index') ||
+            route().current('kunjungan.filterByTime', 'hariIni') ||
+            route().current('kunjungan.filterByTime', 'mingguIni') ||
+            route().current('kunjungan.filterByTime', 'bulanIni') ||
+            route().current('kunjungan.filterByTime', 'tahunIni') ||
             route().current('konsul.index') ||
+            route().current('konsul.filterByTime', 'hariIni') ||
+            route().current('konsul.filterByTime', 'mingguIni') ||
+            route().current('konsul.filterByTime', 'bulanIni') ||
+            route().current('konsul.filterByTime', 'tahunIni') ||
             route().current('mutasi.index') ||
+            route().current('mutasi.filterByTime', 'hariIni') ||
+            route().current('mutasi.filterByTime', 'mingguIni') ||
+            route().current('mutasi.filterByTime', 'bulanIni') ||
+            route().current('mutasi.filterByTime', 'tahunIni') ||
+            route().current('antrian.index') ||
+            route().current('antrian.filterByStatus', 'batal') ||
+            route().current('antrian.filterByStatus', 'belumDiterima') ||
+            route().current('antrian.filterByStatus', 'diterima') ||
             route().current('reservasi.index') ||
-            route().current('antrian.index');
+            route().current('reservasi.filterByStatus', 'batal') ||
+            route().current('reservasi.filterByStatus', 'reservasi') ||
+            route().current('reservasi.filterByStatus', 'selesai');
     };
 
     return (
@@ -80,6 +102,13 @@ export default function NavigationPendaftaran() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Antrian Ruangan
+                    </NavLink>
+                    <NavLink
+                        href={route('reservasi.index')}
+                        active={route().current('reservasi.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Reservasi
                     </NavLink>
                 </div>
             )}

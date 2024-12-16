@@ -3,8 +3,21 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
+
+    const headers = [
+        { name: "TABLE ID" },
+        { name: "JENIS ID" },
+        { name: "JENIS DESKRIPSI" },
+        { name: "REFERENSI ID" },
+        { name: "REFERENSI DESKRIPSI" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (deskripsi, value) => {
@@ -48,36 +61,38 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Referensi</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={5} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.deskripsi || ''}
-                                                    placeholder="Cari referensi"
+                                                    placeholder="Cari data berdasarkan jenis deskripsi atau referensi deskripsi"
                                                     onChange={e => onInputChange('deskripsi', e)}
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr className="text-nowrap">
-                                            <th className="px-3 py-2">TABLE ID</th>
-                                            <th className="px-3 py-2">JENIS</th>
-                                            <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">DESKRIPSI</th>
+                                    </TableHeader>
+                                    <TableHeader>
+                                        <tr>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.tabel_id}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.tabel_id}</td>
-                                                    <td className="px-3 py-3">{dataTable.jenis}</td>
-                                                    <td className="px-3 py-3">{dataTable.id}</td>
-                                                    <td className="px-3 py-3">{dataTable.deskripsi}</td>
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.tabel_id} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.tabel_id}</TableCell>
+                                                    <TableCell>{data.idJenis}</TableCell>
+                                                    <TableCell>{data.jenis}</TableCell>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.deskripsi}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -85,7 +100,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

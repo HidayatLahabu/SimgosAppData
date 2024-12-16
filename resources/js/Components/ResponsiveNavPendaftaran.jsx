@@ -34,6 +34,7 @@ export default function ResponsiveNavPendaftaran() {
                             <ResponsiveNavLink href={route('konsul.index')}>Konsul</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('mutasi.index')}>Mutasi</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('antrian.index')}>Antrian Ruangan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('reservasi.index')}>Reservasi</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

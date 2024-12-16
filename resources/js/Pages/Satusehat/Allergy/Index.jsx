@@ -3,17 +3,30 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/ButtonDetail";
+import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+
+    const headers = [
+        { name: "ID" },
+        { name: "PATIENT" },
+        { name: "CLINICAL STATUS" },
+        { name: "REF ID" },
+        { name: "SEND DATE" },
+    ];
 
     // Function to handle search input changes
-    const searchFieldChanged = (patient, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[patient] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[patient];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('allergy.index'), updatedParams, {
@@ -23,15 +36,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (patient, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(patient, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (patient, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(patient, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -43,47 +56,46 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Allergy Intolerance</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Allergy Intolerance {header} {totalCount} {text}</h1>
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.patient || ''}
-                                                    placeholder="Cari berdasarkan patient"
-                                                    onChange={e => onInputChange('patient', e)}
-                                                    onKeyPress={e => onKeyPress('patient', e)}
-                                                />
+                                            <th colSpan={8} className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan patient atau ref id"
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("allergy.filterByTime", "hariIni")} text="Hari Ini" />
+                                                    <ButtonTime href={route("allergy.filterByTime", "mingguIni")} text="Minggu Ini" />
+                                                    <ButtonTime href={route("allergy.filterByTime", "bulanIni")} text="Bulan Ini" />
+                                                    <ButtonTime href={route("allergy.filterByTime", "tahunIni")} text="Tahun Ini" />
+                                                </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">ID</th>
-                                            <th className="px-3 py-2">PATIENT</th>
-                                            <th className="px-3 py-2">CLINICAL STATUS</th>
-                                            <th className="px-3 py-2">REF ID</th>
-                                            <th className="px-3 py-2">SEND DATE</th>
-                                            {/* <th className="px-3 py-2 text-center">MENU</th> */}
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.refId}-${index}`}
-                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{data.id}</td>
-                                                    <td className="px-3 py-3">{data.patient}</td>
-                                                    <td className="px-3 py-3">{data.clinicalStatus}</td>
-                                                    <td className="px-3 py-3">{data.refId}</td>
-                                                    <td className="px-3 py-3">{data.sendDate}</td>
-                                                    {/* <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
-                                                        <ButtonDetail
-                                                            href={route("allergy.detail", { id: data.refId })}
-                                                        />
-                                                    </td> */}
-                                                </tr>
+                                                <TableRow key={data.refId} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.patient}</TableCell>
+                                                    <TableCell>{data.clinicalStatus}</TableCell>
+                                                    <TableCell>{data.refId}</TableCell>
+                                                    <TableCell>{data.sendDate}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -91,7 +103,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

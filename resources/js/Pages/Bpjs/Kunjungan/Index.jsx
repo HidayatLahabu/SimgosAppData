@@ -3,10 +3,26 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 import ButtonDetail from "@/Components/ButtonDetail";
+import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, queryParams = {} }) {
+
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "SEP" },
+        { name: "TANGGAL SEP" },
+        { name: "RUJUKAN" },
+        { name: "TANGGAL RUJUKAN" },
+        { name: "MENU", className: "text-center" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -46,49 +62,52 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Kunjungan BPJS</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Kunjungan BPJS {header} {totalCount} Pasien</h1>
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan SEP, rujukan, atau nama pasien"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien, SEP atau rujukan, "
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("kunjunganBpjs.filterByTime", "hariIni")} text="Hari Ini" />
+                                                    <ButtonTime href={route("kunjunganBpjs.filterByTime", "mingguIni")} text="Minggu Ini" />
+                                                    <ButtonTime href={route("kunjunganBpjs.filterByTime", "bulanIni")} text="Bulan Ini" />
+                                                    <ButtonTime href={route("kunjunganBpjs.filterByTime", "tahunIni")} text="Tahun Ini" />
+                                                </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">SEP</th>
-                                            <th className="px-3 py-2">TANGGAL SEP</th>
-                                            <th className="px-3 py-2">RUJUKAN</th>
-                                            <th className="px-3 py-2">TANGGAL RUJUKAN</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 text-center">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.noSEP}-${index}`}
-                                                    className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{data.noSEP}</td>
-                                                    <td className="px-3 py-3">{data.tglSEP}</td>
-                                                    <td className="px-3 py-3">{data.noRujukan}</td>
-                                                    <td className="px-3 py-3">{formatDate(data.tglRujukan)}</td>
-                                                    <td className="px-3 py-3">{data.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                <TableRow key={data.noSEP} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.noSEP}</TableCell>
+                                                    <TableCell>{data.tglSEP}</TableCell>
+                                                    <TableCell>{data.noRujukan}</TableCell>
+                                                    <TableCell>{data.tglRujukan}</TableCell>
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("kunjunganBpjs.detail", { id: data.noSEP })}
                                                         />
-                                                    </td>
-                                                </tr>
+                                                    </TableCellMenu>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -96,7 +115,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

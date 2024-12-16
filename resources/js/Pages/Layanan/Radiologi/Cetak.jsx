@@ -66,8 +66,8 @@ export default function Cetak() {
                                     placeholder="Pilih Jenis Penjamin"
                                     onChange={onJenisPenjaminChange}
                                     options={[
-                                        { value: 1, label: 'Penjamin Non BPJS' },
-                                        { value: 2, label: 'Penjamin BPJS' },
+                                        { value: 1, label: 'Penjamin Non BPJS Kesehatan' },
+                                        { value: 2, label: 'Penjamin BPJS Kesehatan' },
                                     ]}
                                 />
                             </div>

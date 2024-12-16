@@ -32,7 +32,6 @@ export default function ResponsiveNavLayanan() {
                             <ResponsiveNavLink href={route('layananLab.index')}>Laboratorium</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananRad.index')}>Radiologi</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananResep.index')}>Resep</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('layananTindakan.index')}>Tindakan Medis</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananPulang.index')}>Pasien Pulang</ResponsiveNavLink>
                         </div>
                     </div>

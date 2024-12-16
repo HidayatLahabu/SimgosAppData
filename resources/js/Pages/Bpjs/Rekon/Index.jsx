@@ -3,18 +3,33 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import { formatDate } from '@/utils/formatDate';
 import ButtonDetail from "@/Components/ButtonDetail";
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
+import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "NOMOR KONTROL" },
+        { name: "TANGGAL KONTROL" },
+        { name: "NOMOR SEP" },
+        { name: "TUJUAN" },
+        { name: "MENU", className: "text-center" },
+    ];
+
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('rekonBpjs.index'), updatedParams, {
@@ -24,15 +39,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -47,47 +62,45 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Rencana Kontrol</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <Table>
+                                    <TableHeader>
                                         <tr>
                                             <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari pasien"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari data berdasarkan nomor kontrol, nomor SEP, NORM atau nama pasien"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">TANGGAL KONTROL</th>
-                                            <th className="px-3 py-2">NO SEP</th>
-                                            <th className="px-3 py-2">TUJUAN</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 text-center">MENU</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <tr key={`${data.noSurat}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{data.noSurat}</td>
-                                                    <td className="px-3 py-3">{formatDate(data.tanggal)}</td>
-                                                    <td className="px-3 py-3">{data.noSep}</td>
-                                                    <td className="px-3 py-3">POLI {data.poliTujuan}</td>
-                                                    <td className="px-3 py-3">{data.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{data.nama}</td>
-                                                    <td className="px-1 py-1 text-center flex items-center justify-center space-x-1">
+                                                <TableRow key={data.noSurat} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.noSurat}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.noSep}</TableCell>
+                                                    <TableCell>{data.poliTujuan}</TableCell>
+                                                    <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("rekonBpjs.detail", { id: data.noSurat })}
                                                         />
-                                                    </td>
-                                                </tr>
+                                                    </TableCellMenu>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
@@ -95,7 +108,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

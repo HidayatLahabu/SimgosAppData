@@ -1,12 +1,15 @@
-import { useState } from 'react';
 import { Link, Head } from '@inertiajs/react';
 
 export default function Welcome({ auth, hospitalName }) {
 
+    const gradientBackground = {
+        backgroundImage: 'linear-gradient(to left top, #096b22, #005b3e, #00484a, #003545, #002232, #00202e, #001e2b, #001c27, #002930, #00362d, #04421e, #354a06)',
+    };
+
     return (
         <>
             <Head title="Dunda" />
-            <div className="bg-gray-50 text-black/50 dark:bg-indigo-950 dark:text-gray-200 min-h-screen flex flex-col justify-between relative">
+            <div className="bg-gray-50 text-black/50 dark:text-gray-200 min-h-screen flex flex-col justify-between relative" style={gradientBackground}>
                 <div className="absolute top-4 right-4 flex gap-4 z-10">
                     {auth.user ? (
                         <Link
@@ -49,7 +52,7 @@ export default function Welcome({ auth, hospitalName }) {
                         </div>
                     </div>
                 </div>
-                <footer className="bg-gray-50 text-black/50 dark:bg-indigo-950 dark:text-gray-200 py-2">
+                <footer className="text-black/50  dark:text-gray-200 py-2">
                     <div className="text-center">
                         <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
                     </div>

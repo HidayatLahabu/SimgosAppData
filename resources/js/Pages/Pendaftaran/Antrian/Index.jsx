@@ -3,8 +3,26 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
+import ButtonTime from '@/Components/ButtonTime';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
+import CardLink from "@/Components/CardLink";
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, antrianData, filterKunjungan, header, headerKunjungan, queryParams = {} }) {
+
+    const headers = [
+        { name: "NORM" },
+        { name: "NAMA PASIEN" },
+        { name: "NOMOR ANTRIAN" },
+        { name: "TANGGAL" },
+        { name: "RUANGAN TUJUAN" },
+        { name: "NOMOR URUT" },
+        { name: "PENDAFTARAN" },
+        { name: "STATUS" },
+    ];
 
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
@@ -44,52 +62,78 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Antrian Ruangan</h1>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Antrian Ruangan {header} {filterKunjungan && headerKunjungan}</h1>
+                                <div className="flex flex-wrap gap-4 justify-between mb-4">
+                                    <CardLink
+                                        href={route("antrian.index")}
+                                        title="JUMLAH DATA ANTRIAN"
+                                        value={antrianData.total_antrian}
+                                    />
+                                    <CardLink
+                                        href={route("antrian.filterByStatus", "batal")}
+                                        title="ANTRIAN BATAL"
+                                        value={antrianData.total_batal}
+                                    />
+                                    <CardLink
+                                        href={route("antrian.filterByStatus", "belumDiterima")}
+                                        title="ANTRIAN BELUM DITERIMA"
+                                        value={antrianData.total_belum_diterima}
+                                    />
+                                    <CardLink
+                                        href={route("antrian.filterByStatus", "diterima")}
+                                        title="ANTRIAN SUDAH DITERIMA"
+                                        value={antrianData.total_diterima}
+                                    />
+                                </div>
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor antrian, NORM, atau nama pasien"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
+                                            <th colSpan={8} className="px-3 py-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <TextInput
+                                                        className="w-full"
+                                                        defaultValue={queryParams.search || ''}
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor antrian"
+                                                        onChange={e => onInputChange('search', e)}
+                                                        onKeyPress={e => onKeyPress('search', e)}
+                                                    />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "rajal")} text="Rawat Jalan" />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "ranap")} text="Rawat Inap" />
+                                                    <ButtonTime href={route("antrian.filterByKunjungan", "darurat")} text="Rawat Darurat" />
+                                                </div>
                                             </th>
                                         </tr>
-                                    </thead>
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+                                    </TableHeader>
+                                    <TableHeader>
                                         <tr>
-                                            <th className="px-3 py-2">NOMOR</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">TANGGAL</th>
-                                            <th className="px-3 py-2">RUANGAN</th>
-                                            <th className="px-3 py-2">NO URUT</th>
-                                            <th className="px-3 py-2">STATUS</th>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={header.className || ""}>
+                                                    {header.name}
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    </thead>
+                                    </TableHeader>
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((dataTable, index) => (
-                                                <tr key={`${dataTable.nomor}-${index}`} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                    <td className="px-3 py-3">{dataTable.nomor}</td>
-                                                    <td className="px-3 py-3">{dataTable.norm}</td>
-                                                    <td className="px-3 py-3 uppercase">{dataTable.nama}</td>
-                                                    <td className="px-3 py-3">{dataTable.tanggal}</td>
-                                                    <td className="px-3 py-3">{dataTable.ruangan}</td>
-                                                    <td className="px-3 py-3">{dataTable.urut}</td>
-                                                    <td className="px-3 py-3">{dataTable.status === 0 ? 'Batal' : dataTable.status === 1 ? 'Belum Diterima' : 'Diterima'}</td>
-                                                </tr>
+                                            dataTable.data.map((data, index) => (
+                                                <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.nomor}</TableCell>
+                                                    <TableCell>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.ruangan}</TableCell>
+                                                    <TableCell>{data.urut}</TableCell>
+                                                    <TableCell>{data.pendaftaran}</TableCell>
+                                                    <TableCell>{data.status === 0 ? 'Batal' : data.status === 1 ? 'Belum Diterima' : 'Sudah Diterima'}</TableCell>
+                                                </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 <Pagination links={dataTable.links} />
                             </div>
                         </div>

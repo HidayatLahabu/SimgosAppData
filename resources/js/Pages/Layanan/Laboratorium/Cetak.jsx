@@ -25,12 +25,12 @@ export default function Cetak() {
         }));
     }, []);
 
-    const onJenisPasienChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisPasien: selectedOption.value }));
+    const onJenisPenjaminChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
     };
 
-    const onOrderByChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, orderBy: selectedOption.value }));
+    const onJenisKunjunganChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
     };
 
     const onSubmit = (e) => {
@@ -57,34 +57,34 @@ export default function Cetak() {
                             <div className="flex-1">
                                 <InputLabel
                                     htmlFor="jenisPasien"
-                                    value="Jenis Pasien"
+                                    value="Jenis Penjamin"
                                 />
                                 <SelectTwoInput
                                     id="jenisPasien"
                                     name="jenisPasien"
                                     className="mt-1 block w-full"
-                                    placeholder="Pilih Jenis Pasien"
-                                    onChange={onJenisPasienChange}
+                                    placeholder="Pilih Jenis Penjamin"
+                                    onChange={onJenisPenjaminChange}
                                     options={[
-                                        { value: 1, label: 'BPJS Kesehatan' },
-                                        { value: 2, label: 'Pasien Umum' },
+                                        { value: 1, label: 'Penjamin Non BPJS Kesehatan' },
+                                        { value: 2, label: 'Penjamin BPJS Kesehatan' },
                                     ]}
                                 />
                             </div>
                             <div className="flex-1">
                                 <InputLabel
-                                    htmlFor="orderBy"
-                                    value="Urutan berdasarkan"
+                                    htmlFor="jenisKunjungan"
+                                    value="Jenis Kunjungan"
                                 />
                                 <SelectTwoInput
-                                    id="orderBy"
-                                    name="orderBy"
+                                    id="jenisKunjungan"
+                                    name="jenisKunjungan"
                                     className="mt-1 block w-full"
-                                    placeholder="Pilih Urutan berdasarkan"
-                                    onChange={onOrderByChange}
+                                    placeholder="Pilih Jenis Kunjungan"
+                                    onChange={onJenisKunjunganChange}
                                     options={[
-                                        { value: 1, label: 'Nama Pasien' },
-                                        { value: 2, label: 'Tanggal' },
+                                        { value: 1, label: 'Rawat Inap' },
+                                        { value: 2, label: 'Rawat Jalan' },
                                     ]}
                                 />
                             </div>

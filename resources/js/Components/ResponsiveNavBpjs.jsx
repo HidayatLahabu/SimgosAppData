@@ -34,7 +34,6 @@ export default function ResponsiveNavBpjs() {
                             <ResponsiveNavLink href={route('pengajuanSep.index')}>Pengajuan SEP</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('rekonBpjs.index')}>Rencana Kontrol</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('monitoringRekon.index')}>Monitoring Rekon</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('rujukanBpjs.index')}>Rujukan Masuk</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

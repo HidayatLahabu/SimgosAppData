@@ -23,6 +23,9 @@ class Backtrace
     /** @var bool */
     protected $withObject = false;
 
+    /** @var bool */
+    protected $trimFilePaths = false;
+
     /** @var string|null */
     protected $applicationPath;
 
@@ -91,6 +94,13 @@ class Backtrace
         return $this;
     }
 
+    public function trimFilePaths(): self
+    {
+        $this->trimFilePaths = true;
+
+        return $this;
+    }
+
     public function offset(int $offset): self
     {
         $this->offset = $offset;
@@ -139,7 +149,7 @@ class Backtrace
             return $this->throwable->getTrace();
         }
 
-        $options = null;
+        $options = DEBUG_BACKTRACE_PROVIDE_OBJECT;
 
         if (! $this->withArguments) {
             $options = $options | DEBUG_BACKTRACE_IGNORE_ARGS;
@@ -183,6 +193,9 @@ class Backtrace
                 $currentLine -= 1;
             }
 
+            if ($this->trimFilePaths && $this->applicationPath) {
+                $trimmedFilePath = str_replace($this->applicationPath, '', $currentFile);
+            }
             $frame = new Frame(
                 $currentFile,
                 $currentLine,
@@ -190,7 +203,8 @@ class Backtrace
                 $rawFrame['function'] ?? null,
                 $rawFrame['class'] ?? null,
                 $this->isApplicationFrame($currentFile),
-                $textSnippet
+                $textSnippet,
+                $trimmedFilePath ?? null,
             );
 
             $frames[] = $frame;

@@ -21,10 +21,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     LAYANAN RADIOLOGI
                                 </h1>
                                 <h2 className="text-center font-bold text-2xl uppercase">
-                                    JENIS PENJAMIN {jenisPenjamin}
+                                    JENIS PENJAMIN : {jenisPenjamin}
                                 </h2>
                                 <h2 className="text-center font-bold text-2xl uppercase">
-                                    JENIS KUNJUNGAN {jenisKunjungan}
+                                    JENIS KUNJUNGAN : {jenisKunjungan}
                                 </h2>
                                 <p className="text-center font-bold text-2xl">
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
@@ -38,8 +38,8 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                             <th className="px-3 py-2">TANGGAL</th>
                                             <th className="px-3 py-2">NORM</th>
                                             <th className="px-3 py-2">NAMA PASIEN</th>
-                                            {jenisPenjamin === 'BPJS' && (
-                                                <th className="px-3 py-2">NOMOR SEP</th>
+                                            {jenisPenjamin === "BPJS KESEHATAN" && (
+                                                <th>NOMOR SEP</th>
                                             )}
                                             <th className="px-3 py-2">TINDAKAN</th>
                                             <th className="px-3 py-2">PELAKSANA</th>
@@ -61,14 +61,14 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                 <td className="px-3 py-2">
                                                     {item.namaPasien}
                                                 </td>
-                                                {jenisPenjamin === 'BPJS' && (
-                                                    <td className="px-3 py-2 text-nowrap">{item.nomorSEP}</td>
+                                                {jenisPenjamin === "BPJS KESEHATAN" && (
+                                                    <td>{item.nomorSEP}</td>
                                                 )}
                                                 <td className="px-3 py-2">
                                                     {item.namaTindakan}
                                                 </td>
                                                 <td className="px-3 py-2">
-                                                    {item.dokterRadiologi}
+                                                    {item.pelaksana}
                                                 </td>
                                             </tr>
                                         ))}

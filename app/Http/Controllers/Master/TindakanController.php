@@ -17,9 +17,11 @@ class TindakanController extends Controller
         $query = DB::connection('mysql2')->table('master.tindakan as tindakan')
             ->select(
                 'tindakan.ID as id',
+                'referensi.DESKRIPSI as jenis',
                 'tindakan.NAMA as nama',
                 'tarif.TARIF as tarif',
-                'referensi.DESKRIPSI as jenis'
+                'tarif.TANGGAL_SK as tanggalSK',
+                'tarif.NOMOR_SK as nomorSK',
             )
             ->distinct()
             ->leftJoin('master.tarif_tindakan as tarif', 'tindakan.ID', '=', 'tarif.TINDAKAN')
@@ -27,7 +29,8 @@ class TindakanController extends Controller
             ->where('tindakan.STATUS', 1)
             ->where('tarif.STATUS', 1)
             ->where('referensi.JENIS', 74)
-            ->orderBy('tindakan.ID');
+            ->orderBy('referensi.DESKRIPSI')
+            ->orderBy('tindakan.NAMA');
 
         // Add search filter if provided
         if ($searchSubject) {

@@ -2,52 +2,55 @@
 
 namespace App\Http\Controllers\Layanan;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class RadiologiController extends Controller
 {
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
-            ->selectRaw('
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderRad.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.ORDER_ID', '=', 'orderRad.NOMOR')
+            ->leftJoin('layanan.hasil_rad as hasilRad', 'hasilRad.TINDAKAN_MEDIS', '=', 'orderRadDetail.REF');
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(orderRad.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Group by 'nomor' and select the first occurrence for other fields
+        $query->selectRaw('
             orderRad.NOMOR as nomor,
             MIN(orderRad.TANGGAL) as tanggal,
             MIN(orderRad.KUNJUNGAN) as kunjungan,
-            orderRad.STATUS as statusKunjungan,
             MIN(pegawai.NAMA) as dokter,
             MIN(pegawai.GELAR_DEPAN) as gelarDepan,
             MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
             MIN(pasien.NORM) as norm,
             MIN(pasien.NAMA) as nama,
-            MIN(peserta.noKartu) as noKartu,
-            MIN(hasil.STATUS) as statusHasil
+            MIN(kunjungan.STATUS) as statusKunjungan,
+            MIN(orderRad.STATUS) as statusOrder,
+            MIN(hasilRad.STATUS) as statusHasil
         ')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.REF', '=', 'orderRad.NOMOR')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik');
-
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->whereRaw('LOWER(pasien.nama) LIKE ?', ['%' . $searchSubject . '%']);
-        }
-
-        // Group by 'nomor'
-        $query->groupBy('orderRad.NOMOR');
+            ->groupBy('orderRad.NOMOR');
 
         // Paginate the results
-        $data = $query->orderByDesc('tanggal')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('orderRad.TANGGAL')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -59,6 +62,106 @@ class RadiologiController extends Controller
                 'links' => $dataArray['links'], // Pagination links
             ],
             'queryParams' => request()->all()
+        ]);
+    }
+
+    public function filterByTime($filter)
+    {
+        // Mendapatkan istilah pencarian dari request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Membangun query dasar
+        $baseQuery = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderRad.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('layanan.order_detil_rad as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderRad.NOMOR')
+            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+
+        // Menerapkan filter waktu
+        switch ($filter) {
+            case 'hariIni':
+                $baseQuery->whereDate('orderRad.TANGGAL', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'mingguIni':
+                $baseQuery->whereBetween('orderRad.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                $header = 'MINGGU INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'bulanIni':
+                $baseQuery->whereMonth('orderRad.TANGGAL', now()->month)
+                    ->whereYear('orderRad.TANGGAL', now()->year);
+                $header = 'BULAN INI';
+                $text = 'PASIEN';
+                break;
+
+            case 'tahunIni':
+                $baseQuery->whereYear('orderRad.TANGGAL', now()->year);
+                $header = 'TAHUN INI';
+                $text = 'PASIEN';
+                break;
+
+            default:
+                abort(404, 'Filter tidak ditemukan');
+        }
+
+        // Membangun query data dengan grouping dan seleksi
+        $dataQuery = clone $baseQuery;
+        $dataQuery->selectRaw('
+            orderRad.NOMOR as nomor,
+            MIN(orderRad.TANGGAL) as tanggal,
+            MIN(orderRad.KUNJUNGAN) as kunjungan,
+            MIN(pegawai.NAMA) as dokter,
+            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
+            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
+            MIN(pasien.NORM) as norm,
+            MIN(pasien.NAMA) as nama,
+            MIN(kunjungan.STATUS) as statusKunjungan,
+            MIN(orderRad.STATUS) as statusOrder,
+            MIN(hasil.STATUS) as statusHasil
+        ')
+            ->groupBy('orderRad.NOMOR');
+
+        // Membangun query count
+        $count = $baseQuery->distinct('orderRad.NOMOR')->count('orderRad.NOMOR');
+
+        // Menambahkan filter pencarian jika ada
+        if ($searchSubject) {
+            $dataQuery->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(orderRad.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+
+            // Perbarui count untuk pencarian
+            $count = $baseQuery->distinct('orderRad.NOMOR')->count('orderRad.NOMOR');
+        }
+
+        // Mengambil data dengan paginasi
+        $data = $dataQuery->orderByDesc('orderRad.TANGGAL')->paginate(5)->appends(request()->query());
+
+        // Mengonversi data ke array
+        $dataArray = $data->toArray();
+
+        // Mengembalikan view Inertia dengan data yang dipaginate
+        return inertia("Layanan/Radiologi/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Hanya data yang dipaginate
+                'links' => $dataArray['links'], // Tautan paginasi
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+            'text' => $text,
         ]);
     }
 
@@ -146,8 +249,10 @@ class RadiologiController extends Controller
         $jenisKunjungan = $request->input('jenisKunjungan');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
 
-        // Variable default untuk label
+        // Variable default
         $penjamin = 'Semua Penjamin';
         $kunjungan = 'Semua Kunjungan';
 
@@ -157,12 +262,9 @@ class RadiologiController extends Controller
                 'hasilRad.ID as idHasil',
                 'hasilRad.TANGGAL as tanggalHasil',
                 'tindakan.NAMA as namaTindakan',
-                'tindakanMedis.KUNJUNGAN',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
-                'jenisPenjamin.NOMOR as nomorSEP',
-                'pegawai.NAMA as dokterRadiologi',
-                'ruangan.DESKRIPSI as ruangan',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilRad.TINDAKAN_MEDIS')
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
@@ -179,9 +281,8 @@ class RadiologiController extends Controller
             $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
                 ->where('jenisPenjamin.JENIS', 1)
                 ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
-            $penjamin = 'Non BPJS';
+            $penjamin = 'Non BPJS KESEHATAN';
 
-            // Filter berdasarkan jenis kunjungan
             if ($jenisKunjungan == 1) {
                 $query->whereNotIn('ruangan.JENIS_KUNJUNGAN', [1, 5]); // Exclude Rawat Jalan
                 $kunjungan = 'Rawat Inap';
@@ -197,9 +298,10 @@ class RadiologiController extends Controller
                         ->whereNotNull('jenisPenjamin.NOMOR')
                         ->where('jenisPenjamin.NOMOR', '!=', '');
                 }); // Pasien BPJS
-            $penjamin = 'BPJS';
+            $penjamin = 'BPJS KESEHATAN';
 
-            // Filter berdasarkan jenis kunjungan
+            $query->addSelect(DB::raw('IFNULL(jenisPenjamin.NOMOR, "") as nomorSEP'));
+
             if ($jenisKunjungan == 1) {
                 $query->where('kunjunganBpjs.jenisPelayanan', 1); // Pasien Rawat Inap
                 $kunjungan = 'Rawat Inap';
@@ -214,7 +316,7 @@ class RadiologiController extends Controller
             ->orderBy('hasilRad.TANGGAL')
             ->get();
 
-        // Kirim data ke frontend menggunakan Inertia
+        // Kirim data ke frontend
         return inertia("Layanan/Radiologi/Print", [
             'data'              => $data,
             'dariTanggal'       => $dariTanggal,
