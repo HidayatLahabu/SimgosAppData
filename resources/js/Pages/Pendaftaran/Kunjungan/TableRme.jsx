@@ -25,6 +25,7 @@ export default function TableRme({
     riwayatLainnya,
     faktorRisiko,
     riwayatPenyakitKeluarga,
+    riwayatTuberkulosis,
     statusFungsional,
     cppt,
     tandaVital,
@@ -89,6 +90,7 @@ export default function TableRme({
                                     riwayatLainnya={riwayatLainnya}
                                     faktorRisiko={faktorRisiko}
                                     riwayatPenyakitKeluarga={riwayatPenyakitKeluarga}
+                                    riwayatTuberkulosis={riwayatTuberkulosis}
                                     statusFungsional={statusFungsional}
                                     cppt={cppt}
                                     tandaVital={tandaVital}

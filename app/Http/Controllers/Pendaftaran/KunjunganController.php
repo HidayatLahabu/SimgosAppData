@@ -1022,7 +1022,7 @@ class KunjunganController extends Controller
                 'kunjungan.NOMOR as nomor',
                 'rpk.ID as id',
             ])
-            ->leftJoin('medicalrecord.rpk as rpk', 'rpk.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('medicalrecord.riwayat_penyakit_keluarga as rpk', 'rpk.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }
@@ -1030,11 +1030,14 @@ class KunjunganController extends Controller
     public function riwayatPenyakitKeluarga($id)
     {
         // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.rpk as rpk')
+        $query = DB::connection('mysql5')->table('medicalrecord.riwayat_penyakit_keluarga as rpk')
             ->select([
                 'rpk.ID as ID',
                 'rpk.KUNJUNGAN as KUNJUNGAN',
-                'rpk.DESKRIPSI as DESKRIPSI',
+                'rpk.HIPERTENSI as HIPERTENSI',
+                'rpk.DIABETES_MELITUS as DIABETES_MELITUS',
+                'rpk.PENYAKIT_JANTUNG as PENYAKIT_JANTUNG',
+                'rpk.HIPERTENSI as HIPERTENSI',
                 'rpk.TANGGAL as TANGGAL',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
                 'rpk.STATUS as STATUS',
@@ -1073,6 +1076,73 @@ class KunjunganController extends Controller
             'tanggalKeluar'    => $keluar,
             'dpjp'             => $dpjp,
             'judulRme'         => 'RIWAYAT PENYAKIT KELUARGA',
+        ]);
+    }
+
+    protected function getRiwayatTuberkulosis($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'riwayatTuberkulosis.ID as id',
+            ])
+            ->leftJoin('medicalrecord.riwayat_penyakit_tb as riwayatTuberkulosis', 'riwayatTuberkulosis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function riwayatTuberkulosis($id)
+    {
+        // Fetch the specific data
+        $query = DB::connection('mysql5')->table('medicalrecord.riwayat_penyakit_tb as riwayatTuberkulosis')
+            ->select([
+                'riwayatTuberkulosis.ID as ID',
+                'riwayatTuberkulosis.KUNJUNGAN as KUNJUNGAN',
+                'riwayatTuberkulosis.RIWAYAT as RIWAYAT',
+                'riwayatTuberkulosis.TAHUN as TAHUN',
+                'riwayatTuberkulosis.BEROBAT as BEROBAT',
+                'riwayatTuberkulosis.SPUTUM as SPUTUM',
+                'riwayatTuberkulosis.TANGGAL_PEMERIKSAAN_SPUTUM as TANGGAL_PEMERIKSAAN_SPUTUM',
+                'riwayatTuberkulosis.TEST_CEPAT_MOLEKULER as TEST_CEPAT_MOLEKULER',
+                'riwayatTuberkulosis.TANGGAL_TEST_CEPAT as TANGGAL_TEST_CEPAT',
+                'riwayatTuberkulosis.TANGGAL as TANGGAL',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                'riwayatTuberkulosis.STATUS as STATUS',
+            ])
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatTuberkulosis.OLEH')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
+            ->where('riwayatTuberkulosis.ID', $id)
+            ->distinct()
+            ->first();
+
+        $noKunjungan = $query->KUNJUNGAN;
+
+        // Panggil fungsi getDataPasien
+        $dataPasien = $this->getDataPasien($noKunjungan);
+
+        // Ambil data dari hasil query
+        $pendaftaran = $dataPasien->nomorPendaftaran;
+        $kunjungan   = $dataPasien->nomorKunjungan;
+        $pasien      = $dataPasien->namaPasien;
+        $norm        = $dataPasien->norm;
+        $ruangan     = $dataPasien->ruangan;
+        $status      = $dataPasien->status;
+        $masuk       = $dataPasien->masuk;
+        $keluar      = $dataPasien->keluar;
+        $dpjp        = $dataPasien->dpjp;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'           => $query,
+            'nomorKunjungan'   => $kunjungan,
+            'nomorPendaftaran' => $pendaftaran,
+            'namaPasien'       => $pasien,
+            'normPasien'       => $norm,
+            'ruanganTujuan'    => $ruangan,
+            'statusKunjungan'  => $status,
+            'tanggalMasuk'     => $masuk,
+            'tanggalKeluar'    => $keluar,
+            'dpjp'             => $dpjp,
+            'judulRme'         => 'RIWAYAT TUBERKULOSIS',
         ]);
     }
 
