@@ -18,7 +18,8 @@ export default function Authenticated({ user, children }) {
 
             <footer className="bg-gray-50 text-black/50 dark:bg-gray-950 dark:text-gray-200">
                 <div className="text-center">
-                    <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto.
+                    </p>
                 </div>
             </footer>
         </div>

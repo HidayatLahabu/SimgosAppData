@@ -68,7 +68,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.deskripsi || ''}
-                                                    placeholder="Cari data berdasarkan jenis deskripsi atau referensi deskripsi"
+                                                    placeholder="Cari data berdasarkan jenis id, jenis deskripsi atau referensi deskripsi"
                                                     onChange={e => onInputChange('deskripsi', e)}
                                                 />
                                             </th>

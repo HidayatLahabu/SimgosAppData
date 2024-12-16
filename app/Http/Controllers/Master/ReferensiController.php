@@ -30,7 +30,8 @@ class ReferensiController extends Controller
         // Add search filter if provided
         if ($searchSubject) {
             $query->whereRaw('LOWER(jenis.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
-                ->orWhereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
+                ->orWhereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(referensi.JENIS) LIKE ?', ['%' . $searchSubject . '%']);
         }
 
         // Paginate the results

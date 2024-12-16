@@ -256,6 +256,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
         Route::get('kunjungan/tableRme/{id}', [KunjunganController::class, 'tableRme'])->name('kunjungan.tableRme');
+
+        Route::get('kunjungan/triage/{id}', [KunjunganController::class, 'triage'])->name('kunjungan.triage');
         Route::get('kunjungan/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
         Route::get('kunjungan/keluhanUtama/{id}', [KunjunganController::class, 'keluhanUtama'])->name('kunjungan.keluhanUtama');
         Route::get('kunjungan/anamnesisDiperoleh/{id}', [KunjunganController::class, 'anamnesisDiperoleh'])->name('kunjungan.anamnesisDiperoleh');
@@ -267,7 +269,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/faktorRisiko/{id}', [KunjunganController::class, 'faktorRisiko'])->name('kunjungan.faktorRisiko');
         Route::get('kunjungan/riwayatPenyakitKeluarga/{id}', [KunjunganController::class, 'riwayatPenyakitKeluarga'])->name('kunjungan.riwayatPenyakitKeluarga');
         Route::get('kunjungan/riwayatTuberkulosis/{id}', [KunjunganController::class, 'riwayatTuberkulosis'])->name('kunjungan.riwayatTuberkulosis');
+        Route::get('kunjungan/riwayatGinekologi/{id}', [KunjunganController::class, 'riwayatGinekologi'])->name('kunjungan.riwayatGinekologi');
         Route::get('kunjungan/statusFungsional/{id}', [KunjunganController::class, 'statusFungsional'])->name('kunjungan.statusFungsional');
+        Route::get('kunjungan/hubunganPsikososial/{id}', [KunjunganController::class, 'hubunganPsikososial'])->name('kunjungan.hubunganPsikososial');
+        Route::get('kunjungan/edukasiPasienKeluarga/{id}', [KunjunganController::class, 'edukasiPasienKeluarga'])->name('kunjungan.edukasiPasienKeluarga');
+        Route::get('kunjungan/edukasiEmergency/{id}', [KunjunganController::class, 'edukasiEmergency'])->name('kunjungan.edukasiEmergency');
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
         Route::get('kunjungan/tandaVital/{id}', [KunjunganController::class, 'tandaVital'])->name('kunjungan.tandaVital');

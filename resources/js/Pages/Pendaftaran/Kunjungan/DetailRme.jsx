@@ -65,34 +65,44 @@ export default function Detail({
                                     <ButtonBack href={route("kunjungan.tableRme", { id: nomorKunjungan })} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL {judulRme}</h1>
                                 </div>
+
                                 <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-2 text-sm">
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Pendaftaran : <br />{nomorPendaftaran}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Pendaftaran : <br />
+                                        <span className="block text-yellow-500">{nomorPendaftaran}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Kunjungan : <br />{nomorKunjungan}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Kunjungan : <br />
+                                        <span className="block text-yellow-500">{nomorKunjungan}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NORM : <br />{normPasien}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        NORM : <br />
+                                        <span className="block text-yellow-500">{normPasien}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Pasien : <br />{namaPasien}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Pasien : <br />
+                                        <span className="block text-yellow-500">{namaPasien}</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-4 text-sm">
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Ruangan : <br />{ruanganTujuan}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Ruangan : <br />
+                                        <span className="block text-yellow-500">{ruanganTujuan}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        DPJP : <br />{dpjp}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        DPJP : <br />
+                                        <span className="block text-yellow-500">{dpjp}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Keluar : <br />{tanggalKeluar}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Keluar : <br />
+                                        <span className="block text-yellow-500">{tanggalKeluar}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Status : <br />{statusKunjungan === 0 ? 'Batal' : statusKunjungan === 1 ? 'Sedang Dilayani' : 'Selesai'}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Status : <br />
+                                        <span className="block text-yellow-500">{statusKunjungan === 0 ? 'Batal' : statusKunjungan === 1 ? 'Sedang Dilayani' : 'Selesai'}</span>
                                     </div>
                                 </div>
+
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
                                         <div
@@ -123,6 +133,49 @@ export default function Detail({
                                                                         detailItem.value === 0 ? "Belum Final" :
                                                                             detailItem.value
                                                                 ) : detailItem.uraian === "INA_GROUPER" ? (
+                                                                    detailItem.value === 1 ? "Final" :
+                                                                        detailItem.value === 0 ? "Belum Final" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "STATUS_MENTAL" ? (
+                                                                    detailItem.value === 1 ? "Sadar dan orientasi baik" :
+                                                                        detailItem.value === 2 ? "Ada masalah perilaku" :
+                                                                            detailItem.value === 3 ? "Perilaku kekerasan yang dialami pasien sebelumnya" :
+                                                                                detailItem.value
+                                                                ) : detailItem.uraian === "HUBUNGAN_PASIEN_DENGAN_KELUARGA" ? (
+                                                                    detailItem.value === 1 ? "Baik" :
+                                                                        detailItem.value === 0 ? "Tidak Baik" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "TEMPAT_TINGGAL" ? (
+                                                                    detailItem.value === 1 ? "Rumah" :
+                                                                        detailItem.value === 2 ? "Panti" :
+                                                                            detailItem.value === 3 ? "Lainnya" :
+                                                                                detailItem.value
+                                                                ) : detailItem.uraian === "KEBIASAAN_BERIBADAH_TERATUR" ? (
+                                                                    detailItem.value === 1 ? "Ya" :
+                                                                        detailItem.value === 2 ? "Tidak" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "NILAI_KEPERCAYAAN" ? (
+                                                                    detailItem.value === 1 ? "Ada" :
+                                                                        detailItem.value === 0 ? "Tidak" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "PENGHASILAN_PERBULAN" ? (
+                                                                    detailItem.value === 1 ? "< Rp.5.000.000" :
+                                                                        detailItem.value === 2 ? "Rp.5.000.000 s/d Rp.10.000.000" :
+                                                                            detailItem.value === 3 ? "> Rp.10.000.000" :
+                                                                                detailItem.value
+                                                                ) : detailItem.uraian === "BEROBAT" ? (
+                                                                    detailItem.value === 1 ? "Pernah Transfusi Darah" :
+                                                                        detailItem.value === 2 ? "Tidak Pernah Transfusi Darah" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "SPUTUM" ? (
+                                                                    detailItem.value === 1 ? "Positif" :
+                                                                        detailItem.value === 2 ? "Negatif" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "STATUS_KONDISI_SOSIAL" ? (
+                                                                    detailItem.value === 1 ? "Final" :
+                                                                        detailItem.value === 0 ? "Belum Final" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "STATUS_END_OF_LIFE" ? (
                                                                     detailItem.value === 1 ? "Final" :
                                                                         detailItem.value === 0 ? "Belum Final" :
                                                                             detailItem.value
