@@ -10,7 +10,7 @@ export default function TableCell({ children, className = "" }) {
     };
 
     return (
-        <td className={`px-3 py-3 border border-gray-500 dark:border-gray-600 ${className}`}>
+        <td className={`px-3 py-3 text-xs border border-gray-500 dark:border-gray-600 ${className}`}>
             {cleanText(children)}  {/* Render sanitized content */}
         </td>
     );

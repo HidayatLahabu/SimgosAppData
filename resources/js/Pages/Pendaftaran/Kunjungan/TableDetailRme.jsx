@@ -7,37 +7,44 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
 export default function TableDetailRme({
-    anamnesisDiperoleh,
     askep,
+    anamnesisDiperoleh,
+    keluhanUtama,
+    riwayatPenyakitSekarang,
+    riwayatPenyakitDahulu,
+    riwayatAlergi,
+    riwayatPemberianObat,
+    riwayatLainnya,
+    faktorRisiko,
+    riwayatPenyakitKeluarga,
+    statusFungsional,
     cppt,
+    tandaVital,
     diagnosa,
     jadwalKontrol,
-    riwayatAlergi,
-    riwayatLainnya,
-    riwayatPemberianObat,
-    riwayatPerjalananPenyakit,
-    riwayatPenyakit,
-    keluhanUtama,
-    tandaVital }) {
+}) {
 
     const headers = [
-        { name: "MEDICAL RECORD", className: "text-left" },
-        { name: "INPUT DATA", className: "text-left" },
+        { name: "MEDICAL RECORD", className: "text-left, w-[50%]" },
+        { name: "INPUT DATA", className: "text-left, w-[auto]" },
     ];
 
     const rows = [
+        { label: "ASUHAN KEPERAWATAN", data: askep, routeName: "kunjungan.askep" },
+        { label: "KELUHAN UTAMA", data: keluhanUtama, routeName: "kunjungan.keluhanUtama" },
         { label: "ANAMNESIS DIPEROLEH", data: anamnesisDiperoleh, routeName: "kunjungan.anamnesisDiperoleh" },
-        { label: "ASKEP", data: askep, routeName: "kunjungan.askep" },
+        { label: "RIWAYAT PENYAKIT SEKARANG", data: riwayatPenyakitSekarang, routeName: "kunjungan.riwayatPenyakitSekarang" },
+        { label: "RIWAYAT PERJALANAN DAHULU", data: riwayatPenyakitDahulu, routeName: "kunjungan.riwayatPenyakitDahulu" },
+        { label: "RIWAYAT ALERGI", data: riwayatAlergi, routeName: "kunjungan.riwayatAlergi" },
+        { label: "RIWAYAT PEMBERIAN OBAT", data: riwayatPemberianObat, routeName: "kunjungan.riwayatPemberianObat" },
+        { label: "RIWAYAT LAINNYA", data: riwayatLainnya, routeName: "kunjungan.riwayatLainnya" },
+        { label: "FAKTOR RISIKO", data: faktorRisiko, routeName: "kunjungan.faktorRisiko" },
+        { label: "RIWAYAT PENYAKIT KELUARGA", data: riwayatPenyakitKeluarga, routeName: "kunjungan.riwayatPenyakitKeluarga" },
+        { label: "STATUS FUNGSIONAL", data: statusFungsional, routeName: "kunjungan.statusFungsional" },
         { label: "CPPT", data: cppt, routeName: "kunjungan.cppt" },
+        { label: "TANDA VITAL", data: tandaVital, routeName: "kunjungan.tandaVital" },
         { label: "DIAGNOSA", data: diagnosa, routeName: "kunjungan.diagnosa" },
         { label: "JADWAL KONTROL", data: jadwalKontrol, routeName: "kunjungan.jadwalKontrol" },
-        { label: "KELUHAN UTAMA", data: keluhanUtama, routeName: "kunjungan.keluhanUtama" },
-        { label: "RIWAYAT ALERGI", data: riwayatAlergi, routeName: "kunjungan.riwayatAlergi" },
-        { label: "RIWAYAT LAINNYA", data: riwayatLainnya, routeName: "kunjungan.riwayatLainnya" },
-        { label: "RIWAYAT PEMBERIAN OBAT", data: riwayatPemberianObat, routeName: "kunjungan.riwayatPemberianObat" },
-        { label: "RIWAYAT PERJALANAN PENYAKIT", data: riwayatPerjalananPenyakit, routeName: "kunjungan.riwayatPerjalananPenyakit" },
-        { label: "RIWAYAT PENYAKIT SEKARANG", data: riwayatPenyakit, routeName: "kunjungan.riwayatPenyakit" },
-        { label: "TANDA VITAL", data: tandaVital, routeName: "kunjungan.tandaVital" },
     ];
 
     // Membagi rows menjadi dua bagian

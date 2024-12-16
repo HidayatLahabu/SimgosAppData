@@ -10,7 +10,17 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import TableCellMenu from "@/Components/TableCellMenu";
 
-export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaftaran, namaPasien, normPasien }) {
+export default function TableRme({ auth,
+    dataTable,
+    nomorKunjungan,
+    nomorPendaftaran,
+    namaPasien,
+    normPasien,
+    ruanganTujuan,
+    statusKunjungan,
+    tanggalKeluar,
+    dpjp
+}) {
 
     const headers = [
         { name: "NO" },
@@ -34,18 +44,32 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                     <ButtonBack href={route("kunjungan.tableRme", { id: nomorKunjungan })} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DAFTAR CPPT</h1>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 pb-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-2 text-sm">
                                     <div className="flex justify-between border p-2 rounded">
-                                        NOMOR PENDAFTARAN : {nomorPendaftaran}
+                                        Pendaftaran : <br />{nomorPendaftaran}
                                     </div>
                                     <div className="flex justify-between border p-2 rounded">
-                                        NOMOR KUNJUNGAN : {nomorKunjungan}
+                                        Kunjungan : <br />{nomorKunjungan}
                                     </div>
                                     <div className="flex justify-between border p-2 rounded">
-                                        NAMA PASIEN : {namaPasien}
+                                        NORM : <br />{normPasien}
                                     </div>
                                     <div className="flex justify-between border p-2 rounded">
-                                        NORM : {normPasien}
+                                        Pasien : <br />{namaPasien}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-4 text-sm">
+                                    <div className="flex justify-between border p-2 rounded">
+                                        Ruangan : <br />{ruanganTujuan}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        DPJP : <br />{dpjp}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        Keluar : <br />{tanggalKeluar}
+                                    </div>
+                                    <div className="flex justify-between border p-2 rounded">
+                                        Status : <br />{statusKunjungan === 0 ? 'Batal' : statusKunjungan === 1 ? 'Sedang Dilayani' : 'Selesai'}
                                     </div>
                                 </div>
                                 <Table>

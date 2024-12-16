@@ -15,18 +15,21 @@ export default function TableRme({
     statusKunjungan,
     tanggalKeluar,
     dpjp,
-    anamnesisDiperoleh,
     askep,
+    keluhanUtama,
+    anamnesisDiperoleh,
+    riwayatPenyakitSekarang,
+    riwayatPenyakitDahulu,
+    riwayatAlergi,
+    riwayatPemberianObat,
+    riwayatLainnya,
+    faktorRisiko,
+    riwayatPenyakitKeluarga,
+    statusFungsional,
     cppt,
+    tandaVital,
     diagnosa,
     jadwalKontrol,
-    keluhanUtama,
-    riwayatAlergi,
-    riwayatLainnya,
-    riwayatPemberianObat,
-    riwayatPerjalananPenyakit,
-    riwayatPenyakit,
-    tandaVital,
 }) {
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -76,18 +79,21 @@ export default function TableRme({
                                 </div>
 
                                 <TableDetailRme
-                                    anamnesisDiperoleh={anamnesisDiperoleh}
                                     askep={askep}
+                                    keluhanUtama={keluhanUtama}
+                                    anamnesisDiperoleh={anamnesisDiperoleh}
+                                    riwayatPenyakitSekarang={riwayatPenyakitSekarang}
+                                    riwayatPenyakitDahulu={riwayatPenyakitDahulu}
+                                    riwayatAlergi={riwayatAlergi}
+                                    riwayatPemberianObat={riwayatPemberianObat}
+                                    riwayatLainnya={riwayatLainnya}
+                                    faktorRisiko={faktorRisiko}
+                                    riwayatPenyakitKeluarga={riwayatPenyakitKeluarga}
+                                    statusFungsional={statusFungsional}
                                     cppt={cppt}
+                                    tandaVital={tandaVital}
                                     diagnosa={diagnosa}
                                     jadwalKontrol={jadwalKontrol}
-                                    keluhanUtama={keluhanUtama}
-                                    riwayatAlergi={riwayatAlergi}
-                                    riwayatLainnya={riwayatLainnya}
-                                    riwayatPemberianObat={riwayatPemberianObat}
-                                    riwayatPerjalananPenyakit={riwayatPerjalananPenyakit}
-                                    riwayatPenyakit={riwayatPenyakit}
-                                    tandaVital={tandaVital}
                                 />
                             </div>
                         </div>
