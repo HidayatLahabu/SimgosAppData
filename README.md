@@ -3,8 +3,8 @@ Aplikasi ini memanfaatkan database SIMGOS, dan untuk database usersimgos dibuat 
 tempat penyimpanan informasi pengguna.
 Tujuan dari pembuatan aplikasi ini adalah untuk memudahkan Administrator SIMGOS dalam pencarian data dan 
 informasi pelayanan, tanpa harus login ke aplikasi SIMGOS. 
-Aplikasi ini menampilkan data-data yang dapat digunakan untuk pengambilan keputusan oleh pejabat yang 
-berwenang berkaitan dengan pelayanan dengan memanfaatkan SIMGOS sebagai aplikasi untuk RME.
+Aplikasi ini juga menampilkan data-data yang dapat digunakan untuk pengambilan keputusan oleh pejabat  
+yang berwenang berkaitan dengan pelayanan dengan memanfaatkan SIMGOS sebagai aplikasi untuk RME.
 
 Ikhtisar Deployment:
 
