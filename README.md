@@ -8,7 +8,7 @@ yang berwenang berkaitan dengan pelayanan dengan memanfaatkan SIMGOS sebagai apl
 
 Ikhtisar Deployment:
 
-    SimgosAppData hanya diuji di OS Linux
+    SimgosAppData telah diuji di OS Linux
     Server: Ubuntu 22.04 & Ubuntu 24.04
     Database: MySQL
     PHP versi 8.2
