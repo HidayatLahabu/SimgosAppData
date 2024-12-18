@@ -274,14 +274,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/hubunganPsikososial/{id}', [KunjunganController::class, 'hubunganPsikososial'])->name('kunjungan.hubunganPsikososial');
         Route::get('kunjungan/edukasiPasienKeluarga/{id}', [KunjunganController::class, 'edukasiPasienKeluarga'])->name('kunjungan.edukasiPasienKeluarga');
         Route::get('kunjungan/edukasiEmergency/{id}', [KunjunganController::class, 'edukasiEmergency'])->name('kunjungan.edukasiEmergency');
+        Route::get('kunjungan/edukasiEndOfLife/{id}', [KunjunganController::class, 'edukasiEndOfLife'])->name('kunjungan.edukasiEndOfLife');
+        Route::get('kunjungan/skriningGiziAwal/{id}', [KunjunganController::class, 'skriningGiziAwal'])->name('kunjungan.skriningGiziAwal');
+        Route::get('kunjungan/batuk/{id}', [KunjunganController::class, 'batuk'])->name('kunjungan.batuk');
+
+        Route::get('kunjungan/pemeriksaanUmum/{id}', [KunjunganController::class, 'pemeriksaanUmum'])->name('kunjungan.pemeriksaanUmum');
+        Route::get('kunjungan/pemeriksaanFisik/{id}', [KunjunganController::class, 'pemeriksaanFisik'])->name('kunjungan.pemeriksaanFisik');
+
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
-        Route::get('kunjungan/tandaVital/{id}', [KunjunganController::class, 'tandaVital'])->name('kunjungan.tandaVital');
+
         Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
         Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
+
         Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
 
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
+
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
         Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])

@@ -3,14 +3,42 @@ import sanitizeHtml from 'sanitize-html';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
-import DataKunjungan from './DataKunjungan';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableDetailRme from './TableDetailRme';
 
-export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
+export default function Detail({
+    auth,
+    detail,
+    triage,
+    askep,
+    keluhanUtama,
+    anamnesisDiperoleh,
+    riwayatPenyakitSekarang,
+    riwayatPenyakitDahulu,
+    riwayatAlergi,
+    riwayatPemberianObat,
+    riwayatLainnya,
+    faktorRisiko,
+    riwayatPenyakitKeluarga,
+    riwayatTuberkulosis,
+    riwayatGinekologi,
+    statusFungsional,
+    hubunganPsikososial,
+    edukasiPasienKeluarga,
+    edukasiEmergency,
+    edukasiEndOfLife,
+    skriningGiziAwal,
+    batuk,
+    pemeriksaanUmum,
+    pemeriksaanFisik,
+    cppt,
+    diagnosa,
+    jadwalKontrol,
+}) {
 
     const headers = [
         { name: "NO", className: "w-[5%]" },
@@ -103,7 +131,33 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                 </div>
             </div>
 
-            <DataKunjungan dataKunjungan={dataKunjungan} nomorPendaftaran={nomorPendaftaran} />
+            <TableDetailRme
+                triage={triage}
+                askep={askep}
+                keluhanUtama={keluhanUtama}
+                anamnesisDiperoleh={anamnesisDiperoleh}
+                riwayatPenyakitSekarang={riwayatPenyakitSekarang}
+                riwayatPenyakitDahulu={riwayatPenyakitDahulu}
+                riwayatAlergi={riwayatAlergi}
+                riwayatPemberianObat={riwayatPemberianObat}
+                riwayatLainnya={riwayatLainnya}
+                faktorRisiko={faktorRisiko}
+                riwayatPenyakitKeluarga={riwayatPenyakitKeluarga}
+                riwayatTuberkulosis={riwayatTuberkulosis}
+                riwayatGinekologi={riwayatGinekologi}
+                statusFungsional={statusFungsional}
+                hubunganPsikososial={hubunganPsikososial}
+                edukasiPasienKeluarga={edukasiPasienKeluarga}
+                edukasiEmergency={edukasiEmergency}
+                edukasiEndOfLife={edukasiEndOfLife}
+                skriningGiziAwal={skriningGiziAwal}
+                batuk={batuk}
+                pemeriksaanUmum={pemeriksaanUmum}
+                pemeriksaanFisik={pemeriksaanFisik}
+                cppt={cppt}
+                diagnosa={diagnosa}
+                jadwalKontrol={jadwalKontrol}
+            />
 
         </AuthenticatedLayout>
     );

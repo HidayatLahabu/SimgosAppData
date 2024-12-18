@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Print({ data, dariTanggal, sampaiTanggal, namaRuangan, namaStatusKunjungan }) {
+export default function Print({ data, dariTanggal, sampaiTanggal, namaRuangan, namaStatusKunjungan, jenisPasien }) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');
@@ -24,7 +24,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal, namaRuangan, n
                                     NAMA RUANGAN : {namaRuangan}
                                 </h2>
                                 <h2 className="text-center font-bold text-2xl uppercase">
-                                    STATUS KUNJUNGAN : {namaStatusKunjungan}
+                                    STATUS AKTIFITAS KUNJUNGAN : {namaStatusKunjungan}
+                                </h2>
+                                <h2 className="text-center font-bold text-2xl uppercase">
+                                    STATUS KUNJUNGAN : {jenisPasien}
                                 </h2>
                                 <p className="text-center font-bold text-2xl">
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}

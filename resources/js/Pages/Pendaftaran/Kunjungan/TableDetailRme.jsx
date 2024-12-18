@@ -24,8 +24,12 @@ export default function TableDetailRme({
     hubunganPsikososial,
     edukasiPasienKeluarga,
     edukasiEmergency,
+    edukasiEndOfLife,
+    skriningGiziAwal,
+    batuk,
+    pemeriksaanUmum,
+    pemeriksaanFisik,
     cppt,
-    tandaVital,
     diagnosa,
     jadwalKontrol,
 }) {
@@ -52,8 +56,12 @@ export default function TableDetailRme({
         { label: "HUBUNGAN STATUS PSIKOSOSIAL", data: hubunganPsikososial, routeName: "kunjungan.hubunganPsikososial" },
         { label: "EDUKASI PASIEN DAN KELUARGA", data: edukasiPasienKeluarga, routeName: "kunjungan.edukasiPasienKeluarga" },
         { label: "EDUKASI EMERGENCY", data: edukasiEmergency, routeName: "kunjungan.edukasiEmergency" },
+        { label: "EDUKASI END OF LIFE", data: edukasiEndOfLife, routeName: "kunjungan.edukasiEndOfLife" },
+        { label: "SKRINING GIZI AWAL", data: skriningGiziAwal, routeName: "kunjungan.skriningGiziAwal" },
+        { label: "BATUK", data: batuk, routeName: "kunjungan.batuk" },
+        { label: "PEMERIKSAAN UMUM", data: pemeriksaanUmum, routeName: "kunjungan.pemeriksaanUmum" },
+        { label: "PEMERIKSAAN FISIK", data: pemeriksaanFisik, routeName: "kunjungan.pemeriksaanUmum" },
         { label: "CPPT", data: cppt, routeName: "kunjungan.cppt" },
-        { label: "TANDA VITAL", data: tandaVital, routeName: "kunjungan.tandaVital" },
         { label: "DIAGNOSA", data: diagnosa, routeName: "kunjungan.diagnosa" },
         { label: "JADWAL KONTROL", data: jadwalKontrol, routeName: "kunjungan.jadwalKontrol" },
     ];
@@ -117,15 +125,28 @@ export default function TableDetailRme({
     );
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-            {/* Tabel Pertama */}
-            <div className="overflow-auto w-full">{renderTable(firstPart)}</div>
+        <div className="py-2">
+            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
+                <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
+                        <div className="relative flex items-center justify-between pb-7 pt-2">
+                            <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
+                                DATA MEDICAL RECORD
+                            </h1>
+                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
+                            {/* Tabel Pertama */}
+                            <div className="overflow-auto w-full">{renderTable(firstPart)}</div>
 
-            {/* Tabel Kedua */}
-            <div className="overflow-auto w-full">{renderTable(secondPart)}</div>
+                            {/* Tabel Kedua */}
+                            <div className="overflow-auto w-full">{renderTable(secondPart)}</div>
 
-            {/* Tabel Ketiga */}
-            <div className="overflow-auto w-full">{renderTable(thirdPart)}</div>
+                            {/* Tabel Ketiga */}
+                            <div className="overflow-auto w-full">{renderTable(thirdPart)}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { formatDate } from '@/utils/formatDate';
-import { formatNumber } from '@/utils/formatNumber';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
 
@@ -45,7 +45,7 @@ export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
                                                 <td className="border border-gray-500 dark:border-gray-600 px-4 py-2">{item.KOTA}</td>
                                                 <td className="border border-gray-500 dark:border-gray-600 px-4 py-2 text-center">{item.TAHUN}</td>
                                                 <td className="border border-gray-500 dark:border-gray-600 px-4 py-2">{item.DESKRIPSI}</td>
-                                                <td className="border border-gray-500 dark:border-gray-600 px-4 py-2 text-right">{formatNumber(item.JUMLAH)} PASIEN</td>
+                                                <td className="border border-gray-500 dark:border-gray-600 px-4 py-2 text-right">{formatRibuan(item.JUMLAH)} PASIEN</td>
                                             </tr>
                                         ))}
                                     </tbody>

@@ -80,7 +80,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, r
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor kunjungan"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien, nomor kunjungan, atau nama ruangan"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />

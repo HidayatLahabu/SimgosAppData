@@ -41,37 +41,47 @@ export default function TableRme({ auth,
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("kunjungan.tableRme", { id: nomorKunjungan })} />
+                                    <ButtonBack href={route("kunjungan.detail", { id: nomorKunjungan })} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DAFTAR CPPT</h1>
                                 </div>
+
                                 <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-2 text-sm">
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Pendaftaran : <br />{nomorPendaftaran}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Pendaftaran : <br />
+                                        <span className="block text-yellow-500">{nomorPendaftaran}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Kunjungan : <br />{nomorKunjungan}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Kunjungan : <br />
+                                        <span className="block text-yellow-500">{nomorKunjungan}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NORM : <br />{normPasien}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        NORM : <br />
+                                        <span className="block text-yellow-500">{normPasien}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Pasien : <br />{namaPasien}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Pasien : <br />
+                                        <span className="block text-yellow-500">{namaPasien}</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-4 lg:grid-cols-4 gap-2 pb-4 text-sm">
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Ruangan : <br />{ruanganTujuan}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Ruangan : <br />
+                                        <span className="block text-yellow-500">{ruanganTujuan}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        DPJP : <br />{dpjp}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        DPJP : <br />
+                                        <span className="block text-yellow-500">{dpjp}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Keluar : <br />{tanggalKeluar}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Keluar : <br />
+                                        <span className="block text-yellow-500">{tanggalKeluar}</span>
                                     </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        Status : <br />{statusKunjungan === 0 ? 'Batal' : statusKunjungan === 1 ? 'Sedang Dilayani' : 'Selesai'}
+                                    <div className="flex flex-col border p-2 rounded">
+                                        Status : <br />
+                                        <span className="block text-yellow-500">{statusKunjungan === 0 ? 'Batal' : statusKunjungan === 1 ? 'Sedang Dilayani' : 'Selesai'}</span>
                                     </div>
                                 </div>
+
                                 <Table>
                                     <TableHeader>
                                         <tr>

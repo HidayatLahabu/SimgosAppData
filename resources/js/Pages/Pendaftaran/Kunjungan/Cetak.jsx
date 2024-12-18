@@ -10,6 +10,7 @@ export default function Cetak({ ruangan = [] }) {
         sampai_tanggal: "",
         ruangan: "",
         statusKunjungan: "",
+        pasien: "",
     });
 
     // Utility function for initializing date values
@@ -42,6 +43,10 @@ export default function Cetak({ ruangan = [] }) {
 
     const handleStatusChange = (selectedOption) => {
         setData(prevData => ({ ...prevData, statusKunjungan: selectedOption.value }));
+    };
+
+    const handlePasienChange = (selectedOption) => {
+        setData(prevData => ({ ...prevData, pasien: selectedOption.value }));
     };
 
     const onSubmit = (e) => {
@@ -84,17 +89,31 @@ export default function Cetak({ ruangan = [] }) {
                                 />
                             </div>
                             <div className="flex-1">
-                                <InputLabel htmlFor="statusKunjungan" value="Status Kunjungan" />
+                                <InputLabel htmlFor="statusKunjungan" value="Status Aktifitas Kunjungan" />
                                 <SelectTwoInput
                                     id="statusKunjungan"
                                     name="statusKunjungan"
                                     className="mt-1 block w-full"
-                                    placeholder="Pilih Status Kunjungan"
+                                    placeholder="Pilih Status Aktifitas Kunjungan"
                                     onChange={handleStatusChange}
                                     options={[
                                         { value: 0, label: 'Batal Kunjungan' },
                                         { value: 1, label: 'Sedang Dilayani' },
                                         { value: 2, label: 'Selesai' },
+                                    ]}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <InputLabel htmlFor="pasien" value="Status Kunjungan" />
+                                <SelectTwoInput
+                                    id="pasien"
+                                    name="pasien"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Status Kunjungan"
+                                    onChange={handlePasienChange}
+                                    options={[
+                                        { value: 1, label: 'Baru' },
+                                        { value: 2, label: 'Lama' },
                                     ]}
                                 />
                             </div>
