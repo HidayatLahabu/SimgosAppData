@@ -1,6 +1,10 @@
-SimgosAppData adalah modul ekstensi yang dirancang untuk melengkapi aplikasi Simgos Kemenkes. Modul ini 
-terintegrasi dengan database simgos yang sudah ada untuk manajemen data, sementara database terpisah 
-usersimgos untuk informasi pengguna.
+SimgosAppData adalah aplikasi tambahan yang dirancang untuk melengkapi aplikasi SIMGOS Kemenkes. 
+Aplikasi ini memanfaatkan database SIMGOS, dan untuk database usersimgos dibuat terpisah sebagai 
+tempat penyimpanan informasi pengguna.
+Tujuan dari pembuatan aplikasi ini adalah untuk memudahkan Administrator SIMGOS dalam pencarian data dan 
+informasi pelayanan, tanpa harus login ke aplikasi SIMGOS. 
+Aplikasi ini menampilkan data-data yang dapat digunakan untuk pengambilan keputusan oleh pejabat yang 
+berwenang berkaitan dengan pelayanan dengan memanfaatkan SIMGOS sebagai aplikasi untuk RME.
 
 Ikhtisar Deployment:
 
@@ -56,12 +60,13 @@ Untuk menarik pembaruan terbaru:
     pada laravel package dan node package
     Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 7 di atas.
 
-Tip : Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara real-time.
+Tip : 
+Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara real-time.
 
-Notes : Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
+Notes : 
+Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
 
-Lisensi
-Aplikasi ini memungkinkan penggunaan bebas dengan harapan identitas pengembang (seperti footer) 
-tetap dipertahankan. Detail lengkapnya dapat dilihat di LICENSE.
+Lisensi :
+Aplikasi ini dapat digunakan secara bebas dengan harapan identitas pengembang tetap dipertahankan. 
 
 
