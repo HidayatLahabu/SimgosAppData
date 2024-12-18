@@ -11,7 +11,10 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
+export default function Detail({
+    auth,
+    detail,
+}) {
 
     const headers = [
         { name: "NO", className: "w-[5%]" },
@@ -25,14 +28,21 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
         value: detail[key],
     }));
 
+    // Filter out detailData with empty or whitespace values
+    const filteredDetailData = detailData.filter((item) => {
+        const value = String(item.value || "").trim(); // Convert value to string and trim whitespace
+        return value !== ""; // Only include non-empty strings
+    });
+
     // Specify how many rows per table
-    const rowsPerTable = Math.ceil(detailData.length / 2);
+    const rowsPerTable = Math.ceil(filteredDetailData.length / 2);
 
     // Split the data into groups
     const tables = [];
-    for (let i = 0; i < detailData.length; i += rowsPerTable) {
-        tables.push(detailData.slice(i, i + rowsPerTable));
+    for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
+        tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
+
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -94,6 +104,10 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                                                                     detailItem.value === 0 ? "Tidak Disetujui" :
                                                                         detailItem.value === 1 ? "Disetujui" :
                                                                             detailItem.value
+                                                                ) : detailItem.uraian === "STATUS_DIAGNOSA" ? (
+                                                                    detailItem.value === 0 ? "Batal" :
+                                                                        detailItem.value === 1 ? "Final" :
+                                                                            detailItem.value
                                                                 ) : detailItem.value}
                                                             </TableCell>
                                                         </TableRow>
@@ -108,8 +122,6 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                     </div>
                 </div>
             </div>
-
-            <DataKunjungan dataKunjungan={dataKunjungan} nomorPendaftaran={nomorPendaftaran} />
 
         </AuthenticatedLayout>
     );

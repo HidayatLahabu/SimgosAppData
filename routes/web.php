@@ -22,7 +22,6 @@ use App\Http\Controllers\Inventory\BarangController;
 use App\Http\Controllers\Logs\PenggunaLogController;
 use App\Http\Controllers\Master\ReferensiController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
-use App\Http\Controllers\Bpjs\RujukanMasukController;
 use App\Http\Controllers\Layanan\RadiologiController;
 use App\Http\Controllers\Satusehat\AllergyController;
 use App\Http\Controllers\Satusehat\ConsentController;
@@ -48,7 +47,6 @@ use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Layanan\LaboratoriumController;
 use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
-use App\Http\Controllers\Layanan\TindakanMedisController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
@@ -62,6 +60,7 @@ use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
+use App\Http\Controllers\Pendaftaran\MedicalRecordController;
 use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
@@ -255,7 +254,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
-        Route::get('kunjungan/tableRme/{id}', [KunjunganController::class, 'tableRme'])->name('kunjungan.tableRme');
+        Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])
+            ->name('kunjungan.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+        Route::get('/kunjungan-print', [KunjunganController::class, 'print'])->name('kunjungan.print');
 
         Route::get('kunjungan/triage/{id}', [KunjunganController::class, 'triage'])->name('kunjungan.triage');
         Route::get('kunjungan/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
@@ -280,12 +282,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjungan/pemeriksaanUmum/{id}', [KunjunganController::class, 'pemeriksaanUmum'])->name('kunjungan.pemeriksaanUmum');
         Route::get('kunjungan/pemeriksaanFisik/{id}', [KunjunganController::class, 'pemeriksaanFisik'])->name('kunjungan.pemeriksaanFisik');
+        Route::get('kunjungan/pemeriksaanAnatomi/{id}', [KunjunganController::class, 'pemeriksaanAnatomi'])->name('kunjungan.pemeriksaanAnatomi');
 
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
-
-        Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
-        Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
 
         Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
 
@@ -293,10 +293,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
         Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
-        Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])
-            ->name('kunjungan.filterByTime')
-            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
-        Route::get('/kunjungan-print', [KunjunganController::class, 'print'])->name('kunjungan.print');
 
         Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
         Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');

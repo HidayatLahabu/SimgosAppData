@@ -35,6 +35,7 @@ export default function Detail({
     batuk,
     pemeriksaanUmum,
     pemeriksaanFisik,
+    pemeriksaanAnatomi,
     cppt,
     diagnosa,
     jadwalKontrol,
@@ -52,13 +53,19 @@ export default function Detail({
         value: detail[key],
     }));
 
+    // Filter out detailData with empty or whitespace values
+    const filteredDetailData = detailData.filter((item) => {
+        const value = String(item.value || "").trim(); // Convert value to string and trim whitespace
+        return value !== ""; // Only include non-empty strings
+    });
+
     // Specify how many rows per table
-    const rowsPerTable = Math.ceil(detailData.length / 2);
+    const rowsPerTable = Math.ceil(filteredDetailData.length / 2);
 
     // Split the data into groups
     const tables = [];
-    for (let i = 0; i < detailData.length; i += rowsPerTable) {
-        tables.push(detailData.slice(i, i + rowsPerTable));
+    for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
+        tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
 
     // Function to sanitize HTML and strip all tags
@@ -154,6 +161,7 @@ export default function Detail({
                 batuk={batuk}
                 pemeriksaanUmum={pemeriksaanUmum}
                 pemeriksaanFisik={pemeriksaanFisik}
+                pemeriksaanAnatomi={pemeriksaanAnatomi}
                 cppt={cppt}
                 diagnosa={diagnosa}
                 jadwalKontrol={jadwalKontrol}

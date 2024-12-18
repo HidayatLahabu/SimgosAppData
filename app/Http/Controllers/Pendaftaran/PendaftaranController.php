@@ -215,6 +215,14 @@ class PendaftaranController extends Controller
                 'pendaftaran.PAKET as PAKET',
                 'pengguna.NAMA as OLEH',
                 'pendaftaran.STATUS as STATUS_PENDAFTARAN',
+                'diagnosa.KODE as KODE_DIAGNOSA',
+                'diagnosa.DIAGNOSA as DESKRIPSI_DIAGNOSA',
+                'diagnosa.UTAMA as DIAGNOSA_UTAMA',
+                'diagnosa.INACBG as INACBG',
+                'diagnosa.BARU as DIAGNOSA_BARU',
+                'diagnosa.TANGGAL as TANGGAL_DIAGNOSA',
+                'penggunaDiagnosa.NAMA as DIAGNOSA_OLEH',
+                'diagnosa.STATUS as STATUS_DIAGNOSA',
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
@@ -250,7 +258,9 @@ class PendaftaranController extends Controller
                 $join->on('kecelakaan_jenis.ID', '=', 'kecelakaan.JENIS')
                     ->where('kecelakaan_jenis.JENIS', '=', 212);
             })
+            ->leftJoin('medicalrecord.diagnosa as diagnosa', 'diagnosa.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pendaftaran.OLEH')
+            ->leftJoin('aplikasi.pengguna as penggunaDiagnosa', 'penggunaDiagnosa.ID', '=', 'diagnosa.OLEH')
             ->where('pendaftaran.NOMOR', $id)
             ->distinct()
             ->first();
@@ -263,86 +273,11 @@ class PendaftaranController extends Controller
 
         //nomor pendaftaran
         $noPendaftaran = $query->NOMOR_PENDAFTARAN;
-        // Fetch kunjungan data using the new function
-        $kunjungan = $this->getKunjungan($noPendaftaran);
 
         // Return Inertia view with the encounter data
         return inertia("Pendaftaran/Pendaftaran/Detail", [
             'detail'            => $query,
-            'dataKunjungan'     => $kunjungan,
             'nomorPendaftaran'  => $noPendaftaran,
-        ]);
-    }
-
-    protected function getKunjungan($noPendaftaran)
-    {
-        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
-            ->select([
-                'kunjungan.NOMOR as nomor',
-                'kunjungan.NOPEN as pendaftaran',
-                'kunjungan.MASUK as masuk',
-                'kunjungan.KELUAR as keluar',
-                'ruangan.DESKRIPSI as ruangan',
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
-            ->where('pendaftaran.NOMOR', $noPendaftaran)
-            ->get();
-    }
-
-    public function kunjungan($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select([
-                'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
-                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
-                'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
-                'ruang_kamar.KAMAR as KAMAR_TUJUAN',
-                'ruang_kamar_tidur.TEMPAT_TIDUR as TEMPAT_TIDUR',
-                'kunjungan.MASUK as TANGGAL_MASUK',
-                'kunjungan.KELUAR as TANGGAL_KELUAR',
-                'kunjungan.REF as REF',
-                'penerima_kunjungan.NAMA as DITERIMA_OLEH',
-                'kunjungan.BARU as STATUS_KUNJUNGAN',
-                'kunjungan.TITIPAN as TITIPAN',
-                'kunjungan.TITIPAN_KELAS as TITIPAN_KELAS',
-                'kunjungan.STATUS as STATUS_AKTIFITAS_KUNJUNGAN',
-                DB::raw('IFNULL(final_kunjungan.NAMA, "") as FINAL_HASIL_OLEH'),
-                'kunjungan.FINAL_HASIL_TANGGAL as FINAL_HASIL_TANGGAL',
-                'perubahan_tanggal_kunjungan.TANGGAL_LAMA as TANGGAL_KUNJUNGAN_LAMA',
-                'perubahan_tanggal_kunjungan.TANGGAL_BARU as TANGGAL_KUNJUNGAN_BARU',
-                'perubahan_oleh.NAMA as PERUBAHAN_KUNJUNGAN_OLEH',
-                'perubahan_tanggal_kunjungan.STATUS as STATUS_PERUBAHAN_KUNJUNGAN',
-            ])
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
-            ->leftJoin('master.ruang_kamar as ruang_kamar', 'ruang_kamar.RUANGAN', '=', 'kunjungan.RUANGAN')
-            ->leftJoin('master.ruang_kamar_tidur as ruang_kamar_tidur', 'ruang_kamar_tidur.ID', '=', 'kunjungan.RUANG_KAMAR_TIDUR')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'kunjungan.DPJP')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('master.diagnosa_masuk as diagnosa_masuk', 'diagnosa_masuk.ID', '=', 'pendaftaran.DIAGNOSA_MASUK')
-            ->leftJoin('aplikasi.pengguna as penerima_kunjungan', 'penerima_kunjungan.ID', '=', 'kunjungan.DITERIMA_OLEH')
-            ->leftJoin('aplikasi.pengguna as final_kunjungan', 'final_kunjungan.ID', '=', 'kunjungan.FINAL_HASIL_OLEH')
-            ->leftJoin('pendaftaran.perubahan_tanggal_kunjungan AS perubahan_tanggal_kunjungan', 'perubahan_tanggal_kunjungan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
-            ->leftJoin('aplikasi.pengguna AS perubahan_oleh', 'perubahan_oleh.ID', '=', 'perubahan_tanggal_kunjungan.OLEH')
-            ->where('kunjungan.NOPEN', $id)
-            ->distinct()
-            ->first();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('pendaftaran.index')->with('error', 'Data not found.');
-        }
-
-        // Return Inertia view with the encounter data
-        return inertia("Pendaftaran/Pendaftaran/Kunjungan", [
-            'detail' => $query,
         ]);
     }
 
