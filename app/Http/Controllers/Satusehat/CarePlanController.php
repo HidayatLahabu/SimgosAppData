@@ -136,7 +136,7 @@ class CarePlanController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatCarePlanModel::where('nopen', $id)->first();
+        $query = SatusehatCarePlanModel::where('nopen', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

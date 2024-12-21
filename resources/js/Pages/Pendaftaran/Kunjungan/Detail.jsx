@@ -1,5 +1,4 @@
 import React from 'react';
-import sanitizeHtml from 'sanitize-html';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
@@ -14,6 +13,9 @@ export default function Detail({
     auth,
     detail,
     triage,
+    rekonsiliasiObatAdmisi,
+    rekonsiliasiObatTransfer,
+    rekonsiliasiObatDischarge,
     askep,
     keluhanUtama,
     anamnesisDiperoleh,
@@ -34,10 +36,12 @@ export default function Detail({
     skriningGiziAwal,
     batuk,
     pemeriksaanUmum,
+    pemeriksaanFungsional,
     pemeriksaanFisik,
-    pemeriksaanAnatomi,
+    pemeriksaanKepala,
+    pemeriksaanMata,
+    pemeriksaanTelinga,
     cppt,
-    diagnosa,
     jadwalKontrol,
 }) {
 
@@ -53,10 +57,9 @@ export default function Detail({
         value: detail[key],
     }));
 
-    // Filter out detailData with empty or whitespace values
     const filteredDetailData = detailData.filter((item) => {
-        const value = String(item.value || "").trim(); // Convert value to string and trim whitespace
-        return value !== ""; // Only include non-empty strings
+        return item.value !== null && item.value !== undefined && item.value !== "" &&
+            (item.value !== 0 || item.uraian === "STATUS_KUNJUNGAN" || item.uraian === "STATUS_AKTIFITAS_KUNJUNGAN");
     });
 
     // Specify how many rows per table
@@ -67,14 +70,6 @@ export default function Detail({
     for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
         tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
-
-    // Function to sanitize HTML and strip all tags
-    const sanitizeValue = (value) => {
-        return sanitizeHtml(value, {
-            allowedTags: [], // Remove all tags
-            allowedAttributes: {} // Remove all attributes
-        });
-    };
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -115,15 +110,15 @@ export default function Detail({
                                                             <TableCell>{detailItem.uraian}</TableCell>
                                                             <TableCell className="text-wrap">
                                                                 {detailItem.uraian === "STATUS_KUNJUNGAN" ? (
-                                                                    detailItem.value === 1 ? "Baru" :
-                                                                        detailItem.value === 0 ? "Lama" :
+                                                                    detailItem.value == 1 ? "Baru" :
+                                                                        detailItem.value == 0 ? "Lama" :
                                                                             detailItem.value
                                                                 ) : detailItem.uraian === "STATUS_AKTIFITAS_KUNJUNGAN" ? (
                                                                     detailItem.value === 0 ? "Batal Kunjungan" :
                                                                         detailItem.value === 1 ? "Pasien Berada di ruangan ini/Sedang dilayani" :
                                                                             detailItem.value === 2 ? "Selesai" :
                                                                                 detailItem.value
-                                                                ) : sanitizeValue(detailItem.value)}
+                                                                ) : detailItem.value}
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}
@@ -140,6 +135,9 @@ export default function Detail({
 
             <TableDetailRme
                 triage={triage}
+                rekonsiliasiObatAdmisi={rekonsiliasiObatAdmisi}
+                rekonsiliasiObatTransfer={rekonsiliasiObatTransfer}
+                rekonsiliasiObatDischarge={rekonsiliasiObatDischarge}
                 askep={askep}
                 keluhanUtama={keluhanUtama}
                 anamnesisDiperoleh={anamnesisDiperoleh}
@@ -160,10 +158,12 @@ export default function Detail({
                 skriningGiziAwal={skriningGiziAwal}
                 batuk={batuk}
                 pemeriksaanUmum={pemeriksaanUmum}
+                pemeriksaanFungsional={pemeriksaanFungsional}
                 pemeriksaanFisik={pemeriksaanFisik}
-                pemeriksaanAnatomi={pemeriksaanAnatomi}
+                pemeriksaanKepala={pemeriksaanKepala}
+                pemeriksaanMata={pemeriksaanMata}
+                pemeriksaanTelinga={pemeriksaanTelinga}
                 cppt={cppt}
-                diagnosa={diagnosa}
                 jadwalKontrol={jadwalKontrol}
             />
 

@@ -63,7 +63,9 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pendaftaran {header} {totalCount} Pasien</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">
+                                    Data Pendaftaran {header} {totalCount} Pasien
+                                </h1>
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
                                     <Card title="RATA-RATA PER HARI" value={rataRata.rata_rata_per_hari} />
                                     <Card title="RATA-RATA PER MINGGU" value={rataRata.rata_rata_per_minggu} />

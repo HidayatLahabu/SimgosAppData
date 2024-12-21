@@ -25,7 +25,7 @@ class MedicalrecordTriageModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::table('medicalrecord.triage as triage')
+        $query = DB::connection('mysql11')->table('medicalrecord.triage as triage')
             ->select([
                 'triage.ID as ID',
                 'triage.KUNJUNGAN as KUNJUNGAN',
@@ -57,7 +57,7 @@ class MedicalrecordTriageModel extends Model
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('triage.ID', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {

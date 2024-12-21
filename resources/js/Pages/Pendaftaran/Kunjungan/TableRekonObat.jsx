@@ -2,23 +2,35 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
-import ButtonDetail from "@/Components/ButtonDetail";
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import InformasiKunjungan from "./InfoKunjungan";
+import RekonObatDetail from "./TableRekonObatDetail";
 
-export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaftaran, namaPasien, normPasien }) {
+export default function TableRme({
+    auth,
+    dataTable,
+    nomorKunjungan,
+    nomorPendaftaran,
+    namaPasien,
+    normPasien,
+    ruanganTujuan,
+    statusKunjungan,
+    tanggalKeluar,
+    dpjp,
+    judulRme,
+}) {
 
     const headers = [
-        { name: "NO" },
-        { name: "NOMOR PENDAFTARAN" },
-        { name: "ID DIAGNOSA" },
+        { name: "ID" },
+        { name: "KUNJUNGAN" },
+        { name: "PENDAFTARAN" },
         { name: "TANGGAL", className: "text-center" },
         { name: "OLEH" },
         { name: "STATUS" },
-        { name: "MENU", className: "text-center" },
     ];
 
     return (
@@ -30,23 +42,21 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("kunjungan.tableRme", { id: nomorKunjungan })} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DAFTAR DIAGNOSA</h1>
+                                    <ButtonBack href={route("kunjungan.detail", { id: nomorKunjungan })} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">{judulRme}</h1>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 pb-4">
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NOMOR PENDAFTARAN : {nomorPendaftaran}
-                                    </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NOMOR KUNJUNGAN : {nomorKunjungan}
-                                    </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NAMA PASIEN : {namaPasien}
-                                    </div>
-                                    <div className="flex justify-between border p-2 rounded">
-                                        NORM : {normPasien}
-                                    </div>
-                                </div>
+
+                                <InformasiKunjungan
+                                    nomorPendaftaran={nomorPendaftaran}
+                                    nomorKunjungan={nomorKunjungan}
+                                    normPasien={normPasien}
+                                    namaPasien={namaPasien}
+                                    ruanganTujuan={ruanganTujuan}
+                                    dpjp={dpjp}
+                                    tanggalKeluar={tanggalKeluar}
+                                    statusKunjungan={statusKunjungan}
+                                />
+
                                 <Table>
                                     <TableHeader>
                                         <tr>
@@ -61,21 +71,14 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                                         {dataTable.length > 0 ? (
                                             dataTable.map((item, index) => (
                                                 <TableRow key={index}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{item.pendaftaran}</TableCell>
-                                                    <TableCell>{item.id}</TableCell>
-                                                    <TableCell className='text-center'>{item.tanggal}</TableCell>
-                                                    <TableCell>{item.oleh}</TableCell>
+                                                    <TableCell>{item.ID}</TableCell>
+                                                    <TableCell>{item.KUNJUNGAN}</TableCell>
+                                                    <TableCell>{item.PENDAFTARAN}</TableCell>
+                                                    <TableCell className='text-center'>{item.TANGGAL}</TableCell>
+                                                    <TableCell>{item.OLEH}</TableCell>
                                                     <TableCell>
-                                                        {item.status ? 'Selesai' : 'Sedang Dilayani'}
+                                                        {item.status ? 'Final' : 'Belum Final'}
                                                     </TableCell>
-                                                    <td className="px-3 py-3">
-                                                        {item.id ? (
-                                                            <ButtonDetail href={route("kunjungan.detailDiagnosa", { id: item.id })} />
-                                                        ) : (
-                                                            <span className="text-gray-500">No detail available</span>
-                                                        )}
-                                                    </td>
                                                 </TableRow>
                                             ))
                                         ) : (
@@ -92,6 +95,12 @@ export default function TableRme({ auth, dataTable, nomorKunjungan, nomorPendaft
                     </div>
                 </div>
             </div>
+
+            <RekonObatDetail
+                dataTable={dataTable}
+                judulRme={judulRme}
+            />
+
         </AuthenticatedLayout>
     );
 }

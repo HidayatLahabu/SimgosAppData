@@ -145,7 +145,7 @@ class ConsentController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatConsentModel::where('refId', $id)->first();
+        $query = SatusehatConsentModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

@@ -194,7 +194,7 @@ class RadiologiController extends Controller
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'order.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'order.OLEH')
             ->where('order.NOMOR', $id)
-            ->first();
+            ->firstOrFail();
 
         // Fetch data hasil lab (lab test results)
         $queryHasil = DB::connection('mysql7')->table('layanan.order_rad as orderRad')

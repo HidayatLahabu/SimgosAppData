@@ -137,7 +137,7 @@ class CompositionController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatCompositionModel::where('nopen', $id)->first();
+        $query = SatusehatCompositionModel::where('nopen', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

@@ -47,7 +47,7 @@ class PractitionerController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatPractitionerModel::where('refId', $id)->first();
+        $query = SatusehatPractitionerModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

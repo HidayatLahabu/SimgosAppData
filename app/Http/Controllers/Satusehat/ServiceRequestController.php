@@ -145,8 +145,7 @@ class ServiceRequestController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatServiceRequestModel::where('refId', $id)->first();
-
+        $query = SatusehatServiceRequestModel::where('refId', $id)->firstOrFail();
         // Check if the record exists
         if (!$query) {
             // Handle the case where the data was not found

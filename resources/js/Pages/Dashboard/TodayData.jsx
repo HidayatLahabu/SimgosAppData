@@ -26,11 +26,11 @@ export default function TodayData({
 
     return (
         <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
+            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+                Data Hari Ini <br /> <span className='text-lg'>{formattedDate}</span>
+            </h1>
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="pt-5 pb-2 px-5 text-gray-900 dark:text-gray-100 w-full">
-                    <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-gray-200 mb-4">
-                        Data Hari Ini <br /> <span className='text-lg'>{formattedDate}</span>
-                    </h1>
                     <div className="flex flex-wrap gap-2 justify-between mb-4">
                         <Card title="PENDAFTARAN" titleSize="text-normal" valueSize="text-normal" value={pendaftaran} />
                         <Card title="KUNJUNGAN" titleSize="text-normal" valueSize="text-normal" value={kunjungan} />

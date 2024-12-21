@@ -189,7 +189,7 @@ class KonsulController extends Controller
                 'konsul.KUNJUNGAN as KUNJUNGAN',
                 'pendaftaran.NOMOR as PENDAFTARAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA',
+                'pasien.NAMA as NAMA_PASIEN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'konsul.ALASAN as ALASAN',
                 'konsul.PERMINTAAN_TINDAKAN as PERMINTAAN_TINDAKAN',
@@ -204,7 +204,7 @@ class KonsulController extends Controller
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->where('konsul.NOMOR', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

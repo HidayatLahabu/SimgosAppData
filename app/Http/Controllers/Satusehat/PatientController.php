@@ -146,7 +146,7 @@ class PatientController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatPatientModel::where('refId', $id)->first();
+        $query = SatusehatPatientModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

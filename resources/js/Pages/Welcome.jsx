@@ -41,7 +41,7 @@ export default function Welcome({ auth, hospitalName }) {
 
                         <div className="flex flex-col items-center justify-center py-8 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
                             <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl sm:leading-none md:text-5xl lg:text-6xl dark:text-white text-center pb-4">
-                                Sistem Informasi Manajemen <br /> {hospitalName}
+                                Aplikasi Administrator Data Simgos <br /> {hospitalName}
                             </h1>
                             <p className="mt-4 text-md text-gray-500 sm:mt-3 sm:text-2lg lg:text-3xl xl:text-4xl dark:text-gray-400 text-center">
                                 Aplikasi ini dibuat sebagai pendukung SIMGOS Kementerian Kesehatan yang merupakan aplikasi utama dalam pelaksanaan pelayanan kesehatan di {hospitalName}.

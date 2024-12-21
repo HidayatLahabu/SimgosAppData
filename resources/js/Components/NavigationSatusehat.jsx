@@ -93,6 +93,13 @@ export default function NavigationSatusehat() {
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-96 grid grid-cols-2 gap-2">
+                    <NavLink
+                        href={route('sinkronisasi.index')}
+                        active={route().current('sinkronisasi.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Sinkronisasi
+                    </NavLink>
                     {sortedNavLinks.map((link) => (
                         <NavLink
                             key={link.route}

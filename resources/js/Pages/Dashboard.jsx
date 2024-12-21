@@ -1,6 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import SatuSehatTable from './Dashboard/SatuSehatTable';
 import TodayData from './Dashboard/TodayData';
 import MonthlyPendaftaranTable from './Dashboard/PendaftaranBulanan';
 import MonthlyKunjunganTable from './Dashboard/KunjunganBulanan';
@@ -9,7 +8,6 @@ import MonthlyMutasiTable from './Dashboard/MutasiBulanan';
 
 export default function Dashboard({
     auth,
-    items,
     pendaftaran,
     kunjungan,
     konsul,
@@ -29,9 +27,7 @@ export default function Dashboard({
             user={auth.user}
         >
             <Head title="Beranda" />
-            <div>
 
-            </div>
             <div className="py-5 flex flex-wrap w-full">
                 <TodayData
                     pendaftaran={pendaftaran}
@@ -45,6 +41,9 @@ export default function Dashboard({
                     pulang={pulang}
                 />
             </div>
+            <h1 className="uppercase text-center font-bold text-2xl pb-2 text-yellow-400">
+                Data Bulanan Tahun {new Date().getFullYear()}
+            </h1>
             <div className="pt-0 pb-5 flex flex-wrap w-full">
                 <div className="w-1/4">
                     <MonthlyPendaftaranTable pendaftaranBulanan={pendaftaranBulanan} />
@@ -60,9 +59,6 @@ export default function Dashboard({
                 </div>
             </div>
 
-            <div className="pt-0 pb-5 flex flex-wrap w-full">
-                <SatuSehatTable items={items} />
-            </div>
         </AuthenticatedLayout>
     );
 }

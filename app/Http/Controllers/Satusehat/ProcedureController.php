@@ -48,7 +48,7 @@ class ProcedureController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatProcedureModel::where('nopen', $id)->first();
+        $query = SatusehatProcedureModel::where('nopen', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

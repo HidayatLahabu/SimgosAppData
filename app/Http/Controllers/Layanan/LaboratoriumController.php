@@ -165,7 +165,6 @@ class LaboratoriumController extends Controller
         ]);
     }
 
-
     public function detail($id)
     {
         // Fetch data utama (main lab order details)
@@ -206,7 +205,7 @@ class LaboratoriumController extends Controller
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'order.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'order.OLEH')
             ->where('order.NOMOR', $id)
-            ->first();
+            ->firstOrFail();
 
         $queryHasil = DB::connection('mysql7')->table('layanan.order_detil_lab as orderDetail')
             ->select(

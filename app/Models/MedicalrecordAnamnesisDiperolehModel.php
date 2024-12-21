@@ -25,7 +25,7 @@ class MedicalrecordAnamnesisDiperolehModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql5')->table('medicalrecord.anamnesis_diperoleh as anamnesisDiperoleh')
+        $query = DB::connection('mysql11')->table('medicalrecord.anamnesis_diperoleh as anamnesisDiperoleh')
             ->select([
                 'anamnesisDiperoleh.ID as ID',
                 'anamnesisDiperoleh.KUNJUNGAN as KUNJUNGAN',
@@ -39,7 +39,7 @@ class MedicalrecordAnamnesisDiperolehModel extends Model
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('anamnesisDiperoleh.ID', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {

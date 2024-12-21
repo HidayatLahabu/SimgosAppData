@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MedicalrecordRppModel extends Model
 {
@@ -23,7 +25,7 @@ class MedicalrecordRppModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql5')->table('medicalrecord.rpp as rpp')
+        $query = DB::connection('mysql11')->table('medicalrecord.rpp as rpp')
             ->select([
                 'rpp.ID as ID',
                 'rpp.KUNJUNGAN as KUNJUNGAN',
@@ -37,7 +39,7 @@ class MedicalrecordRppModel extends Model
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('rpp.ID', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {

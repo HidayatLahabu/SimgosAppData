@@ -25,7 +25,7 @@ class MedicalrecordKeluhanUtamaModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql5')->table('medicalrecord.keluhan_utama as keluhanUtama')
+        $query = DB::connection('mysql11')->table('medicalrecord.keluhan_utama as keluhanUtama')
             ->select([
                 'keluhanUtama.ID as ID',
                 'keluhanUtama.KUNJUNGAN as KUNJUNGAN',
@@ -39,7 +39,7 @@ class MedicalrecordKeluhanUtamaModel extends Model
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('keluhanUtama.ID', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {

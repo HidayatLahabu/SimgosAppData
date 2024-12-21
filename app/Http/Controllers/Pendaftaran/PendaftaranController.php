@@ -263,7 +263,7 @@ class PendaftaranController extends Controller
             ->leftJoin('aplikasi.pengguna as penggunaDiagnosa', 'penggunaDiagnosa.ID', '=', 'diagnosa.OLEH')
             ->where('pendaftaran.NOMOR', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {
@@ -289,7 +289,7 @@ class PendaftaranController extends Controller
                 'pendaftaran.NOMOR as NOMOR_PENDAFTARAN',
                 'pasien.NORM as NORM',
                 'pasien.GELAR_DEPAN AS GELAR_DEPAN',
-                'pasien.NAMA as NAMA',
+                'pasien.NAMA as NAMA_PASIEN',
                 'pasien.GELAR_BELAKANG as GELAR_BELAKANG',
                 'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
                 'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
@@ -357,7 +357,7 @@ class PendaftaranController extends Controller
             })
             ->where('pendaftaran.NORM', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {
@@ -384,7 +384,7 @@ class PendaftaranController extends Controller
             ->leftJoin('bpjs.peserta as bpjs', 'bpjs.nik', '=', 'identitas.NOMOR')
             ->where('pendaftaran.NORM', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

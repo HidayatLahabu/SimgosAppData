@@ -79,7 +79,7 @@ class BarangToBzaController extends Controller
             ->where('barangBza.ID', $id)
             ->where('satuan.TYPE', 19)
             ->where('referensi.JENIS', 217)
-            ->first();
+            ->firstOrFail();
 
         // Error handling: No data found
         if (!$queryDetail) {

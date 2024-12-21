@@ -8,6 +8,9 @@ import TableCell from "@/Components/TableCell";
 
 export default function TableDetailRme({
     triage,
+    rekonsiliasiObatAdmisi,
+    rekonsiliasiObatTransfer,
+    rekonsiliasiObatDischarge,
     askep,
     anamnesisDiperoleh,
     keluhanUtama,
@@ -28,8 +31,11 @@ export default function TableDetailRme({
     skriningGiziAwal,
     batuk,
     pemeriksaanUmum,
+    pemeriksaanFungsional,
     pemeriksaanFisik,
-    pemeriksaanAnatomi,
+    pemeriksaanKepala,
+    pemeriksaanMata,
+    pemeriksaanTelinga,
     cppt,
     diagnosa,
     jadwalKontrol,
@@ -41,6 +47,9 @@ export default function TableDetailRme({
 
     const rows = [
         { label: "TRIAGE", data: triage, routeName: "kunjungan.triage" },
+        { label: "REKONSILIASI OBAT ADMISI", data: rekonsiliasiObatAdmisi, routeName: "kunjungan.rekonsiliasiObatAdmisi" },
+        { label: "REKONSILIASI OBAT TRANSFER", data: rekonsiliasiObatTransfer, routeName: "kunjungan.rekonsiliasiObatTransfer" },
+        { label: "REKONSILIASI OBAT DISCHARGE", data: rekonsiliasiObatDischarge, routeName: "kunjungan.rekonsiliasiObatDischarge" },
         { label: "ASUHAN KEPERAWATAN", data: askep, routeName: "kunjungan.askep" },
         { label: "KELUHAN UTAMA", data: keluhanUtama, routeName: "kunjungan.keluhanUtama" },
         { label: "ANAMNESIS DIPEROLEH", data: anamnesisDiperoleh, routeName: "kunjungan.anamnesisDiperoleh" },
@@ -60,19 +69,23 @@ export default function TableDetailRme({
         { label: "EDUKASI END OF LIFE", data: edukasiEndOfLife, routeName: "kunjungan.edukasiEndOfLife" },
         { label: "SKRINING GIZI AWAL", data: skriningGiziAwal, routeName: "kunjungan.skriningGiziAwal" },
         { label: "BATUK", data: batuk, routeName: "kunjungan.batuk" },
-        { label: "PEMERIKSAAN UMUM", data: pemeriksaanUmum, routeName: "kunjungan.pemeriksaanUmum" },
+        { label: "PEMERIKSAAN UMUM TANDA VITAL", data: pemeriksaanUmum, routeName: "kunjungan.pemeriksaanUmum" },
+        { label: "PEMERIKSAAN UMUM FUNGSIONAL", data: pemeriksaanFungsional, routeName: "kunjungan.pemeriksaanFungsional" },
         { label: "PEMERIKSAAN FISIK", data: pemeriksaanFisik, routeName: "kunjungan.pemeriksaanUmum" },
-        { label: "PEMERIKSAAN ANATOMI", data: pemeriksaanAnatomi, routeName: "kunjungan.pemeriksaanAnatomi" },
+        { label: "PEMERIKSAAN KEPALA", data: pemeriksaanKepala, routeName: "kunjungan.pemeriksaanKepala" },
+        { label: "PEMERIKSAAN MATA", data: pemeriksaanMata, routeName: "kunjungan.pemeriksaanMata" },
+        { label: "PEMERIKSAAN TELINGA", data: pemeriksaanTelinga, routeName: "kunjungan.pemeriksaanTelinga" },
         { label: "CPPT", data: cppt, routeName: "kunjungan.cppt" },
         { label: "DIAGNOSA", data: diagnosa, routeName: "kunjungan.diagnosa" },
         { label: "JADWAL KONTROL", data: jadwalKontrol, routeName: "kunjungan.jadwalKontrol" },
     ];
 
-    // Membagi rows menjadi tiga bagian
-    const partSize = Math.ceil(rows.length / 3);
-    const firstPart = rows.slice(0, partSize);
-    const secondPart = rows.slice(partSize, partSize * 2);
-    const thirdPart = rows.slice(partSize * 2);
+    const validRows = rows.filter(row => row.data && row.data !== "");
+
+    const partSize = validRows.length < 5 ? validRows.length : Math.ceil(validRows.length / 3);
+    const firstPart = validRows.slice(0, partSize);
+    const secondPart = validRows.slice(partSize, partSize * 2);
+    const thirdPart = validRows.slice(partSize * 2);
 
     const DataLink = ({ href }) => (
         href ? (
@@ -86,7 +99,6 @@ export default function TableDetailRme({
                         Lihat Disini
                     </span>
                 </Link>
-
             </div>
         ) : (
             <span className="block font-semibold text-red-800 dark:text-red-500">
@@ -111,14 +123,10 @@ export default function TableDetailRme({
                     <TableRow key={index}>
                         <TableCell>{row.label}</TableCell>
                         <TableCell>
-                            {row.data ? (
-                                <DataLink
-                                    href={route(row.routeName, { id: row.data })}
-                                    label={`Data ${row.label}`}
-                                />
-                            ) : (
-                                <span className="text-red-500">TIDAK ADA</span>
-                            )}
+                            <DataLink
+                                href={route(row.routeName, { id: row.data })}
+                                label={`Data ${row.label}`}
+                            />
                         </TableCell>
                     </TableRow>
                 ))}
@@ -132,19 +140,19 @@ export default function TableDetailRme({
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="relative flex items-center justify-between pb-7 pt-2">
-                            <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
+                            <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl text-center">
                                 DATA MEDICAL RECORD
                             </h1>
                         </div>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
-                            {/* Tabel Pertama */}
-                            <div className="overflow-auto w-full">{renderTable(firstPart)}</div>
-
-                            {/* Tabel Kedua */}
-                            <div className="overflow-auto w-full">{renderTable(secondPart)}</div>
-
-                            {/* Tabel Ketiga */}
-                            <div className="overflow-auto w-full">{renderTable(thirdPart)}</div>
+                        <div className="relative flex items-center justify-between pb-7">
+                            <h1 className="absolute left-1/2 transform -translate-x-1/2 font-bold italic text-center text-red-400">
+                                Hanya menampilkan data yang telah diinput
+                            </h1>
+                        </div>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            {renderTable(firstPart)}
+                            {renderTable(secondPart)}
+                            {renderTable(thirdPart)}
                         </div>
                     </div>
                 </div>
@@ -152,4 +160,5 @@ export default function TableDetailRme({
         </div>
     );
 }
+
 

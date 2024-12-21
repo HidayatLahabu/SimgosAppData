@@ -145,7 +145,7 @@ class SpecimenController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatSpecimenModel::where('refId', $id)->first();
+        $query = SatusehatSpecimenModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

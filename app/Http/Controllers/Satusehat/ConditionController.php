@@ -137,7 +137,7 @@ class ConditionController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatConditionModel::where('nopen', $id)->first();
+        $query = SatusehatConditionModel::where('nopen', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

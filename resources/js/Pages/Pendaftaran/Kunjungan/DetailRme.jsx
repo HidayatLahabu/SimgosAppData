@@ -1,5 +1,4 @@
 import React from "react";
-import sanitizeHtml from "sanitize-html";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from "@/Components/ButtonBack";
@@ -31,14 +30,14 @@ export default function Detail({
 
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
-        uraian: key, // Keep the original column name as it is
+        uraian: key,
         value: detail[key],
     }));
 
     // Filter out detailData with empty or whitespace values
     const filteredDetailData = detailData.filter((item) => {
-        const value = String(item.value || "").trim(); // Convert value to string and trim whitespace
-        return value !== ""; // Only include non-empty strings
+        const value = String(item.value || "").trim();
+        return value !== "";
     });
 
     // Tentukan jumlah row per tabel
@@ -48,29 +47,74 @@ export default function Detail({
             : filteredDetailData.length;
 
     // Bagi data menjadi grup hanya jika jumlah row > 10
-    const tables =
-        filteredDetailData.length > 10
-            ? Array.from(
-                {
-                    length: Math.ceil(
-                        filteredDetailData.length / rowsPerTable
-                    ),
-                },
-                (_, i) =>
-                    filteredDetailData.slice(
-                        i * rowsPerTable,
-                        (i + 1) * rowsPerTable
-                    )
-            )
-            : [filteredDetailData]; // Jika <= 10, tetap satu tabel
+    const tables = filteredDetailData.length > 10 ? Array.from({
+        length: Math.ceil(filteredDetailData.length / rowsPerTable),
+    }, (_, i) => filteredDetailData.slice(i * rowsPerTable, (i + 1) * rowsPerTable))
+        : [filteredDetailData];
 
-    // Function to sanitize HTML and strip all tags
-    const sanitizeValue = (value) => {
-        return sanitizeHtml(value, {
-            allowedTags: [], // Remove all tags
-            allowedAttributes: {}, // Remove all attributes
-        });
-    };
+    // Function to get the display value based on mappings
+    function getDisplayValue(uraian, value) {
+        const statusMapping = {
+            "STATUS": {
+                1: "Final",
+                0: "Belum Final"
+            },
+            "INA_GROUPER": {
+                1: "Final",
+                0: "Belum Final"
+            },
+            "STATUS_MENTAL": {
+                1: "Sadar dan orientasi baik",
+                2: "Ada masalah perilaku",
+                3: "Perilaku kekerasan yang dialami pasien sebelumnya"
+            },
+            "HUBUNGAN_PASIEN_DENGAN_KELUARGA": {
+                1: "Baik",
+                0: "Tidak Baik"
+            },
+            "TEMPAT_TINGGAL": {
+                1: "Rumah",
+                2: "Panti",
+                3: "Lainnya"
+            },
+            "KEBIASAAN_BERIBADAH_TERATUR": {
+                1: "Ya",
+                2: "Tidak"
+            },
+            "NILAI_KEPERCAYAAN": {
+                1: "Ada",
+                0: "Tidak"
+            },
+            "PENGHASILAN_PERBULAN": {
+                1: "< Rp.5.000.000",
+                2: "Rp.5.000.000 s/d Rp.10.000.000",
+                3: "> Rp.10.000.000"
+            },
+            "BEROBAT": {
+                1: "Pernah Transfusi Darah",
+                2: "Tidak Pernah Transfusi Darah"
+            },
+            "SPUTUM": {
+                1: "Positif",
+                2: "Negatif"
+            },
+            "STATUS_KONDISI_SOSIAL": {
+                1: "Final",
+                0: "Belum Final"
+            },
+            "STATUS_END_OF_LIFE": {
+                1: "Final",
+                0: "Belum Final"
+            }
+        };
+
+        // Return the mapped value if exists, otherwise return the original value
+        if (statusMapping[uraian]) {
+            return statusMapping[uraian][value] || value;
+        }
+
+        return value; // Return the original value if no mapping is found
+    }
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -106,27 +150,15 @@ export default function Detail({
 
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
-                                        <div
-                                            key={tableIndex}
-                                            className="flex-1 shadow-md rounded-lg"
+                                        <div key={tableIndex} className="flex-1 shadow-md rounded-lg"
                                         >
                                             <Table>
                                                 <TableHeader>
                                                     <tr>
                                                         {headers.map(
                                                             (header, index) => (
-                                                                <TableHeaderCell
-                                                                    key={index}
-                                                                    className={`${index ===
-                                                                        0
-                                                                        ? "w-[10%]"
-                                                                        : index ===
-                                                                            1
-                                                                            ? "w-[30%]"
-                                                                            : "w-[60%]"
-                                                                        } ${header.className ||
-                                                                        ""
-                                                                        }`}
+                                                                <TableHeaderCell key={index} className={`${index === 0 ? "w-[10%]" : index === 1 ? "w-[30%]" : "w-[60%]"} 
+                                                                ${header.className || ""}`}
                                                                 >
                                                                     {
                                                                         header.name
@@ -137,146 +169,19 @@ export default function Detail({
                                                     </tr>
                                                 </TableHeader>
                                                 <tbody>
-                                                    {tableData.map(
-                                                        (detailItem, index) => (
-                                                            <TableRow
-                                                                key={index}
-                                                            >
-                                                                <TableCell>
-                                                                    {index +
-                                                                        1 +
-                                                                        tableIndex *
-                                                                        rowsPerTable}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {
-                                                                        detailItem.uraian
-                                                                    }
-                                                                </TableCell>
-                                                                <TableCell className="text-wrap">
-                                                                    {detailItem.uraian ===
-                                                                        "STATUS"
-                                                                        ? detailItem.value ===
-                                                                            1
-                                                                            ? "Final"
-                                                                            : detailItem.value ===
-                                                                                0
-                                                                                ? "Belum Final"
-                                                                                : detailItem.value
-                                                                        : detailItem.uraian ===
-                                                                            "INA_GROUPER"
-                                                                            ? detailItem.value ===
-                                                                                1
-                                                                                ? "Final"
-                                                                                : detailItem.value ===
-                                                                                    0
-                                                                                    ? "Belum Final"
-                                                                                    : detailItem.value
-                                                                            : detailItem.uraian ===
-                                                                                "STATUS_MENTAL"
-                                                                                ? detailItem.value ===
-                                                                                    1
-                                                                                    ? "Sadar dan orientasi baik"
-                                                                                    : detailItem.value ===
-                                                                                        2
-                                                                                        ? "Ada masalah perilaku"
-                                                                                        : detailItem.value ===
-                                                                                            3
-                                                                                            ? "Perilaku kekerasan yang dialami pasien sebelumnya"
-                                                                                            : detailItem.value
-                                                                                : detailItem.uraian ===
-                                                                                    "HUBUNGAN_PASIEN_DENGAN_KELUARGA"
-                                                                                    ? detailItem.value ===
-                                                                                        1
-                                                                                        ? "Baik"
-                                                                                        : detailItem.value ===
-                                                                                            0
-                                                                                            ? "Tidak Baik"
-                                                                                            : detailItem.value
-                                                                                    : detailItem.uraian ===
-                                                                                        "TEMPAT_TINGGAL"
-                                                                                        ? detailItem.value ===
-                                                                                            1
-                                                                                            ? "Rumah"
-                                                                                            : detailItem.value ===
-                                                                                                2
-                                                                                                ? "Panti"
-                                                                                                : detailItem.value ===
-                                                                                                    3
-                                                                                                    ? "Lainnya"
-                                                                                                    : detailItem.value
-                                                                                        : detailItem.uraian ===
-                                                                                            "KEBIASAAN_BERIBADAH_TERATUR"
-                                                                                            ? detailItem.value ===
-                                                                                                1
-                                                                                                ? "Ya"
-                                                                                                : detailItem.value ===
-                                                                                                    2
-                                                                                                    ? "Tidak"
-                                                                                                    : detailItem.value
-                                                                                            : detailItem.uraian ===
-                                                                                                "NILAI_KEPERCAYAAN"
-                                                                                                ? detailItem.value ===
-                                                                                                    1
-                                                                                                    ? "Ada"
-                                                                                                    : detailItem.value ===
-                                                                                                        0
-                                                                                                        ? "Tidak"
-                                                                                                        : detailItem.value
-                                                                                                : detailItem.uraian ===
-                                                                                                    "PENGHASILAN_PERBULAN"
-                                                                                                    ? detailItem.value ===
-                                                                                                        1
-                                                                                                        ? "< Rp.5.000.000"
-                                                                                                        : detailItem.value ===
-                                                                                                            2
-                                                                                                            ? "Rp.5.000.000 s/d Rp.10.000.000"
-                                                                                                            : detailItem.value ===
-                                                                                                                3
-                                                                                                                ? "> Rp.10.000.000"
-                                                                                                                : detailItem.value
-                                                                                                    : detailItem.uraian ===
-                                                                                                        "BEROBAT"
-                                                                                                        ? detailItem.value ===
-                                                                                                            1
-                                                                                                            ? "Pernah Transfusi Darah"
-                                                                                                            : detailItem.value ===
-                                                                                                                2
-                                                                                                                ? "Tidak Pernah Transfusi Darah"
-                                                                                                                : detailItem.value
-                                                                                                        : detailItem.uraian ===
-                                                                                                            "SPUTUM"
-                                                                                                            ? detailItem.value ===
-                                                                                                                1
-                                                                                                                ? "Positif"
-                                                                                                                : detailItem.value ===
-                                                                                                                    2
-                                                                                                                    ? "Negatif"
-                                                                                                                    : detailItem.value
-                                                                                                            : detailItem.uraian ===
-                                                                                                                "STATUS_KONDISI_SOSIAL"
-                                                                                                                ? detailItem.value ===
-                                                                                                                    1
-                                                                                                                    ? "Final"
-                                                                                                                    : detailItem.value ===
-                                                                                                                        0
-                                                                                                                        ? "Belum Final"
-                                                                                                                        : detailItem.value
-                                                                                                                : detailItem.uraian ===
-                                                                                                                    "STATUS_END_OF_LIFE"
-                                                                                                                    ? detailItem.value ===
-                                                                                                                        1
-                                                                                                                        ? "Final"
-                                                                                                                        : detailItem.value ===
-                                                                                                                            0
-                                                                                                                            ? "Belum Final"
-                                                                                                                            : detailItem.value
-                                                                                                                    : sanitizeValue(
-                                                                                                                        detailItem.value
-                                                                                                                    )}
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
+                                                    {tableData.map((detailItem, index) => (
+                                                        <TableRow key={index} >
+                                                            <TableCell>
+                                                                {index + 1 + tableIndex * rowsPerTable}
+                                                            </TableCell>
+                                                            <TableCell>
+                                                                {detailItem.uraian}
+                                                            </TableCell>
+                                                            <TableCell className="text-wrap">
+                                                                {getDisplayValue(detailItem.uraian, detailItem.value)}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )
                                                     )}
                                                 </tbody>
                                             </Table>

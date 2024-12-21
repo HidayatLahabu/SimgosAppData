@@ -4,7 +4,6 @@ import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
 import ButtonPasien from '@/Components/ButtonPasien';
 import ButtonBpjs from '@/Components/ButtonBpjs';
-import DataKunjungan from '../Kunjungan/DataKunjungan';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
@@ -42,7 +41,6 @@ export default function Detail({
     for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
         tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
-
 
     return (
         <AuthenticatedLayout user={auth.user}>

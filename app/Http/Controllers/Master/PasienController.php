@@ -127,7 +127,7 @@ class PasienController extends Controller
             })
             ->where('pasien.NORM', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

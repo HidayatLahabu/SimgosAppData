@@ -47,7 +47,7 @@ class OrganizationController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatOrganizationModel::where('refId', $id)->first();
+        $query = SatusehatOrganizationModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

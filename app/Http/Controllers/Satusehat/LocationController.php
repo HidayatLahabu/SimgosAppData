@@ -37,7 +37,7 @@ class LocationController extends Controller
     public function detail($id)
     {
         // Fetch the specific data
-        $query = SatusehatLocationModel::where('refId', $id)->first();
+        $query = SatusehatLocationModel::where('refId', $id)->firstOrFail();
 
         // Check if the record exists
         if (!$query) {

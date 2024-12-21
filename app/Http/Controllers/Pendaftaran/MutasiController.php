@@ -186,7 +186,7 @@ class MutasiController extends Controller
                 'mutasi.KUNJUNGAN as KUNJUNGAN',
                 'mutasi.TANGGAL as TANGGAL',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA',
+                'pasien.NAMA as NAMA_PASIEN',
                 'mutasi.STATUS as STATUS_MUTASI',
                 'mutasi_oleh.NAMA as MUTASI_OLEH',
                 'mutasi.STATUS as STATUS_MUTASI',
@@ -210,7 +210,7 @@ class MutasiController extends Controller
             ->leftJoin('aplikasi.pengguna as reservasi_oleh', 'reservasi_oleh.ID', '=', 'reservasi.OLEH')
             ->where('mutasi.NOMOR', $id)
             ->distinct()
-            ->first();
+            ->firstOrFail();
 
         // Check if the record exists
         if (!$query) {
