@@ -370,6 +370,18 @@ class MedicalRecordController extends Controller
             ->first();
     }
 
+    public function getPemeriksaanRambut($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanRambut.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_rambut as pemeriksaanRambut', 'pemeriksaanRambut.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
     public function getPemeriksaanBibir($noKunjungan)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
@@ -461,7 +473,7 @@ class MedicalRecordController extends Controller
                 'kunjungan.NOMOR as nomor',
                 'pemeriksaanDada.ID as id',
             ])
-            ->leftJoin('medicalrecord.pemeriksaan_data as pemeriksaanDada', 'pemeriksaanDada.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('medicalrecord.pemeriksaan_dada as pemeriksaanDada', 'pemeriksaanDada.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }
@@ -557,7 +569,7 @@ class MedicalRecordController extends Controller
                 'kunjungan.NOMOR as nomor',
                 'pemeriksaanJariTangan.ID as id',
             ])
-            ->leftJoin('medicalrecord.pemeriksaan_jari_tangan as pemeriksaanJariTangan', 'pemeriksaanRambut.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('medicalrecord.pemeriksaan_jari_tangan as pemeriksaanJariTangan', 'pemeriksaanJariTangan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }
@@ -678,6 +690,90 @@ class MedicalRecordController extends Controller
                 'pemeriksaanSaluranCernahAtas.ID as id',
             ])
             ->leftJoin('medicalrecord.pemeriksaan_saluran_cernah_atas as pemeriksaanSaluranCernahAtas', 'pemeriksaanSaluranCernahAtas.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanEeg($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanEeg.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_eeg as pemeriksaanEeg', 'pemeriksaanEeg.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanEmg($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanEmg.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_emg as pemeriksaanEmg', 'pemeriksaanEmg.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanRavenTest($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanRavenTest.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_raven_test as pemeriksaanRavenTest', 'pemeriksaanRavenTest.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanCatClams($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanCatClams.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_cat_clams as pemeriksaanCatClams', 'pemeriksaanCatClams.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanTransfusiDarah($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanTransfusiDarah.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_transfusi_darah as pemeriksaanTransfusiDarah', 'pemeriksaanTransfusiDarah.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanAsessmentMChat($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanAsessmentMChat.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_asessment_m_chat as pemeriksaanAsessmentMChat', 'pemeriksaanAsessmentMChat.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemeriksaanEkg($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemeriksaanEkg.ID as id',
+            ])
+            ->leftJoin('medicalrecord.pemeriksaan_ekg as pemeriksaanEkg', 'pemeriksaanEkg.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }

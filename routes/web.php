@@ -328,6 +328,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/pemeriksaanSaluranCernahBawah/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahBawah'])->name('kunjungan.pemeriksaanSaluranCernahBawah');
         Route::get('kunjungan/pemeriksaanSaluranCernahAtas/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahAtas'])->name('kunjungan.pemeriksaanSaluranCernahAtas');
 
+        Route::get('kunjungan/pemeriksaanEeg/{id}', [KunjunganController::class, 'pemeriksaanEeg'])->name('kunjungan.pemeriksaanEeg');
+        Route::get('kunjungan/pemeriksaanEmg/{id}', [KunjunganController::class, 'pemeriksaanEmg'])->name('kunjungan.pemeriksaanEmg');
+        Route::get('kunjungan/pemeriksaanRavenTest/{id}', [KunjunganController::class, 'pemeriksaanRavenTest'])->name('kunjungan.pemeriksaanRavenTest');
+        Route::get('kunjungan/pemeriksaanCatClams/{id}', [KunjunganController::class, 'pemeriksaanCatClams'])->name('kunjungan.pemeriksaanCatClams');
+        Route::get('kunjungan/pemeriksaanTransfusiDarah/{id}', [KunjunganController::class, 'pemeriksaanTransfusiDarah'])->name('kunjungan.pemeriksaanTransfusiDarah');
+        Route::get('kunjungan/pemeriksaanAsessmentMChat/{id}', [KunjunganController::class, 'pemeriksaanAsessmentMChat'])->name('kunjungan.pemeriksaanAsessmentMChat');
+        Route::get('kunjungan/pemeriksaanEkg/{id}', [KunjunganController::class, 'pemeriksaanEkg'])->name('kunjungan.pemeriksaanEkg');
+
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
 

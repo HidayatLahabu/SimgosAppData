@@ -41,6 +41,41 @@ export default function Detail({
     pemeriksaanKepala,
     pemeriksaanMata,
     pemeriksaanTelinga,
+    pemeriksaanHidung,
+    pemeriksaanRambut,
+    pemeriksaanBibir,
+    pemeriksaanGigiGeligi,
+    pemeriksaanLidah,
+    pemeriksaanLangitLangit,
+    pemeriksaanLeher,
+    pemeriksaanTenggorokan,
+    pemeriksaanTonsil,
+    pemeriksaanDada,
+    pemeriksaanPayudara,
+    pemeriksaanPunggung,
+    pemeriksaanPerut,
+    pemeriksaanGenital,
+    pemeriksaanAnus,
+    pemeriksaanLenganAtas,
+    pemeriksaanLenganBawah,
+    pemeriksaanJariTangan,
+    pemeriksaanKukuTangan,
+    pemeriksaanPersendianTangan,
+    pemeriksaanTungkaiAtas,
+    pemeriksaanTungkaiBawah,
+    pemeriksaanJariKaki,
+    pemeriksaanKukuKaki,
+    pemeriksaanPersendianKaki,
+    pemeriksaanFaring,
+    pemeriksaanSaluranCernahBawah,
+    pemeriksaanSaluranCernahAtas,
+    pemeriksaanEeg,
+    pemeriksaanEmg,
+    pemeriksaanRavenTest,
+    pemeriksaanCatClams,
+    pemeriksaanTransfusiDarah,
+    pemeriksaanAsessmentMChat,
+    pemeriksaanEkg,
     cppt,
     jadwalKontrol,
 }) {
@@ -163,6 +198,41 @@ export default function Detail({
                 pemeriksaanKepala={pemeriksaanKepala}
                 pemeriksaanMata={pemeriksaanMata}
                 pemeriksaanTelinga={pemeriksaanTelinga}
+                pemeriksaanHidung={pemeriksaanHidung}
+                pemeriksaanRambut={pemeriksaanRambut}
+                pemeriksaanBibir={pemeriksaanBibir}
+                pemeriksaanGigiGeligi={pemeriksaanGigiGeligi}
+                pemeriksaanLidah={pemeriksaanLidah}
+                pemeriksaanLangitLangit={pemeriksaanLangitLangit}
+                pemeriksaanLeher={pemeriksaanLeher}
+                pemeriksaanTenggorokan={pemeriksaanTenggorokan}
+                pemeriksaanTonsil={pemeriksaanTonsil}
+                pemeriksaanDada={pemeriksaanDada}
+                pemeriksaanPayudara={pemeriksaanPayudara}
+                pemeriksaanPunggung={pemeriksaanPunggung}
+                pemeriksaanPerut={pemeriksaanPerut}
+                pemeriksaanGenital={pemeriksaanGenital}
+                pemeriksaanAnus={pemeriksaanAnus}
+                pemeriksaanLenganAtas={pemeriksaanLenganAtas}
+                pemeriksaanLenganBawah={pemeriksaanLenganBawah}
+                pemeriksaanJariTangan={pemeriksaanJariTangan}
+                pemeriksaanKukuTangan={pemeriksaanKukuTangan}
+                pemeriksaanPersendianTangan={pemeriksaanPersendianTangan}
+                pemeriksaanTungkaiAtas={pemeriksaanTungkaiAtas}
+                pemeriksaanTungkaiBawah={pemeriksaanTungkaiBawah}
+                pemeriksaanJariKaki={pemeriksaanJariKaki}
+                pemeriksaanKukuKaki={pemeriksaanKukuKaki}
+                pemeriksaanPersendianKaki={pemeriksaanPersendianKaki}
+                pemeriksaanFaring={pemeriksaanFaring}
+                pemeriksaanSaluranCernahBawah={pemeriksaanSaluranCernahBawah}
+                pemeriksaanSaluranCernahAtas={pemeriksaanSaluranCernahAtas}
+                pemeriksaanEeg={pemeriksaanEeg}
+                pemeriksaanEmg={pemeriksaanEmg}
+                pemeriksaanRavenTest={pemeriksaanRavenTest}
+                pemeriksaanCatClams={pemeriksaanCatClams}
+                pemeriksaanTransfusiDarah={pemeriksaanTransfusiDarah}
+                pemeriksaanAsessmentMChat={pemeriksaanAsessmentMChat}
+                pemeriksaanEkg={pemeriksaanEkg}
                 cppt={cppt}
                 jadwalKontrol={jadwalKontrol}
             />
