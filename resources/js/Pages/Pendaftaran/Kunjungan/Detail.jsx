@@ -86,6 +86,7 @@ export default function Detail({
     penilaianGetupGo,
     penilaianDekubitus,
     penilaianBallanceCairan,
+    diagnosa,
     cppt,
     jadwalKontrol,
 }) {
@@ -253,6 +254,7 @@ export default function Detail({
                 penilaianGetupGo={penilaianGetupGo}
                 penilaianDekubitus={penilaianDekubitus}
                 penilaianBallanceCairan={penilaianBallanceCairan}
+                diagnosa={diagnosa}
                 cppt={cppt}
                 jadwalKontrol={jadwalKontrol}
             />

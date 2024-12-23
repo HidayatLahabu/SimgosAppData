@@ -25,8 +25,8 @@ export default function TableRme({ auth,
 
     const headers = [
         { name: "NO" },
-        { name: "NOMOR KUNJUNGAN" },
-        { name: "ID CPPT" },
+        { name: "NOMOR PENDAFTARAN" },
+        { name: "ID DIAGNOSA" },
         { name: "TANGGAL", className: "text-center" },
         { name: "OLEH" },
         { name: "STATUS" },
@@ -43,7 +43,7 @@ export default function TableRme({ auth,
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
                                     <ButtonBack href={route("kunjungan.detail", { id: nomorKunjungan })} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DAFTAR CPPT</h1>
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DAFTAR DIAGNOSA</h1>
                                 </div>
 
                                 <InformasiKunjungan
@@ -72,7 +72,7 @@ export default function TableRme({ auth,
                                             dataTable.map((item, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{item.kunjungan}</TableCell>
+                                                    <TableCell>{item.pendaftaran}</TableCell>
                                                     <TableCell>{item.id}</TableCell>
                                                     <TableCell className='text-center'>{item.tanggal}</TableCell>
                                                     <TableCell>{item.oleh}</TableCell>
@@ -81,7 +81,7 @@ export default function TableRme({ auth,
                                                     </TableCell>
                                                     <TableCellMenu>
                                                         {item.id ? (
-                                                            <ButtonDetail href={route("kunjungan.detailCppt", { id: item.id })} />
+                                                            <ButtonDetail href={route("kunjungan.detailDiagnosa", { id: item.id })} />
                                                         ) : (
                                                             <span className="text-gray-500">No detail available</span>
                                                         )}

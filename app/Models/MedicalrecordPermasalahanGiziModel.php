@@ -27,20 +27,9 @@ class MedicalrecordPermasalahanGiziModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.permasalahan_gizi as permasalahanGizi')
             ->select([
-                'permasalahanGizi.ID as ID',
-                'permasalahanGizi.KUNJUNGAN as KUNJUNGAN',
-                'permasalahanGizi.BERAT_BADAN_SIGNIFIKAN as BERAT_BADAN_SIGNIFIKAN',
-                'permasalahanGizi.PERUBAHAN_BERAT_BADAN as PERUBAHAN_BERAT_BADAN',
-                'permasalahanGizi.INTAKE_MAKANAN as INTAKE_MAKANAN',
-                'permasalahanGizi.KONDISI_KHUSUS as KONDISI_KHUSUS',
-                'permasalahanGizi.SKOR as SKOR',
-                'permasalahanGizi.STATUS_SKOR as STATUS_SKOR',
-                'permasalahanGizi.TANGGAL as TANGGAL',
+                'permasalahanGizi.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'permasalahanGizi.STATUS_VALIDASI as STATUS_VALIDASI',
-                'permasalahanGizi.TANGGAL_VALIDASI as TANGGAL_VALIDASI',
                 DB::raw('CONCAT(pegawaiValidasi.GELAR_DEPAN, " ", pegawaiValidasi.NAMA, " ", pegawaiValidasi.GELAR_BELAKANG) as USER_VALIDASI'),
-                'permasalahanGizi.STATUS as STATUS',
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'permasalahanGizi.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

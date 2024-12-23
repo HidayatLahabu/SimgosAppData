@@ -27,13 +27,8 @@ class MedicalrecordRiwayatLainnyaModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.riwayat_lainnya as riwayatLainnya')
             ->select([
-                'riwayatLainnya.ID as ID',
-                'riwayatLainnya.KUNJUNGAN as KUNJUNGAN',
-                'riwayatLainnya.MEROKOK as MEROKOK',
-                'riwayatLainnya.TERPAPAR_ASAP_ROKOK as TERPAPAR_ASAP_ROKOK',
-                'riwayatLainnya.TANGGAL as TANGGAL',
+                'riwayatLainnya.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'riwayatLainnya.STATUS as STATUS',
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatLainnya.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

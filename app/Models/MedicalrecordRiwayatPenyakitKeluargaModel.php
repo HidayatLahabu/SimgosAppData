@@ -23,15 +23,8 @@ class MedicalrecordRiwayatPenyakitKeluargaModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.riwayat_penyakit_keluarga as rpk')
             ->select([
-                'rpk.ID as ID',
-                'rpk.KUNJUNGAN as KUNJUNGAN',
-                'rpk.HIPERTENSI as HIPERTENSI',
-                'rpk.DIABETES_MELITUS as DIABETES_MELITUS',
-                'rpk.PENYAKIT_JANTUNG as PENYAKIT_JANTUNG',
-                'rpk.HIPERTENSI as HIPERTENSI',
-                'rpk.TANGGAL as TANGGAL',
+                'rpk.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'rpk.STATUS as STATUS',
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'rpk.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

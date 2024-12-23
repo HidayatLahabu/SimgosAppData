@@ -27,12 +27,8 @@ class MedicalrecordRekonsiliasiDischargeModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.rekonsiliasi_discharge as rekonsiliasiDischarge')
             ->select([
-                'rekonsiliasiDischarge.ID as ID',
-                'rekonsiliasiDischarge.KUNJUNGAN as KUNJUNGAN',
-                'rekonsiliasiDischarge.PENDAFTARAN as PENDAFTARAN',
-                'rekonsiliasiDischarge.TANGGAL as TANGGAL',
+                'rekonsiliasiDischarge.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'rekonsiliasiDischarge.STATUS as STATUS',
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'rekonsiliasiDischarge.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

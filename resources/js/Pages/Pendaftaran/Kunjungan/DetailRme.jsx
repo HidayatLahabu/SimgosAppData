@@ -136,7 +136,6 @@ export default function Detail({
                                     </h1>
                                 </div>
 
-                                {/* Informasi Detail */}
                                 <InformasiKunjungan
                                     nomorPendaftaran={nomorPendaftaran}
                                     nomorKunjungan={nomorKunjungan}

@@ -347,6 +347,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/penilaianDekubitus/{id}', [KunjunganController::class, 'penilaianDekubitus'])->name('kunjungan.penilaianDekubitus');
         Route::get('kunjungan/penilaianBallanceCairan/{id}', [KunjunganController::class, 'penilaianBallanceCairan'])->name('kunjungan.penilaianBallanceCairan');
 
+        Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
+        Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
+
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
 

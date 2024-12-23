@@ -27,14 +27,8 @@ class MedicalrecordRiwayatAlergiModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.riwayat_alergi as riwayatAlergi')
             ->select([
-                'riwayatAlergi.ID as ID',
-                'riwayatAlergi.KUNJUNGAN as KUNJUNGAN',
-                'riwayatAlergi.JENIS as JENIS',
-                'riwayatAlergi.DESKRIPSI as DESKRIPSI',
-                'riwayatAlergi.KODE_REFERENSI as KODE_REFERENSI',
-                'riwayatAlergi.TANGGAL as TANGGAL',
+                'riwayatAlergi.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'riwayatAlergi.STATUS as STATUS',
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'riwayatAlergi.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
