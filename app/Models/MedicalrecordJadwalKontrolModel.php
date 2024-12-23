@@ -23,22 +23,11 @@ class MedicalrecordJadwalKontrolModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.jadwal_kontrol as jadwalKontrol')
             ->select([
-                'jadwalKontrol.ID as ID',
-                'jadwalKontrol.KUNJUNGAN as KUNJUNGAN',
-                'jadwalKontrol.NOMOR as NOMOR',
-                'jadwalKontrol.NOMOR_REFERENSI as NOMOR_REFERENSI',
-                'jadwalKontrol.NOMOR_ANTRIAN as NOMOR_ANTRIAN',
-                'jadwalKontrol.NOMOR_BOOKING as NOMOR_BOOKING',
+                'jadwalKontrol.*',
                 'tujuan.DESKRIPSI as TUJUAN',
-                DB::raw('CONCAT(dokter.GELAR_DEPAN, " ", dokter.NAMA, " ", dokter.GELAR_BELAKANG) as DOKTER'),
-                'jadwalKontrol.TANGGAL as TANGGAL',
-                'jadwalKontrol.JAM as JAM',
-                'jadwalKontrol.DESKRIPSI as DESKRIPSI',
                 'ruangan.DESKRIPSI as RUANGAN',
-                'jadwalKontrol.BERULANG as BERULANG',
-                'jadwalKontrol.DIBUAT_TANGGAL as DIBUAT_TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'jadwalKontrol.STATUS as STATUS',
+                DB::raw('CONCAT(dokter.GELAR_DEPAN, " ", dokter.NAMA, " ", dokter.GELAR_BELAKANG) as DOKTER'),
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'jadwalKontrol.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')

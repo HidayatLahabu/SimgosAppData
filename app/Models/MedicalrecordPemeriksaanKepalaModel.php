@@ -23,14 +23,8 @@ class MedicalrecordPemeriksaanKepalaModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_kepala as pemeriksaanKepala')
             ->select([
-                'pemeriksaanKepala.ID as ID',
-                'pemeriksaanKepala.KUNJUNGAN as KUNJUNGAN',
-                'pemeriksaanKepala.PENDAFTARAN as PENDAFTARAN',
-                'pemeriksaanKepala.ADA_KELAINAN as ADA_KELAINAN',
-                'pemeriksaanKepala.DESKRIPSI as DESKRIPSI',
-                'pemeriksaanKepala.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'pemeriksaanKepala.STATUS as STATUS',
+                'pemeriksaanKepala.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanKepala.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

@@ -336,6 +336,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/pemeriksaanAsessmentMChat/{id}', [KunjunganController::class, 'pemeriksaanAsessmentMChat'])->name('kunjungan.pemeriksaanAsessmentMChat');
         Route::get('kunjungan/pemeriksaanEkg/{id}', [KunjunganController::class, 'pemeriksaanEkg'])->name('kunjungan.pemeriksaanEkg');
 
+        Route::get('kunjungan/penilaianFisik/{id}', [KunjunganController::class, 'penilaianFisik'])->name('kunjungan.penilaianFisik');
+        Route::get('kunjungan/penilaianNyeri/{id}', [KunjunganController::class, 'penilaianNyeri'])->name('kunjungan.penilaianNyeri');
+        Route::get('kunjungan/penilaianStatusPediatrik/{id}', [KunjunganController::class, 'penilaianStatusPediatrik'])->name('kunjungan.penilaianStatusPediatrik');
+        Route::get('kunjungan/penilaianDiagnosis/{id}', [KunjunganController::class, 'penilaianDiagnosis'])->name('kunjungan.penilaianDiagnosis');
+        Route::get('kunjungan/penilaianSkalaMorse/{id}', [KunjunganController::class, 'penilaianSkalaMorse'])->name('kunjungan.penilaianSkalaMorse');
+        Route::get('kunjungan/penilaianSkalaHumptyDumpty/{id}', [KunjunganController::class, 'penilaianSkalaHumptyDumpty'])->name('kunjungan.penilaianSkalaHumptyDumpty');
+        Route::get('kunjungan/penilaianEpfra/{id}', [KunjunganController::class, 'penilaianEpfra'])->name('kunjungan.penilaianEpfra');
+        Route::get('kunjungan/penilaianGetupGo/{id}', [KunjunganController::class, 'penilaianGetupGo'])->name('kunjungan.penilaianGetupGo');
+        Route::get('kunjungan/penilaianDekubitus/{id}', [KunjunganController::class, 'penilaianDekubitus'])->name('kunjungan.penilaianDekubitus');
+        Route::get('kunjungan/penilaianBallanceCairan/{id}', [KunjunganController::class, 'penilaianBallanceCairan'])->name('kunjungan.penilaianBallanceCairan');
+
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
 

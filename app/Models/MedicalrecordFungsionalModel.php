@@ -23,14 +23,8 @@ class MedicalrecordFungsionalModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.fungsional as fungsional')
             ->select([
-                'fungsional.ID as ID',
-                'fungsional.KUNJUNGAN as KUNJUNGAN',
-                'fungsional.ALAT_BANTU as ALAT_BANTU',
-                'fungsional.PROTHESA as PROTHESA',
-                'fungsional.CACAT_TUBUH as CACAT_TUBUH',
-                'fungsional.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'fungsional.STATUS as STATUS',
+                'fungsional.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'fungsional.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

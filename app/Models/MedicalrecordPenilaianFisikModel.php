@@ -21,18 +21,14 @@ class MedicalrecordPenilaianFisikModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql11')->table('medicalrecord.penilaian_fisik as pemeriksaanFisik')
+        $query = DB::connection('mysql11')->table('medicalrecord.penilaian_fisik as penilaianFisik')
             ->select([
-                'pemeriksaanFisik.ID as ID',
-                'pemeriksaanFisik.KUNJUNGAN as KUNJUNGAN',
-                'pemeriksaanFisik.DESKRIPSI as DESKRIPSI',
-                'pemeriksaanFisik.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'pemeriksaanFisik.STATUS as STATUS',
+                'penilaianFisik.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanFisik.OLEH')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'penilaianFisik.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('pemeriksaanFisik.ID', $id)
+            ->where('penilaianFisik.ID', $id)
             ->distinct()
             ->firstOrFail();
 

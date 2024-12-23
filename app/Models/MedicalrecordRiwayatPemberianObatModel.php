@@ -14,7 +14,7 @@ class MedicalrecordRiwayatPemberianObatModel extends Model
     public $connection = "mysql11";
 
     // Menentukan tabel yang digunakan
-    protected $table = 'riwayat_alergi';
+    protected $table = 'riwayat_pemberian_obat';
 
     /**
      * Mendapatkan data triage berdasarkan ID

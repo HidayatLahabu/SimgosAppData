@@ -31,6 +31,7 @@ use App\Models\MedicalrecordPemeriksaanDadaModel;
 use App\Models\MedicalrecordPemeriksaanEegModel;
 use App\Models\MedicalrecordPemeriksaanEkgModel;
 use App\Models\MedicalrecordPemeriksaanFaringModel;
+use App\Models\MedicalrecordPemeriksaanFisikModel;
 use App\Models\MedicalrecordPemeriksaanGenitalModel;
 use App\Models\MedicalrecordPemeriksaanGigiGeligiModel;
 use App\Models\MedicalrecordPemeriksaanHidungModel;
@@ -388,127 +389,93 @@ class KunjunganController extends Controller
 
     private function getRelatedData($noKunjungan)
     {
-        $triage = $this->medicalRecordController->getTriage($noKunjungan);
-        $rekonsiliasiObatAdmisi = $this->medicalRecordController->getRekonsiliasiObatAdmisi($noKunjungan);
-        $rekonsiliasiObatTransfer = $this->medicalRecordController->getRekonsiliasiObatTransfer($noKunjungan);
-        $rekonsiliasiObatDischarge = $this->medicalRecordController->getRekonsiliasiObatDischarge($noKunjungan);
-        $askep = $this->medicalRecordController->getAskep($noKunjungan);
-        $keluhanUtama = $this->medicalRecordController->getKeluhanUtama($noKunjungan);
-        $anamnesisDiperoleh = $this->medicalRecordController->getAnamnesisDiperoleh($noKunjungan);
-        $riwayatPenyakitSekarang = $this->medicalRecordController->getRiwayatPenyakitSekarang($noKunjungan);
-        $riwayatPenyakitDahulu = $this->medicalRecordController->getRiwayatPenyakitDahulu($noKunjungan);
-        $riwayatAlergi = $this->medicalRecordController->getRiwayatAlergi($noKunjungan);
-        $riwayatPemberianObat = $this->medicalRecordController->getRiwayatPemberianObat($noKunjungan);
-        $riwayatLainnya = $this->medicalRecordController->getRiwayatLainnya($noKunjungan);
-        $faktorRisiko = $this->medicalRecordController->getFaktorRisiko($noKunjungan);
-        $riwayatPenyakitKeluarga = $this->medicalRecordController->getRiwayatPenyakitKeluarga($noKunjungan);
-        $riwayatTuberkulosis = $this->medicalRecordController->getRiwayatTuberkulosis($noKunjungan);
-        $riwayatGinekologi = $this->medicalRecordController->getRiwayatGinekologi($noKunjungan);
-        $statusFungsional = $this->medicalRecordController->getStatusFungsional($noKunjungan);
-        $hubunganPsikososial = $this->medicalRecordController->getHubunganPsikososial($noKunjungan);
-        $edukasiPasienKeluarga = $this->medicalRecordController->getEdukasiPasienKeluarga($noKunjungan);
-        $edukasiEmergency = $this->medicalRecordController->getEdukasiEmergency($noKunjungan);
-        $edukasiEndOfLife = $this->medicalRecordController->getEdukasiEndOfLife($noKunjungan);
-        $skriningGiziAwal = $this->medicalRecordController->getSkriningGiziAwal($noKunjungan);
-        $batuk = $this->medicalRecordController->getBatuk($noKunjungan);
-        $pemeriksaanUmum = $this->medicalRecordController->getPemeriksaanUmum($noKunjungan);
-        $pemeriksaanFungsional = $this->medicalRecordController->getPemeriksaanFungsional($noKunjungan);
-        $pemeriksaanFisik = $this->medicalRecordController->getPemeriksaanFisik($noKunjungan);
-        $pemeriksaanKepala = $this->medicalRecordController->getPemeriksaanKepala($noKunjungan);
-        $pemeriksaanMata = $this->medicalRecordController->getPemeriksaanMata($noKunjungan);
-        $pemeriksaanTelinga = $this->medicalRecordController->getPemeriksaanTelinga($noKunjungan);
-        $pemeriksaanHidung = $this->medicalRecordController->getPemeriksaanHidung($noKunjungan);
-        $pemeriksaanRambut = $this->medicalRecordController->getPemeriksaanRambut($noKunjungan);
-        $pemeriksaanBibir = $this->medicalRecordController->getPemeriksaanBibir($noKunjungan);
-        $pemeriksaanGigiGeligi = $this->medicalRecordController->getPemeriksaanGigiGeligi($noKunjungan);
-        $pemeriksaanLidah = $this->medicalRecordController->getPemeriksaanLidah($noKunjungan);
-        $pemeriksaanLangitLangit = $this->medicalRecordController->getPemeriksaanLangitLangit($noKunjungan);
-        $pemeriksaanLeher = $this->medicalRecordController->getPemeriksaanLeher($noKunjungan);
-        $pemeriksaanTenggorokan = $this->medicalRecordController->getPemeriksaanTenggorokan($noKunjungan);
-        $pemeriksaanTonsil = $this->medicalRecordController->getPemeriksaanTonsil($noKunjungan);
-        $pemeriksaanDada = $this->medicalRecordController->getPemeriksaanDada($noKunjungan);
-        $pemeriksaanPayudara = $this->medicalRecordController->getPemeriksaanPayudara($noKunjungan);
-        $pemeriksaanPunggung = $this->medicalRecordController->getPemeriksaanPunggung($noKunjungan);
-        $pemeriksaanPerut = $this->medicalRecordController->getPemeriksaanPerut($noKunjungan);
-        $pemeriksaanGenital = $this->medicalRecordController->getPemeriksaanGenital($noKunjungan);
-        $pemeriksaanAnus = $this->medicalRecordController->getPemeriksaanAnus($noKunjungan);
-        $pemeriksaanLenganAtas = $this->medicalRecordController->getPemeriksaanLenganAtas($noKunjungan);
-        $pemeriksaanLenganBawah = $this->medicalRecordController->getPemeriksaanLenganBawah($noKunjungan);
-        $pemeriksaanJariTangan = $this->medicalRecordController->getPemeriksaanJariTangan($noKunjungan);
-        $pemeriksaanKukuTangan = $this->medicalRecordController->getPemeriksaanKukuTangan($noKunjungan);
-        $pemeriksaanPersendianTangan = $this->medicalRecordController->getPemeriksaanPersendianTangan($noKunjungan);
-        $pemeriksaanTungkaiAtas = $this->medicalRecordController->getPemeriksaanTungkaiAtas($noKunjungan);
-        $pemeriksaanTungkaiBawah = $this->medicalRecordController->getPemeriksaanTungkaiBawah($noKunjungan);
-        $pemeriksaanJariKaki = $this->medicalRecordController->getPemeriksaanJariKaki($noKunjungan);
-        $pemeriksaanKukuKaki = $this->medicalRecordController->getPemeriksaanKukuKaki($noKunjungan);
-        $pemeriksaanPersendianKaki = $this->medicalRecordController->getPemeriksaanPersendianKaki($noKunjungan);
-        $pemeriksaanFaring = $this->medicalRecordController->getPemeriksaanFaring($noKunjungan);
-        $pemeriksaanSaluranCernahBawah = $this->medicalRecordController->getPemeriksaanSaluranCernahBawah($noKunjungan);
-        $pemeriksaanSaluranCernahAtas = $this->medicalRecordController->getPemeriksaanSaluranCernahAtas($noKunjungan);
-        $cppt = $this->medicalRecordController->getCppt($noKunjungan);
-        $jadwalKontrol = $this->medicalRecordController->getJadwalKontrol($noKunjungan);
-
-        return [
-            'triage' => $triage ? $triage->id : null,
-            'rekonsiliasiObatAdmisi' => $rekonsiliasiObatAdmisi ? $rekonsiliasiObatAdmisi->id : null,
-            'rekonsiliasiObatTransfer' => $rekonsiliasiObatTransfer ? $rekonsiliasiObatTransfer->id : null,
-            'rekonsiliasiObatDischarge' => $rekonsiliasiObatDischarge ? $rekonsiliasiObatDischarge->id : null,
-            'askep' => $askep ? $askep->id : null,
-            'keluhanUtama' => $keluhanUtama ? $keluhanUtama->id : null,
-            'anamnesisDiperoleh' => $anamnesisDiperoleh ? $anamnesisDiperoleh->id : null,
-            'riwayatPenyakitSekarang' => $riwayatPenyakitSekarang ? $riwayatPenyakitSekarang->id : null,
-            'riwayatPenyakitDahulu' => $riwayatPenyakitDahulu ? $riwayatPenyakitDahulu->id : null,
-            'riwayatAlergi' => $riwayatAlergi ? $riwayatAlergi->id : null,
-            'riwayatPemberianObat' => $riwayatPemberianObat ? $riwayatPemberianObat->id : null,
-            'riwayatLainnya' => $riwayatLainnya ? $riwayatLainnya->id : null,
-            'faktorRisiko' => $faktorRisiko ? $faktorRisiko->id : null,
-            'riwayatPenyakitKeluarga' => $riwayatPenyakitKeluarga ? $riwayatPenyakitKeluarga->id : null,
-            'riwayatTuberkulosis' => $riwayatTuberkulosis ? $riwayatTuberkulosis->id : null,
-            'riwayatGinekologi' => $riwayatGinekologi ? $riwayatGinekologi->id : null,
-            'statusFungsional' => $statusFungsional ? $statusFungsional->id : null,
-            'hubunganPsikososial' => $hubunganPsikososial ? $hubunganPsikososial->id : null,
-            'edukasiPasienKeluarga' => $edukasiPasienKeluarga ? $edukasiPasienKeluarga->id : null,
-            'edukasiEmergency' => $edukasiEmergency ? $edukasiEmergency->id : null,
-            'edukasiEndOfLife' => $edukasiEndOfLife ? $edukasiEndOfLife->id : null,
-            'skriningGiziAwal' => $skriningGiziAwal ? $skriningGiziAwal->id : null,
-            'batuk' => $batuk ? $batuk->id : null,
-            'pemeriksaanUmum' => $pemeriksaanUmum ? $pemeriksaanUmum->id : null,
-            'pemeriksaanFungsional' => $pemeriksaanFungsional ? $pemeriksaanFungsional->id : null,
-            'pemeriksaanFisik' => $pemeriksaanFisik ? $pemeriksaanFisik->id : null,
-            'pemeriksaanKepala' => $pemeriksaanKepala ? $pemeriksaanKepala->id : null,
-            'pemeriksaanMata' => $pemeriksaanMata ? $pemeriksaanMata->id : null,
-            'pemeriksaanTelinga' => $pemeriksaanTelinga ? $pemeriksaanTelinga->id : null,
-            'pemeriksaanHidung' => $pemeriksaanHidung ? $pemeriksaanHidung->id : null,
-            'pemeriksaanRambut' => $pemeriksaanRambut ? $pemeriksaanRambut->id : null,
-            'pemeriksaanBibir' => $pemeriksaanBibir ? $pemeriksaanBibir->id : null,
-            'pemeriksaanGigiGeligi' => $pemeriksaanGigiGeligi ? $pemeriksaanGigiGeligi->id : null,
-            'pemeriksaanLidah' => $pemeriksaanLidah ? $pemeriksaanLidah->id : null,
-            'pemeriksaanLangitLangit' => $pemeriksaanLangitLangit ? $pemeriksaanLangitLangit->id : null,
-            'pemeriksaanLeher' => $pemeriksaanLeher ? $pemeriksaanLeher->id : null,
-            'pemeriksaanTenggorokan' => $pemeriksaanTenggorokan ? $pemeriksaanTenggorokan->id : null,
-            'pemeriksaanTonsil' => $pemeriksaanTonsil ? $pemeriksaanTonsil->id : null,
-            'pemeriksaanDada' => $pemeriksaanDada ? $pemeriksaanDada->id : null,
-            'pemeriksaanPayudara' => $pemeriksaanPayudara ? $pemeriksaanPayudara->id : null,
-            'pemeriksaanPunggung' => $pemeriksaanPunggung ? $pemeriksaanPunggung->id : null,
-            'pemeriksaanPerut' => $pemeriksaanPerut ? $pemeriksaanPerut->id : null,
-            'pemeriksaanGenital' => $pemeriksaanGenital ? $pemeriksaanGenital->id : null,
-            'pemeriksaanAnus' => $pemeriksaanAnus ? $pemeriksaanAnus->id : null,
-            'pemeriksaanLenganAtas' => $pemeriksaanLenganAtas ? $pemeriksaanLenganAtas->id : null,
-            'pemeriksaanLenganBawah' => $pemeriksaanLenganBawah ? $pemeriksaanLenganBawah->id : null,
-            'pemeriksaanJariTangan' => $pemeriksaanJariTangan ? $pemeriksaanJariTangan->id : null,
-            'pemeriksaanKukuTangan' => $pemeriksaanKukuTangan ? $pemeriksaanKukuTangan->id : null,
-            'pemeriksaanPersendianTangan' => $pemeriksaanPersendianTangan ? $pemeriksaanPersendianTangan->id : null,
-            'pemeriksaanTungkaiAtas' => $pemeriksaanTungkaiAtas ? $pemeriksaanTungkaiAtas->id : null,
-            'pemeriksaanTungkaiBawah' => $pemeriksaanTungkaiBawah ? $pemeriksaanTungkaiBawah->id : null,
-            'pemeriksaanJariKaki' => $pemeriksaanJariKaki ? $pemeriksaanJariKaki->id : null,
-            'pemeriksaanKukuKaki' => $pemeriksaanKukuKaki ? $pemeriksaanKukuKaki->id : null,
-            'pemeriksaanPersendianKaki' => $pemeriksaanPersendianKaki ? $pemeriksaanPersendianKaki->id : null,
-            'pemeriksaanFaring' => $pemeriksaanFaring ? $pemeriksaanFaring->id : null,
-            'pemeriksaanSaluranCernahBawah' => $pemeriksaanSaluranCernahBawah ? $pemeriksaanSaluranCernahBawah->id : null,
-            'pemeriksaanSaluranCernahAtas' => $pemeriksaanSaluranCernahAtas ? $pemeriksaanSaluranCernahAtas->id : null,
-            'cppt' => $cppt ? $cppt->id : null,
-            'jadwalKontrol' => $jadwalKontrol ? $jadwalKontrol->id : null,
+        $methods = [
+            'getTriage' => 'triage',
+            'getRekonsiliasiObatAdmisi' => 'rekonsiliasiObatAdmisi',
+            'getRekonsiliasiObatTransfer' => 'rekonsiliasiObatTransfer',
+            'getRekonsiliasiObatDischarge' => 'rekonsiliasiObatDischarge',
+            'getAskep' => 'askep',
+            'getKeluhanUtama' => 'keluhanUtama',
+            'getAnamnesisDiperoleh' => 'anamnesisDiperoleh',
+            'getRiwayatPenyakitSekarang' => 'riwayatPenyakitSekarang',
+            'getRiwayatPenyakitDahulu' => 'riwayatPenyakitDahulu',
+            'getRiwayatAlergi' => 'riwayatAlergi',
+            'getRiwayatPemberianObat' => 'riwayatPemberianObat',
+            'getRiwayatLainnya' => 'riwayatLainnya',
+            'getFaktorRisiko' => 'factoRisiko',
+            'getRiwayatPenyakitKeluarga' => 'riwayatPenyakitKeluarga',
+            'getRiwayatTuberkulosis' => 'riwayatTuberkulosis',
+            'getRiwayatGinekologi' => 'riwayatGinekologi',
+            'getStatusFungsional' => 'statusFungsional',
+            'getHubunganPsikososial' => 'hubunganPsikososial',
+            'getEdukasiPasienKeluarga' => 'edukasiPasienKeluarga',
+            'getEdukasiEmergency' => 'edukasiEmergency',
+            'getEdukasiEndOfLife' => 'edukasiEndOfLife',
+            'getSkriningGiziAwal' => 'skriningGiziAwal',
+            'getBatuk' => 'batuk',
+            'getPemeriksaanUmum' => 'pemeriksaanUmum',
+            'getPemeriksaanFungsional' => 'pemeriksaanFungsional',
+            'getPemeriksaanFisik' => 'pemeriksaanFisik',
+            'getPemeriksaanKepala' => 'pemeriksaanKepala',
+            'getPemeriksaanMata' => 'pemeriksaanMata',
+            'getPemeriksaanTelinga' => 'pemeriksaanTelinga',
+            'getPemeriksaanHidung' => 'pemeriksaanHidung',
+            'getPemeriksaanRambut' => 'pemeriksaanRambut',
+            'getPemeriksaanBibir' => 'pemeriksaanBibir',
+            'getPemeriksaanGigiGeligi' => 'pemeriksaanGigiGeligi',
+            'getPemeriksaanLidah' => 'pemeriksaanLidah',
+            'getPemeriksaanLangitLangit' => 'pemeriksaanLangitLangit',
+            'getPemeriksaanLeher' => 'pemeriksaanLeher',
+            'getPemeriksaanTenggorokan' => 'pemeriksaanTenggorokan',
+            'getPemeriksaanTonsil' => 'pemeriksaanTonsil',
+            'getPemeriksaanDada' => 'pemeriksaanDada',
+            'getPemeriksaanPayudara' => 'pemeriksaanPayudara',
+            'getPemeriksaanPunggung' => 'pemeriksaanPunggung',
+            'getPemeriksaanPerut' => 'pemeriksaanPerut',
+            'getPemeriksaanGenital' => 'pemeriksaanGenital',
+            'getPemeriksaanAnus' => 'pemeriksaanAnus',
+            'getPemeriksaanLenganAtas' => 'pemeriksaanLenganAtas',
+            'getPemeriksaanLenganBawah' => 'pemeriksaanLenganBawah',
+            'getPemeriksaanJariTangan' => 'pemeriksaanJariTangan',
+            'getPemeriksaanKukuTangan' => 'pemeriksaanKukuTangan',
+            'getPemeriksaanPersendianTangan' => 'pemeriksaanPersendianTangan',
+            'getPemeriksaanTungkaiAtas' => 'pemeriksaanTungkaiAtas',
+            'getPemeriksaanTungkaiBawah' => 'pemeriksaanTungkaiBawah',
+            'getPemeriksaanJariKaki' => 'pemeriksaanJariKaki',
+            'getPemeriksaanKukuKaki' => 'pemeriksaanKukuKaki',
+            'getPemeriksaanPersendianKaki' => 'pemeriksaanPersendianKaki',
+            'getPemeriksaanFaring' => 'pemeriksaanFaring',
+            'getPemeriksaanSaluranCernahBawah' => 'pemeriksaanSaluranCernahBawah',
+            'getPemeriksaanSaluranCernahAtas' => 'pemeriksaanSaluranCernahAtas',
+            'getPemeriksaanEeg' => 'pemeriksaanEeg',
+            'getPemeriksaanEmg' => 'pemeriksaanEmg',
+            'getPemeriksaanRavenTest' => 'pemeriksaanRavenTest',
+            'getPemeriksaanCatClams' => 'pemeriksaanCatClams',
+            'getPemeriksaanTransfusiDarah' => 'pemeriksaanTransfusiDarah',
+            'getPemeriksaanAsessmentMChat' => 'pemeriksaanAsessmentMChat',
+            'getPemeriksaanEkg' => 'pemeriksaanEkg',
+            'getPenilaianFisik' => 'penilaianFisik',
+            'getPenilaianNyeri' => 'penilaianNyeri',
+            'getPenilaianStatusPediatrik' => 'penilaianStatusPediatrik',
+            'getPenilaianDiagnosis' => 'penilaianDiagnosis',
+            'getPenilaianSkalaMorse' => 'penilaianSkalaMorse',
+            'getPenilaianSkalaHumptyDumpty' => 'penilaianSkalaHumptyDumpty',
+            'getPenilaianEpfra' => 'penilaianEpfra',
+            'getPenilaianGetupGo' => 'penilaianGetupGo',
+            'getPenilaianDekubitus' => 'penilaianDekubitus',
+            'getPenilaianBallanceCairan' => 'penilaianBallanceCairan',
+            'getCppt' => 'cppt',
+            'getJadwalKontrol' => 'jadwalKontrol',
         ];
+
+        $result = [];
+
+        foreach ($methods as $method => $key) {
+            $data = $this->medicalRecordController->$method($noKunjungan);
+            $result[$key] = $data ? $data->id : null;
+        }
+
+        return $result;
     }
 
     public function triage($id)
@@ -1490,7 +1457,7 @@ class KunjunganController extends Controller
     public function pemeriksaanFisik($id)
     {
         // Fetch the specific data
-        $query = MedicalrecordPenilaianFisikModel::getById($id);
+        $query = MedicalrecordPemeriksaanFisikModel::getById($id);
 
         $noKunjungan = $query->KUNJUNGAN;
 
@@ -2887,6 +2854,42 @@ class KunjunganController extends Controller
             'tanggalKeluar'    => $keluar,
             'dpjp'             => $dpjp,
             'judulRme'         => 'PEMERIKSAAN EKG',
+        ]);
+    }
+
+    public function penilaianFisik($id)
+    {
+        // Fetch the specific data
+        $query = MedicalrecordPenilaianFisikModel::getById($id);
+
+        $noKunjungan = $query->KUNJUNGAN;
+
+        // Panggil fungsi getDataPasien
+        $dataPasien = $this->getDataPasien($noKunjungan);
+
+        // Ambil data dari hasil query
+        $pendaftaran = $dataPasien->nomorPendaftaran;
+        $kunjungan   = $dataPasien->nomorKunjungan;
+        $pasien      = $dataPasien->namaPasien;
+        $norm        = $dataPasien->norm;
+        $ruangan     = $dataPasien->ruangan;
+        $status      = $dataPasien->status;
+        $masuk       = $dataPasien->masuk;
+        $keluar      = $dataPasien->keluar;
+        $dpjp        = $dataPasien->dpjp;
+
+        return inertia("Pendaftaran/Kunjungan/DetailRme", [
+            'detail'           => $query,
+            'nomorKunjungan'   => $kunjungan,
+            'nomorPendaftaran' => $pendaftaran,
+            'namaPasien'       => $pasien,
+            'normPasien'       => $norm,
+            'ruanganTujuan'    => $ruangan,
+            'statusKunjungan'  => $status,
+            'tanggalMasuk'     => $masuk,
+            'tanggalKeluar'    => $keluar,
+            'dpjp'             => $dpjp,
+            'judulRme'         => 'PENILAIAN FISIK',
         ]);
     }
 

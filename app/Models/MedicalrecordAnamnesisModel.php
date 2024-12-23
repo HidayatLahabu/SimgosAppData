@@ -17,13 +17,8 @@ class MedicalrecordAnamnesisModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.anamnesis as anamnesis')
             ->select([
-                'anamnesis.ID as ID',
-                'anamnesis.KUNJUNGAN as KUNJUNGAN',
-                'anamnesis.PENDAFTARAN as PENDAFTARAN',
-                'anamnesis.DESKRIPSI as DESKRIPSI',
-                'anamnesis.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'anamnesis.STATUS as STATUS',
+                'anamnesis.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'anamnesis.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

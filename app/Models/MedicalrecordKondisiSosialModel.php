@@ -27,7 +27,7 @@ class MedicalrecordKondisiSosialModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.kondisi_sosial as kondisiSosial')
             ->select([
-                'kondisiSosial.ID as ID',
+                'kondisiSosial.ID as ID_KONDISI_SOSIAL',
                 'kondisiSosial.KUNJUNGAN as KUNJUNGAN',
                 'kondisiSosial.TIDAK_ADA_KELAINAN as TIDAK_ADA_KELAINAN',
                 'kondisiSosial.MARAH as MARAH',
@@ -50,6 +50,7 @@ class MedicalrecordKondisiSosialModel extends Model
                 'kondisiSosial.TANGGAL as TANGGAL',
                 DB::raw('CONCAT(pegawaiKondisiSosial.GELAR_DEPAN, " ", pegawaiKondisiSosial.NAMA, " ", pegawaiKondisiSosial.GELAR_BELAKANG) as KONDISI_SOSIAL_OLEH'),
                 'kondisiSosial.STATUS as STATUS_KONDISI_SOSIAL',
+                'hubunganPsikososial.ID as ID_HUBUNGAN_PSIKOSOSIAL',
                 'hubunganPsikososial.KECEMASAN_PASIEN_ATAU_KERABAT as KECEMASAN_PASIEN_ATAU_KERABAT',
                 'hubunganPsikososial.KETERANGAN_KECEMASAN_PASIEN_ATAU_KERABAT as KETERANGAN_KECEMASAN_PASIEN_ATAU_KERABAT',
                 'hubunganPsikososial.KEBUTUHAN_DAN_DUKUNGAN_SPIRITUAL as KEBUTUHAN_DAN_DUKUNGAN_SPIRITUAL',
@@ -62,8 +63,8 @@ class MedicalrecordKondisiSosialModel extends Model
                 'hubunganPsikososial.KETERANGAN_INDIKASI_KEBUTUHAN_KHUSUS as KETERANGAN_INDIKASI_KEBUTUHAN_KHUSUS',
                 'hubunganPsikososial.PILIHAN_HIDUP_PASIEN as PILIHAN_HIDUP_PASIEN',
                 'hubunganPsikososial.TANGGAL as PILIHAN_HIDUP_PASIEN',
-                DB::raw('CONCAT(pegawaiHubunganPsikososial.GELAR_DEPAN, " ", pegawaiHubunganPsikososial.NAMA, " ", pegawaiHubunganPsikososial.GELAR_BELAKANG) as OLEH'),
-                'hubunganPsikososial.STATUS as STATUS_END_OF_LIFE',
+                DB::raw('CONCAT(pegawaiHubunganPsikososial.GELAR_DEPAN, " ", pegawaiHubunganPsikososial.NAMA, " ", pegawaiHubunganPsikososial.GELAR_BELAKANG) as HUBUNGAN_PSIKOSOSIAL_OLEH'),
+                'hubunganPsikososial.STATUS as STATUS_HUBUNGAN_PSIKOSOSIAL',
             ])
             ->leftJoin('aplikasi.pengguna as penggunaKondisiSosial', 'penggunaKondisiSosial.ID', '=', 'kondisiSosial.OLEH')
             ->leftJoin('master.pegawai as pegawaiKondisiSosial', 'pegawaiKondisiSosial.NIP', '=', 'penggunaKondisiSosial.NIP')

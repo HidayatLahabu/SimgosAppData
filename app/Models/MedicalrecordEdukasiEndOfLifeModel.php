@@ -27,14 +27,8 @@ class MedicalrecordEdukasiEndOfLifeModel extends Model
         // Melakukan query untuk mengambil data berdasarkan ID
         $query = DB::connection('mysql11')->table('medicalrecord.edukasi_end_of_life as edukasiEndOfLife')
             ->select([
-                'edukasiEndOfLife.ID as ID',
-                'edukasiEndOfLife.KUNJUNGAN as KUNJUNGAN',
-                'edukasiEndOfLife.MENGETAHUI_DIAGNOSA as MENGETAHUI_DIAGNOSA',
-                'edukasiEndOfLife.MENGETAHUI_PROGNOSIS as MENGETAHUI_PROGNOSIS',
-                'edukasiEndOfLife.MENGETAHUI_TUJUAN_PERAWATAN as MENGETAHUI_TUJUAN_PERAWATAN',
-                'edukasiEndOfLife.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'edukasiEndOfLife.STATUS as STATUS',
+                'edukasiEndOfLife.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'edukasiEndOfLife.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

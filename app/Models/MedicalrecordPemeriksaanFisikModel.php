@@ -6,15 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MedicalrecordRppModel extends Model
+class MedicalrecordPemeriksaanFisikModel extends Model
 {
     use HasFactory;
-
-    // Koneksi ke database yang digunakan
     public $connection = "mysql11";
-
-    // Menentukan tabel yang digunakan
-    protected $table = 'rpp';
+    protected $table = 'pemeriksaan_fisik';
 
     /**
      * Mendapatkan data triage berdasarkan ID
@@ -25,14 +21,14 @@ class MedicalrecordRppModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql11')->table('medicalrecord.rpp as rpp')
+        $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_fisik as pemeriksaanFisik')
             ->select([
-                'rpp.*',
+                'pemeriksaanFisik.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
             ])
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'rpp.OLEH')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanFisik.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('rpp.ID', $id)
+            ->where('pemeriksaanFisik.ID', $id)
             ->distinct()
             ->firstOrFail();
 

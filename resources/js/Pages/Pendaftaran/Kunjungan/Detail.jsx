@@ -76,6 +76,16 @@ export default function Detail({
     pemeriksaanTransfusiDarah,
     pemeriksaanAsessmentMChat,
     pemeriksaanEkg,
+    penilaianFisik,
+    penilaianNyeri,
+    penilaianStatusPediatrik,
+    penilaianDiagnosis,
+    penilaianSkalaMorse,
+    penilaianSkalaHumptyDumpty,
+    penilaianEpfra,
+    penilaianGetupGo,
+    penilaianDekubitus,
+    penilaianBallanceCairan,
     cppt,
     jadwalKontrol,
 }) {
@@ -233,6 +243,16 @@ export default function Detail({
                 pemeriksaanTransfusiDarah={pemeriksaanTransfusiDarah}
                 pemeriksaanAsessmentMChat={pemeriksaanAsessmentMChat}
                 pemeriksaanEkg={pemeriksaanEkg}
+                penilaianFisik={penilaianFisik}
+                penilaianNyeri={penilaianNyeri}
+                penilaianStatusPediatrik={penilaianStatusPediatrik}
+                penilaianDiagnosis={penilaianDiagnosis}
+                penilaianSkalaMorse={penilaianSkalaMorse}
+                penilaianSkalaHumptyDumpty={penilaianSkalaHumptyDumpty}
+                penilaianEpfra={penilaianEpfra}
+                penilaianGetupGo={penilaianGetupGo}
+                penilaianDekubitus={penilaianDekubitus}
+                penilaianBallanceCairan={penilaianBallanceCairan}
                 cppt={cppt}
                 jadwalKontrol={jadwalKontrol}
             />
