@@ -94,7 +94,7 @@ export default function DetailLab({ auth, detailRad, detailHasilRad }) {
                 </div>
             </div>
 
-            {/* <DetailHasilRad detailHasilRad={detailHasilRad} /> */}
+            <DetailHasilRad detailHasilRad={detailHasilRad} />
         </AuthenticatedLayout>
     );
 }
