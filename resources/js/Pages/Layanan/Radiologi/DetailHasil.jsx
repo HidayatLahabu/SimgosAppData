@@ -32,7 +32,7 @@ export default function DetailHasil({ detailHasil = {} }) {
                                         detailHasil.map((hasil, index) => (
                                             <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.HASIL_ID}</td>
+                                                <td className="px-3 py-3 w-56">{hasil.ID}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.TINDAKAN}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.TANGGAL}</td>
                                                 <td className="px-3 py-3 w-56">{hasil.KLINIS}</td>

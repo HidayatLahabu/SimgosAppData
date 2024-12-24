@@ -19,7 +19,6 @@ use App\Models\MedicalrecordDischargePlanningSkriningModel;
 use App\Models\MedicalrecordEdukasiEmergencyModel;
 use App\Models\MedicalrecordEdukasiEndOfLifeModel;
 use App\Models\MedicalrecordEdukasiPasienKeluargaModel;
-use App\Models\MedicalrecordEndOfLifeModel;
 use App\Models\MedicalrecordFaktorRisikoModel;
 use App\Models\MedicalrecordFungsionalModel;
 use App\Models\MedicalrecordJadwalKontrolModel;
@@ -399,6 +398,7 @@ class KunjunganController extends Controller
                 'pasien.NORM as NORM',
                 'pasien.NAMA as NAMA_PASIEN',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
+                'kunjungan.RUANGAN as ID_RUANGAN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'ruang_kamar.KAMAR as KAMAR_TUJUAN',
                 'ruang_kamar_tidur.TEMPAT_TIDUR as TEMPAT_TIDUR',
@@ -476,13 +476,150 @@ class KunjunganController extends Controller
             ->first();
     }
 
+    public function getDetailLab($id)
+    {
+        // Fetch data utama (main lab order details)
+        $queryDetail = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
+            ->select(
+                'orderLab.*',
+                'pasien.NORM',
+                'pasien.NAMA',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                'ruangan.DESKRIPSI as TUJUAN',
+                'pengguna.NAMA as OLEH',
+            )
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.REF', '=', 'orderLab.NOMOR')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'orderLab.TUJUAN')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'orderLab.OLEH')
+            ->where('orderLab.NOMOR', $id)
+            ->firstOrFail();
+
+        // Error handling: No data found
+        if (!$queryDetail) {
+            return redirect()->route('kunjungan.index')->with('error', 'Data tidak ditemukan.');
+        }
+
+        // Return both data to the view
+        return $queryDetail;
+    }
+
+    public function getHasilLab($id)
+    {
+
+        $queryHasil = DB::connection('mysql7')->table('layanan.order_detil_lab as orderDetail')
+            ->select(
+                'orderDetail.ORDER_ID',
+                'tindakan.NAMA as TINDAKAN',
+                'parameter.PARAMETER as PARAMETER',
+                'hasilLab.HASIL',
+                'hasilLab.NILAI_NORMAL',
+                'hasilLab.SATUAN',
+                'hasilLab.STATUS'
+            )
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'orderDetail.TINDAKAN')
+            ->leftJoin('layanan.hasil_lab as hasilLab', 'hasilLab.TINDAKAN_MEDIS', '=', 'orderDetail.REF')
+            ->leftJoin('master.parameter_tindakan_lab as parameter', 'parameter.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
+            ->where('orderDetail.ORDER_ID', $id)
+            ->where('hasilLab.HASIL', '!=', '')
+            ->get();
+
+        // Return both data to the view
+        return $queryHasil;
+    }
+
+    public function getCatatanLab($id)
+    {
+
+        $queryCatatan = DB::connection('mysql7')->table('pendaftaran.kunjungan as kunjungan')
+            ->select(
+                'catatan.KUNJUNGAN',
+                'catatan.TANGGAL',
+                'catatan.CATATAN',
+                DB::raw('CONCAT(dokterLab.GELAR_DEPAN, " ", dokterLab.NAMA, " ", dokterLab.GELAR_BELAKANG) as DOKTER_LAB'),
+                'catatan.STATUS',
+            )
+            ->leftJoin('layanan.catatan_hasil_lab as catatan', 'catatan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('layanan.order_lab as order', 'order.NOMOR', '=', 'kunjungan.REF')
+            ->leftJoin('master.dokter as pegawaiLab', 'pegawaiLab.ID', '=', 'catatan.DOKTER')
+            ->leftJoin('master.pegawai as dokterLab', 'dokterLab.NIP', '=', 'pegawaiLab.NIP')
+            ->where('kunjungan.REF', $id)
+            ->first();
+
+        // Return both data to the view
+        return $queryCatatan;
+    }
+
+    public function getDetailRad($id)
+    {
+        // Fetch data utama (main lab order details)
+        $queryDetail = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
+            ->select(
+                'orderRad.*',
+                'pasien.NORM',
+                'pasien.NAMA',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                'ruangan.DESKRIPSI as TUJUAN',
+                'pengguna.NAMA as OLEH',
+            )
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
+            ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.REF', '=', 'tindakanMedis.ID')
+            ->leftJoin('layanan.order_rad as orderRad', 'orderRad.NOMOR', '=', 'orderRadDetail.ORDER_ID')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'orderRad.TUJUAN')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'orderRad.OLEH')
+            ->where('tindakanMedis.KUNJUNGAN', $id)
+            ->firstOrFail();
+
+
+        // Error handling: No data found
+        if (!$queryDetail) {
+            return redirect()->route('kunjungan.index')->with('error', 'Data tidak ditemukan.');
+        }
+
+        // Return both data to the view
+        return $queryDetail;
+    }
+
+    public function getHasilRad($id)
+    {
+        // Fetch data utama (main lab order details)
+        $queryHasil = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
+            ->select(
+                'tindakan.NAMA as NAMA_TINDAKAN',
+                'hasilRad.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER'),
+                'pengguna.NAMA as OLEH',
+            )
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
+            ->leftJoin('layanan.hasil_rad as hasilRad', 'hasilRad.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasilRad.DOKTER')
+            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'hasilRad.OLEH')
+            ->where('tindakanMedis.KUNJUNGAN', $id)
+            ->where('hasilRad.STATUS', 2)
+            ->first();
+
+        // Error handling: No data found
+        if (!$queryHasil) {
+            return redirect()->route('kunjungan.index')->with('error', 'Data tidak ditemukan.');
+        }
+
+        // Return both data to the view
+        return $queryHasil;
+    }
+
     public function detail($id)
     {
 
         // Fetch kunjungan data using the new function
         $query = $this->getDetailKunjungan($id);
-
-        //dd($query);
 
         // Check if the record exists
         if (!$query) {
@@ -493,6 +630,7 @@ class KunjunganController extends Controller
         //nomor pendaftaran
         $pendaftaran = $query->NOMOR_PENDAFTARAN;
         $noKunjungan = $query->NOMOR_KUNJUNGAN;
+        $refKunjungan = $query->REF;
 
         // Fetch kunjungan data using the new function
         $kunjungan = $this->getKunjungan($pendaftaran);
@@ -504,12 +642,47 @@ class KunjunganController extends Controller
         $diagnosa = $this->getDiagnosa($noKunjungan);
         $diagnosaId = $diagnosa ? $diagnosa->id : null;
 
-        return inertia("Pendaftaran/Kunjungan/Detail", array_merge([
-            'detail' => $query,
-            'nomorPendaftaran' => $pendaftaran,
-            'dataKunjungan' => $kunjungan,
-            'diagnosa' => $diagnosaId,
-        ], $relatedData));
+        $idRuangan = $query->ID_RUANGAN;
+
+        // //check if kunjungan laboratorium
+        $jenisKunjungan = MasterRuanganModel::where('ID', $idRuangan)->value('JENIS_KUNJUNGAN');
+
+        //jika kunjungan laboratorium
+        if ($jenisKunjungan == 4) {
+
+            //get detail lab berdasarkan ref kunjungan
+            $detailLab = $this->getDetailLab($refKunjungan);
+
+            //get hasil lab berdasarkan ref kunjungan
+            $hasilLab = $this->getHasilLab($refKunjungan);
+
+            //get catatan lab berdasarkan ref kunjungan
+            $catatanLab = $this->getCatatanLab($refKunjungan);
+
+            return inertia("Pendaftaran/Kunjungan/DetailLab", [
+                'detailLab' => $detailLab,
+                'detailHasilLab' => $hasilLab,
+                'detailCatatanLab' => $catatanLab,
+            ]);
+        } elseif ($jenisKunjungan == 5) {
+            //get detail lab berdasarkan ref kunjungan
+            $detailRad = $this->getDetailRad($noKunjungan);
+
+            //get hasil lab berdasarkan ref kunjungan
+            $hasilRad = $this->getHasilRad($noKunjungan);
+
+            return inertia("Pendaftaran/Kunjungan/DetailRad", [
+                'detailRad' => $detailRad,
+                'detailHasilRad' => $hasilRad,
+            ]);
+        } else {
+            return inertia("Pendaftaran/Kunjungan/Detail", array_merge([
+                'detail' => $query,
+                'nomorPendaftaran' => $pendaftaran,
+                'dataKunjungan' => $kunjungan,
+                'diagnosa' => $diagnosaId,
+            ], $relatedData));
+        }
     }
 
     private function getRelatedData($noKunjungan)

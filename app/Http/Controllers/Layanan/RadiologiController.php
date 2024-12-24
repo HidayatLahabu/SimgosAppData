@@ -199,7 +199,7 @@ class RadiologiController extends Controller
         // Fetch data hasil lab (lab test results)
         $queryHasil = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
             ->select(
-                'hasil.ID as HASIL_ID',
+                'hasil.ID as ID',
                 'tindakan.NAMA as TINDAKAN',
                 'hasil.TANGGAL',
                 'hasil.KLINIS',
@@ -219,6 +219,7 @@ class RadiologiController extends Controller
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('aplikasi.pengguna as pengguna', 'hasil.OLEH', '=', 'pengguna.ID')
             ->where('orderRad.NOMOR', $id)
+            ->where('hasil.STATUS', 2)
             ->distinct()
             ->get();
 
