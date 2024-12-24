@@ -350,10 +350,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
         Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
 
+        Route::get('kunjungan/rencanaTerapi/{id}', [KunjunganController::class, 'rencanaTerapi'])->name('kunjungan.rencanaTerapi');
+
+        Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
+
+        Route::get('kunjungan/perencanaanRawatInap/{id}', [KunjunganController::class, 'perencanaanRawatInap'])->name('kunjungan.perencanaanRawatInap');
+
+        Route::get('kunjungan/dischargePlanningSkrining/{id}', [KunjunganController::class, 'dischargePlanningSkrining'])->name('kunjungan.dischargePlanningSkrining');
+
+        Route::get('kunjungan/dischargePlanningFaktorRisiko/{id}', [KunjunganController::class, 'dischargePlanningFaktorRisiko'])->name('kunjungan.dischargePlanningFaktorRisiko');
+
         Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
         Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
 
-        Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
+        Route::get('kunjungan/pemantauanHDIntradialitik/{id}', [KunjunganController::class, 'pemantauanHDIntradialitik'])->name('kunjungan.pemantauanHDIntradialitik');
+
+        Route::get('kunjungan/tindakanAbci/{id}', [KunjunganController::class, 'tindakanAbci'])->name('kunjungan.tindakanAbci');
+
+        Route::get('kunjungan/tindakanMmpi/{id}', [KunjunganController::class, 'tindakanMmpi'])->name('kunjungan.tindakanMmpi');
 
         Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
 

@@ -9,11 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class MedicalrecordRekonsiliasiTransferModel extends Model
 {
     use HasFactory;
-
-    // Koneksi ke database yang digunakan
     public $connection = "mysql11";
-
-    // Menentukan tabel yang digunakan
     protected $table = 'rekonsiliasi_transfer';
 
     /**

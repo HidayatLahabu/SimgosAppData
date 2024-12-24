@@ -87,8 +87,15 @@ export default function Detail({
     penilaianDekubitus,
     penilaianBallanceCairan,
     diagnosa,
-    cppt,
+    rencanaTerapi,
     jadwalKontrol,
+    perencanaanRawatInap,
+    dischargePlanningSkrining,
+    dischargePlanningFaktorRisiko,
+    cppt,
+    pemantuanHDIntradialitik,
+    tindakanAbci,
+    tindakanMmpi,
 }) {
 
     const headers = [
@@ -255,8 +262,15 @@ export default function Detail({
                 penilaianDekubitus={penilaianDekubitus}
                 penilaianBallanceCairan={penilaianBallanceCairan}
                 diagnosa={diagnosa}
-                cppt={cppt}
+                rencanaTerapi={rencanaTerapi}
                 jadwalKontrol={jadwalKontrol}
+                perencanaanRawatInap={perencanaanRawatInap}
+                dischargePlanningSkrining={dischargePlanningSkrining}
+                dischargePlanningFaktorRisiko={dischargePlanningFaktorRisiko}
+                cppt={cppt}
+                pemantuanHDIntradialitik={pemantuanHDIntradialitik}
+                tindakanAbci={tindakanAbci}
+                tindakanMmpi={tindakanMmpi}
             />
 
         </AuthenticatedLayout>

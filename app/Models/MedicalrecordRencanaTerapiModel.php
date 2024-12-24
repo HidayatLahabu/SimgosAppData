@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MedicalrecordPemeriksaanFisikModel extends Model
+class MedicalrecordRencanaTerapiModel extends Model
 {
     use HasFactory;
     public $connection = "mysql11";
-    protected $table = 'pemeriksaan_fisik';
+    protected $table = 'rencana_terapi';
 
     /**
      * Mendapatkan data triage berdasarkan ID
@@ -21,20 +21,20 @@ class MedicalrecordPemeriksaanFisikModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_fisik as pemeriksaanFisik')
+        $query = DB::connection('mysql11')->table('medicalrecord.rencana_terapi as rencanaTerapi')
             ->select([
-                'pemeriksaanFisik.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                'rencanaTerapi.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
             ])
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanFisik.OLEH')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'rencanaTerapi.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('pemeriksaanFisik.ID', $id)
+            ->where('rencanaTerapi.ID', $id)
             ->distinct()
             ->firstOrFail();
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {
-            return response()->json(['message' => 'Data not found'], 404);
+            return response()->json(['message' => 'Triage not found'], 404);
         }
 
         return $query;

@@ -38,7 +38,7 @@ class MedicalrecordRiwayatLainnyaModel extends Model
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {
-            return response()->json(['message' => 'Triage not found'], 404);
+            return response()->json(['message' => 'Data not found'], 404);
         }
 
         return $query;

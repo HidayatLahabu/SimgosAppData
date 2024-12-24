@@ -28,7 +28,7 @@ export default function Dashboard({
         >
             <Head title="Beranda" />
 
-            <div className="py-5 flex flex-wrap w-full">
+            <div className="pt-5 pb-2 flex flex-wrap w-full">
                 <TodayData
                     pendaftaran={pendaftaran}
                     kunjungan={kunjungan}

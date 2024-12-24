@@ -898,14 +898,14 @@ class MedicalRecordController extends Controller
             ->first();
     }
 
-    public function getCppt($noKunjungan)
+    public function getRencanaTerapi($noKunjungan)
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select([
                 'kunjungan.NOMOR as nomor',
-                'cppt.KUNJUNGAN as id',
+                'rencanaTerapi.ID as id',
             ])
-            ->leftJoin('medicalrecord.cppt as cppt', 'cppt.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('medicalrecord.rencana_terapi as rencanaTerapi', 'rencanaTerapi.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }
@@ -918,6 +918,90 @@ class MedicalRecordController extends Controller
                 'jadwalKontrol.ID as id',
             ])
             ->leftJoin('medicalrecord.jadwal_kontrol as jadwalKontrol', 'jadwalKontrol.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPerencanaanRawatInap($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'perencanaanRawatInap.ID as id',
+            ])
+            ->leftJoin('medicalrecord.perencanaan_rawat_inap as perencanaanRawatInap', 'perencanaanRawatInap.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getDischargePlanningSkrining($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'dischargePlanningSkrining.ID as id',
+            ])
+            ->leftJoin('medicalrecord.discharge_planning_skrining as dischargePlanningSkrining', 'dischargePlanningSkrining.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getDischargePlanningFaktorRisiko($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'dischargePlanningFaktorRisiko.ID as id',
+            ])
+            ->leftJoin('medicalrecord.discharge_planning_faktor_risiko as dischargePlanningFaktorRisiko', 'dischargePlanningFaktorRisiko.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getCppt($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'cppt.KUNJUNGAN as id',
+            ])
+            ->leftJoin('medicalrecord.cppt as cppt', 'cppt.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getPemantauanHDIntradialitik($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'pemantuanHDIntradialitik.KUNJUNGAN as id',
+            ])
+            ->leftJoin('medicalrecord.pemantuan_hd_intradialitik as pemantuanHDIntradialitik', 'pemantuanHDIntradialitik.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getTindakanAbci($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'tindakanAbci.KUNJUNGAN as id',
+            ])
+            ->leftJoin('medicalrecord.tindakan_abci as tindakanAbci', 'tindakanAbci.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->where('kunjungan.NOMOR', $noKunjungan)
+            ->first();
+    }
+
+    public function getTindakanMmpi($noKunjungan)
+    {
+        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select([
+                'kunjungan.NOMOR as nomor',
+                'tindakanMmpi.KUNJUNGAN as id',
+            ])
+            ->leftJoin('medicalrecord.tindakan_mmpi as tindakanMmpi', 'tindakanMmpi.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->where('kunjungan.NOMOR', $noKunjungan)
             ->first();
     }

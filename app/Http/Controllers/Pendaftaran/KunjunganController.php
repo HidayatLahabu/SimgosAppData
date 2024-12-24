@@ -14,6 +14,8 @@ use App\Models\MedicalrecordAnamnesisModel;
 use App\Models\MedicalrecordAsuhanKeperawatanModel;
 use App\Models\MedicalrecordBatukModel;
 use App\Models\MedicalrecordCpptModel;
+use App\Models\MedicalrecordDischargePlanningFaktorRisikoModel;
+use App\Models\MedicalrecordDischargePlanningSkriningModel;
 use App\Models\MedicalrecordEdukasiEmergencyModel;
 use App\Models\MedicalrecordEdukasiEndOfLifeModel;
 use App\Models\MedicalrecordEdukasiPasienKeluargaModel;
@@ -23,6 +25,7 @@ use App\Models\MedicalrecordFungsionalModel;
 use App\Models\MedicalrecordJadwalKontrolModel;
 use App\Models\MedicalrecordKeluhanUtamaModel;
 use App\Models\MedicalrecordKondisiSosialModel;
+use App\Models\MedicalrecordPemantauanHDIntradialitikModel;
 use App\Models\MedicalrecordPemeriksaanAnusModel;
 use App\Models\MedicalrecordPemeriksaanAsessmentMChatModel;
 use App\Models\MedicalrecordPemeriksaanBibirModel;
@@ -71,10 +74,12 @@ use App\Models\MedicalrecordPenilaianNyeriModel;
 use App\Models\MedicalrecordPenilaianSkalaHumptyDumptyModel;
 use App\Models\MedicalrecordPenilaianSkalaMorseModel;
 use App\Models\MedicalrecordPenilaianStatusPediatrikModel;
+use App\Models\MedicalrecordPerencanaanRawatInapModel;
 use App\Models\MedicalrecordPermasalahanGiziModel;
 use App\Models\MedicalrecordRekonsiliasiDischargeModel;
 use App\Models\MedicalrecordRekonsiliasiObatModel;
 use App\Models\MedicalrecordRekonsiliasiTransferModel;
+use App\Models\MedicalrecordRencanaTerapiModel;
 use App\Models\MedicalrecordRiwayatAlergiModel;
 use App\Models\MedicalrecordRiwayatGynekologiModel;
 use App\Models\MedicalrecordRiwayatLainnyaModel;
@@ -84,6 +89,8 @@ use App\Models\MedicalrecordRiwayatTuberkulosisModel;
 use App\Models\MedicalrecordRppModel;
 use App\Models\MedicalrecordStatusFungsionalModel;
 use App\Models\MedicalrecordTandaVitalModel;
+use App\Models\MedicalrecordTindakanAbciModel;
+use App\Models\MedicalrecordTindakanMmpiModel;
 
 class KunjunganController extends Controller
 {
@@ -149,6 +156,98 @@ class KunjunganController extends Controller
             'rataRata' => $rataRata, // Pass rata-rata data to frontend
             'ruangan' => $ruangan,
             'queryParams' => request()->all()
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan' => 'nullable|string',
+            'statusKunjungan' => 'nullable|integer|in:0,1,2',
+            'pasien' => 'nullable|integer|in:1,2',
+            'dari_tanggal' => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan = $request->input('ruangan');
+        $statusKunjungan = $request->input('statusKunjungan');
+        $pasien = $request->input('pasien');
+        $dariTanggal = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variabel default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaStatusKunjungan = 'Semua Status Aktifitas Kunjungan';
+        $jenisPasien = 'Semua Status Kunjungan';
+
+        // Query utama
+        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+            ->select(
+                'kunjungan.NOMOR as nomor',
+                'pasien.NAMA as nama',
+                'pasien.NORM as norm',
+                'ruangan.DESKRIPSI as ruangan',
+                'kunjungan.MASUK as masuk',
+                'kunjungan.KELUAR as keluar',
+                'kunjungan.STATUS as status'
+            )
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->where('pasien.STATUS', 1);
+
+        // Filter berdasarkan ruangan
+        if (!empty($ruangan)) {
+            $query->where('ruangan.ID', $ruangan);
+
+            // Mendapatkan nama ruangan yang sesuai dari hasil query
+            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
+                ->where('ID', $ruangan)
+                ->value('DESKRIPSI');
+        }
+
+        // Filter berdasarkan jenis kunjungan
+        if ($statusKunjungan === null) {
+            $query->whereIn('kunjungan.STATUS', [0, 1, 2]);
+        } elseif ($statusKunjungan == 1) {
+            $query->where('kunjungan.STATUS', 1); // Sedang Dilayani
+            $namaStatusKunjungan = 'Sedang Dilayani';
+        } elseif ($statusKunjungan == 2) {
+            $query->where('kunjungan.STATUS', 2); // Selesai
+            $namaStatusKunjungan = 'Selesai';
+        } else {
+            $query->where('kunjungan.STATUS', 0); // Batal Kunjungan
+            $namaStatusKunjungan = 'Batal Kunjungan';
+        }
+
+        // Filter berdasarkan pasien baru atau lama
+        if ($pasien == 1) {
+            // Pasien baru: TANGGAL pasien sama dengan tanggal kunjungan MASUK
+            $query->whereRaw('DATE(pasien.TANGGAL) = DATE(kunjungan.MASUK)');
+            $jenisPasien = 'Baru';
+        } elseif ($pasien == 2) {
+            // Pasien lama: TANGGAL pasien tidak sama dengan tanggal kunjungan MASUK
+            $query->whereRaw('DATE(pasien.TANGGAL) != DATE(kunjungan.MASUK)');
+            $jenisPasien = 'Lama';
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('kunjungan.MASUK', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('kunjungan.MASUK')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Pendaftaran/Kunjungan/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaStatusKunjungan' => $namaStatusKunjungan,
+            'jenisPasien' => $jenisPasien,
         ]);
     }
 
@@ -490,8 +589,15 @@ class KunjunganController extends Controller
             'getPenilaianGetupGo' => 'penilaianGetupGo',
             'getPenilaianDekubitus' => 'penilaianDekubitus',
             'getPenilaianBallanceCairan' => 'penilaianBallanceCairan',
-            'getCppt' => 'cppt',
+            'getRencanaTerapi' => 'rencanaTerapi',
             'getJadwalKontrol' => 'jadwalKontrol',
+            'getPerencanaanRawatInap' => 'perencanaanRawatInap',
+            'getDischargePlanningSkrining' => 'dischargePlanningSkrining',
+            'getDischargePlanningFaktorRisiko' => 'dischargePlanningFaktorRisiko',
+            'getCppt' => 'cppt',
+            'getPemantauanHDIntradialitik' => 'pemantauanHDIntradialitik',
+            'getTindakanAbci' => 'tindakanAbci',
+            'getTindakanMmpi' => 'tindakanMmpi',
         ];
 
         $result = [];
@@ -604,56 +710,6 @@ class KunjunganController extends Controller
             'detail'            => $query,
             'nomorKunjungan'    => $kunjungan,
             'judulRme'          => 'DIAGNOSA',
-        ]);
-    }
-
-    public function triage($id)
-    {
-        $query = MedicalrecordTriageModel::getById($id);
-
-        if ($query) {
-            $query->KEDATANGAN = implode(', ', json_decode($query->KEDATANGAN, true));
-            $query->KASUS = implode(', ', json_decode($query->KASUS, true));
-            $query->ANAMNESE = implode(', ', json_decode($query->ANAMNESE, true));
-            $query->TANDA_VITAL = implode(', ', json_decode($query->TANDA_VITAL, true));
-            $query->OBGYN = implode(', ', json_decode($query->OBGYN, true));
-            $query->KEBUTUHAN_KHUSUS = implode(', ', json_decode($query->KEBUTUHAN_KHUSUS, true));
-            $query->RESUSITASI = implode(', ', json_decode($query->RESUSITASI, true));
-            $query->EMERGENCY = implode(', ', json_decode($query->EMERGENCY, true));
-            $query->URGENT = implode(', ', json_decode($query->URGENT, true));
-            $query->LESS_URGENT = implode(', ', json_decode($query->LESS_URGENT, true));
-            $query->NON_URGENT = implode(', ', json_decode($query->NON_URGENT, true));
-            $query->DOA = implode(', ', json_decode($query->DOA, true));
-        }
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'TRIAGE',
         ]);
     }
 
@@ -819,18 +875,10 @@ class KunjunganController extends Controller
         ]);
     }
 
-    public function askep($id)
+    public function detailRme($id, $model, $judulRme)
     {
-        $query = MedicalrecordAsuhanKeperawatanModel::getById($id);
-
-        if ($query) {
-            $query->SUBJECKTIF = implode(', ', json_decode($query->SUBJECKTIF, true));
-            $query->OBJEKTIF = implode(', ', json_decode($query->OBJEKTIF, true));
-            $query->OBSERVASI = implode(', ', json_decode($query->OBSERVASI, true));
-            $query->THEURAPEUTIC = implode(', ', json_decode($query->THEURAPEUTIC, true));
-            $query->EDUKASI = implode(', ', json_decode($query->EDUKASI, true));
-            $query->KOLABORASI = implode(', ', json_decode($query->KOLABORASI, true));
-        }
+        // Fetch the specific data using dynamic model
+        $query = $model::getById($id);
 
         $noKunjungan = $query->KUNJUNGAN;
 
@@ -859,2491 +907,363 @@ class KunjunganController extends Controller
             'tanggalMasuk'     => $masuk,
             'tanggalKeluar'    => $keluar,
             'dpjp'             => $dpjp,
-            'judulRme'         => 'ASUHAN KEPERAWATAN',
+            'judulRme'         => $judulRme,
         ]);
+    }
+
+    public function triage($id)
+    {
+        return $this->detailRme($id, MedicalrecordTriageModel::class, 'TRIAGE');
+    }
+
+    public function askep($id)
+    {
+        return $this->detailRme($id, MedicalrecordAsuhanKeperawatanModel::class, 'ASKEP');
     }
 
     public function keluhanUtama($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordKeluhanUtamaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'KELUHAN UTAMA',
-        ]);
+        return $this->detailRme($id, MedicalrecordKeluhanUtamaModel::class, 'KELUHAN UTAMA');
     }
 
     public function anamnesisDiperoleh($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordAnamnesisDiperolehModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'ANAMNESIS DIPEROLEH',
-        ]);
+        return $this->detailRme($id, MedicalrecordAnamnesisDiperolehModel::class, 'ANAMNESIS DIPEROLEH');
     }
 
     public function riwayatPenyakitSekarang($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordAnamnesisModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT PENYAKIT SEKARANG',
-        ]);
+        return $this->detailRme($id, MedicalrecordAnamnesisModel::class, 'RIWAYAT PENYAKIT SEKARANG');
     }
 
     public function riwayatPenyakitDahulu($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRppModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT PERJALANAN PENYAKIT',
-        ]);
+        return $this->detailRme($id, MedicalrecordRppModel::class, 'RIWAYAT PERJALANAN PENYAKIT');
     }
 
     public function riwayatAlergi($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatAlergiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT ALERGI',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatAlergiModel::class, 'RIWAYAT ALERGI');
     }
 
     public function riwayatPemberianObat($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatPemberianObatModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT PEMBERIAN OBAT',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatPemberianObatModel::class, 'RIWAYAT PEMBERIAN OBAT');
     }
 
     public function riwayatLainnya($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatLainnyaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT LAINNYA',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatLainnyaModel::class, 'RIWAYAT LAINNYA');
     }
 
     public function faktorRisiko($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordFaktorRisikoModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'FAKTOR RISIKO',
-        ]);
+        return $this->detailRme($id, MedicalrecordFaktorRisikoModel::class, 'FAKTOR RISIKO');
     }
 
     public function riwayatPenyakitKeluarga($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatPenyakitKeluargaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT PENYAKIT KELUARGA',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatPenyakitKeluargaModel::class, 'RIWAYAT PENYAKIT KELUARGA');
     }
 
     public function riwayatTuberkulosis($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatTuberkulosisModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT TUBERKULOSIS',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatTuberkulosisModel::class, 'RIWAYAT TUBERKULOSIS');
     }
 
     public function riwayatGinekologi($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordRiwayatGynekologiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'RIWAYAT GINEKOLOGI',
-        ]);
+        return $this->detailRme($id, MedicalrecordRiwayatGynekologiModel::class, 'RIWAYAT GINEKOLOGI');
     }
 
     public function statusFungsional($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordStatusFungsionalModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'STATUS FUNGSIONAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordStatusFungsionalModel::class, 'STATUS FUNGSIONAL');
     }
 
     public function hubunganPsikososial($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordKondisiSosialModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'HUBUNGAN STATUS PSIKOSOSIAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordKondisiSosialModel::class, 'HUBUNGAN PSIKOSOSIAL');
     }
 
     public function edukasiPasienKeluarga($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordEdukasiPasienKeluargaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'EDUKASI PASIEN DAN KELUARGA',
-        ]);
+        return $this->detailRme($id, MedicalrecordEdukasiPasienKeluargaModel::class, 'EDUKASI PASIEN DAN KELUARGA');
     }
 
     public function edukasiEmergency($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordEdukasiEmergencyModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'EDUKASI EMERGENCY',
-        ]);
+        return $this->detailRme($id, MedicalrecordEdukasiEmergencyModel::class, 'EDUKASI EMERGENCY');
     }
 
     public function edukasiEndOfLife($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordEdukasiEndOfLifeModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'EDUKASI END OF LIFE',
-        ]);
+        return $this->detailRme($id, MedicalrecordEdukasiEndOfLifeModel::class, 'EDUKASI END OF LIFE');
     }
 
     public function skriningGiziAwal($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPermasalahanGiziModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'SKRINING GIZI AWAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordPermasalahanGiziModel::class, 'SKRINING GIZI AWAL');
     }
 
     public function batuk($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordBatukModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'BATUK',
-        ]);
+        return $this->detailRme($id, MedicalrecordBatukModel::class, 'BATUK');
     }
 
     public function pemeriksaanUmum($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordTandaVitalModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN UMUM TANDA VITAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordTandaVitalModel::class, 'PEMERIKSAAN UMUM TANDA VITAL');
     }
 
     public function pemeriksaanFungsional($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordFungsionalModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN UMUM FUNGSIONAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordFungsionalModel::class, 'PEMERIKSAAN UMUM FUNGSIONAL');
     }
 
     public function pemeriksaanFisik($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanFisikModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN FISIK',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanFisikModel::class, 'PEMERIKSAAN FISIK');
     }
 
     public function pemeriksaanKepala($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanKepalaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN KEPALA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanKepalaModel::class, 'PEMERIKSAAN KEPALA');
     }
 
     public function pemeriksaanMata($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanMataModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN MATA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanMataModel::class, 'PEMERIKSAAN MATA');
     }
 
     public function pemeriksaanTelinga($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTelingaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TELINGA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTelingaModel::class, 'PEMERIKSAAN TELINGA');
     }
 
     public function pemeriksaanHidung($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanHidungModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN HIDUNG',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanHidungModel::class, 'PEMERIKSAAN HIDUNG');
     }
 
     public function pemeriksaanRambut($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanRambutModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN RAMBUT',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanRambutModel::class, 'PEMERIKSAAN RAMBUT');
     }
 
     public function pemeriksaanBibir($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanBibirModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN BIBIR',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanBibirModel::class, 'PEMERIKSAAN BIBIR');
     }
 
     public function pemeriksaanGigiGeligi($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanGigiGeligiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN GIGI GELIGI',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanGigiGeligiModel::class, 'PEMERIKSAAN GIGI GELIGI');
     }
 
     public function pemeriksaanLidah($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanLidahModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN LIDAH',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanLidahModel::class, 'PEMERIKSAAN LIDAH');
     }
 
     public function pemeriksaanLangitLangit($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanLangitLangitModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN LANGIT LANGIT',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanLangitLangitModel::class, 'PEMERIKSAAN LANGIT-LANGIT');
     }
 
     public function pemeriksaanLeher($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanLeherModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN LEHER',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanLeherModel::class, 'PEMERIKSAAN LEHER');
     }
 
     public function pemeriksaanTenggorokan($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTenggorokanModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TENGGOROKAN',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTenggorokanModel::class, 'PEMERIKSAAN TENGGOROKAN');
     }
 
     public function pemeriksaanTonsil($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTonsilModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TONSIL',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTonsilModel::class, 'PEMERIKSAAN TONSIL');
     }
 
     public function pemeriksaanDada($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanDadaModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN DADA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanDadaModel::class, 'PEMERIKSAAN DADA');
     }
+
     public function pemeriksaanPayudara($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanPayudaraModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN PAYUDARA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanPayudaraModel::class, 'PEMERIKSAAN PAYUDARA');
     }
 
     public function pemeriksaanPunggung($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanPunggungModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN PUNGGUNG',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanPunggungModel::class, 'PEMERIKSAAN PUNGGUNG');
     }
 
     public function pemeriksaanPerut($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanPerutModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN PERUT',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanPerutModel::class, 'PEMERIKSAAN PERUT');
     }
 
     public function pemeriksaanGenital($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanGenitalModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN GENITAL',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanGenitalModel::class, 'PEMERIKSAAN GENITAL');
     }
 
     public function pemeriksaanAnus($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanAnusModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN ANUS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanAnusModel::class, 'PEMERIKSAAN ANUS');
     }
 
     public function pemeriksaanLenganAtas($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanLenganAtasModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN LENGAN ATAS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanLenganAtasModel::class, 'PEMERIKSAAN LENGAN ATAS');
     }
 
     public function pemeriksaanLenganBawah($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanLenganBawahModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN LENGAN BAWAH',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanLenganBawahModel::class, 'PEMERIKSAAN LENGAN BAWAH');
     }
 
     public function pemeriksaanJariTangan($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanJariTanganModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN JARI TANGAN',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanJariTanganModel::class, 'PEMERIKSAAN JARI TANGAN');
     }
 
     public function pemeriksaanKukuTangan($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanKukuTanganModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN KUKU TANGAN',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanKukuTanganModel::class, 'PEMERIKSAAN KUKU TANGAN');
     }
 
     public function pemeriksaanPersendianTangan($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanPersendianTanganModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN PERSENDIAN TANGAN',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanPersendianTanganModel::class, 'PEMERIKSAAN PERSENDIAN TANGAN');
     }
 
     public function pemeriksaanTungkaiAtas($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTungkaiAtasModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TUNGKAI ATAS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTungkaiAtasModel::class, 'PEMERIKSAAN TUNGKAI ATAS');
     }
 
     public function pemeriksaanTungkaiBawah($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTungkaiBawahModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TUNGKAI BAWAH',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTungkaiBawahModel::class, 'PEMERIKSAAN TUNGKAI BAWAH');
     }
 
     public function pemeriksaanJariKaki($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanJariKakiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN JARI KAKI',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanJariKakiModel::class, 'PEMERIKSAAN JARI KAKI');
     }
 
     public function pemeriksaanKukuKaki($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanKukuKakiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN KUKU KAKI',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanKukuKakiModel::class, 'PEMERIKSAAN KUKU KAKI');
     }
 
     public function pemeriksaanPersendianKaki($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanPersendianKakiModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN PERSENDIAN KAKI',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanPersendianKakiModel::class, 'PEMERIKSAAN PERSENDIAN KAKI');
     }
 
     public function pemeriksaanFaring($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanFaringModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN FARING',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanFaringModel::class, 'PEMERIKSAAN FARING');
     }
 
     public function pemeriksaanSaluranCernahBawah($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanSaluranCernahBawahModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN SALURAN CERNAH BAWAH',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanSaluranCernahBawahModel::class, 'PEMERIKSAAN SALURAN CERNAH BAWAH');
     }
 
     public function pemeriksaanSaluranCernahAtas($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanSaluranCernahAtasModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN SALURAN CERNAH ATAS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanSaluranCernahAtasModel::class, 'PEMERIKSAAN SALURAN CERNAH ATAS');
     }
 
     public function pemeriksaanEeg($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanEegModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN EEG',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanEegModel::class, 'PEMERIKSAAN EEG');
     }
 
     public function pemeriksaanEmg($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanEmgModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN EMG',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanEmgModel::class, 'PEMERIKSAAN EMG');
     }
 
     public function pemeriksaanRavenTest($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanRavenTestModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN RAVEN TEST',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanRavenTestModel::class, 'PEMERIKSAAN RAVEN TEST');
     }
 
     public function pemeriksaanCatClams($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanCatClamsModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN CAT CLAMS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanCatClamsModel::class, 'PEMERIKSAAN CAT CLAMS');
     }
 
     public function pemeriksaanTransfusiDarah($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanTransfusiDarahModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN TRANSFUSI DARAH',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanTransfusiDarahModel::class, 'PEMERIKSAAN TRANSFUSI DARAH');
     }
 
     public function pemeriksaanAsessmentMChat($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanAsessmentMChatModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN ASESSMENT M CHAT',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanAsessmentMChatModel::class, 'PEMERIKSAAN ASESSMENT M CHAT');
     }
 
     public function pemeriksaanEkg($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPemeriksaanEkgModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PEMERIKSAAN EKG',
-        ]);
+        return $this->detailRme($id, MedicalrecordPemeriksaanEkgModel::class, 'PEMERIKSAAN EKG');
     }
 
     public function penilaianFisik($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianFisikModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN FISIK',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianFisikModel::class, 'PENILAIAN FISIK');
     }
 
     public function penilaianNyeri($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianNyeriModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN NYERI',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianNyeriModel::class, 'PENILAIAN NYERI');
     }
 
     public function penilaianStatusPediatrik($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianStatusPediatrikModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN STATUS PEDIATRIK',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianStatusPediatrikModel::class, 'PENILAIAN STATUS PEDIATRIK');
     }
 
     public function penilaianDiagnosis($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianDiagnosisModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN DIAGNOSIS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianDiagnosisModel::class, 'PENILAIAN DIAGNOSIS');
     }
 
     public function penilaianSkalaMorse($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianSkalaMorseModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN SKALA MORSE',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianSkalaMorseModel::class, 'PENILAIAN SKALA MORSE');
     }
 
     public function penilaianSkalaHumptyDumpty($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianSkalaHumptyDumptyModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN SKALA HUMPTY DUMPTY',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianSkalaHumptyDumptyModel::class, 'PENILAIAN SKALA HUMPTY DUMPTY');
     }
 
     public function penilaianEpfra($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianEpfraModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN EPFRA',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianEpfraModel::class, 'PENILAIAN EPFRA');
     }
 
     public function penilaianGetupGo($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianGetupGoModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN GET UP AND GO',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianGetupGoModel::class, 'PENILAIAN GET UP AND GO');
     }
 
     public function penilaianDekubitus($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianDekubitusModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN DEKUBITUS',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianDekubitusModel::class, 'PENILAIAN DEKUBITUS');
     }
 
     public function penilaianBallanceCairan($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordPenilaianBallanceCairanModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'PENILAIAN BALANCE CAIRAN',
-        ]);
+        return $this->detailRme($id, MedicalrecordPenilaianBallanceCairanModel::class, 'PENILAIAN BALANCE CAIRAN');
     }
 
     public function cppt($id)
@@ -3398,174 +1318,46 @@ class KunjunganController extends Controller
 
     public function detailCppt($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordCpptModel::getById($id);
+        return $this->detailRme($id, MedicalrecordCpptModel::class, 'CPPT');
+    }
 
-        // Gunakan strip_tags untuk data dari tag HTML
-        if ($query) {
-            $query->SUBYEKTIF = html_entity_decode(strip_tags($query->SUBYEKTIF));
-            $query->OBYEKTIF = html_entity_decode(strip_tags($query->OBYEKTIF));
-            $query->ASSESMENT = html_entity_decode(strip_tags($query->ASSESMENT));
-            $query->PLANNING = html_entity_decode(strip_tags($query->PLANNING));
-            $query->INSTRUKSI = html_entity_decode(strip_tags($query->INSTRUKSI));
-        }
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'CPPT',
-        ]);
+    public function rencanaTerapi($id)
+    {
+        return $this->detailRme($id, MedicalrecordRencanaTerapiModel::class, 'RENCANA TERAPI');
     }
 
     public function jadwalKontrol($id)
     {
-        // Fetch the specific data
-        $query = MedicalrecordJadwalKontrolModel::getById($id);
-
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
-        $pendaftaran = $dataPasien->nomorPendaftaran;
-        $kunjungan   = $dataPasien->nomorKunjungan;
-        $pasien      = $dataPasien->namaPasien;
-        $norm        = $dataPasien->norm;
-        $ruangan     = $dataPasien->ruangan;
-        $status      = $dataPasien->status;
-        $masuk       = $dataPasien->masuk;
-        $keluar      = $dataPasien->keluar;
-        $dpjp        = $dataPasien->dpjp;
-
-        return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'           => $query,
-            'nomorKunjungan'   => $kunjungan,
-            'nomorPendaftaran' => $pendaftaran,
-            'namaPasien'       => $pasien,
-            'normPasien'       => $norm,
-            'ruanganTujuan'    => $ruangan,
-            'statusKunjungan'  => $status,
-            'tanggalMasuk'     => $masuk,
-            'tanggalKeluar'    => $keluar,
-            'dpjp'             => $dpjp,
-            'judulRme'         => 'JADWAL KONTROL',
-        ]);
+        return $this->detailRme($id, MedicalrecordJadwalKontrolModel::class, 'JADWAL KONTROL');
     }
 
-    public function print(Request $request)
+    public function perencanaanRawatInap($id)
     {
-        // Validasi input
-        $request->validate([
-            'ruangan' => 'nullable|string',
-            'statusKunjungan' => 'nullable|integer|in:0,1,2',
-            'pasien' => 'nullable|integer|in:1,2',
-            'dari_tanggal' => 'required|date',
-            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
-        ]);
+        return $this->detailRme($id, MedicalrecordPerencanaanRawatInapModel::class, 'PERENCANAAN RAWAT INAP');
+    }
 
-        // Ambil nilai input
-        $ruangan = $request->input('ruangan');
-        $statusKunjungan = $request->input('statusKunjungan');
-        $pasien = $request->input('pasien');
-        $dariTanggal = $request->input('dari_tanggal');
-        $sampaiTanggal = $request->input('sampai_tanggal');
-        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
-        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+    public function dischargePlanningSkrining($id)
+    {
+        return $this->detailRme($id, MedicalrecordDischargePlanningSkriningModel::class, 'DISCHARGE PLANNING SKRINING');
+    }
 
-        // Variabel default untuk label
-        $namaRuangan = 'Semua Ruangan';
-        $namaStatusKunjungan = 'Semua Status Aktifitas Kunjungan';
-        $jenisPasien = 'Semua Status Kunjungan';
+    public function dischargePlanningFaktorRisiko($id)
+    {
+        return $this->detailRme($id, MedicalrecordDischargePlanningFaktorRisikoModel::class, 'DISCHARGE PLANNING FAKTOR RISIKO');
+    }
 
-        // Query utama
-        $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
-            ->select(
-                'kunjungan.NOMOR as nomor',
-                'pasien.NAMA as nama',
-                'pasien.NORM as norm',
-                'ruangan.DESKRIPSI as ruangan',
-                'kunjungan.MASUK as masuk',
-                'kunjungan.KELUAR as keluar',
-                'kunjungan.STATUS as status'
-            )
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
-            ->where('pasien.STATUS', 1);
+    public function pemantuanHDIntradialitik($id)
+    {
+        return $this->detailRme($id, MedicalrecordPemantauanHDIntradialitikModel::class, 'PEMANTAUAN HD INTRADIALITIK');
+    }
 
-        // Filter berdasarkan ruangan
-        if (!empty($ruangan)) {
-            $query->where('ruangan.ID', $ruangan);
+    public function tindakanAbci($id)
+    {
+        return $this->detailRme($id, MedicalrecordTindakanAbciModel::class, 'TINDAKAN ABC I');
+    }
 
-            // Mendapatkan nama ruangan yang sesuai dari hasil query
-            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
-                ->where('ID', $ruangan)
-                ->value('DESKRIPSI');
-        }
-
-        // Filter berdasarkan jenis kunjungan
-        if ($statusKunjungan === null) {
-            $query->whereIn('kunjungan.STATUS', [0, 1, 2]);
-        } elseif ($statusKunjungan == 1) {
-            $query->where('kunjungan.STATUS', 1); // Sedang Dilayani
-            $namaStatusKunjungan = 'Sedang Dilayani';
-        } elseif ($statusKunjungan == 2) {
-            $query->where('kunjungan.STATUS', 2); // Selesai
-            $namaStatusKunjungan = 'Selesai';
-        } else {
-            $query->where('kunjungan.STATUS', 0); // Batal Kunjungan
-            $namaStatusKunjungan = 'Batal Kunjungan';
-        }
-
-        // Filter berdasarkan pasien baru atau lama
-        if ($pasien == 1) {
-            // Pasien baru: TANGGAL pasien sama dengan tanggal kunjungan MASUK
-            $query->whereRaw('DATE(pasien.TANGGAL) = DATE(kunjungan.MASUK)');
-            $jenisPasien = 'Baru';
-        } elseif ($pasien == 2) {
-            // Pasien lama: TANGGAL pasien tidak sama dengan tanggal kunjungan MASUK
-            $query->whereRaw('DATE(pasien.TANGGAL) != DATE(kunjungan.MASUK)');
-            $jenisPasien = 'Lama';
-        }
-
-        // Filter berdasarkan tanggal
-        $data = $query->whereBetween('kunjungan.MASUK', [$dariTanggal, $sampaiTanggal])
-            ->orderBy('kunjungan.MASUK')
-            ->get();
-
-        // Kirim data ke frontend menggunakan Inertia
-        return inertia("Pendaftaran/Kunjungan/Print", [
-            'data' => $data,
-            'dariTanggal' => $dariTanggal,
-            'sampaiTanggal' => $sampaiTanggal,
-            'namaRuangan' => $namaRuangan,
-            'namaStatusKunjungan' => $namaStatusKunjungan,
-            'jenisPasien' => $jenisPasien,
-        ]);
+    public function tindakanMmpi($id)
+    {
+        return $this->detailRme($id, MedicalrecordTindakanMmpiModel::class, 'TINDAKAN MMPI');
     }
 }

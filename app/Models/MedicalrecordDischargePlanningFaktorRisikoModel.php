@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MedicalrecordPemeriksaanFisikModel extends Model
+class MedicalrecordDischargePlanningFaktorRisikoModel extends Model
 {
     use HasFactory;
     public $connection = "mysql11";
-    protected $table = 'pemeriksaan_fisik';
+    protected $table = 'discharge_planning_faktor_risiko';
 
     /**
      * Mendapatkan data triage berdasarkan ID
@@ -21,14 +21,14 @@ class MedicalrecordPemeriksaanFisikModel extends Model
     public static function getById($id)
     {
         // Melakukan query untuk mengambil data berdasarkan ID
-        $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_fisik as pemeriksaanFisik')
+        $query = DB::connection('mysql11')->table('medicalrecord.discharge_planning_faktor_risiko as dischargePlanningFaktorRisiko')
             ->select([
-                'pemeriksaanFisik.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                'dischargePlanningSkrining.*',
+                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
             ])
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanFisik.OLEH')
+            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'dischargePlanningFaktorRisiko.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('pemeriksaanFisik.ID', $id)
+            ->where('dischargePlanningFaktorRisiko.ID', $id)
             ->distinct()
             ->firstOrFail();
 

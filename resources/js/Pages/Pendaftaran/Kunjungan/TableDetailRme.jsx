@@ -81,9 +81,16 @@ export default function TableDetailRme({
     penilaianGetupGo,
     penilaianDekubitus,
     penilaianBallanceCairan,
-    cppt,
     diagnosa,
+    rencanaTerapi,
     jadwalKontrol,
+    perencanaanRawatInap,
+    dischargePlanningSkrining,
+    dischargePlanningFaktorRisiko,
+    cppt,
+    pemantuanHDIntradialitik,
+    tindakanAbci,
+    tindakanMmpi,
 }) {
     const headers = [
         { name: "MEDICAL RECORD", className: "text-left, w-[70%]" },
@@ -165,9 +172,16 @@ export default function TableDetailRme({
         { label: "PENILAIAN GET UP GO", data: penilaianGetupGo, routeName: "kunjungan.penilaianGetupGo" },
         { label: "PENILAIAN DEKUBITUS", data: penilaianDekubitus, routeName: "kunjungan.penilaianDekubitus" },
         { label: "PENILAIAN BALLANCE CAIRAN", data: penilaianBallanceCairan, routeName: "kunjungan.penilaianBallanceCairan" },
-        { label: "CPPT", data: cppt, routeName: "kunjungan.cppt" },
         { label: "DIAGNOSA", data: diagnosa, routeName: "kunjungan.diagnosa" },
+        { label: "RENCANA TERAPI", data: rencanaTerapi, routeName: "kunjungan.rencanaTerapi" },
         { label: "JADWAL KONTROL", data: jadwalKontrol, routeName: "kunjungan.jadwalKontrol" },
+        { label: "PERENCANAAN RAWAT INAP", data: perencanaanRawatInap, routeName: "kunjungan.perencanaanRawatInap" },
+        { label: "DISCHARGE PLANNING SKRINING", data: dischargePlanningSkrining, routeName: "kunjungan.dischargePlanningSkrining" },
+        { label: "DISCHARGE PLANNING FAKTOR RISIKO", data: dischargePlanningFaktorRisiko, routeName: "kunjungan.dischargePlanningFaktorRisiko" },
+        { label: "CPPT", data: cppt, routeName: "kunjungan.cppt" },
+        { label: "PEMANTUAN HD INTRADIALITIK", data: pemantuanHDIntradialitik, routeName: "kunjungan.pemantuanHDIntradialitik" },
+        { label: "TINDAKAN ABC I", data: tindakanAbci, routeName: "kunjungan.tindakanAbci" },
+        { label: "TINDAKAN MMPI", data: tindakanMmpi, routeName: "kunjungan.tindakanMmpi" },
     ];
 
     const validRows = rows.filter(row => row.data && row.data !== "");

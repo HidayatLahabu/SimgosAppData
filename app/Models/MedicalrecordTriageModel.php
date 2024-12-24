@@ -61,7 +61,22 @@ class MedicalrecordTriageModel extends Model
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {
-            return response()->json(['message' => 'Triage not found'], 404);
+            return response()->json(['message' => 'Data not found'], 404);
+        }
+
+        if ($query) {
+            $query->KEDATANGAN = implode(', ', json_decode($query->KEDATANGAN, true));
+            $query->KASUS = implode(', ', json_decode($query->KASUS, true));
+            $query->ANAMNESE = implode(', ', json_decode($query->ANAMNESE, true));
+            $query->TANDA_VITAL = implode(', ', json_decode($query->TANDA_VITAL, true));
+            $query->OBGYN = implode(', ', json_decode($query->OBGYN, true));
+            $query->KEBUTUHAN_KHUSUS = implode(', ', json_decode($query->KEBUTUHAN_KHUSUS, true));
+            $query->RESUSITASI = implode(', ', json_decode($query->RESUSITASI, true));
+            $query->EMERGENCY = implode(', ', json_decode($query->EMERGENCY, true));
+            $query->URGENT = implode(', ', json_decode($query->URGENT, true));
+            $query->LESS_URGENT = implode(', ', json_decode($query->LESS_URGENT, true));
+            $query->NON_URGENT = implode(', ', json_decode($query->NON_URGENT, true));
+            $query->DOA = implode(', ', json_decode($query->DOA, true));
         }
 
         return $query;

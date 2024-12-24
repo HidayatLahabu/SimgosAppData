@@ -34,7 +34,17 @@ class MedicalrecordAsuhanKeperawatanModel extends Model
 
         // Jika data tidak ditemukan, default atau error
         if (!$query) {
-            return response()->json(['message' => 'Triage not found'], 404);
+            return response()->json(['message' => 'Data not found'], 404);
+        }
+
+        if ($query) {
+            $query->SUBJECKTIF = implode(', ', json_decode($query->SUBJECKTIF, true));
+            $query->OBJEKTIF = implode(', ', json_decode($query->OBJEKTIF, true));
+            $query->OBSERVASI = implode(', ', json_decode($query->OBSERVASI, true));
+            $query->THEURAPEUTIC = implode(', ', json_decode($query->THEURAPEUTIC, true));
+            $query->EDUKASI = implode(', ', json_decode($query->EDUKASI, true));
+            $query->KOLABORASI = implode(', ', json_decode($query->KOLABORASI, true));
+            $query->PENYEBAP = implode(', ', json_decode($query->PENYEBAP, true));
         }
 
         return $query;
