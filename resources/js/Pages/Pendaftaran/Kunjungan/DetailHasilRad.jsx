@@ -1,26 +1,34 @@
 import React from 'react';
-import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
-import TableRow from "@/Components/TableRow";
-import TableCell from "@/Components/TableCell";
+import Table from "@/Components/Table"; // Assuming you have a Table component
+import TableHeader from "@/Components/TableHeader"; // Assuming you have TableHeader component
+import TableHeaderCell from "@/Components/TableHeaderCell"; // Assuming you have TableHeaderCell component
+import TableRow from "@/Components/TableRow"; // Assuming you have TableRow component
+import TableCell from "@/Components/TableCell"; // Assuming you have TableCell component
 
-export default function DetailHasilRad({ detailHasilRad = {} }) {
+export default function DetailHasilRad({ detailHasilRad = [] }) {
 
     const headers = [
         { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[20%]" },
+        { name: "COLUMN NAME", className: "w-[10%]" },
         { name: "VALUE", className: "w-[auto]" },
     ];
 
-    // Generate detailData dynamically from the detail object
-    const detailData = Object.keys(detailHasilRad).map((key) => ({
-        uraian: key,
-        value: detailHasilRad[key],
-    }));
+    const generateDetailData = (hasil) => {
+        return [
+            { uraian: "HASIL ID", value: hasil.ID },
+            { uraian: "TINDAKAN", value: hasil.TINDAKAN },
+            { uraian: "TANGGAL", value: hasil.TANGGAL },
+            { uraian: "KLINIS", value: hasil.KLINIS },
+            { uraian: "KESAN", value: hasil.KESAN },
+            { uraian: "USUL", value: hasil.USUL },
+            { uraian: "HASIL", value: hasil.HASIL },
+            { uraian: "BTK", value: hasil.BTK },
+            { uraian: "OLEH", value: hasil.PENGGUNA },
+            { uraian: "STATUS", value: hasil.STATUS === 2 ? "Sudah Final" : "Belum Final" }
+        ];
+    };
 
-    // Filter out any entries that have a null, undefined, or empty value
-    const filteredDetailData = detailData.filter(item => item.value);
+    const filteredDetailData = detailHasilRad.flatMap((hasil) => generateDetailData(hasil)).filter(item => item.value !== null && item.value !== undefined && item.value !== "");
 
     return (
         <div className="py-5">
@@ -31,36 +39,34 @@ export default function DetailHasilRad({ detailHasilRad = {} }) {
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DATA DETAIL HASIL LAYANAN RADIOLOGI
                             </h1>
-                            <div className="flex flex-wrap gap-2">
-                                <div className="flex-1 shadow-md rounded-lg">
-                                    <Table>
-                                        <TableHeader>
-                                            <tr>
-                                                {headers.map((header, index) => (
-                                                    <TableHeaderCell key={index} className={header.className || ""}>
-                                                        {header.name}
-                                                    </TableHeaderCell>
-                                                ))}
-                                            </tr>
-                                        </TableHeader>
-                                        <tbody>
-                                            {filteredDetailData.map((detailItem, index) => (
-                                                <TableRow key={index}>
-                                                    <TableCell>{index + 1}</TableCell>
-                                                    <TableCell>{detailItem.uraian}</TableCell>
-                                                    <TableCell className="text-wrap">
-                                                        {detailItem.uraian === "STATUS" ? (
-                                                            detailItem.value === 1 ? "Belum Final" :
-                                                                detailItem.value === 2 ? "Sudah Final" :
-                                                                    detailItem.value
-                                                        ) : detailItem.value}
-                                                    </TableCell>
-                                                </TableRow>
+
+                            {filteredDetailData.length > 0 ? (
+                                <Table>
+                                    <TableHeader>
+                                        <tr>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell
+                                                    key={index}
+                                                    className={`${index === 0 ? 'w-[5%]' : index === 1 ? 'w-[20%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                >
+                                                    {header.name}
+                                                </TableHeaderCell>
                                             ))}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </div>
+                                        </tr>
+                                    </TableHeader>
+                                    <tbody>
+                                        {filteredDetailData.map((detailItem, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{detailItem.uraian}</TableCell>
+                                                <TableCell>{detailItem.value}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            ) : (
+                                <p className="text-center px-3 py-3">Belum ada data</p>
+                            )}
                         </div>
                     </div>
                 </div>

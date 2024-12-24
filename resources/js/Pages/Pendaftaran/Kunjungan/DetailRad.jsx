@@ -9,7 +9,7 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function DetailLab({ auth, detailRad, detailHasilRad }) {
+export default function DetailRad({ auth, detailRad, detailHasilRad }) {
 
     const headers = [
         { name: "NO", className: "w-[5%]" },

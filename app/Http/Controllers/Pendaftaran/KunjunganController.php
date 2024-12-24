@@ -556,7 +556,7 @@ class KunjunganController extends Controller
     public function getDetailRad($id)
     {
         // Fetch data utama (main lab order details)
-        $queryDetail = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
+        $queryDetail = DB::connection('mysql7')->table('pendaftaran.kunjungan as kunjungan')
             ->select(
                 'orderRad.*',
                 'pasien.NORM',
@@ -565,7 +565,7 @@ class KunjunganController extends Controller
                 'ruangan.DESKRIPSI as TUJUAN',
                 'pengguna.NAMA as OLEH',
             )
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.REF', '=', 'tindakanMedis.ID')
@@ -574,9 +574,8 @@ class KunjunganController extends Controller
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'orderRad.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'orderRad.OLEH')
-            ->where('tindakanMedis.KUNJUNGAN', $id)
+            ->where('kunjungan.NOMOR', $id)
             ->firstOrFail();
-
 
         // Error handling: No data found
         if (!$queryDetail) {
@@ -590,21 +589,32 @@ class KunjunganController extends Controller
     public function getHasilRad($id)
     {
         // Fetch data utama (main lab order details)
-        $queryHasil = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
+        // Fetch data hasil lab (lab test results)
+        $queryHasil = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
             ->select(
-                'tindakan.NAMA as NAMA_TINDAKAN',
-                'hasilRad.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER'),
-                'pengguna.NAMA as OLEH',
+                'hasil.ID as ID',
+                'tindakan.NAMA as TINDAKAN',
+                'hasil.TANGGAL',
+                'hasil.KLINIS',
+                'hasil.KESAN',
+                'hasil.USUL',
+                'hasil.HASIL',
+                'hasil.BTK',
+                'hasil.KRITIS',
+                'pengguna.NAMA as PENGGUNA',
+                'hasil.STATUS'
             )
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.REF', '=', 'orderRad.NOMOR')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
             ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
-            ->leftJoin('layanan.hasil_rad as hasilRad', 'hasilRad.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasilRad.DOKTER')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'hasilRad.OLEH')
-            ->where('tindakanMedis.KUNJUNGAN', $id)
-            ->where('hasilRad.STATUS', 2)
-            ->first();
+            ->leftJoin('aplikasi.pengguna as pengguna', 'hasil.OLEH', '=', 'pengguna.ID')
+            ->where('orderRad.NOMOR', $id)
+            ->where('hasil.STATUS', 2)
+            ->distinct()
+            ->get();
 
         // Error handling: No data found
         if (!$queryHasil) {
@@ -613,6 +623,8 @@ class KunjunganController extends Controller
 
         // Return both data to the view
         return $queryHasil;
+
+        dd($queryHasil);
     }
 
     public function detail($id)
@@ -668,8 +680,10 @@ class KunjunganController extends Controller
             //get detail lab berdasarkan ref kunjungan
             $detailRad = $this->getDetailRad($noKunjungan);
 
+            $orderRadNomor = $detailRad->NOMOR;
+
             //get hasil lab berdasarkan ref kunjungan
-            $hasilRad = $this->getHasilRad($noKunjungan);
+            $hasilRad = $this->getHasilRad($orderRadNomor);
 
             return inertia("Pendaftaran/Kunjungan/DetailRad", [
                 'detailRad' => $detailRad,
