@@ -16,9 +16,9 @@ export default function Detail({
 }) {
 
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[40%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     // Generate detailData dynamically from the detail object
@@ -75,7 +75,7 @@ export default function Detail({
                                                         {headers.map((header, index) => (
                                                             <TableHeaderCell
                                                                 key={index}
-                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                                className={`${index === 0 ? 'w-[5%]' : index === 1 ? 'w-[40%]' : 'w-[auto]'} ${header.className || ""}`}
                                                             >
                                                                 {header.name}
                                                             </TableHeaderCell>

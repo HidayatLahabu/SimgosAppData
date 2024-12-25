@@ -12,9 +12,9 @@ import TableCell from "@/Components/TableCell";
 export default function DetailRad({ auth, detailRad, detailHasilRad }) {
 
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[40%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     // Generate detailData dynamically from the detail object
@@ -60,11 +60,12 @@ export default function DetailRad({ auth, detailRad, detailHasilRad }) {
                                                 <TableHeader>
                                                     <tr>
                                                         {headers.map((header, index) => (
-                                                            <TableHeaderCell
-                                                                key={index}
-                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                            <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[35%]" : "w-[auto]"} 
+                                                            ${header.className || ""}`}
                                                             >
-                                                                {header.name}
+                                                                {
+                                                                    header.name
+                                                                }
                                                             </TableHeaderCell>
                                                         ))}
                                                     </tr>

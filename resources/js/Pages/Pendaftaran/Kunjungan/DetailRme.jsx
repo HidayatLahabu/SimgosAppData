@@ -23,9 +23,9 @@ export default function Detail({
     judulRme,
 }) {
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[30%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     // Generate detailData dynamically from the detail object
@@ -156,7 +156,7 @@ export default function Detail({
                                                     <tr>
                                                         {headers.map(
                                                             (header, index) => (
-                                                                <TableHeaderCell key={index} className={`${index === 0 ? "w-[10%]" : index === 1 ? "w-[30%]" : "w-[60%]"} 
+                                                                <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[35%]" : "w-[auto]"} 
                                                                 ${header.className || ""}`}
                                                                 >
                                                                     {

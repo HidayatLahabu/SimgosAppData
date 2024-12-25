@@ -24,13 +24,13 @@ export default function TableRme({ auth,
 }) {
 
     const headers = [
-        { name: "NO" },
-        { name: "NOMOR KUNJUNGAN" },
-        { name: "ID CPPT" },
-        { name: "TANGGAL", className: "text-center" },
+        { name: "NO", className: "w-[5%]" },
+        { name: "NOMOR KUNJUNGAN", className: "w-[15%]" },
+        { name: "ID CPPT", className: "w-[7%]" },
+        { name: "TANGGAL", className: "text-center w-[15%]" },
         { name: "OLEH" },
-        { name: "STATUS" },
-        { name: "MENU", className: "text-center" },
+        { name: "STATUS", className: "w-[10%]" },
+        { name: "MENU", className: "text-center w-[7%]" },
     ];
 
     return (

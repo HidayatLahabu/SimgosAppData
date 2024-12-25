@@ -17,11 +17,11 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
     const headers = [
         { name: "NAMA PASIEN" },
         { name: "NAMA DOKTER" },
-        { name: "NOMOR KONTROL" },
-        { name: "TANGGAL TERBIT" },
-        { name: "JENIS KONTROL" },
-        { name: "NOMOR SEP" },
-        { name: "MENU", className: "text-center" },
+        { name: "NOMOR KONTROL", className: "w-[12%]" },
+        { name: "TANGGAL TERBIT", className: "w-[8%]" },
+        { name: "JENIS KONTROL", className: "w-[8%]" },
+        { name: "NOMOR SEP", className: "w-[12%]" },
+        { name: "MENU", className: "text-center w-[7%]" },
     ];
 
     // Function to handle search input changes

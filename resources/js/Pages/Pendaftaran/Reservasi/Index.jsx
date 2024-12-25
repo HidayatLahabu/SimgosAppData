@@ -13,14 +13,14 @@ import CardLink from "@/Components/CardLink";
 export default function Index({ auth, dataTable, reservasiData, header, queryParams = {} }) {
 
     const headers = [
-        { name: "NOMOR" },
-        { name: "TANGGAL" },
+        { name: "NOMOR", className: "w-[9%]" },
+        { name: "TANGGAL", className: "w-[12%]" },
         { name: "ATAS NAMA" },
         { name: "RUANGAN" },
         { name: "KAMAR" },
         { name: "TEMPAT TIDUR" },
-        { name: "NOMOR KONTAK" },
-        { name: "STATUS" },
+        { name: "NOMOR KONTAK", className: "w-[10%]" },
+        { name: "STATUS", className: "w-[9%]" },
     ];
 
     // Function to handle search input changes

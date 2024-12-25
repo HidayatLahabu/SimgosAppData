@@ -2,13 +2,39 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function Detail({ auth, detail }) {
+
+    const headers = [
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
+    ];
+
     // Generate detailData dynamically from the detail object
     const detailData = Object.keys(detail).map((key) => ({
         uraian: key, // Keep the original column name as it is
         value: detail[key],
     }));
+
+    const filteredDetailData = detailData.filter((item) => {
+        return item.value !== null && item.value !== undefined && item.value !== "" &&
+            (item.value !== 0 || item.uraian === "STATUS_KUNJUNGAN" || item.uraian === "STATUS_AKTIFITAS_KUNJUNGAN");
+    });
+
+    // Specify how many rows per table
+    const rowsPerTable = 10;
+
+    // Split the data into groups
+    const tables = [];
+    for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
+        tables.push(filteredDetailData.slice(i, i + rowsPerTable));
+    }
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -23,30 +49,46 @@ export default function Detail({ auth, detail }) {
                                     <ButtonBack href={route("rekonBpjs.index")} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL RENCANA KONTROL</h1>
                                 </div>
-                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr>
-                                            <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">COLUMN</th>
-                                            <th className="px-3 py-2">VALUE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {detailData.map((detailItem, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">
-                                                    {detailItem.uraian === "status" ? (
-                                                        detailItem.value === 1 ? "Final" :
-                                                            detailItem.value === 0 ? "Batal" :
-                                                                detailItem.value
-                                                    ) : detailItem.value}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {tables.map((tableData, tableIndex) => (
+                                        <div
+                                            key={tableIndex}
+                                            className="flex-1 shadow-md rounded-lg"
+                                        >
+                                            <Table>
+                                                <TableHeader>
+                                                    <tr>
+                                                        {headers.map((header, index) => (
+                                                            <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[15%]" : "w-[auto]"} 
+                                                            ${header.className || ""}`}
+                                                            >
+                                                                {
+                                                                    header.name
+                                                                }
+                                                            </TableHeaderCell>
+                                                        ))}
+                                                    </tr>
+                                                </TableHeader>
+                                                <tbody>
+                                                    {tableData.map((detailItem, index) => (
+                                                        <TableRow key={index}>
+                                                            <TableCell>{index + 1 + tableIndex * rowsPerTable}</TableCell>
+                                                            <TableCell>{detailItem.uraian}</TableCell>
+                                                            <TableCell className="text-wrap">
+                                                                {detailItem.uraian === "status" ? (
+                                                                    detailItem.value === 1 ? "Final" :
+                                                                        detailItem.value === 0 ? "Batal" :
+                                                                            detailItem.value
+                                                                ) : detailItem.value}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ))}
+                                                </tbody>
+                                            </Table>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

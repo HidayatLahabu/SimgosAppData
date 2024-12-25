@@ -179,7 +179,7 @@ class KunjunganBpjsController extends Controller
                 'kunjungan.cob',
                 'kunjungan.katarak',
                 'kunjungan.noSuratSKDP',
-                'kunjungan.dpjpSKDP',
+                'dpjp.nama as dpjpSKDP',
                 'kunjungan.lakaLantas',
                 'kunjungan.penjamin',
                 'kunjungan.tglKejadian',
@@ -206,6 +206,7 @@ class KunjunganBpjsController extends Controller
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->leftJoin('bpjs.ppk as ppkPelayanan', 'ppkPelayanan.kode', '=', 'kunjungan.ppkPelayanan')
             ->leftJoin('bpjs.rujukan_masuk as rujukan', 'rujukan.noKunjungan', '=', 'kunjungan.noRujukan')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'kunjungan.dpjpSKDP')
             ->where('kunjungan.noSEP', $id)
             ->distinct()
             ->first();

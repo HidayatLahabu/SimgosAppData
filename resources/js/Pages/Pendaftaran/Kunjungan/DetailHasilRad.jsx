@@ -8,9 +8,9 @@ import TableCell from "@/Components/TableCell"; // Assuming you have TableCell c
 export default function DetailHasilRad({ detailHasilRad = [] }) {
 
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[10%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     const generateDetailData = (hasil) => {
@@ -45,11 +45,12 @@ export default function DetailHasilRad({ detailHasilRad = [] }) {
                                     <TableHeader>
                                         <tr>
                                             {headers.map((header, index) => (
-                                                <TableHeaderCell
-                                                    key={index}
-                                                    className={`${index === 0 ? 'w-[5%]' : index === 1 ? 'w-[20%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[15%]" : "w-[auto]"} 
+                                                ${header.className || ""}`}
                                                 >
-                                                    {header.name}
+                                                    {
+                                                        header.name
+                                                    }
                                                 </TableHeaderCell>
                                             ))}
                                         </tr>

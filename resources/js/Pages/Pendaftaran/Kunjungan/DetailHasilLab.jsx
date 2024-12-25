@@ -8,13 +8,13 @@ import TableCell from "@/Components/TableCell";
 export default function DetailHasilLab({ detailHasilLab = {} }) {
 
     const headers = [
-        { name: "NO" },
+        { name: "NO", className: "w-[5%]" },
         { name: "TINDAKAN" },
         { name: "PARAMETER" },
         { name: "HASIL" },
         { name: "NILAI NORMAL" },
-        { name: "SATUAN" },
-        { name: "STATUS" },
+        { name: "SATUAN", className: "w-[10%]" },
+        { name: "STATUS", className: "w-[10%]" },
     ];
 
     return (
