@@ -5,6 +5,7 @@ import MonthlyPendaftaranTable from './Dashboard/PendaftaranBulanan';
 import MonthlyKunjunganTable from './Dashboard/KunjunganBulanan';
 import MonthlyKonsulTable from './Dashboard/KonsulBulanan';
 import MonthlyMutasiTable from './Dashboard/MutasiBulanan';
+import Statistic from './Dashboard/Statistic';
 
 export default function Dashboard({
     auth,
@@ -21,6 +22,7 @@ export default function Dashboard({
     kunjunganBulanan,
     konsulBulanan,
     mutasiBulanan,
+    statistics,
 }) {
     return (
         <AuthenticatedLayout
@@ -41,9 +43,20 @@ export default function Dashboard({
                     pulang={pulang}
                 />
             </div>
-            <h1 className="uppercase text-center font-bold text-2xl pb-2 text-yellow-400">
-                Data Bulanan Tahun {new Date().getFullYear()}
+            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+                Data Tahun Ini
             </h1>
+            <div className="pb-2 flex flex-wrap w-full">
+                <Statistic
+                    BOR={statistics.BOR || 0}
+                    AVLOS={statistics.AVLOS || 0}
+                    BTO={statistics.BTO || 0}
+                    TOI={statistics.TOI || 0}
+                    NDR={statistics.NDR || 0}
+                    GDR={statistics.GDR || 0}
+                />
+            </div>
+
             <div className="pt-0 pb-5 flex flex-wrap w-full">
                 <div className="w-1/4">
                     <MonthlyPendaftaranTable pendaftaranBulanan={pendaftaranBulanan} />

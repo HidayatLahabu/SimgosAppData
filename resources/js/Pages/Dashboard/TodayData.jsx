@@ -31,15 +31,59 @@ export default function TodayData({
             </h1>
             <div className="text-gray-900 dark:text-gray-100 w-full">
                 <div className="flex flex-wrap gap-2 justify-between mb-4">
-                    <Card title="PENDAFTARAN" titleSize="text-normal" valueSize="text-normal" value={pendaftaran} />
-                    <Card title="KUNJUNGAN" titleSize="text-normal" valueSize="text-normal" value={kunjungan} />
-                    <Card title="KONSUL" titleSize="text-normal" valueSize="text-normal" value={konsul} />
-                    <Card title="MUTASI" titleSize="text-normal" valueSize="text-normal" value={mutasi} />
-                    <Card title="BPJS" titleSize="text-normal" valueSize="text-normal" value={kunjunganBpjs} />
-                    <Card title="LABORATORIUM" titleSize="text-normal" valueSize="text-normal" value={laboratorium} />
-                    <Card title="RADIOLOGI" titleSize="text-normal" valueSize="text-normal" value={radiologi} />
-                    <Card title="RESEP" titleSize="text-normal" valueSize="text-normal" value={resep} />
-                    <Card title="PULANG" titleSize="text-normal" valueSize="text-normal" value={pulang} />
+                    <Card
+                        href={route("pendaftaran.index")}
+                        title="PENDAFTARAN"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={pendaftaran} />
+                    <Card href={route("kunjungan.index")}
+                        title="KUNJUNGAN"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={kunjungan} />
+                    <Card
+                        href={route("konsul.index")}
+                        title="KONSUL"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={konsul} />
+                    <Card
+                        href={route("mutasi.index")}
+                        title="MUTASI"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={mutasi} />
+                    <Card
+                        href={route("kunjunganBpjs.index")}
+                        title="BPJS"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={kunjunganBpjs} />
+                    <Card
+                        href={route("layananLab.index")}
+                        title="LABORATORIUM"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={laboratorium} />
+                    <Card
+                        href={route("layananRad.index")}
+                        title="RADIOLOGI"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={radiologi} />
+                    <Card
+                        href={route("layananResep.index")}
+                        title="RESEP"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={resep} />
+                    <Card
+                        href={route("layananPulang.index")}
+                        title="PULANG"
+                        titleSize="text-normal"
+                        valueSize="text-normal"
+                        value={pulang} />
                 </div>
             </div>
         </div>

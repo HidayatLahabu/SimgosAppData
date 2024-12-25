@@ -10,7 +10,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import Card from "@/Components/Card";
+import CardMenu from "@/Components/CardMenu";
 import Cetak from "./Cetak"
 import TableCellMenu from "@/Components/TableCellMenu";
 
@@ -67,10 +67,10 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, r
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Mutasi {header} {totalCount} Pasien</h1>
                                 <div className="flex flex-wrap gap-4 justify-between mb-4">
-                                    <Card title="RATA-RATA PER HARI" value={rataRata.rata_rata_per_hari} />
-                                    <Card title="RATA-RATA PER MINGGU" value={rataRata.rata_rata_per_minggu} />
-                                    <Card title="RATA-RATA PER BULAN" value={rataRata.rata_rata_per_bulan} />
-                                    <Card title="RATA-RATA PER TAHUN" value={rataRata.rata_rata_per_tahun} />
+                                    <CardMenu title="RATA-RATA PER HARI" value={rataRata.rata_rata_per_hari} />
+                                    <CardMenu title="RATA-RATA PER MINGGU" value={rataRata.rata_rata_per_minggu} />
+                                    <CardMenu title="RATA-RATA PER BULAN" value={rataRata.rata_rata_per_bulan} />
+                                    <CardMenu title="RATA-RATA PER TAHUN" value={rataRata.rata_rata_per_tahun} />
                                 </div>
                                 <Table>
                                     <TableHeader>

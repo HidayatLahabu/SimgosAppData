@@ -65,6 +65,9 @@ class DashboardController extends Controller
         //get data konsul bulanan
         $mutasiBulanan = $this->getMonthlyMutasi();
 
+        // Get statistics data from procedure
+        $statistics = $this->getStatistic();
+
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
             'pendaftaran' => $pendaftaran,
@@ -80,6 +83,7 @@ class DashboardController extends Controller
             'kunjunganBulanan' => $kunjunganBulanan,
             'konsulBulanan' => $konsulBulanan,
             'mutasiBulanan' => $mutasiBulanan,
+            'statistics' => $statistics,
         ]);
     }
 
@@ -335,5 +339,32 @@ class DashboardController extends Controller
         ")
             ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
             ->get();
+    }
+
+    public function getStatistic()
+    {
+        // Tanggal awal bulan berjalan
+        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+
+        // Tanggal hari ini
+        $tgl_akhir = Carbon::now()->toDateString();
+
+        // Panggil prosedur yang telah dibuat
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL12(?, ?)', [$tgl_awal, $tgl_akhir]);
+        //dd($data);
+        // Pilih data seperti BOR, AVLOS, GDR, TOI, LOS dan pastikan tipe 
+        $filteredData = [];
+        foreach ($data as $item) {
+            $filteredData = [
+                'BOR' => is_numeric($item->BOR) ? (float) $item->BOR : 0,
+                'AVLOS' => is_numeric($item->AVLOS) ? (float) $item->AVLOS : 0,
+                'BTO' => $item->BTO,
+                'TOI' => is_numeric($item->TOI) ? (float) $item->TOI : 0,
+                'NDR' => $item->NDR,
+                'GDR' => is_numeric($item->GDR) ? (float) $item->GDR : 0,
+            ];
+        }
+
+        return $filteredData;
     }
 }

@@ -4,11 +4,12 @@ import TopNavigation from './TopNavigation';
 export default function Authenticated({ user, children }) {
 
     const gradientBackground = {
-        backgroundImage: 'linear-gradient(to left top, #096b22, #005b3e, #00484a, #003545, #002232, #00202e, #001e2b, #001c27, #002930, #00362d, #04421e, #354a06)',
+        backgroundImage: 'linear-gradient(to right top, #04080e, #001015, #001615, #051a11, #151c07',
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+        // <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+        <div className="min-h-screen" style={gradientBackground}>
 
             <TopNavigation user={user} />
 

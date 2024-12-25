@@ -5,7 +5,6 @@ import { formatDate } from '@/utils/formatDate';
 import { formatNumber } from '@/utils/formatNumber';
 
 export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
-    console.log('Received items:', items);
 
     if (!Array.isArray(items)) {
         console.error('Expected items to be an array but received:', items);
