@@ -1,5 +1,4 @@
 import React from 'react';
-import sanitizeHtml from 'sanitize-html';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import ButtonBack from '@/Components/ButtonBack';
@@ -12,9 +11,9 @@ import TableCell from "@/Components/TableCell";
 export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }) {
 
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[40%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     // Generate detailData dynamically from the detail object
@@ -31,14 +30,6 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
     for (let i = 0; i < detailData.length; i += rowsPerTable) {
         tables.push(detailData.slice(i, i + rowsPerTable));
     }
-
-    // Function to sanitize HTML and strip all tags
-    const sanitizeValue = (value) => {
-        return sanitizeHtml(value, {
-            allowedTags: [], // Remove all tags
-            allowedAttributes: {} // Remove all attributes
-        });
-    };
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -65,7 +56,7 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                                                         {headers.map((header, index) => (
                                                             <TableHeaderCell
                                                                 key={index}
-                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[auto]'} ${header.className || ""}`}
                                                             >
                                                                 {header.name}
                                                             </TableHeaderCell>
@@ -88,7 +79,7 @@ export default function Detail({ auth, detail, dataKunjungan, nomorPendaftaran }
                                                                         detailItem.value === 1 ? "Proses Reservasi" :
                                                                             detailItem.value === 2 ? "Selesai Reservasi" :
                                                                                 detailItem.value
-                                                                ) : sanitizeValue(detailItem.value)}
+                                                                ) : detailItem.value}
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}

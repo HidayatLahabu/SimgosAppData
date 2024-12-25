@@ -213,38 +213,19 @@ class PulangController extends Controller
             ->where('pulang.ID', $id)
             ->firstOrFail();
 
+        $queryDetail->KEADAAN = htmlspecialchars_decode($queryDetail->KEADAAN);
+
         $kunjungan = $queryDetail->NOMOR_KUNJUNGAN;
 
         $queryMeninggal = DB::connection('mysql7')->table('layanan.pasien_meninggal as meninggal')
             ->select(
-                'meninggal.ID',
-                'meninggal.KUNJUNGAN as NOMOR_KUNJUNGAN',
-                'meninggal.TANGGAL as TANGGAL',
-                'meninggal.NOMOR as NOMOR_SURAT_KETERANGAN',
-                'meninggal.DIAGNOSA',
+                'meninggal.*',
                 DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER'),
                 'pemulasaran.DESKRIPSI as RENCANA_PEMULASARAN',
-                'meninggal.KEADAAN_YANG_MENGAKIBATKAN_KEMATIAN',
-                'meninggal.PENYAKIT_SEBAP_KEMATIAN',
-                'meninggal.PENYAKIT_SEBAP_KEMATIAN_LAIN',
-                'meninggal.PENYAKIT_LAIN_MEMPENGARUHI_KEMATIAN',
-                'meninggal.MULAI_SAKIT',
-                'meninggal.AKHIR_SAKIT',
-                'meninggal.MACAM_RUDAPAKSA',
-                'meninggal.CARA_RUDAPAKSA',
-                'meninggal.KERUSAKAN_TUBUH',
-                'meninggal.JANIN_LAHIR_MATI',
-                'meninggal.SEBAP_KELAHIRAN_MATI',
-                'meninggal.PERISTIWA_PERSALINAN',
-                'meninggal.PERISTIWA_KEHAMILAN',
-                'meninggal.DILAKUKAN_OPERASI',
                 'bahasa.DESKRIPSI as BAHASA',
-                'meninggal.STATUS_VERIFIKASI',
                 DB::raw('CONCAT(verifikator.GELAR_DEPAN, " ", verifikator.NAMA, " ", verifikator.GELAR_BELAKANG) as VERIFIKATOR'),
                 'operasi.DESKRIPSI as JENIS_OPERASI',
-                'meninggal.CATATAN_VERIFIKASI',
                 'pengguna.NAMA as OLEH',
-                'meninggal.STATUS',
             )
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'meninggal.DOKTER')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
@@ -266,7 +247,7 @@ class PulangController extends Controller
             ->first();
 
         // Ensure detailMeninggal is not null
-        $queryMeninggal = $queryMeninggal ? (array) $queryMeninggal : [];
+        $queryMeninggal = $queryMeninggal ?: null;
 
         // Error handling: No data found
         if (!$queryDetail) {

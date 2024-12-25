@@ -1,10 +1,36 @@
-export default function DetailMeninggal({ detailMeninggal }) {
-    if (!detailMeninggal || !Array.isArray(detailMeninggal)) {
-        return (
-            <div className="text-center py-5">
-                <p className="text-gray-500 dark:text-gray-300">No data available for Meninggal details.</p>
-            </div>
-        );
+import React from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
+
+export default function DetailMeninggal({ detailMeninggal = {} }) {
+
+    const headers = [
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
+    ];
+
+    // Generate detailData dynamically from the detail object
+    const detailData = Object.keys(detailMeninggal).map((key) => ({
+        uraian: key,
+        value: detailMeninggal[key],
+    }));
+
+    const filteredDetailData = detailData.filter((item) => {
+        return item.value !== null && item.value !== undefined && item.value !== "" &&
+            (item.value !== 0 || item.uraian === "STATUS_KUNJUNGAN" || item.uraian === "STATUS_AKTIFITAS_KUNJUNGAN");
+    });
+
+    // Specify how many rows per table
+    const rowsPerTable = Math.ceil(filteredDetailData.length / 2);
+
+    // Split the data into groups
+    const tables = [];
+    for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
+        tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
 
     return (
@@ -16,51 +42,67 @@ export default function DetailMeninggal({ detailMeninggal }) {
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DATA DETAIL PASIEN MENINGGAL
                             </h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                    <tr>
-                                        <th className="px-3 py-2">NO</th>
-                                        <th className="px-3 py-2">COLUMN</th>
-                                        <th className="px-3 py-2">VALUE</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {detailMeninggal.map((detailItem, index) => (
-                                        <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                            <td className="px-3 py-3 w-16">{index + 1}</td>
-                                            <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                            <td className="px-3 py-3 break-words">
-                                                {detailItem.uraian === "STATUS" ? (
-                                                    detailItem.value === 1 ? "Belum Final" :
-                                                        detailItem.value === 2 ? "Sudah Final" :
-                                                            detailItem.value
-                                                ) : detailItem.uraian === "JENIS_LAHIR_MATI" ? (
-                                                    detailItem.value === 1 ? "Iya" :
-                                                        detailItem.value === 2 ? "Tidak" :
-                                                            ''
-                                                ) : detailItem.uraian === "PERISTIWA_PERSALINAN" ? (
-                                                    detailItem.value === 0 ? "Tidak" :
-                                                        detailItem.value === 1 ? "Ya" :
-                                                            ''
-                                                ) : detailItem.uraian === "PERISTIWA_KEHAMILAN" ? (
-                                                    detailItem.value === 0 ? "Tidak" :
-                                                        detailItem.value === 1 ? "Ya" :
-                                                            ''
-                                                ) : detailItem.uraian === "DILAKUKAN_OPERASI" ? (
-                                                    detailItem.value === 0 ? "Tidak" :
-                                                        detailItem.value === 1 ? "Ya" :
-                                                            ''
-                                                ) : detailItem.uraian === "STATUS_VERIFIKASI" ? (
-                                                    detailItem.value === 0 ? "Tidak Diverifikasi" :
-                                                        detailItem.value === 1 ? "Menunggu" :
-                                                            detailItem.value === 2 ? "Terverifikasi" :
-                                                                ''
-                                                ) : detailItem.value}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+
+                            <div className="flex flex-wrap gap-2">
+                                {tables.map((tableData, tableIndex) => (
+                                    <div
+                                        key={tableIndex}
+                                        className="flex-1 shadow-md rounded-lg"
+                                    >
+                                        <Table>
+                                            <TableHeader>
+                                                <tr>
+                                                    {headers.map((header, index) => (
+                                                        <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[35%]" : "w-[auto]"} 
+                                                            ${header.className || ""}`}
+                                                        >
+                                                            {
+                                                                header.name
+                                                            }
+                                                        </TableHeaderCell>
+                                                    ))}
+                                                </tr>
+                                            </TableHeader>
+                                            <tbody>
+                                                {tableData.map((detailItem, index) => (
+                                                    <TableRow key={index}>
+                                                        <TableCell>{index + 1 + tableIndex * rowsPerTable}</TableCell>
+                                                        <TableCell>{detailItem.uraian}</TableCell>
+                                                        <TableCell className="text-wrap">
+                                                            {detailItem.uraian === "STATUS" ? (
+                                                                detailItem.value === 1 ? "Belum Final" :
+                                                                    detailItem.value === 2 ? "Sudah Final" :
+                                                                        detailItem.value
+                                                            ) : detailItem.uraian === "JENIS_LAHIR_MATI" ? (
+                                                                detailItem.value === 1 ? "Iya" :
+                                                                    detailItem.value === 2 ? "Tidak" :
+                                                                        ''
+                                                            ) : detailItem.uraian === "PERISTIWA_PERSALINAN" ? (
+                                                                detailItem.value === 0 ? "Tidak" :
+                                                                    detailItem.value === 1 ? "Ya" :
+                                                                        ''
+                                                            ) : detailItem.uraian === "PERISTIWA_KEHAMILAN" ? (
+                                                                detailItem.value === 0 ? "Tidak" :
+                                                                    detailItem.value === 1 ? "Ya" :
+                                                                        ''
+                                                            ) : detailItem.uraian === "DILAKUKAN_OPERASI" ? (
+                                                                detailItem.value === 0 ? "Tidak" :
+                                                                    detailItem.value === 1 ? "Ya" :
+                                                                        ''
+                                                            ) : detailItem.uraian === "STATUS_VERIFIKASI" ? (
+                                                                detailItem.value === 0 ? "Tidak Diverifikasi" :
+                                                                    detailItem.value === 1 ? "Menunggu" :
+                                                                        detailItem.value === 2 ? "Terverifikasi" :
+                                                                            ''
+                                                            ) : detailItem.value}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

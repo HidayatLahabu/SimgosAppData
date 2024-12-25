@@ -1,6 +1,34 @@
 import React from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function DetailHasil({ detailHasil = {} }) {
+
+    const headers = [
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
+    ];
+
+    const generateDetailData = (hasil) => {
+        return [
+            { uraian: "HASIL ID", value: hasil.ID },
+            { uraian: "TINDAKAN", value: hasil.TINDAKAN },
+            { uraian: "TANGGAL", value: hasil.TANGGAL },
+            { uraian: "KLINIS", value: hasil.KLINIS },
+            { uraian: "KESAN", value: hasil.KESAN },
+            { uraian: "USUL", value: hasil.USUL },
+            { uraian: "HASIL", value: hasil.HASIL },
+            { uraian: "BTK", value: hasil.BTK },
+            { uraian: "OLEH", value: hasil.PENGGUNA },
+            { uraian: "STATUS", value: hasil.STATUS === 2 ? "Sudah Final" : "Belum Final" }
+        ];
+    };
+
+    const filteredDetailData = detailHasil.flatMap((hasil) => generateDetailData(hasil)).filter(item => item.value !== null && item.value !== undefined && item.value !== "");
 
     return (
         <div className="py-5">
@@ -11,50 +39,35 @@ export default function DetailHasil({ detailHasil = {} }) {
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DATA DETAIL HASIL LAYANAN RADIOLOGI
                             </h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                    <tr>
-                                        <th className="px-3 py-2">NO</th>
-                                        <th className="px-3 py-2">HASIL ID</th>
-                                        <th className="px-3 py-2">TINDAKAN</th>
-                                        <th className="px-3 py-2">TANGGAL</th>
-                                        <th className="px-3 py-2">KLINIS</th>
-                                        <th className="px-3 py-2">KESAN</th>
-                                        <th className="px-3 py-2">USUL</th>
-                                        <th className="px-3 py-2">HASIL</th>
-                                        <th className="px-3 py-2">BTK</th>
-                                        <th className="px-3 py-2">OLEH</th>
-                                        <th className="px-3 py-2">STATUS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {detailHasil.length > 0 ? (
-                                        detailHasil.map((hasil, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.ID}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.TINDAKAN}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.TANGGAL}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.KLINIS}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.KESAN}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.USUL}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.HASIL}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.BTK}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.PENGGUNA}</td>
-                                                <td className="px-3 py-3 w-56">
-                                                    {hasil.STATUS === 2 ? "Sudah Final" : 'Belum Final'}
-                                                </td>
-                                            </tr>
-                                        ))
-                                    ) : (
+
+                            {filteredDetailData.length > 0 ? (
+                                <Table>
+                                    <TableHeader>
                                         <tr>
-                                            <td colSpan="9" className="text-center px-3 py-3">
-                                                No data available
-                                            </td>
+                                            {headers.map((header, index) => (
+                                                <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[15%]" : "w-[auto]"} 
+                                                ${header.className || ""}`}
+                                                >
+                                                    {
+                                                        header.name
+                                                    }
+                                                </TableHeaderCell>
+                                            ))}
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </TableHeader>
+                                    <tbody>
+                                        {filteredDetailData.map((detailItem, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{detailItem.uraian}</TableCell>
+                                                <TableCell>{detailItem.value}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            ) : (
+                                <p className="text-center px-3 py-3">Belum ada data</p>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,21 @@
 import React from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function DetailHasil({ detailHasil = {} }) {
+
+    const headers = [
+        { name: "NO", className: "w-[5%]" },
+        { name: "TINDAKAN" },
+        { name: "PARAMETER" },
+        { name: "HASIL" },
+        { name: "NILAI NORMAL" },
+        { name: "SATUAN", className: "w-[10%]" },
+        { name: "STATUS", className: "w-[8%]" },
+    ];
 
     return (
         <div className="py-5">
@@ -11,32 +26,29 @@ export default function DetailHasil({ detailHasil = {} }) {
                             <h1 className="uppercase text-center font-bold text-xl pb-2">
                                 DATA DETAIL HASIL LAYANAN LABORATORIUM
                             </h1>
-                            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
+
+                            <Table>
+                                <TableHeader>
                                     <tr>
-                                        <th className="px-3 py-2">NO</th>
-                                        <th className="px-3 py-2">TINDAKAN</th>
-                                        <th className="px-3 py-2">PARAMETER</th>
-                                        <th className="px-3 py-2">HASIL</th>
-                                        <th className="px-3 py-2">NILAI NORMAL</th>
-                                        <th className="px-3 py-2">SATUAN</th>
-                                        <th className="px-3 py-2">STATUS</th>
+                                        {headers.map((header, index) => (
+                                            <TableHeaderCell key={index} className={header.className || ""}>
+                                                {header.name}
+                                            </TableHeaderCell>
+                                        ))}
                                     </tr>
-                                </thead>
+                                </TableHeader>
                                 <tbody>
                                     {detailHasil.length > 0 ? (
-                                        detailHasil.map((hasil, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.TINDAKAN}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.PARAMETER}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.HASIL}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.NILAI_NORMAL}</td>
-                                                <td className="px-3 py-3 w-56">{hasil.SATUAN}</td>
-                                                <td className="px-3 py-3 w-56">
-                                                    {hasil.STATUS === 1 ? "Sudah Final" : 'Belum Final'}
-                                                </td>
-                                            </tr>
+                                        detailHasil.map((item, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{item.TINDAKAN}</TableCell>
+                                                <TableCell>{item.PARAMETER}</TableCell>
+                                                <TableCell>{item.HASIL}</TableCell>
+                                                <TableCell>{item.NILAI_NORMAL}</TableCell>
+                                                <TableCell>{item.SATUAN}</TableCell>
+                                                <TableCell>{item.STATUS === 1 ? "Sudah Final" : 'Belum Final'}</TableCell>
+                                            </TableRow>
                                         ))
                                     ) : (
                                         <tr>
@@ -46,7 +58,8 @@ export default function DetailHasil({ detailHasil = {} }) {
                                         </tr>
                                     )}
                                 </tbody>
-                            </table>
+                            </Table>
+
                         </div>
                     </div>
                 </div>

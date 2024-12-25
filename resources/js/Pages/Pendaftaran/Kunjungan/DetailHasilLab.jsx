@@ -14,7 +14,7 @@ export default function DetailHasilLab({ detailHasilLab = {} }) {
         { name: "HASIL" },
         { name: "NILAI NORMAL" },
         { name: "SATUAN", className: "w-[10%]" },
-        { name: "STATUS", className: "w-[10%]" },
+        { name: "STATUS", className: "w-[8%]" },
     ];
 
     return (
@@ -59,6 +59,7 @@ export default function DetailHasilLab({ detailHasilLab = {} }) {
                                     )}
                                 </tbody>
                             </Table>
+
                         </div>
                     </div>
                 </div>

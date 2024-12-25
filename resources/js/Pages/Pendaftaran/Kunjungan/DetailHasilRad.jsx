@@ -1,9 +1,9 @@
 import React from 'react';
-import Table from "@/Components/Table"; // Assuming you have a Table component
-import TableHeader from "@/Components/TableHeader"; // Assuming you have TableHeader component
-import TableHeaderCell from "@/Components/TableHeaderCell"; // Assuming you have TableHeaderCell component
-import TableRow from "@/Components/TableRow"; // Assuming you have TableRow component
-import TableCell from "@/Components/TableCell"; // Assuming you have TableCell component
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function DetailHasilRad({ detailHasilRad = [] }) {
 
