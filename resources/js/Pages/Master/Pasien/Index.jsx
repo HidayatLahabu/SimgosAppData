@@ -15,14 +15,14 @@ import TableCellMenu from "@/Components/TableCellMenu";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
-        { name: "NORM" },
+        { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
-        { name: "TANGGAL LAHIR" },
+        { name: "TANGGAL LAHIR", className: "w-[9%]" },
         { name: "ALAMAT" },
-        { name: "KARTU ASURANSI" },
-        { name: "NIK" },
-        { name: "TANGGAL TERDAFTAR" },
-        { name: "MENU", className: "text-center" },
+        { name: "KARTU ASURANSI", className: "w-[9%]" },
+        { name: "NIK", className: "w-[11%]" },
+        { name: "TANGGAL TERDAFTAR", className: "w-[9%]" },
+        { name: "MENU", className: "text-center w-[5%]" },
     ];
 
     // Function to handle search input changes

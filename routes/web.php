@@ -245,161 +245,169 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
-        Route::get('pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
-        Route::get('pendaftaran/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
-        Route::get('pendaftaran/kunjungan/{id}', [PendaftaranController::class, 'kunjungan'])->name('pendaftaran.kunjungan');
-        Route::get('pendaftaran/pasien/{id}', [PendaftaranController::class, 'pasien'])->name('pendaftaran.pasien');
-        Route::get('pendaftaran/bpjs/{id}', [PendaftaranController::class, 'bpjs'])->name('pendaftaran.bpjs');
-        Route::get('/pendaftaran/{filter}', [PendaftaranController::class, 'filterByTime'])
+        Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+        Route::get('/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
+        Route::get('/pasien/{id}', [PendaftaranController::class, 'pasien'])->name('pendaftaran.pasien');
+        Route::get('/bpjs/{id}', [PendaftaranController::class, 'bpjs'])->name('pendaftaran.bpjs');
+        Route::get('/filter/{filter}', [PendaftaranController::class, 'filterByTime'])
             ->name('pendaftaran.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+    });
 
-        Route::get('kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
-        Route::get('kunjungan/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
-        Route::get('/kunjungan/{filter}', [KunjunganController::class, 'filterByTime'])
+    Route::prefix('kunjungan')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('/', [KunjunganController::class, 'index'])->name('kunjungan.index');
+        Route::get('/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
+        Route::get('/filter/{filter}', [KunjunganController::class, 'filterByTime'])
             ->name('kunjungan.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
-        Route::get('/kunjungan-print', [KunjunganController::class, 'print'])->name('kunjungan.print');
+        Route::get('/print', [KunjunganController::class, 'print'])->name('kunjungan.print');
 
-        Route::get('kunjungan/triage/{id}', [KunjunganController::class, 'triage'])->name('kunjungan.triage');
+        Route::get('/triage/{id}', [KunjunganController::class, 'triage'])->name('kunjungan.triage');
 
-        Route::get('kunjungan/rekonsiliasiObatAdmisi/{id}', [KunjunganController::class, 'rekonsiliasiObatAdmisi'])->name('kunjungan.rekonsiliasiObatAdmisi');
-        Route::get('kunjungan/rekonsiliasiObatTransfer/{id}', [KunjunganController::class, 'rekonsiliasiObatTransfer'])->name('kunjungan.rekonsiliasiObatTransfer');
-        Route::get('kunjungan/rekonsiliasiObatDischarge/{id}', [KunjunganController::class, 'rekonsiliasiObatDischarge'])->name('kunjungan.rekonsiliasiObatDischarge');
+        Route::get('/rekonsiliasiObatAdmisi/{id}', [KunjunganController::class, 'rekonsiliasiObatAdmisi'])->name('kunjungan.rekonsiliasiObatAdmisi');
+        Route::get('/rekonsiliasiObatTransfer/{id}', [KunjunganController::class, 'rekonsiliasiObatTransfer'])->name('kunjungan.rekonsiliasiObatTransfer');
+        Route::get('/rekonsiliasiObatDischarge/{id}', [KunjunganController::class, 'rekonsiliasiObatDischarge'])->name('kunjungan.rekonsiliasiObatDischarge');
 
-        Route::get('kunjungan/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
+        Route::get('/askep/{id}', [KunjunganController::class, 'askep'])->name('kunjungan.askep');
 
-        Route::get('kunjungan/keluhanUtama/{id}', [KunjunganController::class, 'keluhanUtama'])->name('kunjungan.keluhanUtama');
+        Route::get('/keluhanUtama/{id}', [KunjunganController::class, 'keluhanUtama'])->name('kunjungan.keluhanUtama');
 
-        Route::get('kunjungan/anamnesisDiperoleh/{id}', [KunjunganController::class, 'anamnesisDiperoleh'])->name('kunjungan.anamnesisDiperoleh');
+        Route::get('/anamnesisDiperoleh/{id}', [KunjunganController::class, 'anamnesisDiperoleh'])->name('kunjungan.anamnesisDiperoleh');
 
-        Route::get('kunjungan/riwayatPenyakitSekarang/{id}', [KunjunganController::class, 'riwayatPenyakitSekarang'])->name('kunjungan.riwayatPenyakitSekarang');
-        Route::get('kunjungan/riwayatPenyakitDahulu/{id}', [KunjunganController::class, 'riwayatPenyakitDahulu'])->name('kunjungan.riwayatPenyakitDahulu');
-        Route::get('kunjungan/riwayatAlergi/{id}', [KunjunganController::class, 'riwayatAlergi'])->name('kunjungan.riwayatAlergi');
-        Route::get('kunjungan/riwayatPemberianObat/{id}', [KunjunganController::class, 'riwayatPemberianObat'])->name('kunjungan.riwayatPemberianObat');
-        Route::get('kunjungan/riwayatLainnya/{id}', [KunjunganController::class, 'riwayatLainnya'])->name('kunjungan.riwayatLainnya');
-        Route::get('kunjungan/faktorRisiko/{id}', [KunjunganController::class, 'faktorRisiko'])->name('kunjungan.faktorRisiko');
-        Route::get('kunjungan/riwayatPenyakitKeluarga/{id}', [KunjunganController::class, 'riwayatPenyakitKeluarga'])->name('kunjungan.riwayatPenyakitKeluarga');
-        Route::get('kunjungan/riwayatTuberkulosis/{id}', [KunjunganController::class, 'riwayatTuberkulosis'])->name('kunjungan.riwayatTuberkulosis');
-        Route::get('kunjungan/riwayatGinekologi/{id}', [KunjunganController::class, 'riwayatGinekologi'])->name('kunjungan.riwayatGinekologi');
-        Route::get('kunjungan/statusFungsional/{id}', [KunjunganController::class, 'statusFungsional'])->name('kunjungan.statusFungsional');
-        Route::get('kunjungan/hubunganPsikososial/{id}', [KunjunganController::class, 'hubunganPsikososial'])->name('kunjungan.hubunganPsikososial');
+        Route::get('/riwayatPenyakitSekarang/{id}', [KunjunganController::class, 'riwayatPenyakitSekarang'])->name('kunjungan.riwayatPenyakitSekarang');
+        Route::get('/riwayatPenyakitDahulu/{id}', [KunjunganController::class, 'riwayatPenyakitDahulu'])->name('kunjungan.riwayatPenyakitDahulu');
+        Route::get('/riwayatAlergi/{id}', [KunjunganController::class, 'riwayatAlergi'])->name('kunjungan.riwayatAlergi');
+        Route::get('/riwayatPemberianObat/{id}', [KunjunganController::class, 'riwayatPemberianObat'])->name('kunjungan.riwayatPemberianObat');
+        Route::get('/riwayatLainnya/{id}', [KunjunganController::class, 'riwayatLainnya'])->name('kunjungan.riwayatLainnya');
+        Route::get('/faktorRisiko/{id}', [KunjunganController::class, 'faktorRisiko'])->name('kunjungan.faktorRisiko');
+        Route::get('/riwayatPenyakitKeluarga/{id}', [KunjunganController::class, 'riwayatPenyakitKeluarga'])->name('kunjungan.riwayatPenyakitKeluarga');
+        Route::get('/riwayatTuberkulosis/{id}', [KunjunganController::class, 'riwayatTuberkulosis'])->name('kunjungan.riwayatTuberkulosis');
+        Route::get('/riwayatGinekologi/{id}', [KunjunganController::class, 'riwayatGinekologi'])->name('kunjungan.riwayatGinekologi');
+        Route::get('/statusFungsional/{id}', [KunjunganController::class, 'statusFungsional'])->name('kunjungan.statusFungsional');
+        Route::get('/hubunganPsikososial/{id}', [KunjunganController::class, 'hubunganPsikososial'])->name('kunjungan.hubunganPsikososial');
 
-        Route::get('kunjungan/edukasiPasienKeluarga/{id}', [KunjunganController::class, 'edukasiPasienKeluarga'])->name('kunjungan.edukasiPasienKeluarga');
-        Route::get('kunjungan/edukasiEmergency/{id}', [KunjunganController::class, 'edukasiEmergency'])->name('kunjungan.edukasiEmergency');
-        Route::get('kunjungan/edukasiEndOfLife/{id}', [KunjunganController::class, 'edukasiEndOfLife'])->name('kunjungan.edukasiEndOfLife');
+        Route::get('/edukasiPasienKeluarga/{id}', [KunjunganController::class, 'edukasiPasienKeluarga'])->name('kunjungan.edukasiPasienKeluarga');
+        Route::get('/edukasiEmergency/{id}', [KunjunganController::class, 'edukasiEmergency'])->name('kunjungan.edukasiEmergency');
+        Route::get('/edukasiEndOfLife/{id}', [KunjunganController::class, 'edukasiEndOfLife'])->name('kunjungan.edukasiEndOfLife');
 
-        Route::get('kunjungan/skriningGiziAwal/{id}', [KunjunganController::class, 'skriningGiziAwal'])->name('kunjungan.skriningGiziAwal');
+        Route::get('/skriningGiziAwal/{id}', [KunjunganController::class, 'skriningGiziAwal'])->name('kunjungan.skriningGiziAwal');
 
-        Route::get('kunjungan/batuk/{id}', [KunjunganController::class, 'batuk'])->name('kunjungan.batuk');
+        Route::get('/batuk/{id}', [KunjunganController::class, 'batuk'])->name('kunjungan.batuk');
 
-        Route::get('kunjungan/pemeriksaanUmum/{id}', [KunjunganController::class, 'pemeriksaanUmum'])->name('kunjungan.pemeriksaanUmum');
-        Route::get('kunjungan/pemeriksaanFungsional/{id}', [KunjunganController::class, 'pemeriksaanFungsional'])->name('kunjungan.pemeriksaanFungsional');
-        Route::get('kunjungan/pemeriksaanFisik/{id}', [KunjunganController::class, 'pemeriksaanFisik'])->name('kunjungan.pemeriksaanFisik');
-        Route::get('kunjungan/pemeriksaanKepala/{id}', [KunjunganController::class, 'pemeriksaanKepala'])->name('kunjungan.pemeriksaanKepala');
-        Route::get('kunjungan/pemeriksaanMata/{id}', [KunjunganController::class, 'pemeriksaanMata'])->name('kunjungan.pemeriksaanMata');
-        Route::get('kunjungan/pemeriksaanTelinga/{id}', [KunjunganController::class, 'pemeriksaanTelinga'])->name('kunjungan.pemeriksaanTelinga');
-        Route::get('kunjungan/pemeriksaanRambut/{id}', [KunjunganController::class, 'pemeriksaanRambut'])->name('kunjungan.pemeriksaanRambut');
-        Route::get('kunjungan/pemeriksaanBibir/{id}', [KunjunganController::class, 'pemeriksaanBibir'])->name('kunjungan.pemeriksaanBibir');
-        Route::get('kunjungan/pemeriksaanGigiGeligi/{id}', [KunjunganController::class, 'pemeriksaanGigiGeligi'])->name('kunjungan.pemeriksaanGigiGeligi');
-        Route::get('kunjungan/pemeriksaanLidah/{id}', [KunjunganController::class, 'pemeriksaanLidah'])->name('kunjungan.pemeriksaanLidah');
-        Route::get('kunjungan/pemeriksaanLangitLangit/{id}', [KunjunganController::class, 'pemeriksaanLangitLangit'])->name('kunjungan.pemeriksaanLangitLangit');
-        Route::get('kunjungan/pemeriksaanLeher/{id}', [KunjunganController::class, 'pemeriksaanLeher'])->name('kunjungan.pemeriksaanLeher');
-        Route::get('kunjungan/pemeriksaanTenggorokan/{id}', [KunjunganController::class, 'pemeriksaanTenggorokan'])->name('kunjungan.pemeriksaanTenggorokan');
-        Route::get('kunjungan/pemeriksaanTonsil/{id}', [KunjunganController::class, 'pemeriksaanTonsil'])->name('kunjungan.pemeriksaanTonsil');
-        Route::get('kunjungan/pemeriksaanDada/{id}', [KunjunganController::class, 'pemeriksaanDada'])->name('kunjungan.pemeriksaanDada');
-        Route::get('kunjungan/pemeriksaanPayudara/{id}', [KunjunganController::class, 'pemeriksaanPayudara'])->name('kunjungan.pemeriksaanPayudara');
-        Route::get('kunjungan/pemeriksaanPunggung/{id}', [KunjunganController::class, 'pemeriksaanPunggung'])->name('kunjungan.pemeriksaanPunggung');
-        Route::get('kunjungan/pemeriksaanPerut/{id}', [KunjunganController::class, 'pemeriksaanPerut'])->name('kunjungan.pemeriksaanPerut');
-        Route::get('kunjungan/pemeriksaanGenital/{id}', [KunjunganController::class, 'pemeriksaanGenital'])->name('kunjungan.pemeriksaanGenital');
-        Route::get('kunjungan/pemeriksaanAnus/{id}', [KunjunganController::class, 'pemeriksaanAnus'])->name('kunjungan.pemeriksaanAnus');
-        Route::get('kunjungan/pemeriksaanLenganAtas/{id}', [KunjunganController::class, 'pemeriksaanLenganAtas'])->name('kunjungan.pemeriksaanLenganAtas');
-        Route::get('kunjungan/pemeriksaanLenganBawah/{id}', [KunjunganController::class, 'pemeriksaanLenganBawah'])->name('kunjungan.pemeriksaanLenganBawah');
-        Route::get('kunjungan/pemeriksaanJariTangan/{id}', [KunjunganController::class, 'pemeriksaanJariTangan'])->name('kunjungan.pemeriksaanJariTangan');
-        Route::get('kunjungan/pemeriksaanKukuTangan/{id}', [KunjunganController::class, 'pemeriksaanKukuTangan'])->name('kunjungan.pemeriksaanKukuTangan');
-        Route::get('kunjungan/pemeriksaanPersediaanTangan/{id}', [KunjunganController::class, 'pemeriksaanPersediaanTangan'])->name('kunjungan.pemeriksaanPersediaanTangan');
-        Route::get('kunjungan/pemeriksaanTungkaiAtas/{id}', [KunjunganController::class, 'pemeriksaanTungkaiAtas'])->name('kunjungan.pemeriksaanTungkaiAtas');
-        Route::get('kunjungan/pemeriksaanTungkaiBawah/{id}', [KunjunganController::class, 'pemeriksaanTungkaiBawah'])->name('kunjungan.pemeriksaanTungkaiBawah');
-        Route::get('kunjungan/pemeriksaanJariKaki/{id}', [KunjunganController::class, 'pemeriksaanLenganAtas'])->name('kunjungan.pemeriksaanLenganAtas');
-        Route::get('kunjungan/pemeriksaanKukuKaki/{id}', [KunjunganController::class, 'pemeriksaanKukuKaki'])->name('kunjungan.pemeriksaanKukuKaki');
-        Route::get('kunjungan/pemeriksaanPersendianKaki/{id}', [KunjunganController::class, 'pemeriksaanPersendianKaki'])->name('kunjungan.pemeriksaanPersendianKaki');
-        Route::get('kunjungan/pemeriksaanFaring/{id}', [KunjunganController::class, 'pemeriksaanFaring'])->name('kunjungan.pemeriksaanFaring');
-        Route::get('kunjungan/pemeriksaanKukuKaki/{id}', [KunjunganController::class, 'pemeriksaanKukuKaki'])->name('kunjungan.pemeriksaanKukuKaki');
-        Route::get('kunjungan/pemeriksaanSaluranCernahBawah/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahBawah'])->name('kunjungan.pemeriksaanSaluranCernahBawah');
-        Route::get('kunjungan/pemeriksaanSaluranCernahAtas/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahAtas'])->name('kunjungan.pemeriksaanSaluranCernahAtas');
+        Route::get('/pemeriksaanUmum/{id}', [KunjunganController::class, 'pemeriksaanUmum'])->name('kunjungan.pemeriksaanUmum');
+        Route::get('/pemeriksaanFungsional/{id}', [KunjunganController::class, 'pemeriksaanFungsional'])->name('kunjungan.pemeriksaanFungsional');
+        Route::get('/pemeriksaanFisik/{id}', [KunjunganController::class, 'pemeriksaanFisik'])->name('kunjungan.pemeriksaanFisik');
+        Route::get('/pemeriksaanKepala/{id}', [KunjunganController::class, 'pemeriksaanKepala'])->name('kunjungan.pemeriksaanKepala');
+        Route::get('/pemeriksaanMata/{id}', [KunjunganController::class, 'pemeriksaanMata'])->name('kunjungan.pemeriksaanMata');
+        Route::get('/pemeriksaanTelinga/{id}', [KunjunganController::class, 'pemeriksaanTelinga'])->name('kunjungan.pemeriksaanTelinga');
+        Route::get('/pemeriksaanRambut/{id}', [KunjunganController::class, 'pemeriksaanRambut'])->name('kunjungan.pemeriksaanRambut');
+        Route::get('/pemeriksaanBibir/{id}', [KunjunganController::class, 'pemeriksaanBibir'])->name('kunjungan.pemeriksaanBibir');
+        Route::get('/pemeriksaanGigiGeligi/{id}', [KunjunganController::class, 'pemeriksaanGigiGeligi'])->name('kunjungan.pemeriksaanGigiGeligi');
+        Route::get('/pemeriksaanLidah/{id}', [KunjunganController::class, 'pemeriksaanLidah'])->name('kunjungan.pemeriksaanLidah');
+        Route::get('/pemeriksaanLangitLangit/{id}', [KunjunganController::class, 'pemeriksaanLangitLangit'])->name('kunjungan.pemeriksaanLangitLangit');
+        Route::get('/pemeriksaanLeher/{id}', [KunjunganController::class, 'pemeriksaanLeher'])->name('kunjungan.pemeriksaanLeher');
+        Route::get('/pemeriksaanTenggorokan/{id}', [KunjunganController::class, 'pemeriksaanTenggorokan'])->name('kunjungan.pemeriksaanTenggorokan');
+        Route::get('/pemeriksaanTonsil/{id}', [KunjunganController::class, 'pemeriksaanTonsil'])->name('kunjungan.pemeriksaanTonsil');
+        Route::get('/pemeriksaanDada/{id}', [KunjunganController::class, 'pemeriksaanDada'])->name('kunjungan.pemeriksaanDada');
+        Route::get('/pemeriksaanPayudara/{id}', [KunjunganController::class, 'pemeriksaanPayudara'])->name('kunjungan.pemeriksaanPayudara');
+        Route::get('/pemeriksaanPunggung/{id}', [KunjunganController::class, 'pemeriksaanPunggung'])->name('kunjungan.pemeriksaanPunggung');
+        Route::get('/pemeriksaanPerut/{id}', [KunjunganController::class, 'pemeriksaanPerut'])->name('kunjungan.pemeriksaanPerut');
+        Route::get('/pemeriksaanGenital/{id}', [KunjunganController::class, 'pemeriksaanGenital'])->name('kunjungan.pemeriksaanGenital');
+        Route::get('/pemeriksaanAnus/{id}', [KunjunganController::class, 'pemeriksaanAnus'])->name('kunjungan.pemeriksaanAnus');
+        Route::get('/pemeriksaanLenganAtas/{id}', [KunjunganController::class, 'pemeriksaanLenganAtas'])->name('kunjungan.pemeriksaanLenganAtas');
+        Route::get('/pemeriksaanLenganBawah/{id}', [KunjunganController::class, 'pemeriksaanLenganBawah'])->name('kunjungan.pemeriksaanLenganBawah');
+        Route::get('/pemeriksaanJariTangan/{id}', [KunjunganController::class, 'pemeriksaanJariTangan'])->name('kunjungan.pemeriksaanJariTangan');
+        Route::get('/pemeriksaanKukuTangan/{id}', [KunjunganController::class, 'pemeriksaanKukuTangan'])->name('kunjungan.pemeriksaanKukuTangan');
+        Route::get('/pemeriksaanPersediaanTangan/{id}', [KunjunganController::class, 'pemeriksaanPersediaanTangan'])->name('kunjungan.pemeriksaanPersediaanTangan');
+        Route::get('/pemeriksaanTungkaiAtas/{id}', [KunjunganController::class, 'pemeriksaanTungkaiAtas'])->name('kunjungan.pemeriksaanTungkaiAtas');
+        Route::get('/pemeriksaanTungkaiBawah/{id}', [KunjunganController::class, 'pemeriksaanTungkaiBawah'])->name('kunjungan.pemeriksaanTungkaiBawah');
+        Route::get('/pemeriksaanJariKaki/{id}', [KunjunganController::class, 'pemeriksaanLenganAtas'])->name('kunjungan.pemeriksaanLenganAtas');
+        Route::get('/pemeriksaanKukuKaki/{id}', [KunjunganController::class, 'pemeriksaanKukuKaki'])->name('kunjungan.pemeriksaanKukuKaki');
+        Route::get('/pemeriksaanPersendianKaki/{id}', [KunjunganController::class, 'pemeriksaanPersendianKaki'])->name('kunjungan.pemeriksaanPersendianKaki');
+        Route::get('/pemeriksaanFaring/{id}', [KunjunganController::class, 'pemeriksaanFaring'])->name('kunjungan.pemeriksaanFaring');
+        Route::get('/pemeriksaanKukuKaki/{id}', [KunjunganController::class, 'pemeriksaanKukuKaki'])->name('kunjungan.pemeriksaanKukuKaki');
+        Route::get('/pemeriksaanSaluranCernahBawah/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahBawah'])->name('kunjungan.pemeriksaanSaluranCernahBawah');
+        Route::get('/pemeriksaanSaluranCernahAtas/{id}', [KunjunganController::class, 'pemeriksaanSaluranCernahAtas'])->name('kunjungan.pemeriksaanSaluranCernahAtas');
 
-        Route::get('kunjungan/pemeriksaanEeg/{id}', [KunjunganController::class, 'pemeriksaanEeg'])->name('kunjungan.pemeriksaanEeg');
-        Route::get('kunjungan/pemeriksaanEmg/{id}', [KunjunganController::class, 'pemeriksaanEmg'])->name('kunjungan.pemeriksaanEmg');
-        Route::get('kunjungan/pemeriksaanRavenTest/{id}', [KunjunganController::class, 'pemeriksaanRavenTest'])->name('kunjungan.pemeriksaanRavenTest');
-        Route::get('kunjungan/pemeriksaanCatClams/{id}', [KunjunganController::class, 'pemeriksaanCatClams'])->name('kunjungan.pemeriksaanCatClams');
-        Route::get('kunjungan/pemeriksaanTransfusiDarah/{id}', [KunjunganController::class, 'pemeriksaanTransfusiDarah'])->name('kunjungan.pemeriksaanTransfusiDarah');
-        Route::get('kunjungan/pemeriksaanAsessmentMChat/{id}', [KunjunganController::class, 'pemeriksaanAsessmentMChat'])->name('kunjungan.pemeriksaanAsessmentMChat');
-        Route::get('kunjungan/pemeriksaanEkg/{id}', [KunjunganController::class, 'pemeriksaanEkg'])->name('kunjungan.pemeriksaanEkg');
+        Route::get('/pemeriksaanEeg/{id}', [KunjunganController::class, 'pemeriksaanEeg'])->name('kunjungan.pemeriksaanEeg');
+        Route::get('/pemeriksaanEmg/{id}', [KunjunganController::class, 'pemeriksaanEmg'])->name('kunjungan.pemeriksaanEmg');
+        Route::get('/pemeriksaanRavenTest/{id}', [KunjunganController::class, 'pemeriksaanRavenTest'])->name('kunjungan.pemeriksaanRavenTest');
+        Route::get('/pemeriksaanCatClams/{id}', [KunjunganController::class, 'pemeriksaanCatClams'])->name('kunjungan.pemeriksaanCatClams');
+        Route::get('/pemeriksaanTransfusiDarah/{id}', [KunjunganController::class, 'pemeriksaanTransfusiDarah'])->name('kunjungan.pemeriksaanTransfusiDarah');
+        Route::get('/pemeriksaanAsessmentMChat/{id}', [KunjunganController::class, 'pemeriksaanAsessmentMChat'])->name('kunjungan.pemeriksaanAsessmentMChat');
+        Route::get('/pemeriksaanEkg/{id}', [KunjunganController::class, 'pemeriksaanEkg'])->name('kunjungan.pemeriksaanEkg');
 
-        Route::get('kunjungan/penilaianFisik/{id}', [KunjunganController::class, 'penilaianFisik'])->name('kunjungan.penilaianFisik');
-        Route::get('kunjungan/penilaianNyeri/{id}', [KunjunganController::class, 'penilaianNyeri'])->name('kunjungan.penilaianNyeri');
-        Route::get('kunjungan/penilaianStatusPediatrik/{id}', [KunjunganController::class, 'penilaianStatusPediatrik'])->name('kunjungan.penilaianStatusPediatrik');
-        Route::get('kunjungan/penilaianDiagnosis/{id}', [KunjunganController::class, 'penilaianDiagnosis'])->name('kunjungan.penilaianDiagnosis');
-        Route::get('kunjungan/penilaianSkalaMorse/{id}', [KunjunganController::class, 'penilaianSkalaMorse'])->name('kunjungan.penilaianSkalaMorse');
-        Route::get('kunjungan/penilaianSkalaHumptyDumpty/{id}', [KunjunganController::class, 'penilaianSkalaHumptyDumpty'])->name('kunjungan.penilaianSkalaHumptyDumpty');
-        Route::get('kunjungan/penilaianEpfra/{id}', [KunjunganController::class, 'penilaianEpfra'])->name('kunjungan.penilaianEpfra');
-        Route::get('kunjungan/penilaianGetupGo/{id}', [KunjunganController::class, 'penilaianGetupGo'])->name('kunjungan.penilaianGetupGo');
-        Route::get('kunjungan/penilaianDekubitus/{id}', [KunjunganController::class, 'penilaianDekubitus'])->name('kunjungan.penilaianDekubitus');
-        Route::get('kunjungan/penilaianBallanceCairan/{id}', [KunjunganController::class, 'penilaianBallanceCairan'])->name('kunjungan.penilaianBallanceCairan');
+        Route::get('/penilaianFisik/{id}', [KunjunganController::class, 'penilaianFisik'])->name('kunjungan.penilaianFisik');
+        Route::get('/penilaianNyeri/{id}', [KunjunganController::class, 'penilaianNyeri'])->name('kunjungan.penilaianNyeri');
+        Route::get('/penilaianStatusPediatrik/{id}', [KunjunganController::class, 'penilaianStatusPediatrik'])->name('kunjungan.penilaianStatusPediatrik');
+        Route::get('/penilaianDiagnosis/{id}', [KunjunganController::class, 'penilaianDiagnosis'])->name('kunjungan.penilaianDiagnosis');
+        Route::get('/penilaianSkalaMorse/{id}', [KunjunganController::class, 'penilaianSkalaMorse'])->name('kunjungan.penilaianSkalaMorse');
+        Route::get('/penilaianSkalaHumptyDumpty/{id}', [KunjunganController::class, 'penilaianSkalaHumptyDumpty'])->name('kunjungan.penilaianSkalaHumptyDumpty');
+        Route::get('/penilaianEpfra/{id}', [KunjunganController::class, 'penilaianEpfra'])->name('kunjungan.penilaianEpfra');
+        Route::get('/penilaianGetupGo/{id}', [KunjunganController::class, 'penilaianGetupGo'])->name('kunjungan.penilaianGetupGo');
+        Route::get('/penilaianDekubitus/{id}', [KunjunganController::class, 'penilaianDekubitus'])->name('kunjungan.penilaianDekubitus');
+        Route::get('/penilaianBallanceCairan/{id}', [KunjunganController::class, 'penilaianBallanceCairan'])->name('kunjungan.penilaianBallanceCairan');
 
-        Route::get('kunjungan/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
-        Route::get('kunjungan/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
+        Route::get('/diagnosa/{id}', [KunjunganController::class, 'diagnosa'])->name('kunjungan.diagnosa');
+        Route::get('/detailDiagnosa/{id}', [KunjunganController::class, 'detailDiagnosa'])->name('kunjungan.detailDiagnosa');
 
-        Route::get('kunjungan/rencanaTerapi/{id}', [KunjunganController::class, 'rencanaTerapi'])->name('kunjungan.rencanaTerapi');
+        Route::get('/rencanaTerapi/{id}', [KunjunganController::class, 'rencanaTerapi'])->name('kunjungan.rencanaTerapi');
 
-        Route::get('kunjungan/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
+        Route::get('/jadwalKontrol/{id}', [KunjunganController::class, 'jadwalKontrol'])->name('kunjungan.jadwalKontrol');
 
-        Route::get('kunjungan/perencanaanRawatInap/{id}', [KunjunganController::class, 'perencanaanRawatInap'])->name('kunjungan.perencanaanRawatInap');
+        Route::get('/perencanaanRawatInap/{id}', [KunjunganController::class, 'perencanaanRawatInap'])->name('kunjungan.perencanaanRawatInap');
 
-        Route::get('kunjungan/dischargePlanningSkrining/{id}', [KunjunganController::class, 'dischargePlanningSkrining'])->name('kunjungan.dischargePlanningSkrining');
+        Route::get('/dischargePlanningSkrining/{id}', [KunjunganController::class, 'dischargePlanningSkrining'])->name('kunjungan.dischargePlanningSkrining');
 
-        Route::get('kunjungan/dischargePlanningFaktorRisiko/{id}', [KunjunganController::class, 'dischargePlanningFaktorRisiko'])->name('kunjungan.dischargePlanningFaktorRisiko');
+        Route::get('/dischargePlanningFaktorRisiko/{id}', [KunjunganController::class, 'dischargePlanningFaktorRisiko'])->name('kunjungan.dischargePlanningFaktorRisiko');
 
-        Route::get('kunjungan/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
-        Route::get('kunjungan/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
+        Route::get('/cppt/{id}', [KunjunganController::class, 'cppt'])->name('kunjungan.cppt');
+        Route::get('/detailCppt/{id}', [KunjunganController::class, 'detailCppt'])->name('kunjungan.detailCppt');
 
-        Route::get('kunjungan/pemantauanHDIntradialitik/{id}', [KunjunganController::class, 'pemantauanHDIntradialitik'])->name('kunjungan.pemantauanHDIntradialitik');
+        Route::get('/pemantauanHDIntradialitik/{id}', [KunjunganController::class, 'pemantauanHDIntradialitik'])->name('kunjungan.pemantauanHDIntradialitik');
 
-        Route::get('kunjungan/tindakanAbci/{id}', [KunjunganController::class, 'tindakanAbci'])->name('kunjungan.tindakanAbci');
+        Route::get('/tindakanAbci/{id}', [KunjunganController::class, 'tindakanAbci'])->name('kunjungan.tindakanAbci');
 
-        Route::get('kunjungan/tindakanMmpi/{id}', [KunjunganController::class, 'tindakanMmpi'])->name('kunjungan.tindakanMmpi');
+        Route::get('/tindakanMmpi/{id}', [KunjunganController::class, 'tindakanMmpi'])->name('kunjungan.tindakanMmpi');
 
-        Route::get('kunjungan/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
+        Route::get('/laboratorium/{id}', [KunjunganController::class, 'laboratorium'])->name('kunjungan.laboratorium');
 
-        Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
-        Route::get('kunjungan/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
+        Route::get('/radiologi/{id}', [KunjunganController::class, 'radiologi'])->name('kunjungan.radiologi');
+    });
 
-        Route::get('konsul', [KonsulController::class, 'index'])->name('konsul.index');
-        Route::get('konsul/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');
-        Route::get('/konsul/{filter}', [KonsulController::class, 'filterByTime'])
+    Route::prefix('konsul')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('/', [KonsulController::class, 'index'])->name('konsul.index');
+        Route::get('/detail/{id}', [KonsulController::class, 'detail'])->name('konsul.detail');
+        Route::get('/filter/{filter}', [KonsulController::class, 'filterByTime'])
             ->name('konsul.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
-        Route::get('/konsul-print', [KonsulController::class, 'print'])->name('konsul.print');
+        Route::get('/print', [KonsulController::class, 'print'])->name('konsul.print');
+    });
 
-        Route::get('mutasi', [MutasiController::class, 'index'])->name('mutasi.index');
-        Route::get('mutasi/detail/{id}', [MutasiController::class, 'detail'])->name('mutasi.detail');
-        Route::get('/mutasi/{filter}', [MutasiController::class, 'filterByTime'])
+    Route::prefix('mutasi')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('/', [MutasiController::class, 'index'])->name('mutasi.index');
+        Route::get('/detail/{id}', [MutasiController::class, 'detail'])->name('mutasi.detail');
+        Route::get('/filter/{filter}', [MutasiController::class, 'filterByTime'])
             ->name('mutasi.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
-        Route::get('/mutasi-print', [MutasiController::class, 'print'])->name('mutasi.print');
+        Route::get('/print', [MutasiController::class, 'print'])->name('mutasi.print');
+    });
 
-        Route::get('antrian', [AntrianRuanganController::class, 'index'])->name('antrian.index');
-        Route::get('antrian/detail/{id}', [AntrianRuanganController::class, 'detail'])->name('antrian.detail');
-        Route::get('/antrian/{filter}', [AntrianRuanganController::class, 'filterByStatus'])
+    Route::prefix('antrian')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('/', [AntrianRuanganController::class, 'index'])->name('antrian.index');
+        Route::get('/detail/{id}', [AntrianRuanganController::class, 'detail'])->name('antrian.detail');
+        Route::get('/filter/{filter}', [AntrianRuanganController::class, 'filterByStatus'])
             ->name('antrian.filterByStatus')
             ->where('filter', 'batal|belumDiterima|diterima');
-        Route::get('/antrian/{filterKunjungan}', [AntrianRuanganController::class, 'filterByKunjungan'])
+        Route::get('/filter/{filterKunjungan}', [AntrianRuanganController::class, 'filterByKunjungan'])
             ->name('antrian.filterByKunjungan')
             ->where('filterKunjungan', 'rajal|ranap|darurat');
+    });
 
-        Route::get('reservasi', [ReservasiController::class, 'index'])->name('reservasi.index');
-        Route::get('reservasi/detail/{id}', [ReservasiController::class, 'detail'])->name('reservasi.detail');
-        Route::get('/reservasi/{filter}', [ReservasiController::class, 'filterByStatus'])
+    Route::prefix('reservasi')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
+        Route::get('/', [ReservasiController::class, 'index'])->name('reservasi.index');
+        Route::get('/detail/{id}', [ReservasiController::class, 'detail'])->name('reservasi.detail');
+        Route::get('/filter/{filter}', [ReservasiController::class, 'filterByStatus'])
             ->name('reservasi.filterByStatus')
             ->where('filter', 'batal|reservasi|selesai');
     });
