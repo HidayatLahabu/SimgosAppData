@@ -37,14 +37,17 @@ class MedicalrecordAsuhanKeperawatanModel extends Model
             return response()->json(['message' => 'Data not found'], 404);
         }
 
-        if ($query) {
-            $query->SUBJECKTIF = implode(', ', json_decode($query->SUBJECKTIF, true));
-            $query->OBJEKTIF = implode(', ', json_decode($query->OBJEKTIF, true));
-            $query->OBSERVASI = implode(', ', json_decode($query->OBSERVASI, true));
-            $query->THEURAPEUTIC = implode(', ', json_decode($query->THEURAPEUTIC, true));
-            $query->EDUKASI = implode(', ', json_decode($query->EDUKASI, true));
-            $query->KOLABORASI = implode(', ', json_decode($query->KOLABORASI, true));
-            $query->PENYEBAP = implode(', ', json_decode($query->PENYEBAP, true));
+        foreach ((array)$query as $key => $value) {
+            $decoded = json_decode($value, true);
+
+            // Remove fields with empty arrays
+            if (is_array($decoded) && empty($decoded)) {
+                unset($query->{$key});
+            }
+            // For arrays with data, convert them to a comma-separated string
+            elseif (is_array($decoded)) {
+                $query->{$key} = implode(', ', $decoded);
+            }
         }
 
         return $query;

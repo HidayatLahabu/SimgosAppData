@@ -218,11 +218,19 @@ class PendaftaranController extends Controller
                 'diagnosa.KODE as KODE_DIAGNOSA',
                 'diagnosa.DIAGNOSA as DESKRIPSI_DIAGNOSA',
                 'diagnosa.UTAMA as DIAGNOSA_UTAMA',
-                'diagnosa.INACBG as INACBG',
+                'diagnosa.INACBG as DIAGNOSA_INACBG',
                 'diagnosa.BARU as DIAGNOSA_BARU',
                 'diagnosa.TANGGAL as TANGGAL_DIAGNOSA',
-                'penggunaDiagnosa.NAMA as DIAGNOSA_OLEH',
+                'diagnosaOleh.NAMA as DIAGNOSA_OLEH',
                 'diagnosa.STATUS as STATUS_DIAGNOSA',
+                'diagnosa.INA_GROUPER as INA_GROUPER_DIAGNOSA',
+                'prosedur.KODE as KODE_PROSEDUR',
+                'prosedur.TINDAKAN as PROSEDUR_TINDAKAN',
+                'prosedur.INACBG as PROSEDUR_INACBG',
+                'prosedur.TANGGAL as TANGGAL_PROSEDUR',
+                'prosedurOleh.NAMA as PROSEDUR_OLEH',
+                'prosedur.STATUS as STATUS_PROSEDUR',
+                'prosedur.INA_GROUPER as INA_GROUPER_PROSEDUR',
             ])
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.kartu_asuransi_pasien as kartu_asuransi_pasien', 'pasien.NORM', '=', 'kartu_asuransi_pasien.NORM')
@@ -259,8 +267,10 @@ class PendaftaranController extends Controller
                     ->where('kecelakaan_jenis.JENIS', '=', 212);
             })
             ->leftJoin('medicalrecord.diagnosa as diagnosa', 'diagnosa.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('medicalrecord.prosedur as prosedur', 'prosedur.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pendaftaran.OLEH')
-            ->leftJoin('aplikasi.pengguna as penggunaDiagnosa', 'penggunaDiagnosa.ID', '=', 'diagnosa.OLEH')
+            ->leftJoin('aplikasi.pengguna as diagnosaOleh', 'diagnosaOleh.ID', '=', 'diagnosa.OLEH')
+            ->leftJoin('aplikasi.pengguna as prosedurOleh', 'prosedurOleh.ID', '=', 'prosedur.OLEH')
             ->where('pendaftaran.NOMOR', $id)
             ->distinct()
             ->firstOrFail();
@@ -278,123 +288,6 @@ class PendaftaranController extends Controller
         return inertia("Pendaftaran/Pendaftaran/Detail", [
             'detail'            => $query,
             'nomorPendaftaran'  => $noPendaftaran,
-        ]);
-    }
-
-    public function pasien($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
-            ->select([
-                'pendaftaran.NOMOR as NOMOR_PENDAFTARAN',
-                'pasien.NORM as NORM',
-                'pasien.GELAR_DEPAN AS GELAR_DEPAN',
-                'pasien.NAMA as NAMA_PASIEN',
-                'pasien.GELAR_BELAKANG as GELAR_BELAKANG',
-                'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
-                'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
-                'pasien.JENIS_KELAMIN as JENIS_KELAMIN',
-                'pasien.ALAMAT as ALAMAT',
-                'pasien.RT as RT',
-                'pasien.RW as RW',
-                'wilayah.DESKRIPSI as WILAYAH',
-                'pasien.KODEPOS as KODEPOS',
-                'agama.DESKRIPSI as AGAMA',
-                'kelamin.DESKRIPSI as JENIS_KELAMIN',
-                'pendidikan.DESKRIPSI as PENDIDIKAN',
-                'perkawinan.DESKRIPSI as STATUS_PERKAWINAN',
-                'golonganDarah.DESKRIPSI as GOLONGAN_DARAH',
-                'kewarganegaraan.DESKRIPSI as KEWARGANEGARAAN',
-                'pasien.SUKU as SUKU',
-                'pasien.TIDAK_DIKENAL as TIDAK_DIKENAL',
-                'bahasa.DESKRIPSI as BAHASA',
-                'pasien.LOCK_AKSES as LOCK_AKSES',
-                'identitas.NOMOR as KARTU_IDENTITAS',
-                'asuransi.NOMOR as ASURANSI_PASIEN',
-                'kontak_pasien.NOMOR as KONTAK_PASIEN',
-                'keluarga.NAMA as NAMA_KELUARGA',
-                'keluarga.ALAMAT as ALAMAT_KELUARGA',
-                'kontak_keluarga.NOMOR as KONTAK_KELUARGA',
-                'pengguna.NAMA as INPUT_OLEH',
-                'pasien.TANGGAL as TANGGAL_INPUT',
-            ])
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.wilayah as wilayah', 'wilayah.ID', '=', 'pasien.WILAYAH')
-            ->leftJoin('master.negara as kewarganegaraan', 'kewarganegaraan.ID', '=', 'pasien.KEWARGANEGARAAN')
-            ->leftJoin('master.kartu_identitas_pasien as identitas', 'identitas.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.kartu_asuransi_pasien as asuransi', 'asuransi.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.kontak_pasien as kontak_pasien', 'kontak_pasien.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.keluarga_pasien as keluarga', 'keluarga.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.kontak_keluarga_pasien as kontak_keluarga', 'kontak_keluarga.NORM', '=', 'pasien.NORM')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pasien.OLEH')
-            ->leftJoin('master.referensi as kelamin', function ($join) {
-                $join->on('kelamin.ID', '=', 'pasien.JENIS_KELAMIN')
-                    ->where('kelamin.JENIS', '=', 2);
-            })
-            ->leftJoin('master.referensi as agama', function ($join) {
-                $join->on('agama.ID', '=', 'pasien.AGAMA')
-                    ->where('agama.JENIS', '=', 1);
-            })
-            ->leftJoin('master.referensi as pendidikan', function ($join) {
-                $join->on('pendidikan.ID', '=', 'pasien.PENDIDIKAN')
-                    ->where('pendidikan.JENIS', '=', 3);
-            })
-            ->leftJoin('master.referensi as pekerjaan', function ($join) {
-                $join->on('pekerjaan.ID', '=', 'pasien.PEKERJAAN')
-                    ->where('pendidikan.JENIS', '=', 4);
-            })
-            ->leftJoin('master.referensi as perkawinan', function ($join) {
-                $join->on('perkawinan.ID', '=', 'pasien.STATUS_PERKAWINAN')
-                    ->where('perkawinan.JENIS', '=', 5);
-            })
-            ->leftJoin('master.referensi as golonganDarah', function ($join) {
-                $join->on('golonganDarah.ID', '=', 'pasien.GOLONGAN_DARAH')
-                    ->where('golonganDarah.JENIS', '=', 6);
-            })
-            ->leftJoin('master.referensi as bahasa', function ($join) {
-                $join->on('bahasa.ID', '=', 'pasien.BAHASA')
-                    ->where('bahasa.JENIS', '=', 177);
-            })
-            ->where('pendaftaran.NORM', $id)
-            ->distinct()
-            ->firstOrFail();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('pendaftaran.index')->with('error', 'Data not found.');
-        }
-
-        // Return Inertia view with the encounter data
-        return inertia("Pendaftaran/Pendaftaran/Pasien", [
-            'detail' => $query,
-        ]);
-    }
-
-    public function bpjs($id)
-    {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
-            ->select([
-                'pendaftaran.NOMOR as NOMOR_PENDAFTARAN',
-                'bpjs.*',
-            ])
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.kartu_identitas_pasien as identitas', 'identitas.NORM', '=', 'pasien.NORM')
-            ->leftJoin('bpjs.peserta as bpjs', 'bpjs.nik', '=', 'identitas.NOMOR')
-            ->where('pendaftaran.NORM', $id)
-            ->distinct()
-            ->firstOrFail();
-
-        // Check if the record exists
-        if (!$query) {
-            // Handle the case where the encounter was not found
-            return redirect()->route('pendaftaran.index')->with('error', 'Data not found.');
-        }
-
-        // Return Inertia view with the encounter data
-        return inertia("Pendaftaran/Pendaftaran/Bpjs", [
-            'detail' => $query,
         ]);
     }
 }

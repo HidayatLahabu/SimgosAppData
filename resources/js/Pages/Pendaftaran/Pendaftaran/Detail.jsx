@@ -1,14 +1,13 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import ButtonBack from '@/Components/ButtonBack';
-import ButtonPasien from '@/Components/ButtonPasien';
-import ButtonBpjs from '@/Components/ButtonBpjs';
+import ButtonBack from '@/Components/ButtonBack';;
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatDate } from '@/utils/formatDate';
 
 export default function Detail({
     auth,
@@ -51,17 +50,9 @@ export default function Detail({
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <div className="flex items-center justify-between pb-2">
-                                    <h1 className="text-left uppercase font-bold text-2xl">
-                                        DATA DETAIL PENDAFTARAN
-                                    </h1>
-                                    <div className="flex space-x-4">
-                                        <ButtonPasien href={route("pendaftaran.pasien", { id: detail.NORM })} />
-                                        {detail.NOMOR_ASURANSI && detail.NOMOR_ASURANSI.trim() !== "" && (
-                                            <ButtonBpjs href={route("pendaftaran.bpjs", { id: detail.NORM })} />
-                                        )}
-                                        <ButtonBack href={route("pendaftaran.index")} />
-                                    </div>
+                                <div className="relative flex items-center justify-between pb-2">
+                                    <ButtonBack href={route("pendaftaran.index")} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL PENDAFTARAN</h1>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
@@ -106,8 +97,17 @@ export default function Detail({
                                                                     detailItem.value === 0 ? "Batal" :
                                                                         detailItem.value === 1 ? "Final" :
                                                                             detailItem.value
-                                                                ) : detailItem.value}
+                                                                ) : detailItem.uraian === "STATUS_PROSEDUR" ? (
+                                                                    detailItem.value === 0 ? "Batal" :
+                                                                        detailItem.value === 1 ? "Final" :
+                                                                            detailItem.value
+                                                                ) : detailItem.uraian === "TANGGAL_LAHIR" ? (
+                                                                    formatDate(detailItem.value)
+                                                                ) : (
+                                                                    detailItem.value
+                                                                )}
                                                             </TableCell>
+
                                                         </TableRow>
                                                     ))}
                                                 </tbody>

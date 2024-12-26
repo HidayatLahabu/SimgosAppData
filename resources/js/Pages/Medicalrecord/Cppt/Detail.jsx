@@ -11,9 +11,9 @@ import TableCell from "@/Components/TableCell";
 export default function Detail({ auth, detail }) {
 
     const headers = [
-        { name: "NO", className: "w-[5%]" },
-        { name: "COLUMN NAME", className: "w-[40%]" },
-        { name: "VALUE", className: "w-[auto]" },
+        { name: "NO" },
+        { name: "COLUMN NAME" },
+        { name: "VALUE" },
     ];
 
     // Generate detailData dynamically from the detail object
@@ -24,22 +24,25 @@ export default function Detail({ auth, detail }) {
 
     // Filter out detailData with empty or whitespace values
     const filteredDetailData = detailData.filter((item) => {
-        const value = String(item.value || "").trim(); // Convert value to string and trim whitespace
-        return value !== ""; // Only include non-empty strings
+        const value = String(item.value || "").trim();
+        return value !== "" && value !== "0";
     });
 
-    // Specify how many rows per table
-    const rowsPerTable = Math.ceil(filteredDetailData.length / 2);
+    // Tentukan jumlah row per tabel
+    const rowsPerTable =
+        filteredDetailData.length > 10
+            ? Math.ceil(filteredDetailData.length / 2)
+            : filteredDetailData.length;
 
-    // Split the data into groups
-    const tables = [];
-    for (let i = 0; i < filteredDetailData.length; i += rowsPerTable) {
-        tables.push(filteredDetailData.slice(i, i + rowsPerTable));
-    }
+    // Bagi data menjadi grup hanya jika jumlah row > 10
+    const tables = filteredDetailData.length > 10 ? Array.from({
+        length: Math.ceil(filteredDetailData.length / rowsPerTable),
+    }, (_, i) => filteredDetailData.slice(i * rowsPerTable, (i + 1) * rowsPerTable))
+        : [filteredDetailData];
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="BPJS" />
+            <Head title="Medicalrecord" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -47,27 +50,9 @@ export default function Detail({ auth, detail }) {
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("pendaftaran.detail", { id: detail.NOMOR_PENDAFTARAN })} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL PESERTA BPJS</h1>
+                                    <ButtonBack href={route("cppt.index")} />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL CPPT</h1>
                                 </div>
-                                {/* <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200 dark:bg-indigo-900">
-                                    <thead className="text-sm font-bold text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
-                                        <tr>
-                                            <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">COLUMN</th>
-                                            <th className="px-3 py-2">VALUE</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {detailData.map((detailItem, index) => (
-                                            <tr key={index} className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td className="px-3 py-3 w-16">{index + 1}</td>
-                                                <td className="px-3 py-3 w-56">{detailItem.uraian}</td>
-                                                <td className="px-3 py-3 break-words">{detailItem.value}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table> */}
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
                                         <div
@@ -78,11 +63,12 @@ export default function Detail({ auth, detail }) {
                                                 <TableHeader>
                                                     <tr>
                                                         {headers.map((header, index) => (
-                                                            <TableHeaderCell
-                                                                key={index}
-                                                                className={`${index === 0 ? 'w-[10%]' : index === 1 ? 'w-[30%]' : 'w-[60%]'} ${header.className || ""}`}
+                                                            <TableHeaderCell key={index} className={`${index === 0 ? "w-[5%]" : index === 1 ? "w-[15%]" : "w-[auto]"} 
+                                                            ${header.className || ""}`}
                                                             >
-                                                                {header.name}
+                                                                {
+                                                                    header.name
+                                                                }
                                                             </TableHeaderCell>
                                                         ))}
                                                     </tr>
@@ -92,7 +78,13 @@ export default function Detail({ auth, detail }) {
                                                         <TableRow key={index}>
                                                             <TableCell>{index + 1 + tableIndex * rowsPerTable}</TableCell>
                                                             <TableCell>{detailItem.uraian}</TableCell>
-                                                            <TableCell className="text-wrap">{detailItem.value}</TableCell>
+                                                            <TableCell className="text-wrap">
+                                                                {detailItem.uraian === "STATUS" ? (
+                                                                    detailItem.value == 0 ? "Belum Final" :
+                                                                        detailItem.value == 1 ? "Final" :
+                                                                            detailItem.value
+                                                                ) : detailItem.value}
+                                                            </TableCell>
                                                         </TableRow>
                                                     ))}
                                                 </tbody>

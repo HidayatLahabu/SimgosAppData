@@ -56,6 +56,10 @@ use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
+use App\Http\Controllers\Medicalrecord\AnamnesisController;
+use App\Http\Controllers\Medicalrecord\AskepController;
+use App\Http\Controllers\Medicalrecord\CpptController;
+use App\Http\Controllers\Medicalrecord\JadwalKontrolController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
@@ -199,8 +203,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
         Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
         Route::get('/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
-        Route::get('/pasien/{id}', [PendaftaranController::class, 'pasien'])->name('pendaftaran.pasien');
-        Route::get('/bpjs/{id}', [PendaftaranController::class, 'bpjs'])->name('pendaftaran.bpjs');
         Route::get('/filter/{filter}', [PendaftaranController::class, 'filterByTime'])
             ->name('pendaftaran.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
@@ -466,6 +468,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('logsRequest', [PenggunaRequestController::class, 'index'])->name('logsRequest.index');
 
         Route::get('logsPengguna', [PenggunaLogController::class, 'index'])->name('logsPengguna.index');
+    });
+
+    Route::prefix('medicalrecord')->namespace('App\Http\Controllers\Medicalrecord')->group(function () {
+        Route::get('anamnesis', [AnamnesisController::class, 'index'])->name('anamnesis.index');
+        Route::get('anamnesis/detail/{id}', [AnamnesisController::class, 'detail'])->name('anamnesis.detail');
+        Route::get('anamnesis/filter/{filter}', [AnamnesisController::class, 'filterByTime'])
+            ->name('anamnesis.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
+        Route::get('askep', [AskepController::class, 'index'])->name('askep.index');
+        Route::get('askep/detail/{id}', [AskepController::class, 'detail'])->name('askep.detail');
+        Route::get('askep/filter/{filter}', [AskepController::class, 'filterByTime'])
+            ->name('askep.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
+        Route::get('cppt', [CpptController::class, 'index'])->name('cppt.index');
+        Route::get('cppt/detail/{id}', [CpptController::class, 'detail'])->name('cppt.detail');
+        Route::get('cppt/filter/{filter}', [CpptController::class, 'filterByTime'])
+            ->name('cppt.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
+        Route::get('jadwalKontrol', [JadwalKontrolController::class, 'index'])->name('jadwalKontrol.index');
+        Route::get('jadwalKontrol/detail/{id}', [JadwalKontrolController::class, 'detail'])->name('jadwalKontrol.detail');
+        Route::get('jadwalKontrol/filter/{filter}', [JadwalKontrolController::class, 'filterByTime'])
+            ->name('jadwalKontrol.filterByTime')
+            ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
 
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {

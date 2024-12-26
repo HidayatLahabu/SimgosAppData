@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 /* CSS yang ada di customDatePickerWidth.css */
 .customDatePickerWidth {
     width: 100%; /* Menetapkan lebar penuh dari kontainer */
@@ -14,4 +13,30 @@
 
 .customDatePickerWidth .react-datepicker__input {
     width: 100%; /* Menetapkan lebar penuh untuk elemen input tanggal */
+}
+
+/* Mengatur warna scrollbar untuk browser berbasis WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 16px; /* Lebar scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1b4b; /* Warna background track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #312e81; /* Warna scrollbar */
+    border-radius: 10px; /* Membuatnya melengkung */
+    border: 1px solid #fbbf24; /* Opsional: memberi jarak di sekitar scrollbar */
+}
+
+/* Untuk scrollbar horizontal */
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #312e81;
+}
+
+/* Pengaturan scrollbar untuk Firefox */
+* {
+    scrollbar-width: auto; /* Pilihan: auto, thin, atau none */
+    scrollbar-color: #312e81 #1e1b4b; /* Warna thumb dan track */
 }

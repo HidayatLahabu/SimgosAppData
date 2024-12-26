@@ -74,11 +74,13 @@ const TopNavigation = ({ user }) => {
             </div>
             <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                 <div className="pt-2 pb-3 space-y-1">
-                    <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
+                    <ResponsiveNavLink
+                        href={route('dashboard')}
+                        active={route().current('dashboard')}>
                         Beranda
                     </ResponsiveNavLink>
                 </div>
-                <MobileNavigation />
+                <MobileNavigation user={user} />
             </div>
         </nav>
     );
