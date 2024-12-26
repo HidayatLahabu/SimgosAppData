@@ -33,40 +33,40 @@ export default function Print({ data, dariTanggal, sampaiTanggal, namaRuangan, n
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
                                 </p>
 
-                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4">
-                                    <thead className="text-sm font-bold text-gray-900 bg-white dark:text-gray-900 border-b-2 border-gray-500">
+                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
+                                    <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500 ">
                                         <tr>
-                                            <th className="px-3 py-2">NO</th>
-                                            <th className="px-3 py-2">NORM</th>
-                                            <th className="px-3 py-2">NAMA PASIEN</th>
-                                            <th className="px-3 py-2">NOMOR KUNJUNGAN</th>
-                                            <th className="px-3 py-2">TANGGAL MASUK</th>
-                                            <th className="px-3 py-2">TANGGAL KELUAR</th>
-                                            <th className="px-3 py-2">RUANGAN TUJUAN</th>
-                                            <th className="px-3 py-2">STATUS</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[12%] text-center">NOMOR KUNJUNGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">TANGGAL MASUK</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">TANGGAL KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">RUANGAN TUJUAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[5%] text-center">STATUS</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => (
                                             <tr key={item.id} className="border-b bg-white dark:border-gray-500">
-                                                <td className="px-3 py-2 text-nowrap">{key + 1}</td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.norm}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.nama}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.nomor}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.masuk}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.keluar}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap">{item.ruangan}</td>
-                                                <td className="px-3 py-2 text-nowrap">
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{item.ruangan}</td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.status === 0 ? 'Batal Kunjungan' : item.status === 1 ? 'Sedang Dilayani' : 'Selesai'}
                                                 </td>
 

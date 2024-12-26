@@ -79,10 +79,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -90,6 +86,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     Route::prefix('satusehat')->namespace('App\Http\Controllers\Satusehat')->group(function () {
         Route::get('sinkronisasi', [SinkronisasiController::class, 'index'])->name('sinkronisasi.index');
 
@@ -197,53 +195,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('tindakanToLoinc', [TindakanToLoincController::class, 'index'])->name('tindakanToLoinc.index');
         Route::get('tindakanToLoinc/detail/{id}', [TindakanToLoincController::class, 'detail'])->name('tindakanToLoinc.detail');
     });
-});
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('inventory')->namespace('App\Http\Controllers\Inventory')->group(function () {
-        Route::get('daftarBarang', [BarangController::class, 'index'])->name('daftarBarang.index');
-
-        Route::get('orderBarang', [OrderController::class, 'index'])->name('orderBarang.index');
-
-        Route::get('penerimaanBarang', [PenerimaanController::class, 'index'])->name('penerimaanBarang.index');
-
-        Route::get('pengirimanBarang', [PengirimanController::class, 'index'])->name('pengirimanBarang.index');
-
-        Route::get('permintaanBarang', [PermintaanController::class, 'index'])->name('permintaanBarang.index');
-
-        Route::get('barangRuangan', [BarangRuanganController::class, 'index'])->name('barangRuangan.index');
-
-        Route::get('stockBarang', [StockController::class, 'index'])->name('stockBarang.index');
-        Route::get('stockBarang/list/{id}', [StockController::class, 'list'])->name('stockBarang.list');
-
-        Route::get('transaksiBarang', [TransaksiController::class, 'index'])->name('transaksiBarang.index');
-    });
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('master')->namespace('App\Http\Controllers\Master')->group(function () {
-        Route::get('dokter', [DokterController::class, 'index'])->name('dokter.index');
-
-        Route::get('pasien', [PasienController::class, 'index'])->name('pasien.index');
-        Route::get('pasien/detail/{id}', [PasienController::class, 'detail'])->name('pasien.detail');
-
-        Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
-
-        Route::get('perawat', [PerawatController::class, 'index'])->name('perawat.index');
-
-        Route::get('referensi', [ReferensiController::class, 'index'])->name('referensi.index');
-
-        Route::get('ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
-
-        Route::get('staf', [StafController::class, 'index'])->name('staf.index');
-
-        Route::get('tindakan', [TindakanController::class, 'index'])->name('tindakan.index');
-
-        Route::get('tindakanRuangan', [TindakanRuanganController::class, 'index'])->name('tindakanRuangan.index');
-    });
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
         Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
         Route::get('/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
@@ -411,9 +363,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('reservasi.filterByStatus')
             ->where('filter', 'batal|reservasi|selesai');
     });
-});
 
-Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('inventory')->namespace('App\Http\Controllers\Inventory')->group(function () {
+        Route::get('daftarBarang', [BarangController::class, 'index'])->name('daftarBarang.index');
+
+        Route::get('orderBarang', [OrderController::class, 'index'])->name('orderBarang.index');
+
+        Route::get('penerimaanBarang', [PenerimaanController::class, 'index'])->name('penerimaanBarang.index');
+
+        Route::get('pengirimanBarang', [PengirimanController::class, 'index'])->name('pengirimanBarang.index');
+
+        Route::get('permintaanBarang', [PermintaanController::class, 'index'])->name('permintaanBarang.index');
+
+        Route::get('barangRuangan', [BarangRuanganController::class, 'index'])->name('barangRuangan.index');
+
+        Route::get('stockBarang', [StockController::class, 'index'])->name('stockBarang.index');
+        Route::get('stockBarang/list/{id}', [StockController::class, 'list'])->name('stockBarang.list');
+
+        Route::get('transaksiBarang', [TransaksiController::class, 'index'])->name('transaksiBarang.index');
+    });
+
     Route::prefix('bpjs')->namespace('App\Http\Controllers\Bpjs')->group(function () {
         Route::get('pesertaBpjs', [PesertaBpjController::class, 'index'])->name('pesertaBpjs.index');
         Route::get('pesertaBpjs/detail/{id}', [PesertaBpjController::class, 'detail'])->name('pesertaBpjs.detail');
@@ -436,38 +405,59 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('monitoringRekon.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
-});
 
-//layanan
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::prefix('layanan')->namespace('App\Http\Controllers\Layanan')->group(function () {
-        Route::get('layananLab', [LaboratoriumController::class, 'index'])->name('layananLab.index');
-        Route::get('layananLab/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
-        Route::get('/layananLab-print', [LaboratoriumController::class, 'print'])->name('layananLab.print');
-        Route::get('/layananLab/{filter}', [LaboratoriumController::class, 'filterByTime'])
+    Route::prefix('master')->namespace('App\Http\Controllers\Master')->group(function () {
+        Route::get('dokter', [DokterController::class, 'index'])->name('dokter.index');
+
+        Route::get('pasien', [PasienController::class, 'index'])->name('pasien.index');
+        Route::get('pasien/detail/{id}', [PasienController::class, 'detail'])->name('pasien.detail');
+
+        Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
+
+        Route::get('perawat', [PerawatController::class, 'index'])->name('perawat.index');
+
+        Route::get('referensi', [ReferensiController::class, 'index'])->name('referensi.index');
+
+        Route::get('ruangan', [RuanganController::class, 'index'])->name('ruangan.index');
+
+        Route::get('staf', [StafController::class, 'index'])->name('staf.index');
+
+        Route::get('tindakan', [TindakanController::class, 'index'])->name('tindakan.index');
+
+        Route::get('tindakanRuangan', [TindakanRuanganController::class, 'index'])->name('tindakanRuangan.index');
+    });
+
+    Route::prefix('layananLab')->namespace('App\Http\Controllers\Layanan')->group(function () {
+        Route::get('/', [LaboratoriumController::class, 'index'])->name('layananLab.index');
+        Route::get('/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
+        Route::get('/print', [LaboratoriumController::class, 'print'])->name('layananLab.print');
+        Route::get('/filter/{filter}', [LaboratoriumController::class, 'filterByTime'])
             ->name('layananLab.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+    });
 
-        Route::get('layananRad', [RadiologiController::class, 'index'])->name('layananRad.index');
-        Route::get('layananRad/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
-        Route::get('/layananRad-print', [RadiologiController::class, 'print'])->name('layananRad.print');
-        Route::get('/layananRad/{filter}', [RadiologiController::class, 'filterByTime'])
+    Route::prefix('layananRad')->namespace('App\Http\Controllers\Layanan')->group(function () {
+        Route::get('/', [RadiologiController::class, 'index'])->name('layananRad.index');
+        Route::get('/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
+        Route::get('/print', [RadiologiController::class, 'print'])->name('layananRad.print');
+        Route::get('/filter/{filter}', [RadiologiController::class, 'filterByTime'])
             ->name('layananRad.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+    });
 
-        Route::get('layananResep', [ResepController::class, 'index'])->name('layananResep.index');
-
-        Route::get('layananPulang', [PulangController::class, 'index'])->name('layananPulang.index');
-        Route::get('layananPulang/detail/{id}', [PulangController::class, 'detail'])->name('layananPulang.detail');
-        Route::get('/layananPulang-print', [PulangController::class, 'print'])->name('layananPulang.print');
-        Route::get('/layananPulang/{filter}', [PulangController::class, 'filterByTime'])
+    Route::prefix('layananPulang')->namespace('App\Http\Controllers\Layanan')->group(function () {
+        Route::get('/', [PulangController::class, 'index'])->name('layananPulang.index');
+        Route::get('/detail/{id}', [PulangController::class, 'detail'])->name('layananPulang.detail');
+        Route::get('/print', [PulangController::class, 'print'])->name('layananPulang.print');
+        Route::get('/filter/{filter}', [PulangController::class, 'filterByTime'])
             ->name('layananPulang.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
-});
 
-//logs
-Route::middleware(['auth', 'verified'])->group(function () {
+    Route::prefix('layananResep')->namespace('App\Http\Controllers\Layanan')->group(function () {
+        Route::get('/', [ResepController::class, 'index'])->name('layananResep.index');
+    });
+
     Route::prefix('logs')->namespace('App\Http\Controllers\Logs')->group(function () {
         Route::get('logsBridge', [BridgeLogsController::class, 'index'])->name('logsBridge.index');
 
@@ -477,15 +467,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('logsPengguna', [PenggunaLogController::class, 'index'])->name('logsPengguna.index');
     });
-});
 
-//laporan
-Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
     });
 });
-
 
 require __DIR__ . '/auth.php';

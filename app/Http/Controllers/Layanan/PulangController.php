@@ -166,6 +166,9 @@ class PulangController extends Controller
         // Mengonversi data ke array
         $dataArray = $data->toArray();
 
+        //get data referensi pasien pulang
+        $keadaanPulang = MasterReferensiModel::where('JENIS', 46)->get();
+
         // Mengembalikan view Inertia dengan data yang dipaginate
         return inertia("Layanan/Pulang/Index", [
             'dataTable' => [
@@ -176,6 +179,7 @@ class PulangController extends Controller
             'header' => $header,
             'totalCount' => $count,
             'text' => $text,
+            'keadaanPulang' => $keadaanPulang,
         ]);
     }
 
