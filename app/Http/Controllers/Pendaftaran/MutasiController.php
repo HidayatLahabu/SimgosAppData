@@ -74,10 +74,13 @@ class MutasiController extends Controller
             ->selectRaw('
             ROUND(COUNT(*) / COUNT(DISTINCT DATE(mutasi.TANGGAL))) AS rata_rata_per_hari,
             ROUND(COUNT(*) / COUNT(DISTINCT WEEK(mutasi.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(mutasi.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(SUM(CASE WHEN mutasi.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(mutasi.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
             ROUND(COUNT(*) / COUNT(DISTINCT YEAR(mutasi.TANGGAL))) AS rata_rata_per_tahun
         ')
-            ->whereIn('STATUS', [1, 2])
+            ->whereIn('mutasi.STATUS', [1, 2])
+            ->where('mutasi.TANGGAL', '>', '0000-00-00')
+            ->whereNotNull('mutasi.TANGGAL')
+            ->whereYear('mutasi.TANGGAL', now()->year)
             ->first();
     }
 

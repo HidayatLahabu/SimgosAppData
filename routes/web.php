@@ -28,6 +28,7 @@ use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
 use App\Http\Controllers\Logs\PenggunaAksesController;
+use App\Http\Controllers\Medicalrecord\CpptController;
 use App\Http\Controllers\Pendaftaran\KonsulController;
 use App\Http\Controllers\Pendaftaran\MutasiController;
 use App\Http\Controllers\Satusehat\CarePlanController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
 use App\Http\Controllers\Laporan\LaporanRl12Controller;
 use App\Http\Controllers\Laporan\LaporanRl51Controller;
+use App\Http\Controllers\Medicalrecord\AskepController;
 use App\Http\Controllers\Satusehat\ConditionController;
 use App\Http\Controllers\Satusehat\EncounterController;
 use App\Http\Controllers\Satusehat\ProcedureController;
@@ -48,6 +50,7 @@ use App\Http\Controllers\Layanan\LaboratoriumController;
 use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
+use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
@@ -55,23 +58,24 @@ use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\OrganizationController;
 use App\Http\Controllers\Satusehat\PractitionerController;
+use App\Http\Controllers\Satusehat\SinkronisasiController;
 use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Medicalrecord\AnamnesisController;
-use App\Http\Controllers\Medicalrecord\AskepController;
-use App\Http\Controllers\Medicalrecord\CpptController;
-use App\Http\Controllers\Medicalrecord\JadwalKontrolController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
+use App\Http\Controllers\Pendaftaran\MedicalRecordController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
-use App\Http\Controllers\Pendaftaran\MedicalRecordController;
-use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
+use App\Http\Controllers\Medicalrecord\JadwalKontrolController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
+use App\Http\Controllers\Informasi\InformasiKunjunganController;
+use App\Http\Controllers\Informasi\InformasiPenunjangController;
+use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
+use App\Http\Controllers\Informasi\InformasiPengunjungController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
-use App\Http\Controllers\Satusehat\SinkronisasiController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -499,6 +503,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
+    });
+
+    Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
+        Route::get('statistikKunjungan', [StatistikKunjunganController::class, 'index'])->name('statistikKunjungan.index');
+        Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
+        Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
+        Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
     });
 });
 

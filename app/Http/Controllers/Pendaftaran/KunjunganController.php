@@ -256,10 +256,13 @@ class KunjunganController extends Controller
             ->selectRaw('
             ROUND(COUNT(*) / COUNT(DISTINCT DATE(kunjungan.MASUK))) AS rata_rata_per_hari,
             ROUND(COUNT(*) / COUNT(DISTINCT WEEK(kunjungan.MASUK, 1))) AS rata_rata_per_minggu,
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(kunjungan.MASUK, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(SUM(CASE WHEN kunjungan.MASUK IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(kunjungan.MASUK, "%Y-%m"))) AS rata_rata_per_bulan,
             ROUND(COUNT(*) / COUNT(DISTINCT YEAR(kunjungan.MASUK))) AS rata_rata_per_tahun
         ')
-            ->whereIn('STATUS', [1, 2])
+            ->whereIn('kunjungan.STATUS', [1, 2])
+            ->where('kunjungan.MASUK', '>', '0000-00-00')
+            ->whereNotNull('kunjungan.MASUK')
+            ->whereYear('kunjungan.MASUK', now()->year)
             ->first();
     }
 

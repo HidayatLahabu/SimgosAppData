@@ -3,27 +3,23 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/ButtonDetail";
-import ButtonTime from '@/Components/ButtonTime';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import TableCellMenu from "@/Components/TableCellMenu";
+import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, dataTable, header, totalCount, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
-        { name: "NORM", className: "w-[6%]" },
-        { name: "NAMA PASIEN" },
-        { name: "KUNJUNGAN", className: "w-[11%]" },
-        { name: "TANGGAL", className: "w-[7%]" },
-        { name: "JAM", className: "w-[4%]" },
-        { name: "OLEH" },
-        { name: "RUANGAN" },
-        { name: "DIBUAT TANGGAL", className: "w-[11%]" },
-        { name: "MENU", className: "text-center w-[5%]" },
+        { name: "TANGGAL", className: "w-[9%]" },
+        { name: "JENIS KUNJUNGAN", className: "w-[14%]" },
+        { name: "INSTALASI" },
+        { name: "UNIT", className: "w-[14%]" },
+        { name: "SUB UNIT" },
+        { name: "KUNJUNGAN", className: "text-right w-[10%]" },
+        { name: "LAST UPDATED", className: "w-[12%]" },
     ];
 
     // Function to handle search input changes
@@ -35,7 +31,7 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('jadwalKontrol.index'), updatedParams, {
+        router.get(route('informasiPenunjang.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -57,7 +53,7 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="Medicalrecord" />
+            <Head title="Informasi" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -65,25 +61,21 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <h1 className="uppercase text-center font-bold text-2xl pb-2">
-                                    Data Jadwal Kontrol {header} {totalCount} Pasien
+                                    Data Informasi Layanan Penunjang
                                 </h1>
 
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={9} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
                                                         className="flex-1"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM, nama pasien, nomor kunjungan,  atau input oleh"
+                                                        placeholder="Cari data berdasarkan sub unit"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
-                                                    <ButtonTime href={route("jadwalKontrol.filterByTime", "hariIni")} text="Hari Ini" />
-                                                    <ButtonTime href={route("jadwalKontrol.filterByTime", "mingguIni")} text="Minggu Ini" />
-                                                    <ButtonTime href={route("jadwalKontrol.filterByTime", "bulanIni")} text="Bulan Ini" />
-                                                    <ButtonTime href={route("jadwalKontrol.filterByTime", "tahunIni")} text="Tahun Ini" />
                                                 </div>
                                             </th>
                                         </tr>
@@ -100,25 +92,19 @@ export default function Index({ auth, dataTable, header, totalCount, queryParams
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <TableRow key={data.id} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.norm}</TableCell>
-                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
-                                                    <TableCell>{data.kunjungan}</TableCell>
-                                                    <TableCell className='text-center'>{data.tanggal}</TableCell>
-                                                    <TableCell className='text-center'>{data.jam}</TableCell>
-                                                    <TableCell>{data.oleh}</TableCell>
-                                                    <TableCell>{data.ruangan}</TableCell>
-                                                    <TableCell className='text-center'>{data.dibuat}</TableCell>
-                                                    <TableCellMenu>
-                                                        <ButtonDetail
-                                                            href={route("jadwalKontrol.detail", { id: data.id })}
-                                                        />
-                                                    </TableCellMenu>
+                                                <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
+                                                    <TableCell>{formatDate(data.tanggal)}</TableCell>
+                                                    <TableCell>{data.jenisKunjungan}</TableCell>
+                                                    <TableCell>{data.instalasi}</TableCell>
+                                                    <TableCell>{data.unit}</TableCell>
+                                                    <TableCell>{data.subUnit}</TableCell>
+                                                    <TableCell className='text-right'>{data.jumlah}</TableCell>
+                                                    <TableCell>{data.lastUpdated}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="9" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

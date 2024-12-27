@@ -10,6 +10,7 @@ import NavigationLogs from '@/Components/NavigationLogs';
 import NavigationLaporan from '@/Components/NavigationLaporan';
 import NavigationRadiologi from '@/Components/NavigationRadiologi';
 import NavigationMedicalrecord from '@/Components/NavigationMedicalrecord';
+import NavigationInformasi from '@/Components/NavigationInformasi';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -36,6 +37,7 @@ export default function Navigation({ user }) {
                         <NavigationLayanan />
                         <NavigationMedicalrecord />
                         <NavigationInventory />
+                        <NavigationInformasi />
                         <NavigationLaporan />
                         <NavigationLogs />
                         <NavigationMaster />

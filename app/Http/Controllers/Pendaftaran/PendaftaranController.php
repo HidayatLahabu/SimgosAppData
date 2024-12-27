@@ -65,10 +65,13 @@ class PendaftaranController extends Controller
             ->selectRaw('
             ROUND(COUNT(*) / COUNT(DISTINCT DATE(pendaftaran.TANGGAL))) AS rata_rata_per_hari,
             ROUND(COUNT(*) / COUNT(DISTINCT WEEK(pendaftaran.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(pendaftaran.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(SUM(CASE WHEN pendaftaran.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(pendaftaran.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
             ROUND(COUNT(*) / COUNT(DISTINCT YEAR(pendaftaran.TANGGAL))) AS rata_rata_per_tahun
         ')
-            ->whereIn('STATUS', [1, 2])
+            ->whereIn('pendaftaran.STATUS', [1, 2])
+            ->where('pendaftaran.TANGGAL', '>', '0000-00-00')
+            ->whereNotNull('pendaftaran.TANGGAL')
+            ->whereYear('pendaftaran.TANGGAL', now()->year)
             ->first();
     }
 

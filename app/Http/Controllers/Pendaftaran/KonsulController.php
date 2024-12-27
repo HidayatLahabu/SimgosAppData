@@ -75,10 +75,13 @@ class KonsulController extends Controller
             ->selectRaw('
             ROUND(COUNT(*) / COUNT(DISTINCT DATE(konsul.TANGGAL))) AS rata_rata_per_hari,
             ROUND(COUNT(*) / COUNT(DISTINCT WEEK(konsul.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE_FORMAT(konsul.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+            ROUND(SUM(CASE WHEN konsul.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(konsul.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
             ROUND(COUNT(*) / COUNT(DISTINCT YEAR(konsul.TANGGAL))) AS rata_rata_per_tahun
         ')
-            ->whereIn('STATUS', [1, 2])
+            ->whereIn('konsul.STATUS', [1, 2])
+            ->where('konsul.TANGGAL', '>', '0000-00-00')
+            ->whereNotNull('konsul.TANGGAL')
+            ->whereYear('konsul.TANGGAL', now()->year)
             ->first();
     }
 

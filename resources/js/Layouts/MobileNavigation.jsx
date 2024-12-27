@@ -9,6 +9,7 @@ import ResponsiveNavMaster from '@/Components/ResponsiveNavMaster';
 import ResponsiveNavLaporan from '@/Components/ResponsiveNavLaporan';
 import ResponsiveNavMedicalrecord from '@/Components/ResponsiveNavMedicalrecord';
 import ResponsiveNavRadiologi from '@/Components/ResponsiveNavRadiologi';
+import ResponsiveNavInformasi from '@/Components/ResponsiveNavInformasi';
 
 export default function MobileNavigation({ user }) {
     const userName = user.name || '';
@@ -27,6 +28,7 @@ export default function MobileNavigation({ user }) {
                             <ResponsiveNavLayanan />
                             <ResponsiveNavMedicalrecord />
                             <ResponsiveNavInventory />
+                            <ResponsiveNavInformasi />
                             <ResponsiveNavLaporan />
                             <ResponsiveNavLogs />
                             <ResponsiveNavMaster />

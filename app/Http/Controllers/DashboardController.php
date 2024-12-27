@@ -89,10 +89,10 @@ class DashboardController extends Controller
 
     protected function getPendaftaran()
     {
-        return PendaftaranPendaftaranModel::where('STATUS', 1)
+        return PendaftaranPendaftaranModel::where('STATUS', [1, 2])
             ->whereBetween('TANGGAL', [
-                now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
-                now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+                now()->startOfDay(),
+                now()->endOfDay()
             ])
             ->count();
     }
@@ -192,9 +192,9 @@ class DashboardController extends Controller
             END AS BULAN,
             COUNT(*) AS JUMLAH
         ")
-            ->where('STATUS', 1) // Hanya pendaftaran aktif
-            ->whereYear('TANGGAL', now()->year) // Filter untuk tahun berjalan
-            ->where('TANGGAL', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->where('STATUS', [1, 2])
+            ->whereYear('TANGGAL', now()->year)
+            ->where('TANGGAL', '>', '0000-00-00')
             ->groupByRaw("
             CASE MONTH(TANGGAL)
                 WHEN 1 THEN 'Januari'
@@ -234,9 +234,9 @@ class DashboardController extends Controller
             END AS BULAN,
             COUNT(*) AS JUMLAH
         ")
-            ->whereIn('STATUS', [1, 2]) // Hanya pendaftaran aktif
-            ->whereYear('MASUK', now()->year) // Filter untuk tahun berjalan
-            ->where('MASUK', '>', '0000-00-00') // Menghilangkan nilai tidak valid
+            ->whereIn('STATUS', [1, 2])
+            ->whereYear('MASUK', now()->year)
+            ->where('MASUK', '>', '0000-00-00')
             ->groupByRaw("
             CASE MONTH(MASUK)
                 WHEN 1 THEN 'Januari'
