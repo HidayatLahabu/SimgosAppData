@@ -55,7 +55,13 @@ export default function NavigationLaporan() {
                     >
                         Laporan RL 5.1
                     </NavLink>
-
+                    <NavLink
+                        href={route('laporanWaktuTungguRajal.index')}
+                        active={route().current('laporanWaktuTungguRajal.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Laporan Waktu Tunggu
+                    </NavLink>
                 </div>
             )}
         </div>

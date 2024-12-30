@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pendaftaran;
 
 use App\Http\Controllers\Controller;
-use App\Models\PendaftaranKunjunganModel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 

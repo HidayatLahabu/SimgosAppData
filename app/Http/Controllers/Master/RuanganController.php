@@ -17,11 +17,14 @@ class RuanganController extends Controller
         $query = DB::connection('mysql2')->table('master.ruangan as ruangan')
             ->select(
                 'ruangan.ID as id',
-                'ruangan.DESKRIPSI as deskripsi',
-                'jenis.DESKRIPSI as jenis'
+                'ruangan.JENIS as jenisId',
+                'jenis.DESKRIPSI as jenisNama',
+                'ruangan.JENIS_KUNJUNGAN as jenisKunjungan',
+                'ruangan.DESKRIPSI as namaRuangan',
             )
             ->leftJoin('master.jenis_ruangan as jenis', 'ruangan.JENIS', '=', 'jenis.ID')
             ->where('ruangan.STATUS', 1)
+            ->orderBy('ruangan.JENIS')
             ->orderBy('ruangan.ID');
 
         // Add search filter if provided

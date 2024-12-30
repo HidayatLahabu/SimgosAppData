@@ -12,9 +12,11 @@ import TableCell from "@/Components/TableCell";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
-        { name: "ID" },
-        { name: "JENIS" },
-        { name: "DESKRIPSI" },
+        { name: "ID", className: "w-[7%]" },
+        { name: "JENIS ID", className: "w-[7%]" },
+        { name: "JENIS DESKRIPSI" },
+        { name: "JENIS KUNJUNGAN", className: "w-[7%]" },
+        { name: "NAMA RUANGAN" },
     ];
 
     // Function to handle search input changes
@@ -62,7 +64,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={5} className="px-3 py-2">
+                                            <th colSpan={6} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.deskripsi || ''}
@@ -86,13 +88,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.id} isEven={index % 2 === 0}>
                                                     <TableCell>{data.id}</TableCell>
-                                                    <TableCell>{data.jenis}</TableCell>
-                                                    <TableCell>{data.deskripsi}</TableCell>
+                                                    <TableCell>{data.jenisId}</TableCell>
+                                                    <TableCell>{data.jenisNama}</TableCell>
+                                                    <TableCell>{data.jenisKunjungan}</TableCell>
+                                                    <TableCell>{data.namaRuangan}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="5" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

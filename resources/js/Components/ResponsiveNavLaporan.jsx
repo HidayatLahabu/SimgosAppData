@@ -31,6 +31,7 @@ export default function ResponsiveNavLaporan() {
                         <div className="py-1">
                             <ResponsiveNavLink href={route('laporanRl12.index')}>Laporan RL 1.2</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRl51.index')}>Laporan RL 5.1</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('laporanWaktuTungguRajal.index')}>Laporan Waktu Tunggu</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>
