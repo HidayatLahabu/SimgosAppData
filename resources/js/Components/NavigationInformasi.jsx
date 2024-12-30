@@ -55,7 +55,7 @@ export default function NavigationLogs() {
                         active={route().current('informasiKunjungan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Kunjungan
+                        Kunjungan Rawat Jalan
                     </NavLink>
                     <NavLink
                         href={route('informasiPengunjung.index')}
