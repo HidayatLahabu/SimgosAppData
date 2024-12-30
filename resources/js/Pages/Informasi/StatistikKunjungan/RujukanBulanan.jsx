@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
-    const [items, setItems] = useState(kunjunganBulanan);
+export default function MonthlyRujukanTable({ rujukanBulanan = [] }) {
+    const [items, setItems] = useState(rujukanBulanan);
 
     useEffect(() => {
         // If data is passed as a prop, use it directly
-        if (Array.isArray(kunjunganBulanan)) {
-            setItems(kunjunganBulanan);
+        if (Array.isArray(rujukanBulanan)) {
+            setItems(rujukanBulanan);
         } else {
-            console.error('Invalid data passed to component:', kunjunganBulanan);
+            console.error('Invalid data passed to component:', rujukanBulanan);
         }
-    }, [kunjunganBulanan]);
+    }, [rujukanBulanan]);
 
     // Ensure items is always an array
     const sortedItems = Array.isArray(items) ? [...items] : [];
 
-    // Filter untuk hanya menampilkan baris dengan nilai > 0
+    // Filter items to include only rows where any of the columns MASUK, KELUAR, or BALIK is greater than 0
     const filteredItems = sortedItems.filter(
-        (data) => data.RANAP > 0 || data.DARURAT > 0 || data.RANAP > 0
+        (data) =>
+            data.MASUK > 0 || data.KELUAR > 0 || data.BALIK > 0
     );
 
     // Find the maximum value for JUMLAH
@@ -30,16 +31,16 @@ export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-yellow-500 mb-2">
-                        Kunjungan Bulanan
+                        Rujukan Bulanan
                     </h1>
                     <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
                             <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase text-yellow-500">
                                 <tr>
                                     <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-left">Bulan</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Jalan</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Darurat</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Inap</th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rujukan Masuk</th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rujukan Keluar</th>
+                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rujukan Balik</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,22 +60,22 @@ export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
                                                 {data.BULAN}
                                             </td>
                                             <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.RANAP === maxJumlah ? 'text-green-500 font-bold' : ''
+                                                className={`border border-gray-600 px-4 py-2 text-center ${data.MASUK === maxJumlah ? 'text-green-500 font-bold' : ''
                                                     }`}
                                             >
-                                                {data.RANAP.toLocaleString()}
+                                                {data.MASUK.toLocaleString()}
                                             </td>
                                             <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.DARURAT === maxJumlah ? 'text-green-500 font-bold' : ''
+                                                className={`border border-gray-600 px-4 py-2 text-center ${data.KELUAR === maxJumlah ? 'text-green-500 font-bold' : ''
                                                     }`}
                                             >
-                                                {data.DARURAT.toLocaleString()}
+                                                {data.KELUAR.toLocaleString()}
                                             </td>
                                             <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.RANAP === maxJumlah ? 'text-green-500 font-bold' : ''
+                                                className={`border border-gray-600 px-4 py-2 text-center ${data.BALIK === maxJumlah ? 'text-green-500 font-bold' : ''
                                                     }`}
                                             >
-                                                {data.RANAP.toLocaleString()}
+                                                {data.BALIK.toLocaleString()}
                                             </td>
                                         </tr>
                                     ))
