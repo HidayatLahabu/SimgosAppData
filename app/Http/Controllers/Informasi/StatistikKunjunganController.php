@@ -13,18 +13,12 @@ class StatistikKunjunganController extends Controller
     public function index()
     {
         $kunjungan = $this->getKunjungan();
-        // Paginate the results
         $dataKunjungan = $kunjungan->orderByDesc('statistikKunjungan.TANGGAL')->paginate(10)->appends(request()->query());
-
-        // Convert data to array
         $dataKunjungan = $dataKunjungan->toArray();
 
         // Start building the query using the query builder
         $rujukan = $this->getRujukan();
-        // Paginate the results
         $dataRujukan = $rujukan->orderByDesc('statistikRujukan.TANGGAL')->paginate(10)->appends(request()->query());
-
-        // Convert data to array
         $dataRujukan = $dataRujukan->toArray();
 
         //get data pendaftaran bulanan
@@ -33,7 +27,13 @@ class StatistikKunjunganController extends Controller
         //get data pendaftaran bulanan
         $rujukanBulanan = $this->getMonthlyRujukan();
 
-        //dd($rujukanBulanan);
+        $kunjunganMingguan = $this->getWeeklyKunjungan();
+        $dataKunjunganMingguan = $kunjunganMingguan->paginate(8)->appends(request()->query());
+        $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
+
+        $rujukanMingguan = $this->getWeeklyRujukan();
+        $dataRujukanMingguan = $rujukanMingguan->paginate(8)->appends(request()->query());
+        $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
         // Return Inertia view with paginated data
         return inertia("Informasi/StatistikKunjungan/Index", [
@@ -47,6 +47,14 @@ class StatistikKunjunganController extends Controller
             ],
             'kunjunganBulanan' => $kunjunganBulanan,
             'rujukanBulanan' => $rujukanBulanan,
+            'kunjunganMingguan' => [
+                'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
+                'linksKunjunganMingguan' => $dataKunjunganMingguan['links'],
+            ],
+            'rujukanMingguan' => [
+                'dataRujukanMingguan' => $dataRujukanMingguan['data'],
+                'linksRujukanMingguan' => $dataRujukanMingguan['links'],
+            ],
         ]);
     }
 
@@ -80,6 +88,52 @@ class StatistikKunjunganController extends Controller
             ->orWhere('statistikRujukan.KELUAR', '>', 0)
             ->orWhere('statistikRujukan.BALIK', '>', 0)
             ->groupBy('statistikRujukan.TANGGAL');
+    }
+
+    protected function getWeeklyKunjungan()
+    {
+        return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+            ->select(
+                DB::raw('YEAR(statistikKunjungan.TANGGAL) as tahun'),
+                DB::raw('WEEK(statistikKunjungan.TANGGAL, 1) as minggu'),
+                DB::raw('SUM(statistikKunjungan.RJ) as total_rj'),
+                DB::raw('SUM(statistikKunjungan.RD) as total_rd'),
+                DB::raw('SUM(statistikKunjungan.RI) as total_ri')
+            )
+            ->where(function ($query) {
+                $query->where('statistikKunjungan.RJ', '>', 0)
+                    ->orWhere('statistikKunjungan.RD', '>', 0)
+                    ->orWhere('statistikKunjungan.RI', '>', 0);
+            })
+            ->groupBy(
+                DB::raw('YEAR(statistikKunjungan.TANGGAL)'),
+                DB::raw('WEEK(statistikKunjungan.TANGGAL, 1)')
+            )
+            ->orderBy('tahun', 'desc')
+            ->orderBy('minggu', 'desc');
+    }
+
+    protected function getWeeklyRujukan()
+    {
+        return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
+            ->select(
+                DB::raw('YEAR(statistikRujukan.TANGGAL) as tahun'),
+                DB::raw('WEEK(statistikRujukan.TANGGAL, 1) as minggu'),
+                DB::raw('SUM(statistikRujukan.MASUK) as masuk'),
+                DB::raw('SUM(statistikRujukan.KELUAR) as keluar'),
+                DB::raw('SUM(statistikRujukan.BALIK) as balik')
+            )
+            ->where(function ($query) {
+                $query->where('statistikRujukan.MASUK', '>', 0)
+                    ->orWhere('statistikRujukan.KELUAR', '>', 0)
+                    ->orWhere('statistikRujukan.BALIK', '>', 0);
+            })
+            ->groupBy(
+                DB::raw('YEAR(statistikRujukan.TANGGAL)'),
+                DB::raw('WEEK(statistikRujukan.TANGGAL, 1)')
+            )
+            ->orderBy('tahun', 'desc')
+            ->orderBy('minggu', 'desc');
     }
 
     protected function getMonthlyKunjungan()

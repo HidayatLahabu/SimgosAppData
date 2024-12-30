@@ -5,14 +5,12 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import { formatDate } from '@/utils/formatDate';
 
-export default function KunjunganTable({ tableKunjungan }) {
-    // State to track the current pagination links for each table
-    const [kunjunganLinks, setKunjunganLinks] = useState(tableKunjungan.linksKunjungan);
+export default function KunjunganMingguanTable({ kunjunganMingguan }) {
+    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan);
 
-    const handleKunjunganPageChange = (newLinks) => {
-        setKunjunganLinks(newLinks);
+    const handleKunjunganMingguanChange = (newLinks) => {
+        setKunjunganMingguanLinks(newLinks);
     };
 
     return (
@@ -20,27 +18,27 @@ export default function KunjunganTable({ tableKunjungan }) {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-yellow-500 mb-2">
-                        Kunjungan Harian
+                        Kunjungan Mingguan
                     </h1>
                     <Table>
                         <TableHeader>
                             <tr>
-                                <TableHeaderCell className='text-nowrap w-[20%]'>TANGGAL</TableHeaderCell>
+                                <TableHeaderCell className='text-nowrap w-[5%]'>TAHUN</TableHeaderCell>
+                                <TableHeaderCell className='text-nowrap w-[12%]'>MINGGU KE</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT INAP</TableHeaderCell>
-                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATED</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(tableKunjungan?.dataKunjungan) && tableKunjungan.dataKunjungan.length > 0 ? (
-                                tableKunjungan.dataKunjungan.map((data, index) => (
+                            {Array.isArray(kunjunganMingguan?.dataKunjunganMingguan) && kunjunganMingguan.dataKunjunganMingguan.length > 0 ? (
+                                kunjunganMingguan.dataKunjunganMingguan.map((data, index) => (
                                     <TableRow key={data.tanggal} isEven={index % 2 === 0}>
-                                        <TableCell>{formatDate(data.tanggal)}</TableCell>
-                                        <TableCell className='text-right'>{data.rajal}</TableCell>
-                                        <TableCell className='text-right'>{data.darurat}</TableCell>
-                                        <TableCell className='text-right'>{data.ranap}</TableCell>
-                                        <TableCell>{data.tanggalUpdated}</TableCell>
+                                        <TableCell>{data.tahun}</TableCell>
+                                        <TableCell>{data.minggu}</TableCell>
+                                        <TableCell className='text-right'>{data.total_rj}</TableCell>
+                                        <TableCell className='text-right'>{data.total_rd}</TableCell>
+                                        <TableCell className='text-right'>{data.total_ri}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -51,12 +49,11 @@ export default function KunjunganTable({ tableKunjungan }) {
                         </tbody>
                     </Table>
                     <Pagination
-                        links={kunjunganLinks}
-                        onPageChange={handleKunjunganPageChange}
+                        links={kunjunganMingguanLinks}
+                        onPageChange={handleKunjunganMingguanChange}
                     />
                 </div>
             </div>
         </div>
-    )
+    );
 }
-
