@@ -29,7 +29,7 @@ export default function ResponsiveNavLogs() {
                 <div className="absolute left-0 mt-1 w-full rounded-md shadow-lg bg-white dark:bg-indigo-950 z-10">
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
-                            <ResponsiveNavLink href={route('statistikKunjungan.index')}>Statistik Kunjungan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('statistikKunjungan.index')}>Statistik</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('informasiKunjungan.index')}>Kunjungan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('informasiPengunjung.index')}>Pengunjung</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('informasiPenunjang.index')}>Penunjang</ResponsiveNavLink>

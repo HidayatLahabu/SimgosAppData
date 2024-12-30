@@ -24,7 +24,7 @@ export default function Index({ auth, tableKunjungan, tableRujukan }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Informasi" />
+            <Head title="Medicalrecord" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -53,7 +53,7 @@ export default function Index({ auth, tableKunjungan, tableRujukan }) {
                                             <tbody>
                                                 {Array.isArray(tableKunjungan?.dataKunjungan) && tableKunjungan.dataKunjungan.length > 0 ? (
                                                     tableKunjungan.dataKunjungan.map((data, index) => (
-                                                        <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
+                                                        <TableRow key={data.tanggal} isEven={index % 2 === 0}>
                                                             <TableCell>{formatDate(data.tanggal)}</TableCell>
                                                             <TableCell className='text-right'>{data.rajal}</TableCell>
                                                             <TableCell className='text-right'>{data.darurat}</TableCell>
@@ -92,7 +92,7 @@ export default function Index({ auth, tableKunjungan, tableRujukan }) {
                                             <tbody>
                                                 {Array.isArray(tableRujukan?.dataRujukan) && tableRujukan.dataRujukan.length > 0 ? (
                                                     tableRujukan.dataRujukan.map((data, index) => (
-                                                        <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
+                                                        <TableRow key={data.tanggal} isEven={index % 2 === 0}>
                                                             <TableCell>{formatDate(data.tanggal)}</TableCell>
                                                             <TableCell className='text-right'>{data.masuk}</TableCell>
                                                             <TableCell className='text-right'>{data.keluar}</TableCell>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Informasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\InformasiStatistikKunjunganModel;
 
 class StatistikKunjunganController extends Controller
 {
@@ -50,6 +51,9 @@ class StatistikKunjunganController extends Controller
         // Convert data to array
         $dataRujukan = $dataRujukan->toArray();
 
+        //get data pendaftaran bulanan
+        $kunjunganBulanan = $this->getMonthlyKunjungan();
+
         // Return Inertia view with paginated data
         return inertia("Informasi/StatistikKunjungan/Index", [
             'tableKunjungan' => [
@@ -60,6 +64,50 @@ class StatistikKunjunganController extends Controller
                 'dataRujukan' => $dataRujukan['data'],
                 'linksRujukan' => $dataRujukan['links'],
             ],
+            'kunjunganBulanan' => $kunjunganBulanan,
         ]);
+    }
+
+    protected function getMonthlyKunjungan()
+    {
+        return InformasiStatistikKunjunganModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            SUM(RJ) AS RAJAL,
+            SUM(RD) AS DARURAT,
+            SUM(RI) AS RANAP
+        ")
+            ->whereYear('TANGGAL', now()->year)
+            ->where('TANGGAL', '>', '0000-00-00')
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
     }
 }

@@ -48,7 +48,7 @@ export default function NavigationLogs() {
                         active={route().current('statistikKunjungan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Statistik Kunjungan
+                        Statistik
                     </NavLink>
                     <NavLink
                         href={route('informasiKunjungan.index')}
