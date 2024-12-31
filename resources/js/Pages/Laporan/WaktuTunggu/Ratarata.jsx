@@ -32,7 +32,7 @@ export default function Index({ averageWaitData, namaBulan, tahun }) {
                         <div className="overflow-auto w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">RATA-RATA WAKTU TUNGGU RAWAT JALAN</h1>
                             <p className="text-center pb-4">
-                                <strong>Periode : </strong>{namaBulan} {tahun}
+                                <strong>Periode : </strong>{formattedMonth} {tahun}
                             </p>
                             <Table>
 
