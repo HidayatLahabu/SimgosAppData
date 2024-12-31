@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import Table from "@/Components/Table";
+import TableHeader from "@/Components/TableHeader";
+import TableHeaderCell from "@/Components/TableHeaderCell";
+import TableRow from "@/Components/TableRow";
+import TableCell from "@/Components/TableCell";
 
 export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
     const [items, setItems] = useState(kunjunganBulanan);
@@ -29,64 +34,37 @@ export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
         <div className="max-w-full mx-auto w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                    <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-yellow-500 mb-2">
+                    <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
                         Kunjungan Bulanan
                     </h1>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700">
-                            <thead className="bg-indigo-700 dark:bg-indigo-900 border border-gray-300 dark:border-gray-600 uppercase text-yellow-500">
+
+                        <Table>
+                            <TableHeader>
                                 <tr>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-left">Bulan</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Jalan</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Darurat</th>
-                                    <th className="border border-gray-100 dark:border-gray-600 px-4 py-2 text-center">Rawat Inap</th>
+                                    <TableHeaderCell className='text-nowrap w-[20%]'>BULAN</TableHeaderCell>
+                                    <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
+                                    <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
+                                    <TableHeaderCell className='text-right'>RAWAT INAP</TableHeaderCell>
                                 </tr>
-                            </thead>
+                            </TableHeader>
                             <tbody>
                                 {filteredItems.length > 0 ? (
                                     filteredItems.map((data, index) => (
-                                        <tr
-                                            key={index}
-                                            className={`hover:bg-indigo-100 dark:hover:bg-indigo-800 ${index % 2 === 0
-                                                ? 'bg-gray-50 dark:bg-indigo-950'
-                                                : 'bg-gray-50 dark:bg-indigo-950'
-                                                }`}
-                                        >
-                                            <td
-                                                className={`border border-gray-600 px-4 py-2 ${data.JUMLAH === maxJumlah ? 'text-green-500 font-bold' : ''
-                                                    }`}
-                                            >
-                                                {data.BULAN}
-                                            </td>
-                                            <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.RANAP === maxJumlah ? 'text-green-500 font-bold' : ''
-                                                    }`}
-                                            >
-                                                {data.RANAP.toLocaleString()}
-                                            </td>
-                                            <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.DARURAT === maxJumlah ? 'text-green-500 font-bold' : ''
-                                                    }`}
-                                            >
-                                                {data.DARURAT.toLocaleString()}
-                                            </td>
-                                            <td
-                                                className={`border border-gray-600 px-4 py-2 text-center ${data.RANAP === maxJumlah ? 'text-green-500 font-bold' : ''
-                                                    }`}
-                                            >
-                                                {data.RANAP.toLocaleString()}
-                                            </td>
-                                        </tr>
+                                        <TableRow key={data.tanggal} isEven={index % 2 === 0}>
+                                            <TableCell>{data.BULAN}</TableCell>
+                                            <TableCell className='text-right'>{data.RAJAL.toLocaleString()}</TableCell>
+                                            <TableCell className='text-right'>{data.DARURAT.toLocaleString()}</TableCell>
+                                            <TableCell className='text-right'>{data.RANAP.toLocaleString()}</TableCell>
+                                        </TableRow>
                                     ))
                                 ) : (
-                                    <tr>
-                                        <td colSpan="4" className="text-center px-4 py-2 text-gray-500">
-                                            Tidak ada data.
-                                        </td>
+                                    <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
+                                        <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                     </tr>
                                 )}
                             </tbody>
-                        </table>
+                        </Table>
                     </div>
                 </div>
             </div>

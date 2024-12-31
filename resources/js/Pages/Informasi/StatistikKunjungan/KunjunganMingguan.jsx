@@ -17,7 +17,7 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
         <div className="max-w-full mx-auto w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                    <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-yellow-500 mb-2">
+                    <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
                         Kunjungan Mingguan
                     </h1>
                     <Table>
