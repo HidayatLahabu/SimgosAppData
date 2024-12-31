@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import NavLink from '@/Components/NavLink';
 
-export default function NavigationRadiologi() {
+export default function NavigationKontrol() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 

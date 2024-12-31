@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 
-export default function ResponsiveNavInformasi() {
+export default function ResponsiveNavManajemen() {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {

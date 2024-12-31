@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import NavLink from '@/Components/NavLink';
 
-export default function NavigationLaporan() {
+export default function NavigationManajemen() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,7 +27,7 @@ export default function NavigationLaporan() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('laporanRl12.index');
+        return route().current('layananRad.index');
     };
 
     return (
@@ -37,31 +37,39 @@ export default function NavigationLaporan() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Laporan
+                Informasi
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('laporanRl12.index')}
-                        active={route().current('laporanRl12.index')}
+                        href={route('statistikKunjungan.index')}
+                        active={route().current('statistikKunjungan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laporan RL 1.2
+                        Statistik
                     </NavLink>
                     <NavLink
-                        href={route('laporanRl51.index')}
-                        active={route().current('laporanRl51.index')}
+                        href={route('informasiKunjungan.index')}
+                        active={route().current('informasiKunjungan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laporan RL 5.1
+                        Kunjungan Rawat Jalan
                     </NavLink>
                     <NavLink
-                        href={route('laporanWaktuTungguRajal.index')}
-                        active={route().current('laporanWaktuTungguRajal.index')}
+                        href={route('informasiPengunjung.index')}
+                        active={route().current('informasiPengunjung.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Waktu Tunggu
+                        Pengunjung
                     </NavLink>
+                    <NavLink
+                        href={route('informasiPenunjang.index')}
+                        active={route().current('informasiPenunjang.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Penunjang
+                    </NavLink>
+
                 </div>
             )}
         </div>

@@ -18,15 +18,22 @@ class LaporanWaktuTungguRegistrasiController extends Controller
     public function index(Request $request)
     {
         // Get filter parameters from request
-        $tgl_awal = $request->input('tgl_awal', Carbon::now()->startOfYear()->format('Y-m-d'));
-        $tgl_akhir = $request->input('tgl_akhir', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $tgl_awal = $request->input('tgl_awal', Carbon::now()->startOfYear()->format('Y-m-d H:i:s'));
+        $tgl_akhir = $request->input('tgl_akhir', Carbon::now()->endOfDay()->format('Y-m-d H:i:s'));
         $searchTerm = $request->input('search');
         $ruangan = '1021101'; // Default ruangan value
         $cara_bayar = 0; // Default cara bayar value
-        $perPage = 10; // Items per page
+        $perPage = 5; // Items per page
+        // Set locale to Indonesian
+        Carbon::setLocale('id');
+        $currentMonth = Carbon::now()->locale('id')->format('F'); // e.g., 'Desember'
+        $currentYear = date('Y'); // e.g., '2024'
 
         // Retrieve the report data
         $reportData = $this->getLaporan($tgl_awal, $tgl_akhir, $ruangan, $cara_bayar, $perPage, $searchTerm);
+
+        // Retrieve the average waiting time data (Rata-Rata)
+        $averageWaitData = $this->getRataRata($ruangan, $cara_bayar, $perPage);
 
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
@@ -34,9 +41,11 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             'queryParams' => $request->all(),
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
+            'averageWaitData' => $averageWaitData,
+            'currentMonth' => $currentMonth,  // Pass current month
+            'currentYear' => $currentYear,    // Pass current year
         ]);
     }
-
 
     /**
      * Fetch the waiting time data from the database.
@@ -47,7 +56,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
      * @param int $cara_bayar
      * @return \Illuminate\Support\Collection
      */
-    private function getLaporan($tgl_awal, $tgl_akhir, $ruangan, $cara_bayar, $perPage = 10, $searchTerm = null)
+    private function getLaporan($tgl_awal, $tgl_akhir, $ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
     {
         $vRuangan = $ruangan . '%';
 
@@ -73,7 +82,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                     ->where('r.JENIS', '=', 5);
             })
             ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
-            ->whereIn('pd.STATUS', [1, 2])
+            ->whereIn('pd.STATUS', [1])
             ->whereNull('tk.REF')
             ->whereBetween('tk.MASUK', [$tgl_awal, $tgl_akhir])
             ->whereIn('tk.STATUS', [1, 2])
@@ -91,6 +100,46 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 });
             })
             ->orderBy('pd.TANGGAL', 'desc')
+            ->paginate($perPage);
+    }
+
+    private function getRataRata($ruangan, $cara_bayar, $perPage = 5)
+    {
+        $vRuangan = $ruangan . '%';
+
+        // Ambil bulan dan tahun saat ini
+        $currentMonth = date('m');  // Bulan saat ini (01-12)
+        $currentYear = date('Y');   // Tahun saat ini (yyyy)
+
+        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+            ->select([
+                'r.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
+                DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK)) as AVERAGE_SELSIH"),
+            ])
+            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
+            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
+            ->join('pendaftaran.kunjungan as tk', function ($join) {
+                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
+                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            })
+            ->join('master.ruangan as r', function ($join) {
+                $join->on('tp.RUANGAN', '=', 'r.ID')
+                    ->where('r.JENIS', '=', 5);
+            })
+            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
+            ->whereIn('pd.STATUS', [1])
+            ->whereNull('tk.REF')
+            ->whereYear('tk.MASUK', '=', $currentYear)
+            ->whereMonth('tk.MASUK', '=', $currentMonth)
+            ->whereIn('tk.STATUS', [1, 2])
+            ->where('tp.RUANGAN', 'LIKE', $vRuangan)
+            ->whereNotNull('dok.NIP')
+            ->when($cara_bayar != 0, function ($query) use ($cara_bayar) {
+                $query->where('pj.JENIS', '=', $cara_bayar);
+            })
+            ->groupBy('dok.NIP', 'r.DESKRIPSI')
+            ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK))", 'asc'))
             ->paginate($perPage);
     }
 }

@@ -12,6 +12,7 @@ import NavigationRadiologi from '@/Components/NavigationRadiologi';
 import NavigationMedicalrecord from '@/Components/NavigationMedicalrecord';
 import NavigationInformasi from '@/Components/NavigationInformasi';
 import NavigationKontrol from '@/Components/NavigationKontrol';
+import NavigationManajemen from '@/Components/NavigationManajemen';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -32,6 +33,19 @@ export default function Navigation({ user }) {
                     <NavigationRadiologi />
                 ) : userName.includes('Pendaftaran') ? (
                     <NavigationKontrol />
+                ) : userName.includes('Manajemen') ? (
+                    <>
+                        <NavLink
+                            href={route('sinkronisasi.index')}
+                            active={route().current('sinkronisasi.index')}
+                            className="flex"
+                        >
+                            Satusehat
+                        </NavLink>
+                        <NavigationManajemen />
+                        <NavigationLaporan />
+                    </>
+
                 ) :
                     (
                         <>
