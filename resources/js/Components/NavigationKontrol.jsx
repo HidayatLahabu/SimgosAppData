@@ -37,7 +37,7 @@ export default function NavigationRadiologi() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Kontrol Kunjungan
+                Kunjungan
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
@@ -54,6 +54,13 @@ export default function NavigationRadiologi() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Jadwal Kontrol
+                    </NavLink>
+                    <NavLink
+                        href={route('konsul.index')}
+                        active={route().current('konsul.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Konsul
                     </NavLink>
                 </div>
             )}
