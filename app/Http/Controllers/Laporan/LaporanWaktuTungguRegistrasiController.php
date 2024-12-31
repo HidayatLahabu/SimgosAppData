@@ -24,10 +24,9 @@ class LaporanWaktuTungguRegistrasiController extends Controller
         $ruangan = '1021101'; // Default ruangan value
         $cara_bayar = 0; // Default cara bayar value
         $perPage = 5; // Items per page
-        // Set locale to Indonesian
-        Carbon::setLocale('id');
-        $currentMonth = Carbon::now()->locale('id')->format('F'); // e.g., 'Desember'
-        $currentYear = date('Y'); // e.g., '2024'
+
+        $namaBulan = date('m'); // e.g., 'Desember'
+        $tahun = date('Y'); // e.g., '2024'
 
         // Retrieve the report data
         $reportData = $this->getLaporan($tgl_awal, $tgl_akhir, $ruangan, $cara_bayar, $perPage, $searchTerm);
@@ -42,8 +41,8 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
             'averageWaitData' => $averageWaitData,
-            'currentMonth' => $currentMonth,  // Pass current month
-            'currentYear' => $currentYear,    // Pass current year
+            'namaBulan' => $namaBulan,  // Pass current month
+            'tahun' => $tahun,    // Pass current year
         ]);
     }
 
@@ -116,6 +115,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 'r.DESKRIPSI as UNITPELAYANAN',
                 DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
                 DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK)) as AVERAGE_SELSIH"),
+                DB::raw("COUNT(tp.NOPEN) as JUMLAH_PASIEN"),
             ])
             ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
             ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')

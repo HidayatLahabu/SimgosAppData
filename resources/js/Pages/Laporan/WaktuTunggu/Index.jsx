@@ -4,7 +4,7 @@ import { Head } from "@inertiajs/react";
 import Harian from './Harian';
 import Ratarata from './Ratarata';
 
-export default function Index({ auth, dataTable, tgl_awal, tgl_akhir, queryParams = {}, averageWaitData, currentMonth, currentYear }) {
+export default function Index({ auth, dataTable, tgl_awal, tgl_akhir, queryParams = {}, averageWaitData, namaBulan, tahun }) {
 
 
     return (
@@ -23,8 +23,8 @@ export default function Index({ auth, dataTable, tgl_awal, tgl_akhir, queryParam
             <Ratarata
                 averageWaitData={averageWaitData}
                 queryParams={queryParams}
-                currentMonth={currentMonth}
-                currentYear={currentYear}
+                namaBulan={namaBulan}
+                tahun={tahun}
             />
 
         </AuthenticatedLayout>

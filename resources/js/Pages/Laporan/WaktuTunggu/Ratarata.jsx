@@ -7,16 +7,22 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatTime } from '@/utils/formatTime';
 
-export default function Index({ averageWaitData, currentMonth, currentYear }) {
-
-    console.log(currentMonth, currentYear); // Debugging the props
-
+export default function Index({ averageWaitData, namaBulan, tahun }) {
 
     const headers = [
-        { name: "RUANGAN" },
-        { name: "DPJP" },
-        { name: "RATA-RATA WAKTU TUNGGU" },
+        { name: "RUANGAN RAWATAN", className: "w-[25%]" },
+        { name: "NAMA DOKTER PELAKSANA LAYANAN" },
+        { name: "RATA-RATA WAKTU TUNGGU", className: "w-[20%]" },
+        { name: "JUMLAH PASIEN DILAYANI", className: "text-right w-[15%]" },
     ];
+
+    const getMonthName = (monthNumber) => {
+        const date = new Date(2024, monthNumber - 1);  // monthNumber - 1 because months are 0-indexed
+        return new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(date);
+    };
+
+    const formattedMonth = getMonthName(namaBulan);
+
 
     return (
         <div className="py-5">
@@ -26,7 +32,7 @@ export default function Index({ averageWaitData, currentMonth, currentYear }) {
                         <div className="overflow-auto w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">RATA-RATA WAKTU TUNGGU RAWAT JALAN</h1>
                             <p className="text-center pb-4">
-                                <strong>Periode : </strong>{currentMonth} {currentYear}
+                                <strong>Periode : </strong>{namaBulan} {tahun}
                             </p>
                             <Table>
 
@@ -45,7 +51,8 @@ export default function Index({ averageWaitData, currentMonth, currentYear }) {
                                             <TableRow key={data.NOMOR} isEven={index % 2 === 0}>
                                                 <TableCell>{data.UNITPELAYANAN}</TableCell>
                                                 <TableCell>{data.DOKTER_REG}</TableCell>
-                                                <TableCell>{formatTime(data.AVERAGE_SELSIH)}</TableCell> {/* format the time */}
+                                                <TableCell>{formatTime(data.AVERAGE_SELSIH)}</TableCell>
+                                                <TableCell className='text-right'>{data.JUMLAH_PASIEN}</TableCell>
                                             </TableRow>
                                         ))
                                     ) : (
