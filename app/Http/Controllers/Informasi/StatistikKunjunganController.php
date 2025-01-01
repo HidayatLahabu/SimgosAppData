@@ -13,29 +13,24 @@ class StatistikKunjunganController extends Controller
     public function index()
     {
         $kunjungan = $this->getKunjungan();
-        $dataKunjungan = $kunjungan->orderByDesc('statistikKunjungan.TANGGAL')->paginate(10)->appends(request()->query());
+        $dataKunjungan = $kunjungan->orderByDesc('statistikKunjungan.TANGGAL')->paginate(7)->appends(request()->query());
         $dataKunjungan = $dataKunjungan->toArray();
 
-        // Start building the query using the query builder
         $rujukan = $this->getRujukan();
-        $dataRujukan = $rujukan->orderByDesc('statistikRujukan.TANGGAL')->paginate(10)->appends(request()->query());
+        $dataRujukan = $rujukan->orderByDesc('statistikRujukan.TANGGAL')->paginate(7)->appends(request()->query());
         $dataRujukan = $dataRujukan->toArray();
 
-        //get data pendaftaran bulanan
-        $kunjunganBulanan = $this->getMonthlyKunjungan();
-
-        //get data pendaftaran bulanan
-        $rujukanBulanan = $this->getMonthlyRujukan();
-
         $kunjunganMingguan = $this->getWeeklyKunjungan();
-        $dataKunjunganMingguan = $kunjunganMingguan->paginate(8)->appends(request()->query());
+        $dataKunjunganMingguan = $kunjunganMingguan->paginate(4)->appends(request()->query());
         $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
 
         $rujukanMingguan = $this->getWeeklyRujukan();
-        $dataRujukanMingguan = $rujukanMingguan->paginate(8)->appends(request()->query());
+        $dataRujukanMingguan = $rujukanMingguan->paginate(4)->appends(request()->query());
         $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
-        // Return Inertia view with paginated data
+        $kunjunganBulanan = $this->getMonthlyKunjungan();
+        $rujukanBulanan = $this->getMonthlyRujukan();
+
         return inertia("Informasi/StatistikKunjungan/Index", [
             'tableKunjungan' => [
                 'dataKunjungan' => $dataKunjungan['data'],
@@ -45,8 +40,6 @@ class StatistikKunjunganController extends Controller
                 'dataRujukan' => $dataRujukan['data'],
                 'linksRujukan' => $dataRujukan['links'],
             ],
-            'kunjunganBulanan' => $kunjunganBulanan,
-            'rujukanBulanan' => $rujukanBulanan,
             'kunjunganMingguan' => [
                 'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
                 'linksKunjunganMingguan' => $dataKunjunganMingguan['links'],
@@ -55,6 +48,8 @@ class StatistikKunjunganController extends Controller
                 'dataRujukanMingguan' => $dataRujukanMingguan['data'],
                 'linksRujukanMingguan' => $dataRujukanMingguan['links'],
             ],
+            'kunjunganBulanan' => $kunjunganBulanan,
+            'rujukanBulanan' => $rujukanBulanan,
         ]);
     }
 

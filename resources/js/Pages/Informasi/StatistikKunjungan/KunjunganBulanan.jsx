@@ -51,7 +51,7 @@ export default function MonthlyKunjunganTable({ kunjunganBulanan = [] }) {
                             <tbody>
                                 {filteredItems.length > 0 ? (
                                     filteredItems.map((data, index) => (
-                                        <TableRow key={data.tanggal} isEven={index % 2 === 0}>
+                                        <TableRow key={data.BULAN} isEven={index % 2 === 0}>
                                             <TableCell>{data.BULAN}</TableCell>
                                             <TableCell className='text-right'>{data.RAJAL.toLocaleString()}</TableCell>
                                             <TableCell className='text-right'>{data.DARURAT.toLocaleString()}</TableCell>

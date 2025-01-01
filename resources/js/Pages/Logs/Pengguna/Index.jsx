@@ -66,7 +66,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari url"
+                                                    placeholder="Cari pengguna"
                                                     onChange={e => onInputChange('nama', e)}
                                                     onKeyPress={e => onKeyPress('nama', e)}
                                                 />

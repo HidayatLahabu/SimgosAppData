@@ -6,39 +6,49 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function RujukanMingguanTable({ rujukanMingguan }) {
-    const [kunjunganMingguanLinks, setRujukanMingguanLinks] = useState(rujukanMingguan.linksRujukanMingguan);
+export default function RanapBulananTable({ ranapBulanan }) {
 
-    const handleRujukanMingguanChange = (newLinks) => {
-        setRujukanMingguanLinks(newLinks);
-    };
+    const headers = [
+        { name: "TAHUN", className: "w-[10%]" },
+        { name: "BULAN", className: "w-[16%]" },
+        { name: "PASIEN MASUK", className: "text-right" },
+        { name: "PASIEN DIRAWAT", className: "text-right" },
+        { name: "PASIEN KELUAR", className: "text-right" },
+    ];
+
+    // Array nama bulan
+    const bulanNames = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
 
     return (
         <div className="max-w-full mx-auto w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Rujukan Mingguan
+                        Pengunjung Rawat Inap Bulanan
                     </h1>
+
                     <Table>
                         <TableHeader>
                             <tr>
-                                <TableHeaderCell className='text-nowrap w-[5%]'>TAHUN</TableHeaderCell>
-                                <TableHeaderCell className='text-nowrap w-[12%]'>MINGGU KE</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>MASUK</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>KELUAR</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>BALIK</TableHeaderCell>
+                                {headers.map((header, index) => (
+                                    <TableHeaderCell key={index} className={header.className || ""}>
+                                        {header.name}
+                                    </TableHeaderCell>
+                                ))}
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(rujukanMingguan?.dataRujukanMingguan) && rujukanMingguan?.dataRujukanMingguan.length > 0 ? (
-                                rujukanMingguan?.dataRujukanMingguan.map((data, index) => (
-                                    <TableRow key={data.minggu} isEven={index % 2 === 0}>
+                            {ranapBulanan.data.length > 0 ? (
+                                ranapBulanan.data.map((data, index) => (
+                                    <TableRow key={data.bulan} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
-                                        <TableCell>{data.minggu}</TableCell>
+                                        <TableCell>{bulanNames[data.bulan - 1]}</TableCell>
                                         <TableCell className='text-right'>{data.masuk}</TableCell>
+                                        <TableCell className='text-right'>{data.dirawat}</TableCell>
                                         <TableCell className='text-right'>{data.keluar}</TableCell>
-                                        <TableCell className='text-right'>{data.balik}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -48,10 +58,7 @@ export default function RujukanMingguanTable({ rujukanMingguan }) {
                             )}
                         </tbody>
                     </Table>
-                    <Pagination
-                        links={kunjunganMingguanLinks}
-                        onPageChange={handleRujukanMingguanChange}
-                    />
+                    <Pagination links={ranapBulanan.links} />
                 </div>
             </div>
         </div>

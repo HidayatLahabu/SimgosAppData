@@ -5,12 +5,14 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatDate } from '@/utils/formatDate';
 
-export default function RujukanMingguanTable({ rujukanMingguan }) {
-    const [kunjunganMingguanLinks, setRujukanMingguanLinks] = useState(rujukanMingguan.linksRujukanMingguan);
+export default function RanapTable({ tableRanap }) {
 
-    const handleRujukanMingguanChange = (newLinks) => {
-        setRujukanMingguanLinks(newLinks);
+    const [ranapLinks, setRanapLinks] = useState(tableRanap.linksRanap);
+
+    const handleRanapPageChange = (newLinks) => {
+        setRanapLinks(newLinks);
     };
 
     return (
@@ -18,27 +20,27 @@ export default function RujukanMingguanTable({ rujukanMingguan }) {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Rujukan Mingguan
+                        Pengunjung Rawat Inap Harian
                     </h1>
                     <Table>
                         <TableHeader>
                             <tr>
-                                <TableHeaderCell className='text-nowrap w-[5%]'>TAHUN</TableHeaderCell>
-                                <TableHeaderCell className='text-nowrap w-[12%]'>MINGGU KE</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>MASUK</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>KELUAR</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>BALIK</TableHeaderCell>
+                                <TableHeaderCell className='text-nowrap'>TANGGAL</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN MASUK</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN DIRAWAT</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN KELUAR</TableHeaderCell>
+                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATED</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(rujukanMingguan?.dataRujukanMingguan) && rujukanMingguan?.dataRujukanMingguan.length > 0 ? (
-                                rujukanMingguan?.dataRujukanMingguan.map((data, index) => (
-                                    <TableRow key={data.minggu} isEven={index % 2 === 0}>
-                                        <TableCell>{data.tahun}</TableCell>
-                                        <TableCell>{data.minggu}</TableCell>
+                            {Array.isArray(tableRanap?.dataRanap) && tableRanap.dataRanap.length > 0 ? (
+                                tableRanap.dataRanap.map((data, index) => (
+                                    <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
+                                        <TableCell>{formatDate(data.tanggal)}</TableCell>
                                         <TableCell className='text-right'>{data.masuk}</TableCell>
+                                        <TableCell className='text-right'>{data.dirawat}</TableCell>
                                         <TableCell className='text-right'>{data.keluar}</TableCell>
-                                        <TableCell className='text-right'>{data.balik}</TableCell>
+                                        <TableCell className='text-nowrap'>{data.lastUpdated}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -49,11 +51,13 @@ export default function RujukanMingguanTable({ rujukanMingguan }) {
                         </tbody>
                     </Table>
                     <Pagination
-                        links={kunjunganMingguanLinks}
-                        onPageChange={handleRujukanMingguanChange}
+                        links={ranapLinks}
+                        onPageChange={handleRanapPageChange}
                     />
+
                 </div>
             </div>
         </div>
-    );
+    )
 }
+

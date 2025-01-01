@@ -6,11 +6,11 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function KunjunganMingguanTable({ kunjunganMingguan }) {
-    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan);
+export default function RanapMingguanTable({ ranapMingguan }) {
+    const [ranapMingguanLinks, setRanapMingguanLinks] = useState(ranapMingguan.linksRanapMingguan);
 
-    const handleKunjunganMingguanChange = (newLinks) => {
-        setKunjunganMingguanLinks(newLinks);
+    const handleRanapMingguanChange = (newLinks) => {
+        setRanapMingguanLinks(newLinks);
     };
 
     return (
@@ -18,27 +18,27 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Kunjungan Mingguan
+                        Pengunjung Rawat Inap Mingguan
                     </h1>
                     <Table>
                         <TableHeader>
                             <tr>
                                 <TableHeaderCell className='text-nowrap w-[5%]'>TAHUN</TableHeaderCell>
                                 <TableHeaderCell className='text-nowrap w-[12%]'>MINGGU KE</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT INAP</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN MASUK</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN DIRAWAT</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>PASIEN KELUAR</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(kunjunganMingguan?.dataKunjunganMingguan) && kunjunganMingguan.dataKunjunganMingguan.length > 0 ? (
-                                kunjunganMingguan.dataKunjunganMingguan.map((data, index) => (
+                            {Array.isArray(ranapMingguan?.dataRanapMingguan) && ranapMingguan.dataRanapMingguan.length > 0 ? (
+                                ranapMingguan.dataRanapMingguan.map((data, index) => (
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rj}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rd}</TableCell>
-                                        <TableCell className='text-right'>{data.total_ri}</TableCell>
+                                        <TableCell className='text-right'>{data.masuk}</TableCell>
+                                        <TableCell className='text-right'>{data.dirawat}</TableCell>
+                                        <TableCell className='text-right'>{data.keluar}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -49,8 +49,8 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
                         </tbody>
                     </Table>
                     <Pagination
-                        links={kunjunganMingguanLinks}
-                        onPageChange={handleKunjunganMingguanChange}
+                        links={ranapMingguanLinks}
+                        onPageChange={handleRanapMingguanChange}
                     />
                 </div>
             </div>

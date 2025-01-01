@@ -8,11 +8,19 @@ import RujukanTable from './Rujukan';
 import KunjunganMingguanTable from './KunjunganMingguan';
 import RujukanMingguanTable from './RujukanMingguan';
 
-export default function Index({ auth, tableKunjungan, tableRujukan, kunjunganBulanan, rujukanBulanan, kunjunganMingguan, rujukanMingguan }) {
+export default function Index({
+    auth,
+    tableKunjungan,
+    tableRujukan,
+    kunjunganMingguan,
+    rujukanMingguan,
+    kunjunganBulanan,
+    rujukanBulanan
+}) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Medicalrecord" />
+            <Head title="Informasi" />
 
             <div className="p-5 flex flex-wrap w-full">
                 <div className="w-1/2 pr-2">

@@ -52,7 +52,7 @@ export default function MonthlyRujukanTable({ rujukanBulanan = [] }) {
                             <tbody>
                                 {filteredItems.length > 0 ? (
                                     filteredItems.map((data, index) => (
-                                        <TableRow key={data.tanggal} isEven={index % 2 === 0}>
+                                        <TableRow key={data.BULAN} isEven={index % 2 === 0}>
                                             <TableCell>{data.BULAN}</TableCell>
                                             <TableCell className='text-right'>{data.MASUK.toLocaleString()}</TableCell>
                                             <TableCell className='text-right'>{data.KELUAR.toLocaleString()}</TableCell>

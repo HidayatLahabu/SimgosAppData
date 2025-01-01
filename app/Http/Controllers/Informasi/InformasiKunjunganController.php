@@ -70,7 +70,6 @@ class InformasiKunjunganController extends Controller
         return $query->orderByDesc('kunjungan.TANGGAL')->paginate(5)->appends(request()->query());
     }
 
-
     protected function getWeeklyKunjungan()
     {
         return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')

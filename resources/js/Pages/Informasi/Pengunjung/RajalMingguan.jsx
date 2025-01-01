@@ -6,11 +6,11 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function KunjunganMingguanTable({ kunjunganMingguan }) {
-    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan);
+export default function RajalMingguanTable({ rajalMingguan }) {
+    const [rajalMingguanLinks, setRajalMingguanLinks] = useState(rajalMingguan.linksRajalMingguan);
 
-    const handleKunjunganMingguanChange = (newLinks) => {
-        setKunjunganMingguanLinks(newLinks);
+    const handleRajalMingguanChange = (newLinks) => {
+        setRajalMingguanLinks(newLinks);
     };
 
     return (
@@ -18,7 +18,7 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Kunjungan Mingguan
+                        Pengunjung Rawat Jalan & Darurat Mingguan
                     </h1>
                     <Table>
                         <TableHeader>
@@ -27,18 +27,18 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
                                 <TableHeaderCell className='text-nowrap w-[12%]'>MINGGU KE</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT INAP</TableHeaderCell>
+                                <TableHeaderCell className='text-right'>JUMLAH</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(kunjunganMingguan?.dataKunjunganMingguan) && kunjunganMingguan.dataKunjunganMingguan.length > 0 ? (
-                                kunjunganMingguan.dataKunjunganMingguan.map((data, index) => (
+                            {Array.isArray(rajalMingguan?.dataRajalMingguan) && rajalMingguan.dataRajalMingguan.length > 0 ? (
+                                rajalMingguan.dataRajalMingguan.map((data, index) => (
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rj}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rd}</TableCell>
-                                        <TableCell className='text-right'>{data.total_ri}</TableCell>
+                                        <TableCell className='text-right'>{data.rajal}</TableCell>
+                                        <TableCell className='text-right'>{data.darurat}</TableCell>
+                                        <TableCell className='text-right'>{data.semua}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -49,8 +49,8 @@ export default function KunjunganMingguanTable({ kunjunganMingguan }) {
                         </tbody>
                     </Table>
                     <Pagination
-                        links={kunjunganMingguanLinks}
-                        onPageChange={handleKunjunganMingguanChange}
+                        links={rajalMingguanLinks}
+                        onPageChange={handleRajalMingguanChange}
                     />
                 </div>
             </div>
