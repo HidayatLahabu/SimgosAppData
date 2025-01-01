@@ -61,7 +61,7 @@ Untuk menarik pembaruan terbaru:
     Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 7 di atas.
 
 Tip : 
-Fork repositori ini untuk tetap terupdate dengan perubahan terbaru secara real-time.
+Fork repositori ini untuk mendapatkan informasi perubahan terbaru pada aplikasi ini.
 
 Notes : 
 Untuk mengetahui detail perubahan terbaru dapat di lihat pada realease
