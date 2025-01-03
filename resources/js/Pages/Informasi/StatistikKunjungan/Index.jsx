@@ -7,6 +7,7 @@ import KunjunganTable from './Kunjungan';
 import RujukanTable from './Rujukan';
 import KunjunganMingguanTable from './KunjunganMingguan';
 import RujukanMingguanTable from './RujukanMingguan';
+import IndikatorTable from './Indikator';
 
 export default function Index({
     auth,
@@ -15,7 +16,8 @@ export default function Index({
     kunjunganMingguan,
     rujukanMingguan,
     kunjunganBulanan,
-    rujukanBulanan
+    rujukanBulanan,
+    statistikIndikator,
 }) {
 
     return (
@@ -48,6 +50,8 @@ export default function Index({
                     <RujukanBulanan rujukanBulanan={rujukanBulanan} />
                 </div>
             </div>
+
+            <IndikatorTable statistikIndikator={statistikIndikator} />
         </AuthenticatedLayout>
     );
 }

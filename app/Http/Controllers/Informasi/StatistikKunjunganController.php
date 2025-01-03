@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Informasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\InformasiStatistikIndikatorModel;
 use App\Models\InformasiStatistikKunjunganModel;
 use App\Models\InformasiStatistikRujukanModel;
 
@@ -31,6 +32,10 @@ class StatistikKunjunganController extends Controller
         $kunjunganBulanan = $this->getMonthlyKunjungan();
         $rujukanBulanan = $this->getMonthlyRujukan();
 
+        $indikator = $this->getIndikator();
+        $statistikIndikator = $indikator->paginate(8)->appends(request()->query());
+        $statistikIndikator = $statistikIndikator->toArray();
+
         return inertia("Informasi/StatistikKunjungan/Index", [
             'tableKunjungan' => [
                 'dataKunjungan' => $dataKunjungan['data'],
@@ -50,6 +55,10 @@ class StatistikKunjunganController extends Controller
             ],
             'kunjunganBulanan' => $kunjunganBulanan,
             'rujukanBulanan' => $rujukanBulanan,
+            'statistikIndikator' => [
+                'dataIndikator' => $statistikIndikator['data'],
+                'linksIndikator' => $statistikIndikator['links'],
+            ],
         ]);
     }
 
@@ -215,5 +224,17 @@ class StatistikKunjunganController extends Controller
         ")
             ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
             ->get();
+    }
+
+    protected function getIndikator()
+    {
+        return InformasiStatistikIndikatorModel::where('JENIS', 2)
+            ->where('BOR', '>', 0)
+            ->where('ALOS', '>', 0)
+            ->where('BTO', '>', 0)
+            ->where('TOI', '>', 0)
+            ->where('NDR', '>', 0)
+            ->where('GDR', '>', 0)
+            ->orderByDesc('TANGGAL_UPDATED');
     }
 }
