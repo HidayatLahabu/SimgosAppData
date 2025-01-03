@@ -52,6 +52,8 @@ Kustomisasi:
     8. Untuk penyesuaian timezone, lakukan perubahan APP_TIMEZONE value pada file .env 
     9. Untuk perhitungan BOR menggunakan jumlah tempat tidur berdasarkan keputusan pimpinan organisasi atau yang ada, 
        lakukan perubahan nilai TTIDUR pada .env 
+perhatikan contoh pada .env.example
+
 
 Memperbarui Aplikasi:
 
