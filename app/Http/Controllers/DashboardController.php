@@ -346,7 +346,7 @@ class DashboardController extends Controller
         // Definisikan tanggal awal dan akhir
         $tgl_awal = Carbon::now()->startOfYear()->toDateString();
         $tgl_akhir = Carbon::now()->toDateString();
-        $ttidur = env('TTIDUR'); // Ambil nilai TTIDUR dari .env
+        $ttidur = env('TTIDUR', 246); // Ambil nilai TTIDUR dari .env atau 246 sebagai default
 
         // Query SQL untuk menghitung statistik dengan penggunaan sprintf untuk variabel
         $sql = sprintf("
