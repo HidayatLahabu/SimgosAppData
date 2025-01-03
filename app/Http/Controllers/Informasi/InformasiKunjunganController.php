@@ -14,10 +14,7 @@ class InformasiKunjunganController extends Controller
         // Get the search term from the request
         $searchSubject = request('search') ? strtolower(request('search')) : null;
 
-        // Call the getKunjungan function to retrieve data
         $data = $this->getKunjungan($searchSubject);
-
-        // Convert data to array
         $dataArray = $data->toArray();
 
         // Get weekly and monthly data
@@ -30,15 +27,15 @@ class InformasiKunjunganController extends Controller
 
         // Return Inertia view with paginated data
         return inertia("Informasi/Kunjungan/Index", [
-            'dataTable' => [
+            'harian' => [
                 'data' => $dataArray['data'],
                 'links' => $dataArray['links'],
             ],
-            'kunjunganMingguan' => [
+            'mingguan' => [
                 'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
                 'linksKunjunganMingguan' => $dataKunjunganMingguan['links'],
             ],
-            'kunjunganBulanan' => $kunjunganBulanan,
+            'bulanan' => $kunjunganBulanan,
             'queryParams' => request()->all()
         ]);
     }
@@ -57,7 +54,7 @@ class InformasiKunjunganController extends Controller
                 DB::raw('SUM(kunjungan.VALUE) as jumlah'),
                 DB::raw('MAX(kunjungan.LASTUPDATED) as lastUpdated')
             )
-            ->groupBy('kunjungan.TANGGAL', 'kunjungan.IDSUBUNIT');
+            ->groupBy('kunjungan.TANGGAL', 'kunjungan.IDSUBUNIT', 'kunjungan.SUBUNIT');
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -67,7 +64,8 @@ class InformasiKunjunganController extends Controller
         }
 
         // Return the paginated results
-        return $query->orderByDesc('kunjungan.TANGGAL')->paginate(5)->appends(request()->query());
+        return $query->orderByDesc('kunjungan.TANGGAL')->orderBy('kunjungan.SUBUNIT')
+            ->paginate(5)->appends(request()->query());
     }
 
     protected function getWeeklyKunjungan()
@@ -87,10 +85,12 @@ class InformasiKunjunganController extends Controller
             ->groupBy(
                 'kunjungan.IDSUBUNIT',
                 DB::raw('YEAR(kunjungan.TANGGAL)'),
-                DB::raw('WEEK(kunjungan.TANGGAL, 1)')
+                DB::raw('WEEK(kunjungan.TANGGAL, 1)'),
+                'kunjungan.SUBUNIT'
             )
             ->orderBy('tahun', 'desc')
-            ->orderBy('minggu', 'desc');
+            ->orderBy('minggu', 'desc')
+            ->orderBy('kunjungan.SUBUNIT');
     }
 
     protected function getMonthlyKunjungan($perPage)
@@ -110,10 +110,12 @@ class InformasiKunjunganController extends Controller
             ->groupBy(
                 'kunjungan.IDSUBUNIT',
                 DB::raw('YEAR(kunjungan.TANGGAL)'),
-                DB::raw('MONTH(kunjungan.TANGGAL)')
+                DB::raw('MONTH(kunjungan.TANGGAL)'),
+                'kunjungan.SUBUNIT'
             )
             ->orderBy(DB::raw('YEAR(kunjungan.TANGGAL)'), 'desc')
             ->orderBy(DB::raw('MONTH(kunjungan.TANGGAL)'), 'desc')
+            ->orderBy('kunjungan.SUBUNIT')
             ->paginate($perPage);
     }
 }

@@ -9,6 +9,7 @@ use App\Models\LayananResepModel;
 use App\Models\BpjsKunjunganModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\BpjsRujukanMasukModel;
+use App\Models\InformasiStatistikKunjunganModel;
 use App\Models\LayananRadiologiModel;
 use App\Models\PendaftaranKonsulModel;
 use App\Models\PendaftaranMutasiModel;
@@ -41,6 +42,9 @@ class DashboardController extends Controller
         $mutasiBulanan = $this->getMonthlyMutasi();
         $statistics = $this->getStatistic();
         $statistikKunjungan = $this->getStatistikKunjungan();
+        $rawatJalanBulanan = $this->getMonthlyRawatJalan();
+        $rawatDaruratBulanan = $this->getMonthlyRawatDarurat();
+        $rawatInapBulanan = $this->getMonthlyRawatInap();
 
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
@@ -59,6 +63,9 @@ class DashboardController extends Controller
             'mutasiBulanan' => $mutasiBulanan,
             'statistics' => $statistics,
             'statistikKunjungan' => $statistikKunjungan,
+            'rawatJalanBulanan' => $rawatJalanBulanan,
+            'rawatDaruratBulanan' => $rawatDaruratBulanan,
+            'rawatInapBulanan' => $rawatInapBulanan,
         ]);
     }
 
@@ -446,5 +453,128 @@ class DashboardController extends Controller
             'totalValue' => 0,
             'lastUpdated' => null,
         ];
+    }
+
+    protected function getMonthlyRawatJalan()
+    {
+        return InformasiStatistikKunjunganModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            SUM(RJ) AS JUMLAH
+        ")
+            ->whereYear('TANGGAL', now()->year)
+            ->where('TANGGAL', '>', '0000-00-00')
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
+    }
+
+    protected function getMonthlyRawatDarurat()
+    {
+        return InformasiStatistikKunjunganModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            SUM(RD) AS JUMLAH
+        ")
+            ->whereYear('TANGGAL', now()->year)
+            ->where('TANGGAL', '>', '0000-00-00')
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
+    }
+
+    protected function getMonthlyRawatInap()
+    {
+        return InformasiStatistikKunjunganModel::selectRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END AS BULAN,
+            SUM(RI) AS JUMLAH
+        ")
+            ->whereYear('TANGGAL', now()->year)
+            ->where('TANGGAL', '>', '0000-00-00')
+            ->groupByRaw("
+            CASE MONTH(TANGGAL)
+                WHEN 1 THEN 'Januari'
+                WHEN 2 THEN 'Februari'
+                WHEN 3 THEN 'Maret'
+                WHEN 4 THEN 'April'
+                WHEN 5 THEN 'Mei'
+                WHEN 6 THEN 'Juni'
+                WHEN 7 THEN 'Juli'
+                WHEN 8 THEN 'Agustus'
+                WHEN 9 THEN 'September'
+                WHEN 10 THEN 'Oktober'
+                WHEN 11 THEN 'November'
+                WHEN 12 THEN 'Desember'
+            END
+        ")
+            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
+            ->get();
     }
 }

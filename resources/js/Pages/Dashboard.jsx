@@ -7,6 +7,9 @@ import MonthlyKonsulTable from './Dashboard/KonsulBulanan';
 import MonthlyMutasiTable from './Dashboard/MutasiBulanan';
 import Statistic from './Dashboard/Statistic';
 import KunjunganHarian from './Dashboard/KunjunganHarian';
+import RajalBulanan from './Dashboard/RajalBulanan'
+import DaruratBulanan from './Dashboard/DaruratBulanan'
+import RanapBulanan from './Dashboard/RanapBulanan'
 
 export default function Dashboard({
     auth,
@@ -25,6 +28,9 @@ export default function Dashboard({
     mutasiBulanan,
     statistics,
     statistikKunjungan,
+    rawatJalanBulanan,
+    rawatDaruratBulanan,
+    rawatInapBulanan,
 }) {
 
     const today = new Date();
@@ -87,13 +93,13 @@ export default function Dashboard({
 
             <div className="pt-0 pb-5 flex flex-wrap w-full">
                 <div className="w-1/4">
-                    <MonthlyPendaftaranTable pendaftaranBulanan={pendaftaranBulanan} />
+                    <RajalBulanan rawatJalanBulanan={rawatJalanBulanan} />
                 </div>
                 <div className="w-1/4">
-                    <MonthlyKunjunganTable kunjunganBulanan={kunjunganBulanan} />
+                    <DaruratBulanan rawatDaruratBulanan={rawatDaruratBulanan} />
                 </div>
                 <div className="w-1/4">
-                    <MonthlyKonsulTable konsulBulanan={konsulBulanan} />
+                    <RanapBulanan rawatInapBulanan={rawatInapBulanan} />
                 </div>
                 <div className="w-1/4">
                     <MonthlyMutasiTable mutasiBulanan={mutasiBulanan} />

@@ -1,11 +1,11 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import Kunjungan from './Kunjungan';
-import KunjunganMingguan from './KunjunganMingguan';
-import KunjunganBulanan from './KunjunganBulanan';
+import Harian from './Harian';
+import Mingguan from './Mingguan';
+import Bulanan from './Bulanan';
 
-export default function Index({ auth, dataTable, queryParams, kunjunganMingguan, kunjunganBulanan }) {
+export default function Index({ auth, harian, queryParams, mingguan, bulanan }) {
 
     return (
         <AuthenticatedLayout
@@ -13,11 +13,11 @@ export default function Index({ auth, dataTable, queryParams, kunjunganMingguan,
         >
             <Head title="Informasi" />
 
-            <Kunjungan dataTable={dataTable} queryParams={queryParams} />
+            <Harian harian={harian} queryParams={queryParams} />
 
-            <KunjunganMingguan kunjunganMingguan={kunjunganMingguan} />
+            <Mingguan mingguan={mingguan} />
 
-            <KunjunganBulanan kunjunganBulanan={kunjunganBulanan} />
+            <Bulanan bulanan={bulanan} />
 
         </AuthenticatedLayout>
     );
