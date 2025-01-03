@@ -388,7 +388,7 @@ class DashboardController extends Controller
 
     protected function getStatistikKunjungan()
     {
-        // Ambil data terbaru berdasarkan TANGGAL_UPDATED
+        // Ambil data terbaru dari statistik_kunjungan berdasarkan TANGGAL_UPDATED
         $data = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
                 'statistikKunjungan.RJ as rajal',
@@ -401,9 +401,28 @@ class DashboardController extends Controller
                     ->orWhere('statistikKunjungan.RD', '>', 0)
                     ->orWhere('statistikKunjungan.RI', '>', 0);
             })
-            ->orderByDesc('statistikKunjungan.TANGGAL_UPDATED') // Urutkan berdasarkan tanggal terbaru
-            ->limit(1) // Ambil hanya satu data terakhir
-            ->first(); // Eksekusi query dan ambil data pertama
+            ->orderByDesc('statistikKunjungan.TANGGAL_UPDATED')
+            ->limit(1)
+            ->first();
+
+        $laboratorium = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+            ->selectRaw('SUM(penunjang.VALUE) as total_value, MAX(penunjang.LASTUPDATED) as last_updated')
+            ->where('penunjang.ID', '4')
+            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
+            ->first();
+
+        $totalLaboratorium = $laboratorium->total_value ?? 0;
+        $updateLaboratorium = $laboratorium->last_updated ?? null;
+
+        $radiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+            ->selectRaw('SUM(penunjang.VALUE) as total_value, MAX(penunjang.LASTUPDATED) as last_updated')
+            ->where('penunjang.ID', '5')
+            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
+            ->first();
+
+        $totalRadiologi = $radiologi->total_value ?? 0;
+        $updateRadiologi = $radiologi->last_updated ?? null;
+
 
         if ($data) {
             return [
@@ -411,6 +430,10 @@ class DashboardController extends Controller
                 'ranap' => (float) ($data->ranap ?? 0),
                 'darurat' => (float) ($data->darurat ?? 0),
                 'tanggalUpdated' => $data->tanggalUpdated ?? null,
+                'laboratorium' => (float) $totalLaboratorium,
+                'updateLaboratorium' => $updateLaboratorium,
+                'radiologi' => (float) $totalRadiologi,
+                'updateRadiologi' => $updateRadiologi,
             ];
         }
 
@@ -420,6 +443,8 @@ class DashboardController extends Controller
             'ranap' => 0,
             'darurat' => 0,
             'tanggalUpdated' => null,
+            'totalValue' => 0,
+            'lastUpdated' => null,
         ];
     }
 }

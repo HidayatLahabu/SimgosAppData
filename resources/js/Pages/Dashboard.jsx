@@ -54,6 +54,7 @@ export default function Dashboard({
 
             <div className="pt-3 pb-2 flex flex-wrap w-full">
                 <TodayData
+                    auth={auth}
                     pendaftaran={pendaftaran}
                     kunjungan={kunjungan}
                     konsul={konsul}

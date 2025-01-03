@@ -19,7 +19,7 @@ const CardKunjungan = ({ title, value, date }) => {
                 </h2>
                 {date && (
                     <p className="text-sm text-gray-300 mt-1">
-                        Update Jam: {formattedTime}
+                        Update: {formattedTime}
                     </p>
                 )}
             </div>
