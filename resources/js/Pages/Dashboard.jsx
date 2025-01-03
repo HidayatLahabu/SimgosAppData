@@ -6,6 +6,7 @@ import MonthlyKunjunganTable from './Dashboard/KunjunganBulanan';
 import MonthlyKonsulTable from './Dashboard/KonsulBulanan';
 import MonthlyMutasiTable from './Dashboard/MutasiBulanan';
 import Statistic from './Dashboard/Statistic';
+import KunjunganHarian from './Dashboard/KunjunganHarian';
 
 export default function Dashboard({
     auth,
@@ -23,14 +24,35 @@ export default function Dashboard({
     konsulBulanan,
     mutasiBulanan,
     statistics,
+    statistikKunjungan,
 }) {
+
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    }) + ' ' + today.toLocaleTimeString('id-ID', {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    });
+
     return (
         <AuthenticatedLayout
             user={auth.user}
         >
             <Head title="Beranda" />
 
-            <div className="pt-5 pb-2 flex flex-wrap w-full">
+            <div className="max-w-full mx-auto sm:px-5 lg:px- w-full pt-3">
+                <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
+                    Data Hari Ini <br />
+                    <span className='text-lg'>{formattedDate}</span>
+                </h1>
+            </div>
+
+            <div className="pt-3 pb-2 flex flex-wrap w-full">
                 <TodayData
                     pendaftaran={pendaftaran}
                     kunjungan={kunjungan}
@@ -43,7 +65,12 @@ export default function Dashboard({
                     pulang={pulang}
                 />
             </div>
-            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+
+            <div className="pb-2 flex flex-wrap w-full">
+                <KunjunganHarian statistikKunjungan={statistikKunjungan} />
+            </div>
+
+            <h1 className="pt-2 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
                 Data Tahun Ini
             </h1>
             <div className="pb-2 flex flex-wrap w-full">

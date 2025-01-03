@@ -26,9 +26,9 @@ export default function TodayData({
 
     return (
         <div className="max-w-full mx-auto sm:px-5 lg:px- w-full">
-            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+            {/* <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
                 Data Hari Ini <br /> <span className='text-lg'>{formattedDate}</span>
-            </h1>
+            </h1> */}
             <div className="text-gray-900 dark:text-gray-100 w-full">
                 <div className="flex flex-wrap gap-2 justify-between mb-4">
                     <Card
@@ -37,7 +37,8 @@ export default function TodayData({
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={pendaftaran} />
-                    <Card href={route("kunjungan.index")}
+                    <Card
+                        href={route("kunjungan.index")}
                         title="KUNJUNGAN"
                         titleSize="text-normal"
                         valueSize="text-normal"

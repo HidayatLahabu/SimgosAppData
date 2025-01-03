@@ -26,47 +26,21 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Hitung pendaftaran hari ini
         $pendaftaran = $this->getPendaftaran();
-
-        // Hitung kunjungan hari ini
         $kunjungan = $this->getKunjungan();
-
-        // Hitung konsul hari ini
         $konsul = $this->getKonsul();
-
-        // Hitung mutasi hari ini
         $mutasi = $this->getMutasi();
-
-        // Hitung mutasi hari ini
         $kunjunganBpjs = $this->getKunjunganBpjs();
-
-        // Hitung mutasi hari ini
         $laboratorium = $this->getOrderLaboratorium();
-
-        // Hitung mutasi hari ini
         $radiologi = $this->getOrderRadiologi();
-
-        // Hitung mutasi hari ini
         $resep = $this->getOrderResep();
-
-        // Hitung mutasi hari ini
         $pulang = $this->getPasienPulang();
-
-        //get data pendaftaran bulanan
         $pendaftaranBulanan = $this->getMonthlyPendaftaran();
-
-        //get data kunjungan bulanan
         $kunjunganBulanan = $this->getMonthlyKunjungan();
-
-        //get data konsul bulanan
         $konsulBulanan = $this->getMonthlyKonsul();
-
-        //get data konsul bulanan
         $mutasiBulanan = $this->getMonthlyMutasi();
-
-        // Get statistics data from procedure
         $statistics = $this->getStatistic();
+        $statistikKunjungan = $this->getStatistikKunjungan();
 
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
@@ -84,6 +58,7 @@ class DashboardController extends Controller
             'konsulBulanan' => $konsulBulanan,
             'mutasiBulanan' => $mutasiBulanan,
             'statistics' => $statistics,
+            'statistikKunjungan' => $statistikKunjungan,
         ]);
     }
 
@@ -409,5 +384,42 @@ class DashboardController extends Controller
 
         // Kembalikan array kosong jika tidak ada data
         return [];
+    }
+
+    protected function getStatistikKunjungan()
+    {
+        // Ambil data terbaru berdasarkan TANGGAL_UPDATED
+        $data = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+            ->select(
+                'statistikKunjungan.RJ as rajal',
+                'statistikKunjungan.RD as darurat',
+                'statistikKunjungan.RI as ranap',
+                'statistikKunjungan.TANGGAL_UPDATED as tanggalUpdated'
+            )
+            ->where(function ($query) {
+                $query->where('statistikKunjungan.RJ', '>', 0)
+                    ->orWhere('statistikKunjungan.RD', '>', 0)
+                    ->orWhere('statistikKunjungan.RI', '>', 0);
+            })
+            ->orderByDesc('statistikKunjungan.TANGGAL_UPDATED') // Urutkan berdasarkan tanggal terbaru
+            ->limit(1) // Ambil hanya satu data terakhir
+            ->first(); // Eksekusi query dan ambil data pertama
+
+        if ($data) {
+            return [
+                'rajal' => (float) ($data->rajal ?? 0),
+                'ranap' => (float) ($data->ranap ?? 0),
+                'darurat' => (float) ($data->darurat ?? 0),
+                'tanggalUpdated' => $data->tanggalUpdated ?? null,
+            ];
+        }
+
+        // Kembalikan array kosong jika tidak ada data
+        return [
+            'rajal' => 0,
+            'ranap' => 0,
+            'darurat' => 0,
+            'tanggalUpdated' => null,
+        ];
     }
 }

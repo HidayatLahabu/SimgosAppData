@@ -1,7 +1,7 @@
 import React from "react";
 import { formatRibuan } from "@/utils/formatRibuan";
 
-const Card = ({ title, value, titleSize = "text-lg", valueSize = "text-2xl" }) => {
+const CardDashboard = ({ title, value, titleSize = "text-lg", valueSize = "text-2xl" }) => {
     return (
         <div
             className="flex-1 px-5 py-4 bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 border border-gray-300 dark:border-gray-700 group"
@@ -16,4 +16,4 @@ const Card = ({ title, value, titleSize = "text-lg", valueSize = "text-2xl" }) =
     );
 };
 
-export default Card;
+export default CardDashboard;
