@@ -387,7 +387,7 @@ class DashboardController extends Controller
             WHERE irs.TANGGAL = '%s'
             GROUP BY irs.TANGGAL
         ) AS b;
-    ", $ttidur, $ttidur, $ttidur, $tgl_awal, $tgl_awal, $tgl_akhir, $ttidur, $tgl_akhir);
+        ", $ttidur, $ttidur, $ttidur, $tgl_awal, $tgl_awal, $tgl_akhir, $ttidur, $tgl_akhir);
 
         // Eksekusi query dan ambil hasil
         $data = DB::connection('mysql12')->select($sql);
