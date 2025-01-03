@@ -10,6 +10,8 @@ import KunjunganHarian from './Dashboard/KunjunganHarian';
 import RajalBulanan from './Dashboard/RajalBulanan'
 import DaruratBulanan from './Dashboard/DaruratBulanan'
 import RanapBulanan from './Dashboard/RanapBulanan'
+import LaboratoriumBulanan from './Dashboard/LaboratoriumBulanan';
+import RadiologiBulanan from './Dashboard/RadiologiBulanan';
 
 export default function Dashboard({
     auth,
@@ -31,6 +33,8 @@ export default function Dashboard({
     rawatJalanBulanan,
     rawatDaruratBulanan,
     rawatInapBulanan,
+    laboratoriumBulanan,
+    radiologiBulanan,
 }) {
 
     const today = new Date();
@@ -39,7 +43,7 @@ export default function Dashboard({
         day: 'numeric',
         month: 'long',
         year: 'numeric',
-    }) + ' ' + today.toLocaleTimeString('id-ID', {
+    }) + ', JAM ' + today.toLocaleTimeString('id-ID', {
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
@@ -92,17 +96,20 @@ export default function Dashboard({
             </div>
 
             <div className="pt-0 pb-5 flex flex-wrap w-full">
-                <div className="w-1/4">
+                <div className="w-1/5">
                     <RajalBulanan rawatJalanBulanan={rawatJalanBulanan} />
                 </div>
-                <div className="w-1/4">
+                <div className="w-1/5">
                     <DaruratBulanan rawatDaruratBulanan={rawatDaruratBulanan} />
                 </div>
-                <div className="w-1/4">
+                <div className="w-1/5">
                     <RanapBulanan rawatInapBulanan={rawatInapBulanan} />
                 </div>
-                <div className="w-1/4">
-                    <MonthlyMutasiTable mutasiBulanan={mutasiBulanan} />
+                <div className="w-1/5">
+                    <LaboratoriumBulanan laboratoriumBulanan={laboratoriumBulanan} />
+                </div>
+                <div className="w-1/5">
+                    <RadiologiBulanan radiologiBulanan={radiologiBulanan} />
                 </div>
             </div>
 

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-export default function RajalBulanan({ rawatJalanBulanan = [] }) {
-    const [items, setItems] = useState(rawatJalanBulanan);
+export default function RadiologiBulanan({ radiologiBulanan = [] }) {
+    const [items, setItems] = useState(radiologiBulanan);
 
     useEffect(() => {
         // If data is passed as a prop, use it directly
-        if (Array.isArray(rawatJalanBulanan)) {
-            setItems(rawatJalanBulanan);
+        if (Array.isArray(radiologiBulanan)) {
+            setItems(radiologiBulanan);
         } else {
-            console.error('Invalid data passed to component:', rawatJalanBulanan);
+            console.error('Invalid data passed to component:', radiologiBulanan);
         }
-    }, [rawatJalanBulanan]); // This will run when the prop `pendaftaranBulanan` changes
+    }, [radiologiBulanan]); // This will run when the prop `pendaftaranBulanan` changes
 
     // Ensure items is always an array
     const sortedItems = Array.isArray(items) ? [...items] : [];
@@ -21,11 +21,11 @@ export default function RajalBulanan({ rawatJalanBulanan = [] }) {
         : null;
 
     return (
-        <div className="max-w-full mx-auto sm:pl-5 sm:pr-1 lg:pl-5 lg:pr-1 w-full">
+        <div className="max-w-full mx-auto sm:pl-1 sm:pr-5 lg:pl-1 lg:pr-5 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h2 className="uppercase text-center font-extrabold text-indigo-700 dark:text-yellow-500 mb-2">
-                        Rawat Jalan
+                        Radiologi
                     </h2>
                     <div className="overflow-x-auto">
                         <table className="min-w-full border-collapse border border-gray-200 dark:border-gray-700 text-sm">
