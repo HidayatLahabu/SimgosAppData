@@ -24,6 +24,13 @@ export default function Guest({ children }) {
             <div className="w-full sm:max-w-md mt-6 px-6 py-4 overflow-hidden">
                 {children}
             </div>
+
+            <footer className="text-black/50 dark:text-gray-200 pt-10 text-sm">
+                <div className="text-center">
+                    <p>&copy; 2024 - {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto.
+                    </p>
+                </div>
+            </footer>
         </div>
     );
 }

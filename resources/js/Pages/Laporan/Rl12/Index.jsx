@@ -60,7 +60,7 @@ export default function LaporanRl12({ auth, items = [], tgl_awal, tgl_akhir }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Laporan RL 1.2" />
+            <Head title="Laporan" />
 
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">

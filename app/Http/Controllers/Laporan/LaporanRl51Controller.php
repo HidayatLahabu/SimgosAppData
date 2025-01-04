@@ -20,7 +20,6 @@ class LaporanRl51Controller extends Controller
         // Panggil prosedur yang telah dibuat
         $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL51(?, ?)', [$tgl_awal, $tgl_akhir]);
 
-        //dd($data);
         return inertia("Laporan/Rl51/Index", [
             'items' => $data,
             'tgl_awal' => $tgl_awal,

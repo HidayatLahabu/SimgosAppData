@@ -75,6 +75,7 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\LaporanRl31Controller;
 use App\Http\Controllers\Laporan\LaporanWaktuTungguRegistrasiController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 
@@ -503,6 +504,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
+        Route::get('laporanRl31', [LaporanRl31Controller::class, 'index'])->name('laporanRl31.index');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('laporanWaktuTungguRajal', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTungguRajal.index');
     });

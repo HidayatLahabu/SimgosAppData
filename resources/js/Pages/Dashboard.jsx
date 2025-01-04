@@ -54,9 +54,11 @@ export default function Dashboard({
             <Head title="Beranda" />
 
             <div className="max-w-full mx-auto sm:px-5 lg:px- w-full pt-3">
+                <h1 className="uppercase text-center font-extrabold text-lg pb-2 text-indigo-700 dark:text-yellow-400">
+                    {formattedDate}
+                </h1>
                 <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
-                    Input Data Hari Ini <br />
-                    <span className='text-lg'>{formattedDate}</span>
+                    Input Data
                 </h1>
             </div>
 

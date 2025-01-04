@@ -49,6 +49,13 @@ export default function NavigationLaporan() {
                         Laporan RL 1.2
                     </NavLink>
                     <NavLink
+                        href={route('laporanRl31.index')}
+                        active={route().current('laporanRl31.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Laporan RL 3.1
+                    </NavLink>
+                    <NavLink
                         href={route('laporanRl51.index')}
                         active={route().current('laporanRl51.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
