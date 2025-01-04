@@ -60,7 +60,9 @@ export default function TodayData({
                         title="PERMINTAAN MUTASI"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={mutasi} />
+                        value={mutasi}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("kunjunganBpjs.index") : null}
                         title="JAMINAN BPJS"
