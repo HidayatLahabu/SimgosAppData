@@ -97,7 +97,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("layananPulang.index") : null}
-                        title="PASIEN PULANG"
+                        title="PULANG RAWAT INAP"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={pulang}
