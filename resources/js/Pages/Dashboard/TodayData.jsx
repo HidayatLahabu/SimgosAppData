@@ -65,7 +65,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("kunjunganBpjs.index") : null}
-                        title="JAMINAN BPJS"
+                        title="PASIEN BPJS KESEHATAN"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={kunjunganBpjs}
