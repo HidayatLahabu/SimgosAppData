@@ -2,12 +2,9 @@ import React from "react";
 import { formatRibuan } from "@/utils/formatRibuan";
 
 const CardKunjungan = ({ title, value, date }) => {
+
     const formattedTime = date
-        ? new Date(date).toLocaleTimeString('id-ID', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        })
+        ? date.split(' ')[1]
         : null;
 
     return (

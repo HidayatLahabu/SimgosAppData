@@ -33,58 +33,74 @@ export default function TodayData({
                 <div className="flex flex-wrap gap-2 justify-between mb-4">
                     <Card
                         href={isAdmin ? route("pendaftaran.index") : null}
-                        title="PENDAFTARAN"
+                        title="PENDAFTARAN PASIEN"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={pendaftaran} />
+                        value={pendaftaran}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("kunjungan.index") : null}
-                        title="KUNJUNGAN"
+                        title="KUNJUNGAN PASIEN"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={kunjungan} />
+                        value={kunjungan}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("konsul.index") : null}
-                        title="KONSUL"
+                        title="PERMINTAAN KONSUL"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={konsul} />
+                        value={konsul}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("mutasi.index") : null}
-                        title="MUTASI"
+                        title="PERMINTAAN MUTASI"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={mutasi} />
                     <Card
                         href={isAdmin ? route("kunjunganBpjs.index") : null}
-                        title="BPJS"
+                        title="JAMINAN BPJS"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={kunjunganBpjs} />
+                        value={kunjunganBpjs}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("layananLab.index") : null}
-                        title="LABORATORIUM"
+                        title="ORDER LABORATORIUM"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={laboratorium} />
+                        value={laboratorium}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("layananRad.index") : null}
-                        title="RADIOLOGI"
+                        title="ORDER RADIOLOGI"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={radiologi} />
+                        value={radiologi}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("layananResep.index") : null}
-                        title="RESEP"
+                        title="ORDER OBAT/RESEP"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={resep} />
+                        value={resep}
+                        description=''
+                    />
                     <Card
                         href={isAdmin ? route("layananPulang.index") : null}
-                        title="PULANG"
+                        title="PASIEN PULANG"
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={pulang} />
+                        value={pulang}
+                        description=''
+                    />
                 </div>
             </div>
         </div>

@@ -1,11 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import TodayData from './Dashboard/TodayData';
-import MonthlyPendaftaranTable from './Dashboard/PendaftaranBulanan';
-import MonthlyKunjunganTable from './Dashboard/KunjunganBulanan';
-import MonthlyKonsulTable from './Dashboard/KonsulBulanan';
-import MonthlyMutasiTable from './Dashboard/MutasiBulanan';
-import Statistic from './Dashboard/Statistic';
+import StatisticTahun from './Dashboard/StatisticTahun';
+import StatisticBulan from './Dashboard/StatisticBulan';
 import KunjunganHarian from './Dashboard/KunjunganHarian';
 import RajalBulanan from './Dashboard/RajalBulanan'
 import DaruratBulanan from './Dashboard/DaruratBulanan'
@@ -24,11 +21,10 @@ export default function Dashboard({
     radiologi,
     resep,
     pulang,
-    pendaftaranBulanan,
-    kunjunganBulanan,
-    konsulBulanan,
-    mutasiBulanan,
-    statistics,
+    statistikTahun,
+    statistikTahunLalu,
+    statistikBulan,
+    statistikBulanLalu,
     statistikKunjungan,
     rawatJalanBulanan,
     rawatDaruratBulanan,
@@ -38,6 +34,7 @@ export default function Dashboard({
 }) {
 
     const today = new Date();
+
     const formattedDate = today.toLocaleDateString('id-ID', {
         weekday: 'long',
         day: 'numeric',
@@ -47,7 +44,8 @@ export default function Dashboard({
         hour: 'numeric',
         minute: 'numeric',
         second: 'numeric',
-    });
+        hour12: false,
+    }).replace(/\./g, ':');
 
     return (
         <AuthenticatedLayout
@@ -57,7 +55,7 @@ export default function Dashboard({
 
             <div className="max-w-full mx-auto sm:px-5 lg:px- w-full pt-3">
                 <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
-                    Data Hari Ini <br />
+                    Input Data Hari Ini <br />
                     <span className='text-lg'>{formattedDate}</span>
                 </h1>
             </div>
@@ -81,21 +79,61 @@ export default function Dashboard({
                 <KunjunganHarian statistikKunjungan={statistikKunjungan} />
             </div>
 
-            <h1 className="pt-2 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
-                Data Tahun Ini
-            </h1>
-            <div className="pb-2 flex flex-wrap w-full">
-                <Statistic
-                    BOR={statistics.BOR || 0}
-                    AVLOS={statistics.AVLOS || 0}
-                    BTO={statistics.BTO || 0}
-                    TOI={statistics.TOI || 0}
-                    NDR={statistics.NDR || 0}
-                    GDR={statistics.GDR || 0}
-                />
+            <div className="flex flex-row gap-7 justify-center items-start w-full">
+                {/* Data Tahun Ini */}
+                <div className="flex flex-col w-1/2 -mx-1 pl-1">
+                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+                        Data Tahun Ini
+                    </h1>
+                    <div className="pb-2 flex flex-wrap w-full">
+                        <StatisticTahun
+                            BOR={statistikTahun.BOR || 0}
+                            AVLOS={statistikTahun.AVLOS || 0}
+                            BTO={statistikTahun.BTO || 0}
+                            TOI={statistikTahun.TOI || 0}
+                            NDR={statistikTahun.NDR || 0}
+                            GDR={statistikTahun.GDR || 0}
+                            BOR_LALU={statistikTahunLalu.BOR || 0}
+                            AVLOS_LALU={statistikTahunLalu.AVLOS || 0}
+                            BTO_LALU={statistikTahunLalu.BTO || 0}
+                            TOI_LALU={statistikTahunLalu.TOI || 0}
+                            NDR_LALU={statistikTahunLalu.NDR || 0}
+                            GDR_LALU={statistikTahunLalu.GDR || 0}
+                        />
+                    </div>
+                </div>
+
+                {/* Data Bulan Ini */}
+                <div className="flex flex-col w-1/2 -mx-1">
+                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+                        Data Bulan Ini
+                    </h1>
+                    <div className="pb-2 flex flex-wrap w-full pr-1">
+                        <StatisticBulan
+                            BOR={statistikBulan.BOR || 0}
+                            AVLOS={statistikBulan.AVLOS || 0}
+                            BTO={statistikBulan.BTO || 0}
+                            TOI={statistikBulan.TOI || 0}
+                            NDR={statistikBulan.NDR || 0}
+                            GDR={statistikBulan.GDR || 0}
+                            BOR_LALU={statistikBulanLalu.BOR || 0}
+                            AVLOS_LALU={statistikBulanLalu.AVLOS || 0}
+                            BTO_LALU={statistikBulanLalu.BTO || 0}
+                            TOI_LALU={statistikBulanLalu.TOI || 0}
+                            NDR_LALU={statistikBulanLalu.NDR || 0}
+                            GDR_LALU={statistikBulanLalu.GDR || 0}
+                        />
+                    </div>
+                </div>
             </div>
 
-            <div className="pt-0 pb-5 flex flex-wrap w-full">
+
+
+
+            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+                Kunjungan Bulanan
+            </h1>
+            <div className="pb-5 flex flex-wrap w-full">
                 <div className="w-1/5">
                     <RajalBulanan rawatJalanBulanan={rawatJalanBulanan} />
                 </div>

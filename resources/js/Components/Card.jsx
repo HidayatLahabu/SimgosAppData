@@ -1,7 +1,7 @@
 import React from "react";
 import { formatRibuan } from "@/utils/formatRibuan";
 
-const Card = ({ href, title, value, titleSize = "text-lg", valueSize = "text-2xl" }) => {
+const Card = ({ href, title, value, titleSize = "text-lg", valueSize = "text-2xl", description = "PASIEN" }) => {
     return (
         <a
             href={href}
@@ -11,7 +11,7 @@ const Card = ({ href, title, value, titleSize = "text-lg", valueSize = "text-2xl
                 {title}
             </h2>
             <p className={`${valueSize} font-semibold text-white mt-2 group-hover:text-red-500`}>
-                {formatRibuan(value)} Pasien
+                {formatRibuan(value)} {description}
             </p>
         </a>
     );

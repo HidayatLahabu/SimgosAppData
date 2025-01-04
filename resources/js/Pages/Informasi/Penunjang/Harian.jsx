@@ -55,7 +55,7 @@ export default function Harian({ harian, queryParams = {} }) {
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">
-                                Kunjungan Instalasi Penunjang
+                                Kunjungan Instalasi Penunjang Harian
                             </h1>
 
                             <Table>

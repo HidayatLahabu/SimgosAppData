@@ -41,7 +41,10 @@ class DashboardController extends Controller
         $kunjunganBulanan = $this->getMonthlyKunjungan();
         $konsulBulanan = $this->getMonthlyKonsul();
         $mutasiBulanan = $this->getMonthlyMutasi();
-        $statistics = $this->getStatistic();
+        $statistikTahun = $this->getStatistikTahun();
+        $statistikTahunLalu = $this->getStatistikTahunLalu();
+        $statistikBulan = $this->getStatistikBulan();
+        $statistikBulanLalu = $this->getStatistikBulanLalu();
         $statistikKunjungan = $this->getStatistikKunjungan();
         $rawatJalanBulanan = $this->getMonthlyRawatJalan();
         $rawatDaruratBulanan = $this->getMonthlyRawatDarurat();
@@ -64,7 +67,10 @@ class DashboardController extends Controller
             'kunjunganBulanan' => $kunjunganBulanan,
             'konsulBulanan' => $konsulBulanan,
             'mutasiBulanan' => $mutasiBulanan,
-            'statistics' => $statistics,
+            'statistikTahun' => $statistikTahun,
+            'statistikTahunLalu' => $statistikTahunLalu,
+            'statistikBulan' => $statistikBulan,
+            'statistikBulanLalu' => $statistikBulanLalu,
             'statistikKunjungan' => $statistikKunjungan,
             'rawatJalanBulanan' => $rawatJalanBulanan,
             'rawatDaruratBulanan' => $rawatDaruratBulanan,
@@ -328,11 +334,151 @@ class DashboardController extends Controller
             ->get();
     }
 
-    public function getStatistic()
+    public function getStatistikTahun()
     {
         // Definisikan tanggal awal dan akhir
         $tgl_awal = Carbon::now()->startOfYear()->toDateString();
         $tgl_akhir = Carbon::now()->toDateString();
+        $ttidur = env('TTIDUR', 246); // Ambil nilai TTIDUR dari .env atau 246 sebagai default
+
+        // Query SQL untuk menghitung statistik dengan penggunaan sprintf untuk variabel
+        $sql = sprintf("
+            SELECT 
+                ROUND((SUM(HP) * 100) / (%d * SUM(JMLHARI)), 2) AS BOR,
+                ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
+                (SUM(JMLKLR) / %d) AS BTO,
+                ROUND(((%d * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
+                ((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR)) AS NDR,
+                (((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR)) AS GDR
+            FROM (
+                SELECT 
+                    SUM(irs.AWAL) AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, 0 AS TTIDUR, 0 AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, SUM(irs.MASUK) AS MASUK, SUM(irs.PINDAHAN) AS PINDAHAN, 
+                    SUM(irs.KURANG48JAM) AS KURANG48JAM, SUM(irs.LEBIH48JAM) AS LEBIH48JAM, 
+                    SUM(irs.DIPINDAHKAN) AS DIPINDAHKAN, SUM(irs.JMLKLR) AS JMLKLR, 
+                    SUM(irs.LD) AS LD, SUM(irs.HP) AS HP, 
+                    0 AS TTIDUR, SUM(irs.JMLHARI) AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL BETWEEN '%s' AND '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, %d AS TTIDUR, 0 AS JMLHARI, SUM(irs.SISA) AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+            ) AS b;
+        ", $ttidur, $ttidur, $ttidur, $tgl_awal, $tgl_awal, $tgl_akhir, $ttidur, $tgl_akhir);
+
+        // Eksekusi query dan ambil hasil
+        $data = DB::connection('mysql12')->select($sql);
+
+        // Proses data untuk membentuk struktur yang sesuai
+        if (count($data) > 0) {
+            $result = $data[0]; // Ambil hasil baris pertama
+
+            // Pastikan data hasil query valid sebelum digunakan
+            return [
+                'BOR' => $result->BOR ? number_format(round($result->BOR, 2), 2, '.', '') : '0.00',
+                'AVLOS' => $result->AVLOS ? number_format(round($result->AVLOS, 2), 2, '.', '') : '0.00',
+                'BTO' => $result->BTO ? number_format(round($result->BTO, 2), 2, '.', '') : '0.00',
+                'TOI' => $result->TOI ? number_format(round($result->TOI, 2), 2, '.', '') : '0.00',
+                'NDR' => $result->NDR ? number_format(round($result->NDR, 2), 2, '.', '') : '0.00',
+                'GDR' => $result->GDR ? number_format(round($result->GDR, 2), 2, '.', '') : '0.00',
+            ];
+        }
+
+        // Kembalikan array kosong jika tidak ada data
+        return [];
+    }
+
+    public function getStatistikTahunLalu()
+    {
+        // Definisikan tanggal awal dan akhir tahun lalu
+        $tgl_awal = Carbon::now()->subYear()->startOfYear()->toDateString();
+        $tgl_akhir = Carbon::now()->subYear()->endOfYear()->toDateString();
+        $ttidur = env('TTIDUR', 246); // Ambil nilai TTIDUR dari .env atau 246 sebagai default
+
+        // Query SQL untuk menghitung statistik dengan penggunaan sprintf untuk variabel
+        $sql = sprintf("
+            SELECT 
+                ROUND((SUM(HP) * 100) / (%d * SUM(JMLHARI)), 2) AS BOR,
+                ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
+                (SUM(JMLKLR) / %d) AS BTO,
+                ROUND(((%d * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
+                ((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR)) AS NDR,
+                (((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR)) AS GDR
+            FROM (
+                SELECT 
+                    SUM(irs.AWAL) AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, 0 AS TTIDUR, 0 AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, SUM(irs.MASUK) AS MASUK, SUM(irs.PINDAHAN) AS PINDAHAN, 
+                    SUM(irs.KURANG48JAM) AS KURANG48JAM, SUM(irs.LEBIH48JAM) AS LEBIH48JAM, 
+                    SUM(irs.DIPINDAHKAN) AS DIPINDAHKAN, SUM(irs.JMLKLR) AS JMLKLR, 
+                    SUM(irs.LD) AS LD, SUM(irs.HP) AS HP, 
+                    0 AS TTIDUR, SUM(irs.JMLHARI) AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL BETWEEN '%s' AND '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, %d AS TTIDUR, 0 AS JMLHARI, SUM(irs.SISA) AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+            ) AS b;
+        ", $ttidur, $ttidur, $ttidur, $tgl_awal, $tgl_awal, $tgl_akhir, $ttidur, $tgl_akhir);
+
+        // Eksekusi query dan ambil hasil
+        $data = DB::connection('mysql12')->select($sql);
+
+        // Proses data untuk membentuk struktur yang sesuai
+        if (count($data) > 0) {
+            $result = $data[0]; // Ambil hasil baris pertama
+
+            // Pastikan data hasil query valid sebelum digunakan
+            return [
+                'BOR' => $result->BOR ? number_format(round($result->BOR, 2), 2, '.', '') : '0.00',
+                'AVLOS' => $result->AVLOS ? number_format(round($result->AVLOS, 2), 2, '.', '') : '0.00',
+                'BTO' => $result->BTO ? number_format(round($result->BTO, 2), 2, '.', '') : '0.00',
+                'TOI' => $result->TOI ? number_format(round($result->TOI, 2), 2, '.', '') : '0.00',
+                'NDR' => $result->NDR ? number_format(round($result->NDR, 2), 2, '.', '') : '0.00',
+                'GDR' => $result->GDR ? number_format(round($result->GDR, 2), 2, '.', '') : '0.00',
+            ];
+        }
+
+        // Kembalikan array kosong jika tidak ada data
+        return [];
+    }
+
+    public function getStatistikBulan()
+    {
+        // Definisikan tanggal awal dan akhir
+        $tgl_awal = Carbon::now()->startOfMonth()->toDateString();
+        $tgl_akhir = Carbon::now()->endOfMonth()->toDateString();
         $ttidur = env('TTIDUR', 246); // Ambil nilai TTIDUR dari .env atau 246 sebagai default
 
         // Query SQL untuk menghitung statistik dengan penggunaan sprintf untuk variabel
@@ -383,14 +529,82 @@ class DashboardController extends Controller
         if (count($data) > 0) {
             $result = $data[0]; // Ambil hasil baris pertama
 
-            // Pastikan data hasil query valid sebelum digunakan
             return [
-                'BOR' => $result->BOR ? (float) $result->BOR : 0,
-                'AVLOS' => $result->AVLOS ? (float) $result->AVLOS : 0,
-                'BTO' => $result->BTO ? (float) $result->BTO : 0,
-                'TOI' => $result->TOI ? (float) $result->TOI : 0,
-                'NDR' => $result->NDR ? (float) $result->NDR : 0,
-                'GDR' => $result->GDR ? (float) $result->GDR : 0,
+                'BOR' => $result->BOR ? number_format(round($result->BOR, 2), 2, '.', '') : '0.00',
+                'AVLOS' => $result->AVLOS ? number_format(round($result->AVLOS, 2), 2, '.', '') : '0.00',
+                'BTO' => $result->BTO ? number_format(round($result->BTO, 2), 2, '.', '') : '0.00',
+                'TOI' => $result->TOI ? number_format(round($result->TOI, 2), 2, '.', '') : '0.00',
+                'NDR' => $result->NDR ? number_format(round($result->NDR, 2), 2, '.', '') : '0.00',
+                'GDR' => $result->GDR ? number_format(round($result->GDR, 2), 2, '.', '') : '0.00',
+            ];
+        }
+
+        // Kembalikan array kosong jika tidak ada data
+        return [];
+    }
+
+    public function getStatistikBulanLalu()
+    {
+        // Definisikan tanggal awal dan akhir bulan lalu
+        $tgl_awal = Carbon::now()->subMonth()->startOfMonth()->toDateString();
+        $tgl_akhir = Carbon::now()->subMonth()->endOfMonth()->toDateString();
+        $ttidur = env('TTIDUR', 246); // Ambil nilai TTIDUR dari .env atau 246 sebagai default
+
+        // Query SQL untuk menghitung statistik dengan penggunaan sprintf untuk variabel
+        $sql = sprintf("
+            SELECT 
+                ROUND((SUM(HP) * 100) / (%d * SUM(JMLHARI)), 2) AS BOR,
+                ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
+                (SUM(JMLKLR) / %d) AS BTO,
+                ROUND(((%d * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
+                ((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR)) AS NDR,
+                (((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR)) AS GDR
+            FROM (
+                SELECT 
+                    SUM(irs.AWAL) AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, 0 AS TTIDUR, 0 AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, SUM(irs.MASUK) AS MASUK, SUM(irs.PINDAHAN) AS PINDAHAN, 
+                    SUM(irs.KURANG48JAM) AS KURANG48JAM, SUM(irs.LEBIH48JAM) AS LEBIH48JAM, 
+                    SUM(irs.DIPINDAHKAN) AS DIPINDAHKAN, SUM(irs.JMLKLR) AS JMLKLR, 
+                    SUM(irs.LD) AS LD, SUM(irs.HP) AS HP, 
+                    0 AS TTIDUR, SUM(irs.JMLHARI) AS JMLHARI, 0 AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL BETWEEN '%s' AND '%s'
+                GROUP BY irs.TANGGAL
+                UNION ALL
+                SELECT 
+                    0 AS AWAL, 0 AS MASUK, 0 AS PINDAHAN, 0 AS KURANG48JAM, 
+                    0 AS LEBIH48JAM, 0 AS DIPINDAHKAN, 0 AS JMLKLR, 0 AS LD, 
+                    0 AS HP, %d AS TTIDUR, 0 AS JMLHARI, SUM(irs.SISA) AS PASIENDIRAWAT,
+                    MAX(LASTUPDATED) AS LASTUPDATED
+                FROM informasi.indikator_rs irs
+                WHERE irs.TANGGAL = '%s'
+                GROUP BY irs.TANGGAL
+            ) AS b;
+        ", $ttidur, $ttidur, $ttidur, $tgl_awal, $tgl_awal, $tgl_akhir, $ttidur, $tgl_akhir);
+
+        // Eksekusi query dan ambil hasil
+        $data = DB::connection('mysql12')->select($sql);
+
+        // Proses data untuk membentuk struktur yang sesuai
+        if (count($data) > 0) {
+            $result = $data[0]; // Ambil hasil baris pertama
+
+            return [
+                'BOR' => $result->BOR ? number_format(round($result->BOR, 2), 2, '.', '') : '0.00',
+                'AVLOS' => $result->AVLOS ? number_format(round($result->AVLOS, 2), 2, '.', '') : '0.00',
+                'BTO' => $result->BTO ? number_format(round($result->BTO, 2), 2, '.', '') : '0.00',
+                'TOI' => $result->TOI ? number_format(round($result->TOI, 2), 2, '.', '') : '0.00',
+                'NDR' => $result->NDR ? number_format(round($result->NDR, 2), 2, '.', '') : '0.00',
+                'GDR' => $result->GDR ? number_format(round($result->GDR, 2), 2, '.', '') : '0.00',
             ];
         }
 
@@ -413,8 +627,7 @@ class DashboardController extends Controller
                     ->orWhere('statistikKunjungan.RD', '>', 0)
                     ->orWhere('statistikKunjungan.RI', '>', 0);
             })
-            ->orderByDesc('statistikKunjungan.TANGGAL_UPDATED')
-            ->limit(1)
+            ->whereDate('statistikKunjungan.TANGGAL', '=', now()->toDateString())
             ->first();
 
         $laboratorium = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
