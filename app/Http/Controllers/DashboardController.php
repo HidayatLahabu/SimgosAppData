@@ -614,77 +614,102 @@ class DashboardController extends Controller
 
     protected function getStatistikKunjungan()
     {
-        $data = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+        $todayData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
                 'statistikKunjungan.RJ as rajal',
                 'statistikKunjungan.RD as darurat',
                 'statistikKunjungan.RI as ranap',
-                'statistikKunjungan.TANGGAL_UPDATED as tanggalUpdated'
+                'statistikKunjungan.TANGGAL_UPDATED as tanggalUpdated',
             )
             ->where(function ($query) {
                 $query->where('statistikKunjungan.RJ', '>', 0)
                     ->orWhere('statistikKunjungan.RD', '>', 0)
                     ->orWhere('statistikKunjungan.RI', '>', 0);
             })
-            ->orderByDesc('statistikKunjungan.TANGGAL')
+            ->whereDate('statistikKunjungan.TANGGAL', '=', now()->toDateString())
             ->first();
 
-        $laboratorium = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+        $yesterdayData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+            ->select(
+                'statistikKunjungan.RJ as rajal',
+                'statistikKunjungan.RD as darurat',
+                'statistikKunjungan.RI as ranap',
+                'statistikKunjungan.TANGGAL as tanggal',
+            )
+            ->where(function ($query) {
+                $query->where('statistikKunjungan.RJ', '>', 0)
+                    ->orWhere('statistikKunjungan.RD', '>', 0)
+                    ->orWhere('statistikKunjungan.RI', '>', 0);
+            })
+            ->whereDate('statistikKunjungan.TANGGAL', '=', now()->subDay()->toDateString())
+            ->first();
+
+        $todayLab = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->selectRaw(
                 'SUM(penunjang.VALUE) as total_value, 
                 MAX(penunjang.LASTUPDATED) as last_updated,
                 penunjang.TANGGAL'
             )
             ->where('penunjang.ID', '4')
-            ->orderByDesc('penunjang.TANGGAL')
+            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
             ->groupBy('penunjang.TANGGAL')
             ->first();
 
-        $totalLaboratorium = $laboratorium->total_value ?? 0;
-        $updateLaboratorium = $laboratorium->last_updated ?? null;
+        $yesterdayLab = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+            ->selectRaw(
+                'SUM(penunjang.VALUE) as total_value, 
+                MAX(penunjang.TANGGAL) as tanggal'
+            )
+            ->where('penunjang.ID', '4')
+            ->whereDate('penunjang.TANGGAL', '=', now()->subDay()->toDateString())
+            ->groupBy('penunjang.TANGGAL')
+            ->first();
 
-        $radiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+        $todayRadiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->selectRaw(
                 'SUM(penunjang.VALUE) as total_value, 
                 MAX(penunjang.LASTUPDATED) as last_updated,
                 penunjang.TANGGAL'
-
             )
             ->where('penunjang.ID', '5')
-            ->orderByDesc('penunjang.TANGGAL')
+            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
             ->groupBy('penunjang.TANGGAL')
             ->first();
 
-        $totalRadiologi = $radiologi->total_value ?? 0;
-        $updateRadiologi = $radiologi->last_updated ?? null;
+        $yesterdayRadiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+            ->selectRaw(
+                'SUM(penunjang.VALUE) as total_value, 
+                MAX(penunjang.TANGGAL) as tanggal'
+            )
+            ->where('penunjang.ID', '5')
+            ->whereDate('penunjang.TANGGAL', '=', now()->subDay()->toDateString())
+            ->groupBy('penunjang.TANGGAL')
+            ->first();
 
-        if ($data) {
-            return [
-                'rajal' => (float) ($data->rajal ?? 0),
-                'ranap' => (float) ($data->ranap ?? 0),
-                'darurat' => (float) ($data->darurat ?? 0),
-                'tanggalUpdated' => $data->tanggalUpdated ?? null,
-                'laboratorium' => (float) $totalLaboratorium ?? 0,
-                'updateLaboratorium' => $updateLaboratorium,
-                'radiologi' => (float) $totalRadiologi ?? 0,
-                'updateRadiologi' => $updateRadiologi,
-            ];
-        }
-
-        // Kembalikan array kosong jika tidak ada data
+        // Mengembalikan hasil jika ada data, jika tidak ada data return default value
         return [
-            'rajal' => 0,
-            'ranap' => 0,
-            'darurat' => 0,
-            'tanggalUpdated' => null,
-            'totalValue' => 0,
-            'lastUpdated' => null,
-            'laboratorium' => 0,
-            'updateLaboratorium' => null,
-            'radiologi' => 0,
-            'updateRadiologi' => null,
+            'todayRajal' => (float) ($todayData->rajal ?? 0),
+            'todayRanap' => (float) ($todayData->ranap ?? 0),
+            'todayDarurat' => (float) ($todayData->darurat ?? 0),
+            'todayUpdated' => $todayData->tanggalUpdated ?? null,
+
+            'yesterdayRajal' => (float) ($yesterdayData->rajal ?? 0),
+            'yesterdayRanap' => (float) ($yesterdayData->ranap ?? 0),
+            'yesterdayDarurat' => (float) ($yesterdayData->darurat ?? 0),
+            'yesterdayUpdated' => $yesterdayData->tanggal ?? null,
+
+            'todayLabData' => (float) ($todayLab->total_value ?? 0),
+            'todayLabUpdate' => $todayLab->last_updated ?? null,
+            'yesterdayLabData' => (float) ($yesterdayLab->total_value ?? 0),
+            'yesterdayUpdateLab' => $yesterdayLab->tanggal ?? null,
+
+            'todayRadiologi' => (float) ($todayRadiologi->total_value ?? 0),
+            'todayRadiologiUpdate' => $todayRadiologi->last_updated ?? null,
+            'yesterdayRadiologi' => (float) ($yesterdayRadiologi->total_value ?? 0),
+            'yesterdayRadiologiUpdate' => $yesterdayRadiologi->tanggal ?? null,
         ];
     }
+
 
     protected function getMonthlyRawatJalan()
     {

@@ -1,7 +1,7 @@
 import React from "react";
 import { formatRibuan } from "@/utils/formatRibuan";
 
-const CardKunjungan = ({ title, value, date }) => {
+const CardKunjungan = ({ title, todayValue, date, yesterdayValue, yesterdayDate }) => {
 
     const formattedTime = date
         ? date.split(' ')[1]
@@ -14,18 +14,29 @@ const CardKunjungan = ({ title, value, date }) => {
                 <h2 className="text-lg font-bold text-yellow-500 uppercase group-hover:text-white transition-colors duration-300">
                     {title}
                 </h2>
-                {date && (
+                {date && todayValue !== 0 ? (
                     <p className="text-sm text-gray-300 mt-1 group-hover:text-yellow-500 transition-colors duration-300">
                         Update: {formattedTime}
                     </p>
+                ) : (
+                    <p className="text-sm text-gray-300 mt-1 group-hover:text-red-500 transition-colors duration-300">
+                        Belum Terupdate
+                    </p>
                 )}
+                {/* <p className="text-xl text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
+                    {yesterdayDate}: {yesterdayValue}
+                </p> */}
+                <p className="text-xl text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
+                    Sebelumnya: {yesterdayValue}
+                </p>
             </div>
 
             {/* Bagian Kanan */}
-            <div className="flex items-center justify-center text-6xl font-extrabold text-white group-hover:text-red-500 transition-colors duration-300">
-                {formatRibuan(value)}
+            <div className="flex items-center justify-center text-7xl font-extrabold text-green-500 group-hover:text-yellow-500 transition-colors duration-300">
+                {formatRibuan(todayValue)}
             </div>
         </div>
+
     );
 };
 
