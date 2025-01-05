@@ -57,8 +57,12 @@ export default function LaporanRl31({ auth, items, tgl_awal, tgl_akhir }) {
                                             <TableRow key={data.KODE}>
                                                 <TableCell>{data.DESKRIPSI}</TableCell>
                                                 <TableCell className='text-center'>{data.AWAL}</TableCell>
-                                                <TableCell className="text-center">{Number(data.MASUK || 0) + Number(data.PINDAHAN || 0)}</TableCell>
-                                                <TableCell className="text-center">{Number(data.DIPINDAHKAN || 0) + Number(data.HIDUP || 0)}</TableCell>
+                                                <TableCell className="text-center">
+                                                    {parseFloat(data.MASUK || 0) + parseFloat(data.PINDAHAN || 0)}
+                                                </TableCell>
+                                                <TableCell className="text-center">
+                                                    {parseFloat(data.DIPINDAHKAN || 0) + parseFloat(data.HIDUP || 0)}
+                                                </TableCell>
                                                 <TableCell className='text-center'>{data.MATIKURANG48}</TableCell>
                                                 <TableCell className='text-center'>{data.MATILEBIH48}</TableCell>
                                                 <TableCell className='text-center'>{data.LD}</TableCell>

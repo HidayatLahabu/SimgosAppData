@@ -42,7 +42,6 @@ class LaporanRl31Controller extends Controller
             );
         }));
 
-
         return inertia("Laporan/Rl31/Index", [
             'items' => $filteredData,
             'tgl_awal' => $tgl_awal,

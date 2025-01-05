@@ -51,7 +51,11 @@ class InformasiPenunjangController extends Controller
                 DB::raw('SUM(penunjang.VALUE) as jumlah'),
                 DB::raw('MAX(penunjang.LASTUPDATED) as lastUpdated')
             )
-            ->groupBy('penunjang.TANGGAL', 'penunjang.IDSUBUNIT');
+            ->groupBy(
+                'penunjang.TANGGAL',
+                'penunjang.IDSUBUNIT',
+                'penunjang.SUBUNIT',
+            );
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -61,7 +65,8 @@ class InformasiPenunjangController extends Controller
         }
 
         // Paginate the results
-        return $query->orderByDesc('penunjang.TANGGAL')->paginate(5)->appends(request()->query());
+        return $query->orderByDesc('penunjang.TANGGAL')->orderBy('penunjang.SUBUNIT')
+            ->paginate(5)->appends(request()->query());
     }
 
     protected function getMingguan()

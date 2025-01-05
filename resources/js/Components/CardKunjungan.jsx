@@ -15,18 +15,18 @@ const CardKunjungan = ({ title, todayValue, date, yesterdayValue, yesterdayDate 
                     {title}
                 </h2>
                 {date && todayValue !== 0 ? (
-                    <p className="text-sm text-gray-300 mt-1 group-hover:text-yellow-500 transition-colors duration-300">
+                    <p className="text-xs text-gray-300 mt-1 group-hover:text-yellow-500 transition-colors duration-300">
                         Update: {formattedTime}
                     </p>
                 ) : (
-                    <p className="text-sm text-gray-300 mt-1 group-hover:text-red-500 transition-colors duration-300">
+                    <p className="text-xs text-gray-300 mt-1 group-hover:text-red-500 transition-colors duration-300">
                         Belum Terupdate
                     </p>
                 )}
                 {/* <p className="text-xl text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
                     {yesterdayDate}: {yesterdayValue}
                 </p> */}
-                <p className="text-xl text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
+                <p className="text-sm text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
                     Sebelumnya: {yesterdayValue}
                 </p>
             </div>
