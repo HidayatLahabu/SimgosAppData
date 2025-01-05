@@ -11,9 +11,9 @@ export default function MonthlyRujukanTable({ rujukanBulanan }) {
     const headers = [
         { name: "TAHUN", className: "w-[7%]" },
         { name: "BULAN" },
-        { name: "RUJUKAN MASUK", className: "text-right" },
-        { name: "RUJUKAN KELUAR", className: "text-right" },
-        { name: "RUJUKAN BALIK", className: "text-right" },
+        { name: "MASUK", className: "text-right" },
+        { name: "KELUAR", className: "text-right" },
+        { name: "BALIK", className: "text-right" },
     ];
 
     // Array nama bulan

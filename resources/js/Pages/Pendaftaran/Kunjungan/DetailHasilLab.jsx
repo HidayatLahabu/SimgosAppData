@@ -9,6 +9,7 @@ export default function DetailHasilLab({ detailHasilLab = {} }) {
 
     const headers = [
         { name: "NO", className: "w-[5%]" },
+        { name: "HASIL ID", className: "w-[7%]" },
         { name: "TINDAKAN" },
         { name: "PARAMETER" },
         { name: "HASIL" },
@@ -42,6 +43,7 @@ export default function DetailHasilLab({ detailHasilLab = {} }) {
                                         detailHasilLab.map((item, index) => (
                                             <TableRow key={index}>
                                                 <TableCell>{index + 1}</TableCell>
+                                                <TableCell>{item.HASIL_ID}</TableCell>
                                                 <TableCell>{item.TINDAKAN}</TableCell>
                                                 <TableCell>{item.PARAMETER}</TableCell>
                                                 <TableCell>{item.HASIL}</TableCell>

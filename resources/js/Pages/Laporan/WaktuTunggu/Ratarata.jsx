@@ -1,5 +1,7 @@
 import React from 'react';
+import { router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
+import TextInput from "@/Components/TextInput";
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
@@ -7,21 +9,24 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatTime } from '@/utils/formatTime';
 
-export default function Index({ averageWaitData, namaBulan, tahun }) {
+export default function Ratarata({ averageWaitData }) {
+
+    const getNamaBulan = (bulan) => {
+        const bulanIndo = [
+            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        return bulanIndo[bulan - 1]; // Mengembalikan nama bulan, bulan dimulai dari 1
+    };
 
     const headers = [
+        { name: "TAHUN", className: "w-[7%]" },
+        { name: "BULAN", className: "w-[10%]" },
         { name: "RUANGAN RAWATAN", className: "w-[25%]" },
         { name: "NAMA DOKTER PELAKSANA LAYANAN" },
         { name: "RATA-RATA WAKTU TUNGGU", className: "w-[20%]" },
         { name: "JUMLAH PASIEN DILAYANI", className: "text-right w-[15%]" },
     ];
-
-    const getMonthName = (monthNumber) => {
-        const date = new Date(2024, monthNumber - 1);  // monthNumber - 1 because months are 0-indexed
-        return new Intl.DateTimeFormat('id-ID', { month: 'long' }).format(date);
-    };
-
-    const formattedMonth = getMonthName(namaBulan);
 
 
     return (
@@ -30,12 +35,10 @@ export default function Index({ averageWaitData, namaBulan, tahun }) {
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
-                            <h1 className="uppercase text-center font-bold text-2xl pb-2">RATA-RATA WAKTU TUNGGU RAWAT JALAN</h1>
-                            <p className="text-center pb-4">
-                                <strong>Periode : </strong>{formattedMonth} {tahun}
-                            </p>
+                            <h1 className="uppercase text-center font-bold text-2xl pb-2">
+                                RATA-RATA WAKTU TUNGGU RAWAT JALAN PER BULAN
+                            </h1>
                             <Table>
-
                                 <TableHeader>
                                     <tr>
                                         {headers.map((header, index) => (
@@ -48,7 +51,9 @@ export default function Index({ averageWaitData, namaBulan, tahun }) {
                                 <tbody>
                                     {averageWaitData.data.length > 0 ? (
                                         averageWaitData.data.map((data, index) => (
-                                            <TableRow key={data.NOMOR} isEven={index % 2 === 0}>
+                                            <TableRow key={data.DOKTER_REG} isEven={index % 2 === 0}>
+                                                <TableCell>{data.TAHUN}</TableCell>
+                                                <TableCell>{getNamaBulan(data.BULAN)}</TableCell>
                                                 <TableCell>{data.UNITPELAYANAN}</TableCell>
                                                 <TableCell>{data.DOKTER_REG}</TableCell>
                                                 <TableCell>{formatTime(data.AVERAGE_SELSIH)}</TableCell>

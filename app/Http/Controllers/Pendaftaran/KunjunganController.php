@@ -516,6 +516,7 @@ class KunjunganController extends Controller
         $queryHasil = DB::connection('mysql7')->table('layanan.order_detil_lab as orderDetail')
             ->select(
                 'orderDetail.ORDER_ID',
+                'hasilLab.ID as HASIL_ID',
                 'tindakan.NAMA as TINDAKAN',
                 'parameter.PARAMETER as PARAMETER',
                 'hasilLab.HASIL',
