@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\InformasiStatistikIndikatorModel;
-use App\Models\InformasiStatistikKunjunganModel;
-use App\Models\InformasiStatistikRujukanModel;
 
 class StatistikKunjunganController extends Controller
 {
@@ -29,8 +27,9 @@ class StatistikKunjunganController extends Controller
         $dataRujukanMingguan = $rujukanMingguan->paginate(4)->appends(request()->query());
         $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
-        $kunjunganBulanan = $this->getMonthlyKunjungan();
-        $rujukanBulanan = $this->getMonthlyRujukan();
+        $perPage = 12; // Items per page
+        $kunjunganBulanan = $this->getMonthlyKunjungan($perPage);
+        $rujukanBulanan = $this->getMonthlyRujukan($perPage);
 
         $indikator = $this->getIndikator();
         $statistikIndikator = $indikator->paginate(8)->appends(request()->query());
@@ -140,90 +139,45 @@ class StatistikKunjunganController extends Controller
             ->orderBy('minggu', 'desc');
     }
 
-    protected function getMonthlyKunjungan()
+    protected function getMonthlyKunjungan($perPage)
     {
-        return InformasiStatistikKunjunganModel::selectRaw("
-            CASE MONTH(TANGGAL)
-                WHEN 1 THEN 'Januari'
-                WHEN 2 THEN 'Februari'
-                WHEN 3 THEN 'Maret'
-                WHEN 4 THEN 'April'
-                WHEN 5 THEN 'Mei'
-                WHEN 6 THEN 'Juni'
-                WHEN 7 THEN 'Juli'
-                WHEN 8 THEN 'Agustus'
-                WHEN 9 THEN 'September'
-                WHEN 10 THEN 'Oktober'
-                WHEN 11 THEN 'November'
-                WHEN 12 THEN 'Desember'
-            END AS BULAN,
-            SUM(RJ) AS RAJAL,
-            SUM(RD) AS DARURAT,
-            SUM(RI) AS RANAP
-        ")
-            ->whereYear('TANGGAL', now()->year)
-            ->where('TANGGAL', '>', '0000-00-00')
-            ->groupByRaw("
-            CASE MONTH(TANGGAL)
-                WHEN 1 THEN 'Januari'
-                WHEN 2 THEN 'Februari'
-                WHEN 3 THEN 'Maret'
-                WHEN 4 THEN 'April'
-                WHEN 5 THEN 'Mei'
-                WHEN 6 THEN 'Juni'
-                WHEN 7 THEN 'Juli'
-                WHEN 8 THEN 'Agustus'
-                WHEN 9 THEN 'September'
-                WHEN 10 THEN 'Oktober'
-                WHEN 11 THEN 'November'
-                WHEN 12 THEN 'Desember'
-            END
-        ")
-            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
-            ->get();
+        return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+            ->select(
+                DB::raw('SUM(statistikKunjungan.RJ) as rajal'),
+                DB::raw('SUM(statistikKunjungan.RD) as darurat'),
+                DB::raw('SUM(statistikKunjungan.RI) as ranap'),
+                DB::raw('YEAR(statistikKunjungan.TANGGAL) as tahun'),
+                DB::raw('MONTH(statistikKunjungan.TANGGAL) as bulan'),
+            )
+            ->havingRaw('SUM(statistikKunjungan.RJ) > 0')
+            ->orHavingRaw('SUM(statistikKunjungan.RD) > 0')
+            ->orHavingRaw('SUM(statistikKunjungan.RI) > 0')
+            ->groupBy(
+                DB::raw('YEAR(statistikKunjungan.TANGGAL)'),
+                DB::raw('MONTH(statistikKunjungan.TANGGAL)'),
+            )
+            ->orderBy(DB::raw('YEAR(statistikKunjungan.TANGGAL)'), 'desc')
+            ->orderBy(DB::raw('MONTH(statistikKunjungan.TANGGAL)'), 'desc')
+            ->paginate($perPage);
     }
 
-    protected function getMonthlyRujukan()
+    protected function getMonthlyRujukan($perPage)
     {
-        return InformasiStatistikRujukanModel::selectRaw("
-            CASE MONTH(TANGGAL)
-                WHEN 1 THEN 'Januari'
-                WHEN 2 THEN 'Februari'
-                WHEN 3 THEN 'Maret'
-                WHEN 4 THEN 'April'
-                WHEN 5 THEN 'Mei'
-                WHEN 6 THEN 'Juni'
-                WHEN 7 THEN 'Juli'
-                WHEN 8 THEN 'Agustus'
-                WHEN 9 THEN 'September'
-                WHEN 10 THEN 'Oktober'
-                WHEN 11 THEN 'November'
-                WHEN 12 THEN 'Desember'
-            END AS BULAN,
-            SUM(MASUK) AS MASUK,
-            SUM(KELUAR) AS KELUAR,
-            SUM(BALIK) AS BALIK
-        ")
-            ->whereYear('TANGGAL', now()->year)
-            ->where('TANGGAL', '>', '0000-00-00')
-            ->groupByRaw("
-            CASE MONTH(TANGGAL)
-                WHEN 1 THEN 'Januari'
-                WHEN 2 THEN 'Februari'
-                WHEN 3 THEN 'Maret'
-                WHEN 4 THEN 'April'
-                WHEN 5 THEN 'Mei'
-                WHEN 6 THEN 'Juni'
-                WHEN 7 THEN 'Juli'
-                WHEN 8 THEN 'Agustus'
-                WHEN 9 THEN 'September'
-                WHEN 10 THEN 'Oktober'
-                WHEN 11 THEN 'November'
-                WHEN 12 THEN 'Desember'
-            END
-        ")
-            ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
-            ->get();
+        return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
+            ->select(
+                DB::raw('SUM(statistikRujukan.MASUK) as masuk'),
+                DB::raw('SUM(statistikRujukan.KELUAR) as keluar'),
+                DB::raw('SUM(statistikRujukan.BALIK) as balik'),
+                DB::raw('YEAR(statistikRujukan.TANGGAL) as tahun'),
+                DB::raw('MONTH(statistikRujukan.TANGGAL) as bulan'),
+            )
+            ->groupBy(
+                DB::raw('YEAR(statistikRujukan.TANGGAL)'),
+                DB::raw('MONTH(statistikRujukan.TANGGAL)'),
+            )
+            ->orderBy(DB::raw('YEAR(statistikRujukan.TANGGAL)'), 'desc')
+            ->orderBy(DB::raw('MONTH(statistikRujukan.TANGGAL)'), 'desc')
+            ->paginate($perPage);
     }
 
     protected function getIndikator()

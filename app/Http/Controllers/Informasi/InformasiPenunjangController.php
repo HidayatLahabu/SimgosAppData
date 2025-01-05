@@ -115,7 +115,6 @@ class InformasiPenunjangController extends Controller
                 DB::raw('YEAR(penunjang.TANGGAL)'),
                 DB::raw('MONTH(penunjang.TANGGAL)'),
                 'penunjang.SUBUNIT'
-
             )
             ->orderBy(DB::raw('YEAR(penunjang.TANGGAL)'), 'desc')
             ->orderBy(DB::raw('MONTH(penunjang.TANGGAL)'), 'desc')
