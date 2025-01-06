@@ -21,33 +21,6 @@ export default function Harian({ dataTable, queryParams = {} }) {
         { name: "WAKTU TUNGGU", className: "w-[9%" },
     ];
 
-    // // Function to handle search input changes
-    // const searchFieldChanged = (search, value) => {
-    //     const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
-    //     if (value) {
-    //         updatedParams[search] = value;
-    //     } else {
-    //         delete updatedParams[search];
-    //     }
-    //     // Update the URL and fetch new data based on updatedParams
-    //     router.get(route('laporanWaktuTungguRajal.index'), updatedParams, {
-    //         preserveState: true,
-    //         preserveScroll: true,
-    //     });
-    // };
-
-    // // Function to handle change in search input
-    // const onInputChange = (search, e) => {
-    //     const value = e.target.value;
-    //     searchFieldChanged(search, value);
-    // };
-
-    // // Function to handle Enter key press in search input
-    // const onKeyPress = (search, e) => {
-    //     if (e.key !== 'Enter') return;
-    //     searchFieldChanged(search, e.target.value);
-    // };
-
     // Function to handle search input changes
     const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
@@ -73,19 +46,6 @@ export default function Harian({ dataTable, queryParams = {} }) {
     const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
         searchFieldChanged(search, e.target.value);
-    };
-
-    // Function to handle input field clear
-    const onClearSearch = (search) => {
-        // Clear the cache or any stored data related to the search
-        const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
-        delete updatedParams[search]; // Remove the search parameter
-
-        // Update the URL and fetch data without search filter
-        router.get(route('laporanWaktuTungguRajal.index'), updatedParams, {
-            preserveState: true,
-            preserveScroll: true,
-        });
     };
 
 

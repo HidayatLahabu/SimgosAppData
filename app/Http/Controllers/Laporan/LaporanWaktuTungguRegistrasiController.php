@@ -11,29 +11,36 @@ class LaporanWaktuTungguRegistrasiController extends Controller
     public function index(Request $request)
     {
         // Get filter parameters from request
-        $searchTerm = $request->input('search');
+        // $searchTerm = $request->input('search');
+        $searchTerm = request('search') ? strtolower(request('search')) : null;
         $ruangan = '1021101';
         $cara_bayar = 0;
         $perPage = 5;
 
         // Retrieve the report data
         $reportData = $this->getLaporan($ruangan, $cara_bayar, $perPage, $searchTerm);
+        $dataArray = $reportData->toArray();
 
         $averageWaitData = $this->getRataRata($ruangan, $cara_bayar, $perPage, $searchTerm);
 
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
-            'dataTable' => $reportData,
+            // 'dataTable' => $reportData,
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
             'queryParams' => $request->all(),
             'averageWaitData' => $averageWaitData,
         ]);
     }
 
-    private function getLaporan($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
+    public function getLaporan($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
     {
         $vRuangan = $ruangan . '%';
 
-        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
             ->select([
                 'p.NORM as NORM',
                 DB::raw("CONCAT(master.getNamaLengkap(p.NORM)) as NAMALENGKAP"),
@@ -58,28 +65,36 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             ->whereIn('pd.STATUS', [1])
             ->whereNull('tk.REF')
             ->whereIn('tk.STATUS', [1, 2])
-            ->where('tp.RUANGAN', 'LIKE', $vRuangan)
-            ->when($cara_bayar != 0, function ($query) use ($cara_bayar) {
-                $query->where('pj.JENIS', '=', $cara_bayar);
-            })
-            ->when($searchTerm, function ($query, $searchTerm) {
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('p.NORM', 'LIKE', "%{$searchTerm}%")
-                        ->orWhere(DB::raw("CONCAT(master.getNamaLengkap(p.NORM))"), 'LIKE', "%{$searchTerm}%")
-                        ->orWhere('pd.NOMOR', 'LIKE', "%{$searchTerm}%")
-                        ->orWhere('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
-                        ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
-                });
-            })
-            ->orderBy('pd.TANGGAL', 'desc')
-            ->paginate($perPage);
+            ->where('tp.RUANGAN', 'LIKE', $vRuangan);
+
+        // Apply 'cara_bayar' filter if provided
+        if ($cara_bayar != 0) {
+            $query->where('pj.JENIS', '=', $cara_bayar);
+        }
+
+        // Add search filter if provided
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('p.NORM', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere(DB::raw("CONCAT(master.getNamaLengkap(p.NORM))"), 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('pd.NOMOR', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        $data = $query->orderBy('pd.TANGGAL', 'desc')->paginate($perPage)->appends(request()->query());
+
+        // Return paginated data
+        return $data;
     }
 
-    private function getRataRata($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
+    public function getRataRata($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
     {
         $vRuangan = $ruangan . '%';
 
-        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
             ->select([
                 'r.DESKRIPSI as UNITPELAYANAN',
                 DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
@@ -102,26 +117,35 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             ->whereIn('pd.STATUS', [1])
             ->whereNull('tk.REF')
             ->whereIn('tk.STATUS', [1, 2])
-            ->where('tp.RUANGAN', 'LIKE', $vRuangan)
-            ->whereNotNull('dok.NIP')
-            ->when($cara_bayar != 0, function ($query) use ($cara_bayar) {
-                $query->where('pj.JENIS', '=', $cara_bayar);
-            })
-            ->when($searchTerm, function ($query, $searchTerm) {
-                $query->where(function ($q) use ($searchTerm) {
-                    $q->where('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
-                        ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
-                });
-            })
-            ->groupBy(
-                DB::raw('MONTH(tk.MASUK)'),
-                DB::raw('YEAR(tk.MASUK)'),
-                'dok.NIP',
-                'r.DESKRIPSI'
-            )
+            ->where('tp.RUANGAN', 'LIKE', $vRuangan);
+
+        // Apply 'cara_bayar' filter if provided
+        if ($cara_bayar != 0) {
+            $query->where('pj.JENIS', '=', $cara_bayar);
+        }
+
+        // Add search filter if provided
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        // Apply ordering and pagination
+        $data = $query->groupBy(
+            DB::raw('MONTH(tk.MASUK)'),
+            DB::raw('YEAR(tk.MASUK)'),
+            'dok.NIP',
+            'r.DESKRIPSI'
+        )
             ->orderBy(DB::raw('YEAR(tk.MASUK)'), 'desc') // Order by year descending
             ->orderBy(DB::raw('MONTH(tk.MASUK)'), 'desc') // Order by month descending
             ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK))"), 'asc')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->appends(request()->query());
+
+        // Return paginated data
+        return $data;
     }
 }

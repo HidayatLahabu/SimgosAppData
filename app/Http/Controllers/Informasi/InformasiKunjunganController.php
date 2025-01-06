@@ -18,12 +18,14 @@ class InformasiKunjunganController extends Controller
         $dataArray = $data->toArray();
 
         // Get weekly and monthly data
-        $kunjunganMingguan = $this->getWeeklyKunjungan();
-        $dataKunjunganMingguan = $kunjunganMingguan->paginate(5)->appends(request()->query());
-        $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
+        $kunjunganMingguan = $this->getWeeklyKunjungan($searchSubject);
+        $dataKunjunganMingguan = $kunjunganMingguan->toArray();
 
-        $perPage = 5; // Items per page
-        $kunjunganBulanan = $this->getMonthlyKunjungan($perPage);
+        // $perPage = 5; // Items per page
+        // $kunjunganBulanan = $this->getMonthlyKunjungan($perPage);
+
+        $kunjunganBulanan = $this->getMonthlyKunjungan($searchSubject);
+        $dataKunjunganBulanan = $kunjunganBulanan->toArray();
 
         // Return Inertia view with paginated data
         return inertia("Informasi/Kunjungan/Index", [
@@ -31,11 +33,9 @@ class InformasiKunjunganController extends Controller
                 'data' => $dataArray['data'],
                 'links' => $dataArray['links'],
             ],
-            'mingguan' => [
-                'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
-                'linksKunjunganMingguan' => $dataKunjunganMingguan['links'],
-            ],
-            'bulanan' => $kunjunganBulanan,
+            'mingguan' => $dataKunjunganMingguan,
+            // 'bulanan' => $kunjunganBulanan,
+            'bulanan' => $dataKunjunganBulanan,
             'queryParams' => request()->all()
         ]);
     }
@@ -68,9 +68,10 @@ class InformasiKunjunganController extends Controller
             ->paginate(5)->appends(request()->query());
     }
 
-    protected function getWeeklyKunjungan()
+    private function getWeeklyKunjungan($searchSubject = null)
     {
-        return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
             ->select(
                 'kunjungan.IDSUBUNIT as idSubUnit',
                 DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
@@ -87,15 +88,26 @@ class InformasiKunjunganController extends Controller
                 DB::raw('YEAR(kunjungan.TANGGAL)'),
                 DB::raw('WEEK(kunjungan.TANGGAL, 1)'),
                 'kunjungan.SUBUNIT'
-            )
-            ->orderBy('tahun', 'desc')
+            );
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(kunjungan.SUBUNIT) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Return the paginated results
+        return $query->orderBy('tahun', 'desc')
             ->orderBy('minggu', 'desc')
-            ->orderBy('kunjungan.SUBUNIT');
+            ->orderBy('kunjungan.SUBUNIT')
+            ->paginate(5)->appends(request()->query());
     }
 
-    protected function getMonthlyKunjungan($perPage)
+    private function getMonthlyKunjungan($searchSubject = null)
     {
-        return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
             ->select(
                 'kunjungan.IDSUBUNIT as idSubUnit',
                 DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
@@ -112,10 +124,19 @@ class InformasiKunjunganController extends Controller
                 DB::raw('YEAR(kunjungan.TANGGAL)'),
                 DB::raw('MONTH(kunjungan.TANGGAL)'),
                 'kunjungan.SUBUNIT'
-            )
-            ->orderBy(DB::raw('YEAR(kunjungan.TANGGAL)'), 'desc')
+            );
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(kunjungan.SUBUNIT) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Return the paginated results
+        return $query->orderBy(DB::raw('YEAR(kunjungan.TANGGAL)'), 'desc')
             ->orderBy(DB::raw('MONTH(kunjungan.TANGGAL)'), 'desc')
             ->orderBy('kunjungan.SUBUNIT')
-            ->paginate($perPage);
+            ->paginate(5)->appends(request()->query());
     }
 }

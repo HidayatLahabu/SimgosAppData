@@ -19,12 +19,6 @@ export default function Mingguan({ mingguan }) {
         { name: "LAST UPDATED", className: "w-[12%]" },
     ];
 
-    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(mingguan.linksKunjunganMingguan);
-
-    const handleKunjunganMingguanChange = (newLinks) => {
-        setKunjunganMingguanLinks(newLinks);
-    };
-
     return (
         <div className="py-5">
             <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -46,8 +40,8 @@ export default function Mingguan({ mingguan }) {
                                     </tr>
                                 </TableHeader>
                                 <tbody>
-                                    {Array.isArray(mingguan?.dataKunjunganMingguan) && mingguan.dataKunjunganMingguan.length > 0 ? (
-                                        mingguan.dataKunjunganMingguan.map((data, index) => (
+                                    {mingguan.data.length > 0 ? (
+                                        mingguan.data.map((data, index) => (
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{data.tahun}</TableCell>
                                                 <TableCell>{data.minggu}</TableCell>
@@ -66,10 +60,7 @@ export default function Mingguan({ mingguan }) {
                                     )}
                                 </tbody>
                             </Table>
-                            <Pagination
-                                links={kunjunganMingguanLinks}
-                                onPageChange={handleKunjunganMingguanChange}
-                            />
+                            <Pagination links={mingguan.links} />
                         </div>
                     </div>
                 </div>
