@@ -32,7 +32,7 @@ const CardKunjungan = ({ title, todayValue, date, yesterdayValue, yesterdayDate 
             </div>
 
             {/* Bagian Kanan */}
-            <div className="flex items-center justify-center text-7xl font-extrabold text-green-500 group-hover:text-yellow-500 transition-colors duration-300">
+            <div className="flex items-center justify-center text-5xl font-extrabold text-green-500 group-hover:text-yellow-500 transition-colors duration-300">
                 {formatRibuan(todayValue)}
             </div>
         </div>
