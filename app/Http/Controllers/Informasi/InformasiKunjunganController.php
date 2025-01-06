@@ -34,7 +34,6 @@ class InformasiKunjunganController extends Controller
                 'links' => $dataArray['links'],
             ],
             'mingguan' => $dataKunjunganMingguan,
-            // 'bulanan' => $kunjunganBulanan,
             'bulanan' => $dataKunjunganBulanan,
             'queryParams' => request()->all()
         ]);

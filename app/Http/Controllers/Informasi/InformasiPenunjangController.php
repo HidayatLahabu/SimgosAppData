@@ -16,12 +16,11 @@ class InformasiPenunjangController extends Controller
         $data = $this->getHarian($searchSubject);
         $dataArray = $data->toArray();
 
-        $kunjunganMingguan = $this->getMingguan();
-        $dataKunjunganMingguan = $kunjunganMingguan->paginate(5)->appends(request()->query());
-        $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
+        $kunjunganMingguan = $this->getMingguan($searchSubject);
+        $dataKunjunganMingguan = $kunjunganMingguan->toArray();
 
-        $perPage = 5; // Items per page
-        $kunjunganBulanan = $this->getBulanan($perPage);
+        $kunjunganBulanan = $this->getMingguan($searchSubject);
+        $dataKunjunganBulanan = $kunjunganBulanan->toArray();
 
         // Return Inertia view with paginated data
         return inertia("Informasi/Penunjang/Index", [
@@ -29,11 +28,8 @@ class InformasiPenunjangController extends Controller
                 'data' => $dataArray['data'],
                 'links' => $dataArray['links'],
             ],
-            'mingguan' => [
-                'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
-                'linksKunjunganMingguan' => $dataKunjunganMingguan['links'],
-            ],
-            'bulanan' => $kunjunganBulanan,
+            'mingguan' => $dataKunjunganMingguan,
+            'bulanan' => $dataKunjunganBulanan,
             'queryParams' => request()->all()
         ]);
     }
@@ -69,9 +65,10 @@ class InformasiPenunjangController extends Controller
             ->paginate(5)->appends(request()->query());
     }
 
-    protected function getMingguan()
+    private function getMingguan($searchSubject = null)
     {
-        return DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
                 DB::raw('MIN(penunjang.TANGGAL) as tanggal'),
                 'penunjang.IDSUBUNIT as idSubUnit',
@@ -89,15 +86,26 @@ class InformasiPenunjangController extends Controller
                 DB::raw('YEAR(penunjang.TANGGAL)'),
                 DB::raw('WEEK(penunjang.TANGGAL, 1)'),
                 'penunjang.SUBUNIT',
-            )
-            ->orderBy('tahun', 'desc')
+            );
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(penunjang.SUBUNIT) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Return the paginated results
+        return $query->orderBy('tahun', 'desc')
             ->orderBy('minggu', 'desc')
-            ->orderBy('penunjang.SUBUNIT');
+            ->orderBy('penunjang.SUBUNIT')
+            ->paginate(5)->appends(request()->query());
     }
 
-    protected function getBulanan($perPage)
+    private function getBulanan($searchSubject = null)
     {
-        return DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+        // Start building the query using the query builder
+        $query = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
                 DB::raw('MIN(penunjang.TANGGAL) as tanggal'),
                 'penunjang.IDSUBUNIT as idSubUnit',
@@ -115,10 +123,19 @@ class InformasiPenunjangController extends Controller
                 DB::raw('YEAR(penunjang.TANGGAL)'),
                 DB::raw('MONTH(penunjang.TANGGAL)'),
                 'penunjang.SUBUNIT'
-            )
-            ->orderBy(DB::raw('YEAR(penunjang.TANGGAL)'), 'desc')
+            );
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(penunjang.SUBUNIT) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Return the paginated results
+        return $query->orderBy(DB::raw('YEAR(penunjang.TANGGAL)'), 'desc')
             ->orderBy(DB::raw('MONTH(penunjang.TANGGAL)'), 'desc')
             ->orderBy('penunjang.SUBUNIT')
-            ->paginate($perPage);
+            ->paginate(5)->appends(request()->query());
     }
 }
