@@ -1,7 +1,5 @@
 import React from 'react';
-import { router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
-import TextInput from "@/Components/TextInput";
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
@@ -28,7 +26,6 @@ export default function Ratarata({ averageWaitData }) {
         { name: "JUMLAH PASIEN DILAYANI", className: "text-right w-[15%]" },
     ];
 
-
     return (
         <div className="py-5">
             <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
@@ -51,7 +48,11 @@ export default function Ratarata({ averageWaitData }) {
                                 <tbody>
                                     {averageWaitData.data.length > 0 ? (
                                         averageWaitData.data.map((data, index) => (
-                                            <TableRow key={data.DOKTER_REG} isEven={index % 2 === 0}>
+                                            <TableRow
+                                                key={data.DOKTER_REG}
+                                                isEven={index % 2 === 0}
+                                                className={parseFloat(data.AVERAGE_SELSIH) > 3600 ? 'text-red-500' : ''}
+                                            >
                                                 <TableCell>{data.TAHUN}</TableCell>
                                                 <TableCell>{getNamaBulan(data.BULAN)}</TableCell>
                                                 <TableCell>{data.UNITPELAYANAN}</TableCell>

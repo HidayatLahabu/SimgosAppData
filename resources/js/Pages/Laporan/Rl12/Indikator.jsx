@@ -68,7 +68,7 @@ export default function ThisYear({
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">{statistikTahunLalu.BOR}</td>
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">{formatNumber(statistikTahunIni.BOR - statistikTahunLalu.BOR)}</td>
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">
-                                            {statistikTahunIni.BOR !== 0 ? formatNumber(((statistikTahunLalu.BOR - statistikTahunLalu.BOR) / statistikTahunLalu.BOR) * 100) : 0}  %
+                                            {statistikTahunIni.BOR !== 0 ? formatNumber(((statistikTahunIni.BOR - statistikTahunLalu.BOR) / statistikTahunLalu.BOR) * 100) : 0}  %
                                         </td>
                                     </tr>
 

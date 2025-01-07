@@ -48,6 +48,10 @@ export default function Harian({ dataTable, queryParams = {} }) {
         searchFieldChanged(search, e.target.value);
     };
 
+    const convertTimeToMinutes = (timeString) => {
+        const [hours, minutes, seconds] = timeString.split(":").map(Number);
+        return hours * 60 + minutes + seconds / 60;
+    };
 
     return (
         <div className="py-5">
@@ -81,10 +85,15 @@ export default function Harian({ dataTable, queryParams = {} }) {
                                         ))}
                                     </tr>
                                 </TableHeader>
+
                                 <tbody>
                                     {dataTable.data.length > 0 ? (
                                         dataTable.data.map((data, index) => (
-                                            <TableRow key={data.NOMOR} isEven={index % 2 === 0}>
+                                            <TableRow
+                                                key={data.NOMOR}
+                                                className={`${convertTimeToMinutes(data.SELISIH) > 60 ? 'text-red-400' : ''
+                                                    }`}
+                                            >
                                                 <TableCell>{data.NORM}</TableCell>
                                                 <TableCell>{data.NAMALENGKAP}</TableCell>
                                                 <TableCell>{data.NOPEN}</TableCell>
@@ -97,10 +106,13 @@ export default function Harian({ dataTable, queryParams = {} }) {
                                         ))
                                     ) : (
                                         <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                            <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                            <td colSpan="8" className="px-3 py-3 text-center">
+                                                Tidak ada data yang dapat ditampilkan
+                                            </td>
                                         </tr>
                                     )}
                                 </tbody>
+
                             </Table>
                             <Pagination links={dataTable.links} />
                         </div>
