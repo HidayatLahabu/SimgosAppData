@@ -2,9 +2,9 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Indikator from './Indikator';
-import IndikatorBulanan from './IndikatorBulanan';
 import IndikatorTriwulan from './IndikatorTriwulan';
 import IndikatorSemester from './IndikatorSemester';
+import Bulanan from './Bulanan';
 
 export default function LaporanRl12({ auth,
     //tahun ini
@@ -18,7 +18,6 @@ export default function LaporanRl12({ auth,
     sisaTahunIni,
     jumlahKunjunganTahunIni,
     statistikTahunIni,
-    statistikBulananIni,
     statistikTriwulanIni,
     statistikSemesterIni,
     //tahun lalu
@@ -32,9 +31,9 @@ export default function LaporanRl12({ auth,
     sisaTahunLalu,
     jumlahKunjunganTahunLalu,
     statistikTahunLalu,
-    statistikBulananLalu,
     statistikTriwulanLalu,
     statistikSemesterLalu,
+    statistikBulanan,
 }) {
 
     return (
@@ -70,11 +69,8 @@ export default function LaporanRl12({ auth,
                 statistikTahunLalu={statistikTahunLalu}
             />
 
-            <IndikatorBulanan
-                tahunIni={tahunIni}
-                statistikBulananIni={statistikBulananIni}
-                tahunLalu={tahunLalu}
-                statistikBulananLalu={statistikBulananLalu}
+            <Bulanan
+                statistikBulanan={statistikBulanan}
             />
 
             <IndikatorTriwulan
@@ -90,6 +86,8 @@ export default function LaporanRl12({ auth,
                 tahunLalu={tahunLalu}
                 statistikSemesterLalu={statistikSemesterLalu}
             />
+
+
 
         </AuthenticatedLayout>
     );

@@ -64,6 +64,9 @@ class LaporanRl12Controller extends Controller
         $statistikSemesterIni = $this->getStatistikSemester($tahunIni, $ttidurIni) ?? 0;
         $statistikSemesterLalu = $this->getStatistikSemester($tahunLalu, $ttidurLalu) ?? 0;
 
+        $perPage = 12;
+        $statistikBulanan = $this->getStatistikBulanan($ttidurIni, $perPage) ?? 0;
+
         // Return data to frontend
         return inertia("Laporan/Rl12/Index", [
             // Tahun ini
@@ -98,6 +101,7 @@ class LaporanRl12Controller extends Controller
             'statistikBulananLalu' => $statistikBulananLalu,
             'statistikTriwulanLalu' => $statistikTriwulanLalu,
             'statistikSemesterLalu' => $statistikSemesterLalu,
+            'statistikBulanan' => $statistikBulanan,
         ]);
     }
 
@@ -211,45 +215,45 @@ class LaporanRl12Controller extends Controller
             : null;
     }
 
-    public function getStatistikBulanan($tahun, $ttidur)
+    public function getStatistikBulanan($ttidur, $perPage)
     {
-        // Query SQL untuk menghitung statistik bulanan
-        $sql = sprintf("
-            SELECT 
-                YEAR(t.TANGGAL) AS TAHUN,
-                MONTH(t.TANGGAL) AS BULAN,
-                ROUND((SUM(HP) * 100) / (%d * SUM(JMLHARI)), 2) AS BOR,
-                ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
-                (SUM(JMLKLR) / %d) AS BTO,
-                ROUND(((%d * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
-                ((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR)) AS NDR,
-                (((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR)) AS GDR
-            FROM informasi.indikator_rs r
-            JOIN master.tanggal t ON r.TANGGAL = t.TANGGAL
-            WHERE YEAR(t.TANGGAL) = %d AND HP > 0
-            GROUP BY TAHUN, BULAN
-        ", $ttidur, $ttidur, $ttidur, $tahun);
+        // Start building the query using the query builder
+        $query = DB::connection('mysql12')->table('informasi.indikator_rs as r')
+            ->select([
+                DB::raw('YEAR(t.TANGGAL) AS TAHUN'),
+                DB::raw('MONTH(t.TANGGAL) AS BULAN'),
+                DB::raw('ROUND((SUM(HP) * 100) / (' . $ttidur . ' * SUM(JMLHARI)), 2) AS BOR'),
+                DB::raw('ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS'),
+                DB::raw('(SUM(JMLKLR) / ' . $ttidur . ') AS BTO'),
+                DB::raw('ROUND(((' . $ttidur . ' * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI'),
+                DB::raw('((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR)) AS NDR'),
+                DB::raw('(((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR)) AS GDR')
+            ])
+            ->join('master.tanggal as t', 'r.TANGGAL', '=', 't.TANGGAL')
+            ->where('HP', '>', 0)
+            ->groupBy(DB::raw('YEAR(t.TANGGAL), MONTH(t.TANGGAL)'))
+            ->orderBy(DB::raw('YEAR(t.TANGGAL)'), 'desc') // Order by year descending
+            ->orderBy(DB::raw('MONTH(t.TANGGAL)'), 'desc'); // Order by month descending
 
-        // Eksekusi query dan ambil hasil
-        $data = DB::connection('mysql12')->select($sql);
+        // Apply pagination
+        $data = $query->paginate($perPage)->appends(request()->query());
 
-        // Proses data untuk membentuk struktur yang sesuai
+        // Process data to format the result
         $result = [];
         foreach ($data as $row) {
             $result[] = [
                 'TAHUN' => $row->TAHUN,
                 'BULAN' => $row->BULAN,
-                'BOR' => $row->BOR ? number_format(round($row->BOR, 2), 2, '.', '') : '0.00',
-                'AVLOS' => $row->AVLOS ? number_format(round($row->AVLOS, 2), 2, '.', '') : '0.00',
-                'BTO' => $row->BTO ? number_format(round($row->BTO, 2), 2, '.', '') : '0.00',
-                'TOI' => $row->TOI ? number_format(round($row->TOI, 2), 2, '.', '') : '0.00',
-                'NDR' => $row->NDR ? number_format(round($row->NDR, 2), 2, '.', '') : '0.00',
-                'GDR' => $row->GDR ? number_format(round($row->GDR, 2), 2, '.', '') : '0.00',
+                'BOR' => isset($row->BOR) ? number_format($row->BOR, 2, '.', '') : '0.00',
+                'AVLOS' => isset($row->AVLOS) ? number_format($row->AVLOS, 2, '.', '') : '0.00',
+                'BTO' => isset($row->BTO) ? number_format($row->BTO, 2, '.', '') : '0.00',
+                'TOI' => isset($row->TOI) ? number_format($row->TOI, 2, '.', '') : '0.00',
+                'NDR' => isset($row->NDR) ? number_format($row->NDR, 2, '.', '') : '0.00',
+                'GDR' => isset($row->GDR) ? number_format($row->GDR, 2, '.', '') : '0.00',
             ];
         }
 
-        // Kembalikan hasil
-        return $result;
+        return $data;
     }
 
     public function getStatistikTriwulan($tahun, $ttidur)

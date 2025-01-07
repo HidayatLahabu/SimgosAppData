@@ -25,7 +25,6 @@ class LaporanWaktuTungguRegistrasiController extends Controller
 
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
-            // 'dataTable' => $reportData,
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
