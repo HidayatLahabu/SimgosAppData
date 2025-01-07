@@ -1,30 +1,95 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { formatDate } from '@/utils/formatDate';
-import { formatNumber } from '@/utils/formatNumber';
-import ThisYear from './ThisYear';
-import LastYear from './LastYear';
+import Indikator from './Indikator';
+import IndikatorBulanan from './IndikatorBulanan';
+import IndikatorTriwulan from './IndikatorTriwulan';
+import IndikatorSemester from './IndikatorSemester';
 
-export default function LaporanRl12({ auth, items_current_year, tgl_awal, tgl_akhir, items_last_year, tgl_awal_last_year, tgl_akhir_last_year }) {
+export default function LaporanRl12({ auth,
+    //tahun ini
+    tahunIni,
+    ttidurIni,
+    awalTahunIni,
+    masukTahunIni,
+    keluarTahunIni,
+    lebih48TahunIni,
+    kurang48TahunIni,
+    sisaTahunIni,
+    jumlahKunjunganTahunIni,
+    statistikTahunIni,
+    statistikBulananIni,
+    statistikTriwulanIni,
+    statistikSemesterIni,
+    //tahun lalu
+    tahunLalu,
+    ttidurLalu,
+    awalTahunLalu,
+    masukTahunLalu,
+    keluarTahunLalu,
+    lebih48TahunLalu,
+    kurang48TahunLalu,
+    sisaTahunLalu,
+    jumlahKunjunganTahunLalu,
+    statistikTahunLalu,
+    statistikBulananLalu,
+    statistikTriwulanLalu,
+    statistikSemesterLalu,
+}) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Laporan" />
 
-            <div className="flex">
-                <ThisYear
-                    items_current_year={items_current_year}
-                    tgl_awal={tgl_awal}
-                    tgl_akhir={tgl_akhir}
-                />
-                <LastYear
-                    items_last_year={items_last_year}
-                    tgl_awal_last_year={tgl_awal_last_year}
-                    tgl_akhir_last_year={tgl_akhir_last_year}
-                />
+            <div className="max-w-full mx-auto w-full pt-5 text-yellow-500">
+                <h1 className="uppercase text-center font-bold text-2xl">LAPORAN RL 1.2</h1>
+                <p className="text-center font-bold">Sumber : Database Informasi</p>
             </div>
 
+            <Indikator
+                tahunIni={tahunIni}
+                ttidurIni={ttidurIni}
+                awalTahunIni={awalTahunIni}
+                masukTahunIni={masukTahunIni}
+                keluarTahunIni={keluarTahunIni}
+                lebih48TahunIni={lebih48TahunIni}
+                kurang48TahunIni={kurang48TahunIni}
+                sisaTahunIni={sisaTahunIni}
+                jumlahKunjunganTahunIni={jumlahKunjunganTahunIni}
+                statistikTahunIni={statistikTahunIni}
+                //tahun lalu
+                tahunLalu={tahunLalu}
+                ttidurLalu={ttidurLalu}
+                awalTahunLalu={awalTahunLalu}
+                masukTahunLalu={masukTahunLalu}
+                keluarTahunLalu={keluarTahunLalu}
+                lebih48TahunLalu={lebih48TahunLalu}
+                kurang48TahunLalu={kurang48TahunLalu}
+                sisaTahunLalu={sisaTahunLalu}
+                jumlahKunjunganTahunLalu={jumlahKunjunganTahunLalu}
+                statistikTahunLalu={statistikTahunLalu}
+            />
+
+            <IndikatorBulanan
+                tahunIni={tahunIni}
+                statistikBulananIni={statistikBulananIni}
+                tahunLalu={tahunLalu}
+                statistikBulananLalu={statistikBulananLalu}
+            />
+
+            <IndikatorTriwulan
+                tahunIni={tahunIni}
+                statistikTriwulanIni={statistikTriwulanIni}
+                tahunLalu={tahunLalu}
+                statistikTriwulanLalu={statistikTriwulanLalu}
+            />
+
+            <IndikatorSemester
+                tahunIni={tahunIni}
+                statistikSemesterIni={statistikSemesterIni}
+                tahunLalu={tahunLalu}
+                statistikSemesterLalu={statistikSemesterLalu}
+            />
 
         </AuthenticatedLayout>
     );

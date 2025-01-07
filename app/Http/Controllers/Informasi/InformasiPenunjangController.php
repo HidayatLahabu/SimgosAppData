@@ -19,7 +19,7 @@ class InformasiPenunjangController extends Controller
         $kunjunganMingguan = $this->getMingguan($searchSubject);
         $dataKunjunganMingguan = $kunjunganMingguan->toArray();
 
-        $kunjunganBulanan = $this->getMingguan($searchSubject);
+        $kunjunganBulanan = $this->getBulanan($searchSubject);
         $dataKunjunganBulanan = $kunjunganBulanan->toArray();
 
         // Return Inertia view with paginated data

@@ -22,9 +22,9 @@ export default function Dashboard({
     resep,
     pulang,
     statistikKunjungan,
-    statistikTahun,
+    statistikTahunIni,
     statistikTahunLalu,
-    statistikBulan,
+    statistikBulanIni,
     statistikBulanLalu,
     rawatJalanBulanan,
     rawatDaruratBulanan,
@@ -89,18 +89,8 @@ export default function Dashboard({
                     </h1>
                     <div className="pb-2 flex flex-wrap w-full">
                         <StatisticTahun
-                            BOR={statistikTahun.BOR || 0}
-                            AVLOS={statistikTahun.AVLOS || 0}
-                            BTO={statistikTahun.BTO || 0}
-                            TOI={statistikTahun.TOI || 0}
-                            NDR={statistikTahun.NDR || 0}
-                            GDR={statistikTahun.GDR || 0}
-                            BOR_LALU={statistikTahunLalu.BOR || 0}
-                            AVLOS_LALU={statistikTahunLalu.AVLOS || 0}
-                            BTO_LALU={statistikTahunLalu.BTO || 0}
-                            TOI_LALU={statistikTahunLalu.TOI || 0}
-                            NDR_LALU={statistikTahunLalu.NDR || 0}
-                            GDR_LALU={statistikTahunLalu.GDR || 0}
+                            statistikTahunIni={statistikTahunIni}
+                            statistikTahunLalu={statistikTahunLalu}
                         />
                     </div>
                 </div>
@@ -112,18 +102,8 @@ export default function Dashboard({
                     </h1>
                     <div className="pb-2 flex flex-wrap w-full pr-1">
                         <StatisticBulan
-                            BOR={statistikBulan.BOR || 0}
-                            AVLOS={statistikBulan.AVLOS || 0}
-                            BTO={statistikBulan.BTO || 0}
-                            TOI={statistikBulan.TOI || 0}
-                            NDR={statistikBulan.NDR || 0}
-                            GDR={statistikBulan.GDR || 0}
-                            BOR_LALU={statistikBulanLalu.BOR || 0}
-                            AVLOS_LALU={statistikBulanLalu.AVLOS || 0}
-                            BTO_LALU={statistikBulanLalu.BTO || 0}
-                            TOI_LALU={statistikBulanLalu.TOI || 0}
-                            NDR_LALU={statistikBulanLalu.NDR || 0}
-                            GDR_LALU={statistikBulanLalu.GDR || 0}
+                            statistikBulanIni={statistikBulanIni}
+                            statistikBulanLalu={statistikBulanLalu}
                         />
                     </div>
                 </div>

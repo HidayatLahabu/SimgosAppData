@@ -31,10 +31,6 @@ class StatistikKunjunganController extends Controller
         $kunjunganBulanan = $this->getMonthlyKunjungan($perPage);
         $rujukanBulanan = $this->getMonthlyRujukan($perPage);
 
-        $indikator = $this->getIndikator();
-        $statistikIndikator = $indikator->paginate(8)->appends(request()->query());
-        $statistikIndikator = $statistikIndikator->toArray();
-
         return inertia("Informasi/StatistikKunjungan/Index", [
             'tableKunjungan' => [
                 'dataKunjungan' => $dataKunjungan['data'],
@@ -54,10 +50,6 @@ class StatistikKunjunganController extends Controller
             ],
             'kunjunganBulanan' => $kunjunganBulanan,
             'rujukanBulanan' => $rujukanBulanan,
-            'statistikIndikator' => [
-                'dataIndikator' => $statistikIndikator['data'],
-                'linksIndikator' => $statistikIndikator['links'],
-            ],
         ]);
     }
 
@@ -178,17 +170,5 @@ class StatistikKunjunganController extends Controller
             ->orderBy(DB::raw('YEAR(statistikRujukan.TANGGAL)'), 'desc')
             ->orderBy(DB::raw('MONTH(statistikRujukan.TANGGAL)'), 'desc')
             ->paginate($perPage);
-    }
-
-    protected function getIndikator()
-    {
-        return InformasiStatistikIndikatorModel::where('JENIS', 2)
-            ->where('BOR', '>', 0)
-            ->where('ALOS', '>', 0)
-            ->where('BTO', '>', 0)
-            ->where('TOI', '>', 0)
-            ->where('NDR', '>', 0)
-            ->where('GDR', '>', 0)
-            ->orderByDesc('TANGGAL_UPDATED');
     }
 }

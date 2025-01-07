@@ -2,18 +2,8 @@ import React from 'react';
 import CardYear from "@/Components/CardYear";
 
 export default function StatisticTahun({
-    BOR,
-    AVLOS,
-    BTO,
-    TOI,
-    NDR,
-    GDR,
-    BOR_LALU,
-    AVLOS_LALU,
-    BTO_LALU,
-    TOI_LALU,
-    NDR_LALU,
-    GDR_LALU,
+    statistikTahunIni,
+    statistikTahunLalu,
 }) {
     return (
         <div className="max-w-full mx-auto sm:pl-5 sm:pr-2 lg:px- w-full">
@@ -23,33 +13,33 @@ export default function StatisticTahun({
                     {/* Card Items */}
                     <CardYear
                         title="BOR"
-                        value={BOR}
-                        lastValue={BOR_LALU}
+                        value={statistikTahunIni.BOR}
+                        lastValue={statistikTahunLalu.BOR}
                     />
                     <CardYear
                         title="AVLOS"
-                        value={AVLOS}
-                        lastValue={AVLOS_LALU}
+                        value={statistikTahunIni.AVLOS}
+                        lastValue={statistikTahunLalu.AVLOS}
                     />
                     <CardYear
                         title="BTO"
-                        value={BTO}
-                        lastValue={BTO_LALU}
+                        value={statistikTahunIni.BTO}
+                        lastValue={statistikTahunLalu.BTO}
                     />
                     <CardYear
                         title="TOI"
-                        value={TOI}
-                        lastValue={TOI_LALU}
+                        value={statistikTahunIni.TOI}
+                        lastValue={statistikTahunLalu.TOI}
                     />
                     <CardYear
                         title="NDR"
-                        value={NDR}
-                        lastValue={NDR_LALU}
+                        value={statistikTahunIni.NDR}
+                        lastValue={statistikTahunLalu.NDR}
                     />
                     <CardYear
                         title="GDR"
-                        value={GDR}
-                        lastValue={GDR_LALU}
+                        value={statistikTahunIni.GDR}
+                        lastValue={statistikTahunLalu.GDR}
                     />
                 </div>
             </div>
