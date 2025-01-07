@@ -50,10 +50,10 @@ Kustomisasi:
     7. Untuk mengubah nama tampilan nama rumah sakit, klinik atau organisasi pengguna, dapat dilakukan 
        dengan merubah value HOSPITAL_NAME pada file .env
     8. Untuk penyesuaian timezone, lakukan perubahan APP_TIMEZONE value pada file .env 
-    9. Untuk perhitungan BOR menggunakan jumlah tempat tidur berdasarkan keputusan pimpinan organisasi atau yang ada, 
-       lakukan perubahan nilai TTIDUR pada .env 
-perhatikan contoh pada .env.example
-
+    9. Untuk perhitungan BOR menggunakan jumlah tempat tidur berdasarkan keputusan pimpinan organisasi atau  
+       yang digunakan untuk perhitungan, lakukan perubahan nilai TTIDUR untuk jumlah tahun ini dan 
+       TTIDURLALU untuk jumlah tahun lalu, yaitu pada .env 
+perhatikan contoh dan catatan pada .env.example
 
 Memperbarui Aplikasi:
 
