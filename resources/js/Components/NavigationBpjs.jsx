@@ -29,10 +29,20 @@ export default function NavigationBpjs() {
     const isAnyDropdownLinkActive = () => {
         return route().current('pesertaBpjs.index') ||
             route().current('kunjunganBpjs.index') ||
+            route().current('kunjunganBpjs.filterByTime', 'hariIni') ||
+            route().current('kunjunganBpjs.filterByTime', 'mingguIni') ||
+            route().current('kunjunganBpjs.filterByTime', 'bulanIni') ||
+            route().current('kunjunganBpjs.filterByTime', 'tahunIni') ||
             route().current('pengajuanSep.index') ||
             route().current('rekonBpjs.index') ||
+            route().current('rekonBpjs.filterByTime', 'hariIni') ||
             route().current('monitoringRekon.index') ||
-            route().current('batalKontrol.index');
+            route().current('monitoringRekon.filterByTime', 'hariIni') ||
+            route().current('monitoringRekon.filterByTime', 'mingguIni') ||
+            route().current('monitoringRekon.filterByTime', 'bulanIni') ||
+            route().current('monitoringRekon.filterByTime', 'tahunIni') ||
+            route().current('batalKontrol.index') ||
+            route().current('batalKontrol.filterByTime', 'hariIni');
     };
 
     return (

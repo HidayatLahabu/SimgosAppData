@@ -60,7 +60,9 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Batal Kontrol {header} {totalCount} {text}</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">
+                                    Data Pasien Batal Kontrol {header} {totalCount} {text}
+                                </h1>
                                 <Table>
                                     <TableHeader>
                                         <tr>

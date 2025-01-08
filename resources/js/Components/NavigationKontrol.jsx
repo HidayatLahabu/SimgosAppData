@@ -27,7 +27,25 @@ export default function NavigationKontrol() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('layananRad.index');
+        return route().current('rekonBpjs.index') ||
+            route().current('rekonBpjs.filterByTime', 'hariIni') ||
+            route().current('jadwalKontrol.index') ||
+            route().current('jadwalKontrol.filterByTime', 'hariIni') ||
+            route().current('jadwalKontrol.filterByTime', 'mingguIni') ||
+            route().current('jadwalKontrol.filterByTime', 'bulanIni') ||
+            route().current('jadwalKontrol.filterByTime', 'tahunIni') ||
+            route().current('batalKontrol.index') ||
+            route().current('batalKontrol.filterByTime', 'hariIni') ||
+            route().current('monitoringRekon.index') ||
+            route().current('monitoringRekon.filterByTime', 'hariIni') ||
+            route().current('monitoringRekon.filterByTime', 'mingguIni') ||
+            route().current('monitoringRekon.filterByTime', 'bulanIni') ||
+            route().current('monitoringRekon.filterByTime', 'tahunIni') ||
+            route().current('konsul.index') ||
+            route().current('konsul.filterByTime', 'hariIni') ||
+            route().current('konsul.filterByTime', 'mingguIni') ||
+            route().current('konsul.filterByTime', 'bulanIni') ||
+            route().current('konsul.filterByTime', 'tahunIni');
     };
 
     return (
@@ -47,6 +65,20 @@ export default function NavigationKontrol() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Rencana Kontrol
+                    </NavLink>
+                    <NavLink
+                        href={route('batalKontrol.index')}
+                        active={route().current('batalKontrol.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Batal Kontrol
+                    </NavLink>
+                    <NavLink
+                        href={route('monitoringRekon.index')}
+                        active={route().current('monitoringRekon.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Monitoring Kontrol
                     </NavLink>
                     <NavLink
                         href={route('jadwalKontrol.index')}
