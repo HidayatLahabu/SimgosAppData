@@ -66,7 +66,7 @@ Memperbarui Aplikasi:
 
 Untuk menarik pembaruan terbaru:
 
-    Linux: Navigasi ke /var/www/html/SimgosAppData dan jalankan git pull origin master di terminal. 
+    Linux: Navigasi ke /var/www/html/SimgosAppData dan jalankan git pull di terminal. 
     Selanjutnya lakukan perintah composer update dan npm update, mengantisipasi jika terdapat perubahan 
     pada laravel package dan node package
     Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 7 di atas.
