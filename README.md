@@ -53,7 +53,14 @@ Kustomisasi:
     9. Untuk perhitungan BOR menggunakan jumlah tempat tidur berdasarkan keputusan pimpinan organisasi atau  
        yang digunakan untuk perhitungan, lakukan perubahan nilai TTIDUR untuk jumlah tahun ini dan 
        TTIDURLALU untuk jumlah tahun lalu, yaitu pada .env 
-perhatikan contoh dan catatan pada .env.example
+    
+    perhatikan contoh dan catatan pada .env.example
+    
+    10. Untuk akses khusus pengguna manajemen, dapat di buat user yang mengandung kata Manajemen, maka hanya
+        akan menampilkan menu Beranda, Satusehat Sinkronisasi, Laporan dan Informasi saja
+    11. Untuk petugas loket pendaftaran yang membutuhkan menu jadwal kontrol dan konsul, dapat di buat user 
+        yang mengandung kata Pendaftaran, maka akan hanya tampil menu Beranda dan Kunjungan
+
 
 Memperbarui Aplikasi:
 
