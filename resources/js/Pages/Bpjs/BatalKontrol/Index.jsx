@@ -3,25 +3,23 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/ButtonDetail";
 import ButtonTime from '@/Components/ButtonTime';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import TableCellMenu from "@/Components/TableCellMenu";
 
-export default function Index({ auth, dataTable, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, text, totalCount, queryParams = {} }) {
 
     const headers = [
+        { name: "NOMOR PESERTA", className: "w-[9%]" },
+        { name: "SURAT KONTROL" },
+        { name: "TANGGAL KONTROL", className: "w-[8%]" },
         { name: "NORM", className: "w-[7%]" },
-        { name: "NAMA PASIEN", className: "w-[25%]" },
-        { name: "NOMOR KONTROL", className: "w-[12%]" },
-        { name: "TANGGAL KONTROL", className: "w-[12%]" },
-        { name: "NOMOR SEP", className: "w-[12%]" },
-        { name: "TUJUAN" },
-        { name: "MENU", className: "text-center w-[7%]" },
+        { name: "NAMA PASIEN" },
+        { name: "RUANGAN TUJUAN" },
+        { name: "NAMA DOKTER" },
     ];
 
     // Function to handle search input changes
@@ -33,7 +31,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('rekonBpjs.index'), updatedParams, {
+        router.get(route('batalKontrol.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -62,32 +60,20 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Rencana Kontrol</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Pasien Batal Kontrol {header} {totalCount} {text}</h1>
                                 <Table>
                                     <TableHeader>
-                                        {/* <tr>
-                                            <th colSpan={7} className="px-3 py-2">
-                                                <TextInput
-                                                    className="w-full"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan nomor kontrol, nomor SEP, NORM atau nama pasien"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
-                                                <ButtonTime href={route("batalKontrol.filterByTime", "hariIni")} text="Hari Ini" />
-                                            </th>
-                                        </tr> */}
                                         <tr>
                                             <th colSpan={9} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan nomor kontrol, nomor SEP, NORM atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien, nama dokter, atau nama ruangan tujuan "
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
-                                                    <ButtonTime href={route("rekonBpjs.filterByTime", "hariIni")} text="Hari Ini" />
+                                                    <ButtonTime href={route("batalKontrol.filterByTime", "hariIni")} text="Hari Ini" />
                                                 </div>
                                             </th>
                                         </tr>
@@ -105,22 +91,18 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.noSurat} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.norm}</TableCell>
-                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell>{data.noKartu}</TableCell>
                                                     <TableCell>{data.noSurat}</TableCell>
-                                                    <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>{data.noSep}</TableCell>
-                                                    <TableCell>{data.poliTujuan}</TableCell>
-                                                    <TableCellMenu>
-                                                        <ButtonDetail
-                                                            href={route("rekonBpjs.detail", { id: data.noSurat })}
-                                                        />
-                                                    </TableCellMenu>
+                                                    <TableCell>{data.tglRencanaKontrol}</TableCell>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell>{data.namaPasien}</TableCell>
+                                                    <TableCell>{data.ruangan}</TableCell>
+                                                    <TableCell>{data.namaDokter}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="9" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

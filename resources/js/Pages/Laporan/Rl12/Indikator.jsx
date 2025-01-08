@@ -63,7 +63,7 @@ export default function ThisYear({
                                     </tr>
 
                                     <tr className="hover:bg-gray-100 dark:hover:bg-indigo-800 border border-gray-500 dark:border-gray-600 h-10">
-                                        <td className="px-4 py-1 border border-gray-500 dark:border-gray-600">Bed Turn Over</td>
+                                        <td className="px-4 py-1 border border-gray-500 dark:border-gray-600">Bed Occupancy Rate</td>
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">{statistikTahunIni.BOR}</td>
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">{statistikTahunLalu.BOR}</td>
                                         <td className="px-4 py-1 text-center border border-gray-500 dark:border-gray-600">{formatNumber(statistikTahunIni.BOR - statistikTahunLalu.BOR)}</td>

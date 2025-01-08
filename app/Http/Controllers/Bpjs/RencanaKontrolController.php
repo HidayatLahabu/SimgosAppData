@@ -90,4 +90,71 @@ class RencanaKontrolController extends Controller
             'detail' => $query,
         ]);
     }
+
+    public function filterByTime($filter)
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
+            ->select(
+                'rekon.noSurat',
+                'rekon.nomor as noSep',
+                'rekon.tglRencanaKontrol as tanggal',
+                'poli.nama as poliTujuan',
+                'pasien.NORM as norm',
+                'peserta.nama'
+            )
+            ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
+            ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
+
+        // Clone query for count calculation
+        $countQuery = clone $query;
+
+        switch ($filter) {
+            case 'hariIni':
+                $query->whereDate('rekon.tglRencanaKontrol', now()->format('Y-m-d'));
+                $countQuery->whereDate('rekon.tglRencanaKontrol', now()->format('Y-m-d'));
+                $header = 'HARI INI';
+                $text = 'PASIEN';
+                break;
+
+            default:
+                abort(404, 'Filter not found');
+        }
+
+        // Get count
+        $count = $countQuery->count();
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(rekon.noSurat) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(rekon.nomor) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(peserta.nama) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhere('pasien.NORM', 'LIKE', '%' . $searchSubject . '%');
+            });
+        }
+
+        // Paginate the results
+        $data = $query->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Bpjs/Rekon/Index", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all(),
+            'header' => $header,
+            'totalCount' => $count,
+            'text' => $text,
+        ]);
+    }
 }

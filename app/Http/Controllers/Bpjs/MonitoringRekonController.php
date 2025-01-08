@@ -107,15 +107,6 @@ class MonitoringRekonController extends Controller
             });
         }
 
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
-            });
-        }
-
         // Paginate the results
         $data = $query->paginate(10)->appends(request()->query());
 

@@ -2,9 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import Indikator from './Indikator';
-import IndikatorTriwulan from './IndikatorTriwulan';
-import IndikatorSemester from './IndikatorSemester';
-import Bulanan from './Bulanan';
+import Cetak from './Cetak';
 
 export default function LaporanRl12({ auth,
     //tahun ini
@@ -18,8 +16,6 @@ export default function LaporanRl12({ auth,
     sisaTahunIni,
     jumlahKunjunganTahunIni,
     statistikTahunIni,
-    statistikTriwulanIni,
-    statistikSemesterIni,
     //tahun lalu
     tahunLalu,
     ttidurLalu,
@@ -31,9 +27,6 @@ export default function LaporanRl12({ auth,
     sisaTahunLalu,
     jumlahKunjunganTahunLalu,
     statistikTahunLalu,
-    statistikTriwulanLalu,
-    statistikSemesterLalu,
-    statistikBulanan,
 }) {
 
     return (
@@ -69,25 +62,10 @@ export default function LaporanRl12({ auth,
                 statistikTahunLalu={statistikTahunLalu}
             />
 
-            <Bulanan
-                statistikBulanan={statistikBulanan}
-            />
-
-            <IndikatorTriwulan
-                tahunIni={tahunIni}
-                statistikTriwulanIni={statistikTriwulanIni}
-                tahunLalu={tahunLalu}
-                statistikTriwulanLalu={statistikTriwulanLalu}
-            />
-
-            <IndikatorSemester
-                tahunIni={tahunIni}
-                statistikSemesterIni={statistikSemesterIni}
-                tahunLalu={tahunLalu}
-                statistikSemesterLalu={statistikSemesterLalu}
-            />
-
-
+            <div className="w-full">
+                <Cetak
+                />
+            </div>
 
         </AuthenticatedLayout>
     );

@@ -26,7 +26,8 @@ class PasienController extends Controller
             )
             ->leftJoin('master.kartu_identitas_pasien as kip', 'pasien.NORM', '=', 'kip.NORM')
             ->leftJoin('bpjs.peserta as peserta', 'kip.NOMOR', '=', 'peserta.nik')
-            ->where('pasien.STATUS', 1);
+            ->where('pasien.STATUS', 1)
+            ->where('pasien.LOCK_AKSES', 0);
 
         // Add search filter if provided
         if ($searchSubject) {

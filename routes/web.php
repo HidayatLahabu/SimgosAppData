@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bpjs\BatalControlController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -406,12 +407,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('rekonBpjs', [RencanaKontrolController::class, 'index'])->name('rekonBpjs.index');
         Route::get('rekonBpjs/detail/{id}', [RencanaKontrolController::class, 'detail'])->name('rekonBpjs.detail');
+        Route::get('/rekonBpjs/{filter}', [RencanaKontrolController::class, 'filterByTime'])
+            ->name('rekonBpjs.filterByTime')
+            ->where('filter', 'hariIni');
 
         Route::get('monitoringRekon', [MonitoringRekonController::class, 'index'])->name('monitoringRekon.index');
         Route::get('monitoringRekon/detail/{id}', [MonitoringRekonController::class, 'detail'])->name('monitoringRekon.detail');
         Route::get('/monitoringRekon/{filter}', [MonitoringRekonController::class, 'filterByTime'])
             ->name('monitoringRekon.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+
+        Route::get('batalKontrol', [BatalControlController::class, 'index'])->name('batalKontrol.index');
+        Route::get('/batalKontrol/{filter}', [BatalControlController::class, 'filterByTime'])
+            ->name('batalKontrol.filterByTime')
+            ->where('filter', 'hariIni');
     });
 
     Route::prefix('master')->namespace('App\Http\Controllers\Master')->group(function () {
@@ -504,6 +513,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
+        Route::get('/laporanRl12-print', [LaporanRl12Controller::class, 'print'])->name('laporanRl12.print');
         Route::get('laporanRl31', [LaporanRl31Controller::class, 'index'])->name('laporanRl31.index');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('laporanWaktuTungguRajal', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTungguRajal.index');

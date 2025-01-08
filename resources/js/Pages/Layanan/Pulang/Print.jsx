@@ -80,7 +80,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, keadaanPulang,
                 </div>
                 <footer className="bg-white text-black text-sm">
                     <div className="text-center">
-                        <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
+                        <p>&copy; 2024 - {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto.</p>
                     </div>
                 </footer>
             </div>

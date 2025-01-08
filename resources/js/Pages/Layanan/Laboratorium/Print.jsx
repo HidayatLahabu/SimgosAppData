@@ -34,7 +34,6 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
-                                            {/* <th className="px-3 py-2 border border-gray-500 border-solid w-[8%]">ID HASIL</th> */}
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[10%]">TANGGAL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
@@ -51,9 +50,6 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                         {data.map((item, key) => (
                                             <tr key={item.id} className="border-b bg-white dark:border-gray-500">
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
-                                                {/* <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.idHasil}
-                                                </td> */}
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.tanggalHasil}
                                                 </td>
@@ -89,7 +85,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                 </div>
                 <footer className="bg-white text-black text-sm">
                     <div className="text-center">
-                        <p>&copy; {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto. All rights reserved.</p>
+                        <p>&copy; 2024 - {new Date().getFullYear()} Hidayat - Tim IT RSUD Dr. M. M. Dunda Limboto.</p>
                     </div>
                 </footer>
             </div>
