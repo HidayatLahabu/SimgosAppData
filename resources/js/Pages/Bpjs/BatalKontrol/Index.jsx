@@ -9,6 +9,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import Cetak from './Cetak';
 
 export default function Index({ auth, dataTable, header, text, totalCount, queryParams = {} }) {
 
@@ -114,6 +115,10 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="w-full">
+                <Cetak
+                />
             </div>
         </AuthenticatedLayout>
     );

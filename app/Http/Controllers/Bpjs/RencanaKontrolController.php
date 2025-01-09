@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bpjs;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -16,17 +17,29 @@ class RencanaKontrolController extends Controller
         // Start building the query using the query builder
         $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
+                'pasien.NORM as norm',
+                'peserta.nama as namaPasien',
                 'rekon.noSurat',
-                'rekon.nomor as noSep',
                 'rekon.tglRencanaKontrol as tanggal',
                 'poli.nama as poliTujuan',
-                'pasien.NORM as norm',
-                'peserta.nama'
+                'dpjp.nama as namaDokter',
+                'pasienBpjs.nama as pasienNama',
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
-            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
+            ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
+            ->groupBy(
+                'rekon.noSurat',
+                'pasien.NORM',
+                'peserta.nama',
+                'rekon.tglRencanaKontrol',
+                'poli.nama',
+                'dpjp.nama',
+                'pasienBpjs.nama'
+            );
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -39,7 +52,9 @@ class RencanaKontrolController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('rekon.tglRencanaKontrol')->paginate(10)->appends(request()->query());
+        $data = $query
+            ->orderByDesc('rekon.tglRencanaKontrol')
+            ->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -155,6 +170,58 @@ class RencanaKontrolController extends Controller
             'header' => $header,
             'totalCount' => $count,
             'text' => $text,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
+            ->select(
+                'pasien.NORM as norm',
+                'peserta.nama as namaPasien',
+                'rekon.noSurat',
+                'rekon.tglRencanaKontrol as tanggal',
+                'poli.nama as poliTujuan',
+                'dpjp.nama as namaDokter',
+                'pasienBpjs.nama as pasienNama',
+            )
+            ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
+            ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
+            ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
+            ->whereBetween('rekon.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
+            ->groupBy(
+                'rekon.noSurat',
+                'pasien.NORM',
+                'peserta.nama',
+                'rekon.tglRencanaKontrol',
+                'poli.nama',
+                'dpjp.nama',
+                'pasienBpjs.nama'
+            )
+            ->orderBy('peserta.nama')
+            ->orderBy('pasienBpjs.nama')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Bpjs/Rekon/Print", [
+            'data'              => $query,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
         ]);
     }
 }

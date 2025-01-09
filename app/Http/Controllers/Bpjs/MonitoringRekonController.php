@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Bpjs;
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\BpjsMonitorRekonModel;
-use Illuminate\Http\Request;
 
 class MonitoringRekonController extends Controller
 {
@@ -142,6 +144,43 @@ class MonitoringRekonController extends Controller
         // Return Inertia view with the encounter data
         return inertia("Bpjs/Monitoring/Detail", [
             'detail' => $query,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        $query = DB::connection('mysql6')->table('bpjs.monitoring_rencana_kontrol as monitoring')
+            ->select(
+                'monitoring.noSuratKontrol',
+                'monitoring.tglRencanaKontrol as tanggal',
+                'monitoring.noKartu',
+                'monitoring.nama as namaPasien',
+                'monitoring.namaPoliAsal',
+                'monitoring.namaDokter',
+            )
+            ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'monitoring.poliTujuan')
+            ->whereBetween('monitoring.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('monitoring.tglRencanaKontrol')
+            ->orderBy('monitoring.nama')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Bpjs/Monitoring/Print", [
+            'data'              => $query,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
         ]);
     }
 }

@@ -407,17 +407,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('rekonBpjs', [RencanaKontrolController::class, 'index'])->name('rekonBpjs.index');
         Route::get('rekonBpjs/detail/{id}', [RencanaKontrolController::class, 'detail'])->name('rekonBpjs.detail');
+        Route::get('/rekonBpjs-print', [RencanaKontrolController::class, 'print'])->name('rekonBpjs.print');
         Route::get('/rekonBpjs/{filter}', [RencanaKontrolController::class, 'filterByTime'])
             ->name('rekonBpjs.filterByTime')
             ->where('filter', 'hariIni');
 
         Route::get('monitoringRekon', [MonitoringRekonController::class, 'index'])->name('monitoringRekon.index');
         Route::get('monitoringRekon/detail/{id}', [MonitoringRekonController::class, 'detail'])->name('monitoringRekon.detail');
+        Route::get('/monitoringRekon-print', [MonitoringRekonController::class, 'print'])->name('monitoringRekon.print');
         Route::get('/monitoringRekon/{filter}', [MonitoringRekonController::class, 'filterByTime'])
             ->name('monitoringRekon.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
 
         Route::get('batalKontrol', [BatalControlController::class, 'index'])->name('batalKontrol.index');
+        Route::get('/batalKontrol-print', [BatalControlController::class, 'print'])->name('batalKontrol.print');
         Route::get('/batalKontrol/{filter}', [BatalControlController::class, 'filterByTime'])
             ->name('batalKontrol.filterByTime')
             ->where('filter', 'hariIni');

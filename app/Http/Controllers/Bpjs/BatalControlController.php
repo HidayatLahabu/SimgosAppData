@@ -135,4 +135,49 @@ class BatalControlController extends Controller
             'text' => $text,
         ]);
     }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
+            ->select(
+                'peserta.noKartu',
+                'rekon.noSurat',
+                'rekon.tglRencanaKontrol',
+                'peserta.nama as namaPasien',
+                'pasien.NORM as norm',
+                'poli.nama as ruangan',
+                'dpjp.nama as namaDokter'
+            )
+            ->leftJoin('monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
+            ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
+            ->leftJoin('bpjs.kunjungan as kunjunganBpjs', 'kunjunganBpjs.noSEP', '=', 'rekon.nomor')
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjunganBpjs.noKartu')
+            ->leftJoin('master.kartu_asuransi_pasien as asuransi', 'asuransi.NOMOR', '=', 'peserta.noKartu')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'asuransi.NORM')
+            ->whereNull('monitor.noSuratKontrol')
+            ->whereBetween('rekon.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
+            ->orderByDesc('rekon.tglRencanaKontrol')
+            ->orderBy('peserta.nama')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Bpjs/BatalKontrol/Print", [
+            'data'              => $query,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
+        ]);
+    }
 }

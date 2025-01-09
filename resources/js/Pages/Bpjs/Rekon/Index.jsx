@@ -11,6 +11,7 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import TableCellMenu from "@/Components/TableCellMenu";
+import Cetak from './Cetak';
 
 export default function Index({ auth, dataTable, header, text, totalCount, queryParams = {} }) {
 
@@ -18,9 +19,9 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
         { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN", className: "w-[25%]" },
         { name: "NOMOR KONTROL", className: "w-[12%]" },
-        { name: "TANGGAL KONTROL", className: "w-[12%]" },
-        { name: "NOMOR SEP", className: "w-[12%]" },
-        { name: "TUJUAN" },
+        { name: "TANGGAL KONTROL", className: "w-[9%]" },
+        { name: "RUANGAN TUJUAN" },
+        { name: "JADWAL DOKTER" },
         { name: "MENU", className: "text-center w-[7%]" },
     ];
 
@@ -96,11 +97,11 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.noSurat} isEven={index % 2 === 0}>
                                                     <TableCell>{data.norm}</TableCell>
-                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
+                                                    <TableCell className="uppercase">{data.namaPasien || data.pasienNama}</TableCell>
                                                     <TableCell>{data.noSurat}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>{data.noSep}</TableCell>
                                                     <TableCell>{data.poliTujuan}</TableCell>
+                                                    <TableCell>{data.namaDokter}</TableCell>
                                                     <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("rekonBpjs.detail", { id: data.noSurat })}
@@ -120,6 +121,10 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="w-full">
+                <Cetak
+                />
             </div>
         </AuthenticatedLayout>
     );

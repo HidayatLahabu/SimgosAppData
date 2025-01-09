@@ -35,7 +35,8 @@ export default function NavigationMaster() {
             route().current('referensi.index') ||
             route().current('ruangan.index') ||
             route().current('tindakan.index') ||
-            route().current('tindakanRuangan.index');
+            route().current('tindakanRuangan.index') ||
+            route().current('register');
     };
 
     return (
@@ -112,6 +113,12 @@ export default function NavigationMaster() {
                     >
                         Tindakan Ruangan
                     </NavLink>
+                    <Link
+                        href={route('register')}
+                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                    >
+                        Register
+                    </Link>
                 </div>
             )}
         </div>
