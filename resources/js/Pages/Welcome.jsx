@@ -26,7 +26,12 @@ export default function Welcome({ auth, hospitalName }) {
                             >
                                 Login
                             </Link>
-                            
+                            <Link
+                                href={route('register')}
+                                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                            >
+                                Register
+                            </Link>
                         </>
                     )}
                 </div>
