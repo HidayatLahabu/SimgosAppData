@@ -6,7 +6,7 @@ use DateTimeInterface;
 use Illuminate\Support\Str;
 
 /**
- * @template TToken of Laravel\Sanctum\Contracts\HasAbilities = \Laravel\Sanctum\PersonalAccessToken
+ * @template TToken of \Laravel\Sanctum\Contracts\HasAbilities = \Laravel\Sanctum\PersonalAccessToken
  */
 trait HasApiTokens
 {
@@ -36,6 +36,17 @@ trait HasApiTokens
     public function tokenCan(string $ability)
     {
         return $this->accessToken && $this->accessToken->can($ability);
+    }
+
+    /**
+     * Determine if the current API token does not have a given scope.
+     *
+     * @param  string  $ability
+     * @return bool
+     */
+    public function tokenCant(string $ability)
+    {
+        return ! $this->tokenCan($ability);
     }
 
     /**

@@ -8,6 +8,12 @@ Breaking changes are marked with ⚠️.
 
 ## [Unreleased]
 
+## [v2.4.2] - 2025-01-02
+
+**Fixed**
+
+- Fix deprecated implictly nullable parameter by @datlechin in https://github.com/tighten/ziggy/pull/792
+
 ## [v2.4.1] - 2024-11-21
 
 **Fixed**
@@ -451,7 +457,8 @@ See [UPGRADING](UPGRADING.md#upgrading-from-1x-to-2x) for detailed upgrade instr
 
 For previous changes see the [Releases](https://github.com/tighten/ziggy/releases) page.
 
-[Unreleased]: https://github.com/tighten/ziggy/compare/v2.4.1...HEAD
+[Unreleased]: https://github.com/tighten/ziggy/compare/v2.4.2...HEAD
+[v2.4.2]: https://github.com/tighten/ziggy/compare/v2.4.1...v2.4.2
 [v2.4.1]: https://github.com/tighten/ziggy/compare/v2.4.0...v2.4.1
 [v2.4.0]: https://github.com/tighten/ziggy/compare/v2.3.1...v2.4.0
 [v2.3.1]: https://github.com/tighten/ziggy/compare/v2.3.0...v2.3.1
