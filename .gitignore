@@ -34,3 +34,5 @@ AppServiceProvider.php
 /public/.htaccess
 public/.htaccess
 .htaccess
+app/Http/Middleware/TrustProxies.php
+config/trustedproxy.php
