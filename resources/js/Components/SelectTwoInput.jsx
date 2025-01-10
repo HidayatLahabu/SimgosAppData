@@ -42,6 +42,9 @@ export default function SelectInput({ className = '', options = [], ...props }) 
             options={options}
             className={className}
             styles={customStyles}
+            menuPlacement="auto"
+            menuPortalTarget={document.body}
+            menuPosition="fixed"
         />
     );
 }

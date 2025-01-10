@@ -525,6 +525,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
         Route::get('statistikKunjungan', [StatistikKunjunganController::class, 'index'])->name('statistikKunjungan.index');
+        Route::get('/statistikKunjungan-print', [StatistikKunjunganController::class, 'print'])->name('statistikKunjungan.print');
         Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
         Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
         Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');

@@ -29,7 +29,7 @@ export default function Kunjungan({ kunjungan }) {
                                 <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>RAWAT INAP</TableHeaderCell>
-                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATED</TableHeaderCell>
+                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATE</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>

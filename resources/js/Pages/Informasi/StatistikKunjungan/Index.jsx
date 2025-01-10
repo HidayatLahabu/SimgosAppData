@@ -9,6 +9,7 @@ import KunjunganMingguan from './KunjunganMingguan';
 import RujukanMingguan from './RujukanMingguan';
 import KunjunganTahunan from './KunjunganTahunan';
 import RujukanTahunan from './RujukanTahunan';
+import Cetak from './Cetak';
 
 export default function Index({
     auth,
@@ -61,7 +62,10 @@ export default function Index({
                     <RujukanTahunan rujukanTahunan={rujukanTahunan} />
                 </div>
             </div>
-
+            <div className="w-full">
+                <Cetak
+                />
+            </div>
         </AuthenticatedLayout>
     );
 }

@@ -29,7 +29,7 @@ export default function Rujukan({ rujukan }) {
                                 <TableHeaderCell className='text-right'>MASUK</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>KELUAR</TableHeaderCell>
                                 <TableHeaderCell className='text-right'>BALIK</TableHeaderCell>
-                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATED</TableHeaderCell>
+                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATE</TableHeaderCell>
                             </tr>
                         </TableHeader>
                         <tbody>
