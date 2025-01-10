@@ -29,7 +29,7 @@ class MonitoringRekonController extends Controller
         }
 
         // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        $data = $query->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -110,7 +110,7 @@ class MonitoringRekonController extends Controller
         }
 
         // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        $data = $query->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();

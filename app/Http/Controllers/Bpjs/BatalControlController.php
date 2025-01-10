@@ -47,7 +47,7 @@ class BatalControlController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('rekon.tglRencanaKontrol')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('rekon.tglRencanaKontrol')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -118,7 +118,7 @@ class BatalControlController extends Controller
         }
 
         // Paginate the results
-        $data = $query->orderByDesc('rekon.tglRencanaKontrol')->paginate(10)->appends(request()->query());
+        $data = $query->orderByDesc('rekon.tglRencanaKontrol')->paginate(5)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
