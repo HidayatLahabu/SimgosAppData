@@ -8,6 +8,12 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
         import('@/../../resources/css/print.css');
     }, []);
 
+    // Fungsi untuk mengonversi waktu (format HH:MM:SS) ke menit
+    const convertTimeToMinutes = (timeString) => {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
     return (
         <div className="h-screen w-screen bg-white">
             <Head title="Laporan" />
@@ -41,37 +47,39 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.map((item, key) => (
-                                            <tr key={item.noSurat} className="border-b bg-white dark:border-gray-500">
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.NORM}
-                                                </td>
-                                                <td className="px-3 py-2 border border-gray-500 border-solid">
-                                                    {item.NAMALENGKAP}
-                                                </td>
-                                                <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.NOPEN}
-                                                </td>
-                                                <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.UNITPELAYANAN}
-                                                </td>
-                                                <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.DOKTER_REG}
-                                                </td>
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.TGLREG}
-                                                </td>
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.TGLTERIMA}
-                                                </td>
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.SELISIH}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {data.map((item, key) => {
+                                            const isLongWait = convertTimeToMinutes(item.SELISIH) > 60;
+                                            return (
+                                                <tr key={item.noSurat} className={`${isLongWait ? 'text-red-600' : ''} border-b bg-white dark:border-gray-500`}>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.NORM}
+                                                    </td>
+                                                    <td className="px-3 py-2 border border-gray-500 border-solid">
+                                                        {item.NAMALENGKAP}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {item.NOPEN}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {item.UNITPELAYANAN}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {item.DOKTER_REG}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.TGLREG}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.TGLTERIMA}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.SELISIH}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>
