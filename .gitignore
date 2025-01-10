@@ -24,6 +24,13 @@ Homestead.json
 vscode
 .cspell/custom-dictionary-workspace.txt
 cspell.json
-public/sync.ffs_db
-resources/js/Components/sync.ffs_db
-resources/js/Pages/sync.ffs_db
+
+# for online access
+/app/Providers/AppServiceProvider.php
+app/Providers/AppServiceProvider.php
+/Providers/AppServiceProvider.php
+Providers/AppServiceProvider.php
+AppServiceProvider.php
+/public/.htaccess
+public/.htaccess
+.htaccess
