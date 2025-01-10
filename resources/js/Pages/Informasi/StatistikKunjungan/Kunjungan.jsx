@@ -7,9 +7,9 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatDate } from '@/utils/formatDate';
 
-export default function KunjunganTable({ tableKunjungan }) {
+export default function Kunjungan({ kunjungan }) {
     // State to track the current pagination links for each table
-    const [kunjunganLinks, setKunjunganLinks] = useState(tableKunjungan.linksKunjungan);
+    const [kunjunganLinks, setKunjunganLinks] = useState(kunjungan.linksKunjungan);
 
     const handleKunjunganPageChange = (newLinks) => {
         setKunjunganLinks(newLinks);
@@ -33,8 +33,8 @@ export default function KunjunganTable({ tableKunjungan }) {
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(tableKunjungan?.dataKunjungan) && tableKunjungan.dataKunjungan.length > 0 ? (
-                                tableKunjungan.dataKunjungan.map((data, index) => (
+                            {Array.isArray(kunjungan?.dataKunjungan) && kunjungan.dataKunjungan.length > 0 ? (
+                                kunjungan.dataKunjungan.map((data, index) => (
                                     <TableRow key={data.tanggal} isEven={index % 2 === 0}>
                                         <TableCell>{formatDate(data.tanggal)}</TableCell>
                                         <TableCell className='text-right'>{data.rajal}</TableCell>

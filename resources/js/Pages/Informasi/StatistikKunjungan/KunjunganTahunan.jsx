@@ -6,21 +6,15 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function RujukanBulanan({ rujukanBulanan }) {
+export default function KunjunganTahunan({ kunjunganTahunan }) {
 
     const headers = [
         { name: "TAHUN", className: "w-[7%]" },
-        { name: "BULAN" },
-        { name: "MASUK", className: "text-right" },
-        { name: "KELUAR", className: "text-right" },
-        { name: "BALIK", className: "text-right" },
+        { name: "RAWAT JALAN", className: "text-right" },
+        { name: "RAWAT DARURAT", className: "text-right" },
+        { name: "RAWAT INAP", className: "text-right" },
     ];
 
-    // Array nama bulan
-    const bulanNames = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
 
     return (
         <div className="max-w-full mx-auto w-full">
@@ -28,7 +22,7 @@ export default function RujukanBulanan({ rujukanBulanan }) {
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
 
                     <h1 className="uppercase text-center font-bold text-2xl pb-2">
-                        Rujukan Bulanan
+                        Kunjungan Tahunan
                     </h1>
 
                     <Table>
@@ -42,14 +36,13 @@ export default function RujukanBulanan({ rujukanBulanan }) {
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {rujukanBulanan.data.length > 0 ? (
-                                rujukanBulanan.data.map((data, index) => (
-                                    <TableRow key={data.bulan} isEven={index % 2 === 0}>
-                                        <TableCell>{data.tahun}</TableCell>
-                                        <TableCell>{bulanNames[data.bulan - 1]}</TableCell>
-                                        <TableCell className='text-right'>{data.masuk}</TableCell>
-                                        <TableCell className='text-right'>{data.keluar}</TableCell>
-                                        <TableCell className='text-right'>{data.balik}</TableCell>
+                            {kunjunganTahunan.data.length > 0 ? (
+                                kunjunganTahunan.data.map((data, index) => (
+                                    <TableRow key={data.kunjunganTahun} isEven={index % 2 === 0}>
+                                        <TableCell>{data.kunjunganTahun}</TableCell>
+                                        <TableCell className='text-right'>{data.rajalTahun}</TableCell>
+                                        <TableCell className='text-right'>{data.daruratTahun}</TableCell>
+                                        <TableCell className='text-right'>{data.ranapTahun}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -59,7 +52,7 @@ export default function RujukanBulanan({ rujukanBulanan }) {
                             )}
                         </tbody>
                     </Table>
-                    <Pagination links={rujukanBulanan.links} />
+                    <Pagination links={kunjunganTahunan.links} />
                 </div>
             </div>
         </div>

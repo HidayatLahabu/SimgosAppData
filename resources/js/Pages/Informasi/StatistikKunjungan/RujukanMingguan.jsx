@@ -6,8 +6,8 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function RujukanMingguanTable({ rujukanMingguan }) {
-    const [kunjunganMingguanLinks, setRujukanMingguanLinks] = useState(rujukanMingguan.linksRujukanMingguan);
+export default function RujukanMingguan({ rujukanMingguan }) {
+    const [rujukanMingguanLinks, setRujukanMingguanLinks] = useState(rujukanMingguan?.linksRujukanMingguan || []);
 
     const handleRujukanMingguanChange = (newLinks) => {
         setRujukanMingguanLinks(newLinks);
@@ -49,7 +49,7 @@ export default function RujukanMingguanTable({ rujukanMingguan }) {
                         </tbody>
                     </Table>
                     <Pagination
-                        links={kunjunganMingguanLinks}
+                        links={rujukanMingguanLinks}
                         onPageChange={handleRujukanMingguanChange}
                     />
                 </div>

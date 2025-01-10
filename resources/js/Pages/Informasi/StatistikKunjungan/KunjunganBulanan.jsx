@@ -6,7 +6,7 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function MonthlyKunjunganTable({ kunjunganBulanan }) {
+export default function KunjunganBulanan({ kunjunganBulanan }) {
 
     const headers = [
         { name: "TAHUN", className: "w-[7%]" },

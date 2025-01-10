@@ -7,9 +7,9 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatDate } from '@/utils/formatDate';
 
-export default function RujukanTable({ tableRujukan }) {
+export default function Rujukan({ rujukan }) {
     // State to track the current pagination links for each table
-    const [rujukanLinks, setRujukanLinks] = useState(tableRujukan.linksRujukan);
+    const [rujukanLinks, setRujukanLinks] = useState(rujukan.linksRujukan);
 
     const handleRujukanPageChange = (newLinks) => {
         setRujukanLinks(newLinks);
@@ -33,8 +33,8 @@ export default function RujukanTable({ tableRujukan }) {
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(tableRujukan?.dataRujukan) && tableRujukan.dataRujukan.length > 0 ? (
-                                tableRujukan.dataRujukan.map((data, index) => (
+                            {Array.isArray(rujukan?.dataRujukan) && rujukan.dataRujukan.length > 0 ? (
+                                rujukan.dataRujukan.map((data, index) => (
                                     <TableRow key={data.tanggal} isEven={index % 2 === 0}>
                                         <TableCell>{formatDate(data.tanggal)}</TableCell>
                                         <TableCell className='text-right'>{data.masuk}</TableCell>

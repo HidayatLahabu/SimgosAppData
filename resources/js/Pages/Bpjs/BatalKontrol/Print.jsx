@@ -18,7 +18,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    RENCANA KONTROL
+                                    BATAL KONTROL
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()

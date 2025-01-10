@@ -6,8 +6,8 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function KunjunganMingguanTable({ kunjunganMingguan }) {
-    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan);
+export default function KunjunganMingguan({ kunjunganMingguan }) {
+    const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan || []);
 
     const handleKunjunganMingguanChange = (newLinks) => {
         setKunjunganMingguanLinks(newLinks);
