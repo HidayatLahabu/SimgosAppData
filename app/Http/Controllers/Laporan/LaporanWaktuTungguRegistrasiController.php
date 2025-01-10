@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Laporan;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class LaporanWaktuTungguRegistrasiController extends Controller
@@ -11,7 +14,6 @@ class LaporanWaktuTungguRegistrasiController extends Controller
     public function index(Request $request)
     {
         // Get filter parameters from request
-        // $searchTerm = $request->input('search');
         $searchTerm = request('search') ? strtolower(request('search')) : null;
         $ruangan = '1021101';
         $cara_bayar = 0;
@@ -24,10 +26,34 @@ class LaporanWaktuTungguRegistrasiController extends Controller
         $averageWaitData = $this->getRataRata($ruangan, $cara_bayar, $perPage, $searchTerm);
 
         $ruangan = MasterRuanganModel::where('JENIS', 5)
-            ->whereIn('JENIS_KUNJUNGAN', [1, 2, 3, 4, 5])
+            ->whereIn('JENIS_KUNJUNGAN', [1])
             ->where('STATUS', 1)
             ->orderBy('DESKRIPSI')
             ->get();
+
+        $dokter = DB::connection('mysql2')->table('master.dokter as dokter')
+            ->select([
+                'dokter.ID',
+                'dokter.NIP',
+                DB::raw('CONCAT(
+                    IFNULL(pegawai.GELAR_DEPAN, ""), " ",
+                    pegawai.NAMA, " ",
+                    IFNULL(pegawai.GELAR_BELAKANG, "")
+                ) as DOKTER'),
+                'ruangan.DESKRIPSI as RUANGAN',
+            ])
+            ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
+            ->leftJoin('master.dokter_ruangan as dpjpRuangan', 'dokter.ID', '=', 'dpjpRuangan.DOKTER')
+            ->leftJoin('master.ruangan as ruangan', 'dpjpRuangan.RUANGAN', '=', 'ruangan.ID')
+            ->where('dokter.STATUS', 1)
+            ->whereNotNull('pegawai.NAMA')
+            ->where('ruangan.JENIS_KUNJUNGAN', 1)
+            ->where('ruangan.STATUS', 1)
+            ->where('ruangan.JENIS', 5)
+            ->where('ruangan.DESKRIPSI', 'NOT LIKE', '%Umum%')
+            ->get();
+
+        //dd($dokter);
 
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
@@ -37,6 +63,8 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             ],
             'queryParams' => $request->all(),
             'averageWaitData' => $averageWaitData,
+            'ruangan' => $ruangan,
+            'dokter' =>  $dokter,
         ]);
     }
 
@@ -152,5 +180,87 @@ class LaporanWaktuTungguRegistrasiController extends Controller
 
         // Return paginated data
         return $data;
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan'  => 'nullable|integer',
+            'dokter' => 'nullable|integer',
+            'dari_tanggal'   => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan  = $request->input('ruangan');
+        $dokter = $request->input('dokter');
+        $dariTanggal    = $request->input('dari_tanggal');
+        $sampaiTanggal  = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variable default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaDokter = 'Semua Dokter';
+
+        // Query utama
+        $vRuangan = $ruangan . '%';
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+            ->select([
+                'p.NORM as NORM',
+                DB::raw("CONCAT(master.getNamaLengkap(p.NORM)) as NAMALENGKAP"),
+                'pd.NOMOR as NOPEN',
+                'r.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
+                DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
+                DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
+                DB::raw("DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s') as SELISIH"),
+            ])
+            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
+            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
+            ->join('pendaftaran.kunjungan as tk', function ($join) {
+                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
+                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            })
+            ->join('master.ruangan as r', function ($join) {
+                $join->on('tp.RUANGAN', '=', 'r.ID')
+                    ->where('r.JENIS', '=', 5);
+            })
+            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
+            ->whereIn('pd.STATUS', [1])
+            ->whereNull('tk.REF')
+            ->whereIn('tk.STATUS', [1, 2]);
+
+        // Apply 'cara_bayar' filter if provided
+        if ($ruangan) {
+            $query->where('tp.RUANGAN', 'LIKE', $vRuangan);
+        }
+
+        if ($dokter) {
+            $query->where('dok.NIP', $dokter);
+        }
+
+        $cara_bayar = 0;
+        // Apply 'cara_bayar' filter if provided
+        if ($cara_bayar != 0) {
+            $query->where('pj.JENIS', '=', $cara_bayar);
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query
+            ->whereBetween('pd.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Laporan/WaktuTunggu/Print", [
+            'data'              => $data,
+            'dariTanggal'       => $dariTanggal,
+            'sampaiTanggal'     => $sampaiTanggal,
+            'namaRuangan'       => $namaRuangan,
+            'namaDokter'    => $namaDokter,
+        ]);
     }
 }

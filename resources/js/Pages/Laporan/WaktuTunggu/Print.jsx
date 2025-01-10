@@ -30,12 +30,14 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                     <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[10%]">NORM</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">NOMOR KONTROL</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">TANGGAL KONTROL</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">RUANGAN TUJUAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">JADWAL DOKTER</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">PENDAFTARAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">RUANGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">DPJP</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">TANGGAL REGISTRASI</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">TANGGAL DITERIMA</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">WAKTU TUNGGU</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,22 +45,28 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                             <tr key={item.noSurat} className="border-b bg-white dark:border-gray-500">
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.norm}
+                                                    {item.NORM}
                                                 </td>
                                                 <td className="px-3 py-2 border border-gray-500 border-solid">
-                                                    {item.namaPasien || item.pasienNama}
+                                                    {item.NAMALENGKAP}
                                                 </td>
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.noSurat}
+                                                    {item.NOPEN}
                                                 </td>
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.tglRencanaKontrol}
+                                                    {item.UNITPELAYANAN}
                                                 </td>
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.ruangan}
+                                                    {item.DOKTER_REG}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                    {item.namaDokter}
+                                                    {item.TGLREG}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    {item.TGLTERIMA}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    {item.SELISIH}
                                                 </td>
                                             </tr>
                                         ))}

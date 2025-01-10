@@ -278,8 +278,7 @@ class RadiologiController extends Controller
         // Filter berdasarkan jenis penjamin
         if ($jenisPenjamin == 1) {
             $query->leftJoin('pendaftaran.penjamin as jenisPenjamin', 'jenisPenjamin.NOPEN', '=', 'kunjungan.NOPEN')
-                ->where('jenisPenjamin.JENIS', 1)
-                ->where('jenisPenjamin.NOMOR', ''); // Pasien Non BPJS
+                ->where('jenisPenjamin.JENIS', '!=', 2); // Pasien Non BPJS
             $penjamin = 'Non BPJS KESEHATAN';
 
             if ($jenisKunjungan == 1) {

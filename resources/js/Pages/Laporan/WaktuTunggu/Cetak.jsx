@@ -4,7 +4,10 @@ import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
 import SelectTwoInput from "@/Components/SelectTwoInput";
 
-export default function Cetak() {
+export default function Cetak({
+    ruangan,
+    dokter,
+}) {
 
     const { data, setData } = useForm({
         dari_tanggal: '',
@@ -71,18 +74,18 @@ export default function Cetak() {
                                 />
                             </div>
                             <div className="flex-1">
-                                <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
+                                <InputLabel htmlFor="dokter" value="Dokter Penanggungjawab" />
                                 <SelectTwoInput
-                                    id="ruangan"
-                                    name="ruangan"
+                                    id="dokter"
+                                    name="dokter"
                                     className="mt-1 block w-full"
-                                    placeholder="Pilih Ruangan"
-                                    options={Array.isArray(ruangan) ?
-                                        ruangan.map((item) => ({
-                                            value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
+                                    placeholder="Pilih Dokter Penanggungjawab"
+                                    options={Array.isArray(dokter) ?
+                                        dokter.map((item) => ({
+                                            value: item.NIP,
+                                            label: item.NIP + '. ' + item.DOKTER,
                                         })) : []}
-                                    onChange={onRuanganChange}
+                                    onChange={onDokterChange}
                                     isClearable={true}
                                 />
                             </div>

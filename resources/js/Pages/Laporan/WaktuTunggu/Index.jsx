@@ -5,7 +5,14 @@ import Harian from './Harian';
 import Ratarata from './Ratarata';
 import Cetak from './Cetak';
 
-export default function Index({ auth, dataTable, queryParams = {}, averageWaitData }) {
+export default function Index({
+    auth,
+    dataTable,
+    queryParams = {},
+    averageWaitData,
+    ruangan,
+    dokter,
+}) {
 
 
     return (
@@ -26,6 +33,8 @@ export default function Index({ auth, dataTable, queryParams = {}, averageWaitDa
 
             <div className="w-full">
                 <Cetak
+                    ruangan={ruangan}
+                    dokter={dokter}
                 />
             </div>
 
