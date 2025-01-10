@@ -23,6 +23,12 @@ class LaporanWaktuTungguRegistrasiController extends Controller
 
         $averageWaitData = $this->getRataRata($ruangan, $cara_bayar, $perPage, $searchTerm);
 
+        $ruangan = MasterRuanganModel::where('JENIS', 5)
+            ->whereIn('JENIS_KUNJUNGAN', [1, 2, 3, 4, 5])
+            ->where('STATUS', 1)
+            ->orderBy('DESKRIPSI')
+            ->get();
+
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
             'dataTable' => [

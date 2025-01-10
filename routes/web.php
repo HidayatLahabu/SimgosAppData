@@ -519,7 +519,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/laporanRl12-print', [LaporanRl12Controller::class, 'print'])->name('laporanRl12.print');
         Route::get('laporanRl31', [LaporanRl31Controller::class, 'index'])->name('laporanRl31.index');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
-        Route::get('laporanWaktuTungguRajal', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTungguRajal.index');
+        Route::get('laporanWaktuTunggu', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTunggu.index');
+        Route::get('/laporanWaktuTunggu-print', [LaporanWaktuTungguRegistrasiController::class, 'print'])->name('laporanWaktuTunggu.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

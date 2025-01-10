@@ -68,7 +68,10 @@ export default function Cetak({ ruangan = [] }) {
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
-                                <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
+                                <InputLabel
+                                    htmlFor="ruangan"
+                                    value="Ruangan Tujuan"
+                                />
                                 <SelectTwoInput
                                     id="ruangan"
                                     name="ruangan"
@@ -84,7 +87,9 @@ export default function Cetak({ ruangan = [] }) {
                                 />
                             </div>
                             <div className="flex-1">
-                                <InputLabel htmlFor="statusKonsul" value="Status Konsul" />
+                                <InputLabel
+                                    htmlFor="statusKonsul"
+                                    value="Status Konsul" />
                                 <SelectTwoInput
                                     id="statusKonsul"
                                     name="statusKonsul"

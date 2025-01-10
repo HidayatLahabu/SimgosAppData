@@ -60,8 +60,8 @@ export default function Cetak() {
                                     value="Jenis Penjamin"
                                 />
                                 <SelectTwoInput
-                                    id="jenisPasien"
-                                    name="jenisPasien"
+                                    id="jenisPenjamin"
+                                    name="jenisPenjamin"
                                     className="mt-1 block w-full"
                                     placeholder="Pilih Jenis Penjamin"
                                     onChange={onJenisPenjaminChange}

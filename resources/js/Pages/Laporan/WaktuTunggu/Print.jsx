@@ -10,7 +10,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
 
     return (
         <div className="h-screen w-screen bg-white">
-            <Head title="BPJS" />
+            <Head title="Laporan" />
 
             <div className="content">
                 <div className="w-full mx-auto sm:px-6 lg:px-5">
@@ -18,7 +18,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    RENCANA KONTROL
+                                    LAPORAN WAKTU TUNGGU
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -52,10 +52,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                                     {item.noSurat}
                                                 </td>
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.tanggal}
+                                                    {item.tglRencanaKontrol}
                                                 </td>
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                    {item.poliTujuan}
+                                                    {item.ruangan}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.namaDokter}

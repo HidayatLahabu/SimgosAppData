@@ -10,7 +10,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, }) {
 
     return (
         <div className="h-screen w-screen bg-white">
-            <Head title="Layanan" />
+            <Head title="BPJS" />
 
             <div className="content">
                 <div className="w-full mx-auto sm:px-6 lg:px-5">

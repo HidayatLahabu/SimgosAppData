@@ -33,21 +33,19 @@ class RadiologiController extends Controller
             });
         }
 
-        // Group by 'nomor' and select the first occurrence for other fields
         $query->selectRaw('
             orderRad.NOMOR as nomor,
-            MIN(orderRad.TANGGAL) as tanggal,
-            MIN(orderRad.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(kunjungan.STATUS) as statusKunjungan,
-            MIN(orderRad.STATUS) as statusOrder,
-            MIN(hasilRad.STATUS) as statusHasil
-        ')
-            ->groupBy('orderRad.NOMOR');
+            orderRad.TANGGAL as tanggal,
+            orderRad.KUNJUNGAN as kunjungan,
+            pegawai.NAMA as dokter,
+            pegawai.GELAR_DEPAN as gelarDepan,
+            pegawai.GELAR_BELAKANG as gelarBelakang,
+            pasien.NORM as norm,
+            pasien.NAMA as nama,
+            kunjungan.STATUS as statusKunjungan,
+            orderRad.STATUS as statusOrder,
+            hasilRad.STATUS as statusHasil
+        ');
 
         // Paginate the results
         $data = $query->orderByDesc('orderRad.TANGGAL')->paginate(5)->appends(request()->query());
@@ -116,20 +114,20 @@ class RadiologiController extends Controller
 
         // Membangun query data dengan grouping dan seleksi
         $dataQuery = clone $baseQuery;
-        $dataQuery->selectRaw('
+        $dataQuery
+            ->selectRaw('
             orderRad.NOMOR as nomor,
-            MIN(orderRad.TANGGAL) as tanggal,
-            MIN(orderRad.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(kunjungan.STATUS) as statusKunjungan,
-            MIN(orderRad.STATUS) as statusOrder,
-            MIN(hasil.STATUS) as statusHasil
-        ')
-            ->groupBy('orderRad.NOMOR');
+            orderRad.TANGGAL as tanggal,
+            orderRad.KUNJUNGAN as kunjungan,
+            pegawai.NAMA as dokter,
+            pegawai.GELAR_DEPAN as gelarDepan,
+            pegawai.GELAR_BELAKANG as gelarBelakang,
+            pasien.NORM as norm,
+            pasien.NAMA as nama,
+            kunjungan.STATUS as statusKunjungan,
+            orderRad.STATUS as statusOrder,
+            hasil.STATUS as statusHasil
+        ');
 
         // Membangun query count
         $count = $baseQuery->distinct('orderRad.NOMOR')->count('orderRad.NOMOR');

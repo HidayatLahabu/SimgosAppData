@@ -27,7 +27,10 @@ export default function NavigationLaporan() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('laporanRl12.index');
+        return route().current('laporanRl12.index') ||
+            route().current('laporanRl31.index') ||
+            route().current('laporanRl51.index') ||
+            route().current('laporanWaktuTunggu.index');
     };
 
     return (
@@ -63,8 +66,8 @@ export default function NavigationLaporan() {
                         Laporan RL 5.1
                     </NavLink>
                     <NavLink
-                        href={route('laporanWaktuTungguRajal.index')}
-                        active={route().current('laporanWaktuTungguRajal.index')}
+                        href={route('laporanWaktuTunggu.index')}
+                        active={route().current('laporanWaktuTunggu.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Waktu Tunggu

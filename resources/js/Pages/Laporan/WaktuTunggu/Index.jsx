@@ -3,6 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Harian from './Harian';
 import Ratarata from './Ratarata';
+import Cetak from './Cetak';
 
 export default function Index({ auth, dataTable, queryParams = {}, averageWaitData }) {
 
@@ -22,6 +23,11 @@ export default function Index({ auth, dataTable, queryParams = {}, averageWaitDa
                 averageWaitData={averageWaitData}
                 queryParams={queryParams}
             />
+
+            <div className="w-full">
+                <Cetak
+                />
+            </div>
 
         </AuthenticatedLayout>
     );
