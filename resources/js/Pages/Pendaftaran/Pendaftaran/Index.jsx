@@ -127,7 +127,18 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                         )}
                                     </tbody>
                                 </Table>
-                                <Pagination links={dataTable.links} />
+                                {/* <Pagination links={dataTable.links} /> */}
+                                <Pagination
+                                    links={dataTable.links}
+                                    onPageChange={(url) => {
+                                        // Gunakan router untuk mengambil data baru
+                                        router.get(url, {}, {
+                                            preserveState: true,
+                                            preserveScroll: true,
+                                        });
+                                    }}
+                                />
+
                             </div>
                         </div>
                     </div>
