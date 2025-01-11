@@ -169,9 +169,13 @@ class MonitoringRekonController extends Controller
                 'monitoring.nama as namaPasien',
                 'monitoring.namaPoliAsal',
                 'monitoring.namaDokter',
+                'peserta.noKartu',
+                'peserta.norm'
             )
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'monitoring.poliTujuan')
+            ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'monitoring.noKartu')
             ->whereBetween('monitoring.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
+            ->where('monitoring.jnsKontrol', 2)
             ->orderBy('monitoring.tglRencanaKontrol')
             ->orderBy('monitoring.nama')
             ->get();

@@ -158,7 +158,7 @@ class BatalControlController extends Controller
                 'peserta.nama as namaPasien',
                 'pasien.NORM as norm',
                 'poli.nama as ruangan',
-                'dpjp.nama as namaDokter'
+                'dpjp.nama as namaDokter',
             )
             ->leftJoin('monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
             ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')

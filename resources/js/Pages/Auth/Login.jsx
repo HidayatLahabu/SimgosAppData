@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { Head, useForm } from '@inertiajs/react';
+import { Link, Head, useForm } from '@inertiajs/react';
 
 export default function Login({ status }) {
 
@@ -66,6 +66,12 @@ export default function Login({ status }) {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
+                    <Link
+                        href={route('register')}
+                        className="text-sm text-gray-200 dark:text-red-400 hover:text-gray-500 dark:hover:text-red-600 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                    >
+                        Belum terdaftar, Register disini?
+                    </Link>
                     <PrimaryButton className="ms-4" disabled={processing}>
                         Login
                     </PrimaryButton>

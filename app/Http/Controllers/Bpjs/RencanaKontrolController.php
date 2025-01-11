@@ -196,6 +196,8 @@ class RencanaKontrolController extends Controller
                 'poli.nama as poliTujuan',
                 'dpjp.nama as namaDokter',
                 'pasienBpjs.nama as pasienNama',
+                'monitor.noSuratKontrol as kunjungan',
+                'kunjungan.noKartu',
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
@@ -203,16 +205,9 @@ class RencanaKontrolController extends Controller
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
             ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
+            ->leftJoin('bpjs.monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
             ->whereBetween('rekon.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
-            ->groupBy(
-                'rekon.noSurat',
-                'pasien.NORM',
-                'peserta.nama',
-                'rekon.tglRencanaKontrol',
-                'poli.nama',
-                'dpjp.nama',
-                'pasienBpjs.nama'
-            )
+            ->where('rekon.jnsKontrol', 2)
             ->orderBy('peserta.nama')
             ->orderBy('pasienBpjs.nama')
             ->get();
