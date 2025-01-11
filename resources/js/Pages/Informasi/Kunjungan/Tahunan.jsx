@@ -6,31 +6,24 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function Bulanan({ bulanan }) {
+export default function Tahunan({ tahunan }) {
 
     const headers = [
         { name: "TAHUN", className: "w-[9%]" },
-        { name: "BULAN" },
         { name: "JENIS KUNJUNGAN" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
         { name: "LAST UPDATED" },
     ];
 
-    // Array nama bulan
-    const bulanNames = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-
     return (
         <div className="py-5">
-            <div className="max-w-8xl mx-auto sm:pl-5 sm:pr-2 lg:pl-5 pr-2">
+            <div className="max-w-8xl mx-auto sm:pl-2 sm:pr-5 lg:pl-2 lg:pr-5">
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">
-                                Kunjungan Rawat Jalan Bulanan
+                                Kunjungan Rawat Jalan Tahunan
                             </h1>
 
                             <Table>
@@ -44,11 +37,10 @@ export default function Bulanan({ bulanan }) {
                                     </tr>
                                 </TableHeader>
                                 <tbody>
-                                    {bulanan.data.length > 0 ? (
-                                        bulanan.data.map((data, index) => (
+                                    {tahunan.data.length > 0 ? (
+                                        tahunan.data.map((data, index) => (
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{data.tahun}</TableCell>
-                                                <TableCell>{bulanNames[data.bulan - 1]}</TableCell>
                                                 <TableCell>{data.jenisKunjungan}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
                                                 <TableCell className='text-right'>{data.jumlah}</TableCell>
@@ -62,7 +54,7 @@ export default function Bulanan({ bulanan }) {
                                     )}
                                 </tbody>
                             </Table>
-                            <Pagination links={bulanan.links} />
+                            <Pagination links={tahunan.links} />
                         </div>
                     </div>
                 </div>

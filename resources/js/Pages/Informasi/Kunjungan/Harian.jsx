@@ -13,12 +13,10 @@ export default function Harian({ harian, queryParams = {} }) {
 
     const headers = [
         { name: "TANGGAL", className: "w-[9%]" },
-        { name: "JENIS KUNJUNGAN", className: "w-[14%]" },
-        { name: "INSTALASI" },
-        { name: "UNIT", className: "w-[14%]" },
+        { name: "JENIS KUNJUNGAN" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
-        { name: "LAST UPDATED", className: "w-[12%]" },
+        { name: "LAST UPDATED" },
     ];
 
     // Function to handle search input changes
@@ -50,7 +48,7 @@ export default function Harian({ harian, queryParams = {} }) {
 
     return (
         <div className="py-5">
-            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
+            <div className="max-w-8xl mx-auto sm:pl-5 sm:pr-2 lg:pl-5 pr-2">
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
@@ -59,21 +57,7 @@ export default function Harian({ harian, queryParams = {} }) {
                             </h1>
 
                             <Table>
-                                <TableHeader>
-                                    <tr>
-                                        <th colSpan={8} className="px-3 py-2">
-                                            <div className="flex items-center space-x-2">
-                                                <TextInput
-                                                    className="flex-1"
-                                                    defaultValue={queryParams.search || ''}
-                                                    placeholder="Cari data berdasarkan sub unit"
-                                                    onChange={e => onInputChange('search', e)}
-                                                    onKeyPress={e => onKeyPress('search', e)}
-                                                />
-                                            </div>
-                                        </th>
-                                    </tr>
-                                </TableHeader>
+
                                 <TableHeader>
                                     <tr>
                                         {headers.map((header, index) => (
@@ -89,8 +73,6 @@ export default function Harian({ harian, queryParams = {} }) {
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{formatDate(data.tanggal)}</TableCell>
                                                 <TableCell>{data.jenisKunjungan}</TableCell>
-                                                <TableCell>{data.instalasi}</TableCell>
-                                                <TableCell>{data.unit}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
                                                 <TableCell className='text-right'>{data.jumlah}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>

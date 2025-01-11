@@ -30,7 +30,7 @@ export default function ResponsiveNavInformasi() {
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
                             <ResponsiveNavLink href={route('statistikKunjungan.index')}>Statistik</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('informasiKunjungan.index')}>Kunjungan Rawat Jalan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('informasiKunjungan.index')}>Rawat Jalan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('informasiPengunjung.index')}>Pengunjung</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('informasiPenunjang.index')}>Penunjang</ResponsiveNavLink>
                         </div>

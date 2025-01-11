@@ -11,17 +11,15 @@ export default function Mingguan({ mingguan }) {
     const headers = [
         { name: "TAHUN", className: "w-[9%]" },
         { name: "MINGGU KE", className: "w-[10%]" },
-        { name: "JENIS KUNJUNGAN", className: "w-[14%]" },
-        { name: "INSTALASI" },
-        { name: "UNIT", className: "w-[10%]" },
+        { name: "JENIS KUNJUNGAN" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
-        { name: "LAST UPDATED", className: "w-[12%]" },
+        { name: "LAST UPDATED" },
     ];
 
     return (
         <div className="py-5">
-            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
+            <div className="max-w-8xl mx-auto sm:pl-2 sm:pr-5 lg:pl-2 lg:pr-5">
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
@@ -46,8 +44,6 @@ export default function Mingguan({ mingguan }) {
                                                 <TableCell>{data.tahun}</TableCell>
                                                 <TableCell>{data.minggu}</TableCell>
                                                 <TableCell>{data.jenisKunjungan}</TableCell>
-                                                <TableCell>{data.instalasi}</TableCell>
-                                                <TableCell>{data.unit}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
                                                 <TableCell className='text-right'>{data.jumlah}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>

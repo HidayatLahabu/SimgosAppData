@@ -4,8 +4,6 @@ import { formatDate } from '@/utils/formatDate';
 export default function PrintHarian({
     kunjunganHarian,
     rujukanHarian,
-    dariTanggal,
-    sampaiTanggal
 }) {
 
     return (

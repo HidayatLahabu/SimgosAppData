@@ -11,22 +11,22 @@ class InformasiPengunjungController extends Controller
     public function index()
     {
         $queryPengunjung = $this->getRajal();
-        $dataPengunjung = $queryPengunjung->orderByDesc('pengunjung.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataPengunjung = $queryPengunjung->orderByDesc('pengunjung.TANGGAL')->paginate(5)->appends(request()->query());
         $dataPengunjung = $dataPengunjung->toArray();
 
         $queryRanap = $this->getRanap();
-        $dataRanap = $queryRanap->orderByDesc('pasienRanap.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataRanap = $queryRanap->orderByDesc('pasienRanap.TANGGAL')->paginate(5)->appends(request()->query());
         $dataRanap = $dataRanap->toArray();
 
         $rajalMingguan = $this->getWeeklyRajal();
-        $dataRajalMingguan = $rajalMingguan->paginate(4)->appends(request()->query());
+        $dataRajalMingguan = $rajalMingguan->paginate(5)->appends(request()->query());
         $dataRajalMingguan = $dataRajalMingguan->toArray();
 
         $ranapMingguan = $this->getWeeklyRanap();
-        $dataRanapMingguan = $ranapMingguan->paginate(4)->appends(request()->query());
+        $dataRanapMingguan = $ranapMingguan->paginate(5)->appends(request()->query());
         $dataRanapMingguan = $dataRanapMingguan->toArray();
 
-        $perPage = 12; // Items per page
+        $perPage = 5; // Items per page
         $rajalBulanan = $this->getMonthlyRajal($perPage);
         $ranapBulanan = $this->getMonthlyRanap($perPage);
 

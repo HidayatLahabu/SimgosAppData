@@ -527,6 +527,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('statistikKunjungan', [StatistikKunjunganController::class, 'index'])->name('statistikKunjungan.index');
         Route::get('/statistikKunjungan-print', [StatistikKunjunganController::class, 'print'])->name('statistikKunjungan.print');
         Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
+        Route::get('/kunjungan-print', [InformasiKunjunganController::class, 'print'])->name('informasiKunjungan.print');
         Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
         Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
     });
