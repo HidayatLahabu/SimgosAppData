@@ -2,7 +2,14 @@ import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
 
-export default function Print({ data, dariTanggal, sampaiTanggal, namaRuangan, namaStatusKunjungan, jenisPasien }) {
+export default function Print({
+    data,
+    dariTanggal,
+    sampaiTanggal,
+    namaRuangan,
+    namaStatusKunjungan,
+    jenisPasien
+}) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');

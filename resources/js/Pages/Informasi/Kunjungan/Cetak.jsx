@@ -28,7 +28,11 @@ export default function Cetak({
     }, []);
 
     const onRuanganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onSubmit = (e) => {

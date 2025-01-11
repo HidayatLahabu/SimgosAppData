@@ -163,7 +163,7 @@ class KunjunganController extends Controller
         // Validasi input
         $request->validate([
             'ruangan' => 'nullable|string',
-            'statusKunjungan' => 'nullable|integer|in:0,1,2',
+            'statusKunjungan' => 'nullable|integer|in:1,2,3',
             'pasien' => 'nullable|integer|in:1,2',
             'dari_tanggal' => 'required|date',
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
@@ -209,18 +209,18 @@ class KunjunganController extends Controller
                 ->value('DESKRIPSI');
         }
 
-        // Filter berdasarkan jenis kunjungan
-        if ($statusKunjungan === null) {
+        //Filter berdasarkan jenis kunjungan
+        if ($statusKunjungan == null) {
             $query->whereIn('kunjungan.STATUS', [0, 1, 2]);
         } elseif ($statusKunjungan == 1) {
-            $query->where('kunjungan.STATUS', 1); // Sedang Dilayani
-            $namaStatusKunjungan = 'Sedang Dilayani';
-        } elseif ($statusKunjungan == 2) {
-            $query->where('kunjungan.STATUS', 2); // Selesai
-            $namaStatusKunjungan = 'Selesai';
-        } else {
             $query->where('kunjungan.STATUS', 0); // Batal Kunjungan
             $namaStatusKunjungan = 'Batal Kunjungan';
+        } elseif ($statusKunjungan == 2) {
+            $query->where('kunjungan.STATUS', 1); // Sedang Dilayani
+            $namaStatusKunjungan = 'Sedang Dilayani';
+        } elseif ($statusKunjungan == 3) {
+            $query->where('kunjungan.STATUS', 2); // Selesai
+            $namaStatusKunjungan = 'Selesai';
         }
 
         // Filter berdasarkan pasien baru atau lama
@@ -592,7 +592,6 @@ class KunjunganController extends Controller
 
     public function getHasilRad($id)
     {
-        // Fetch data utama (main lab order details)
         // Fetch data hasil lab (lab test results)
         $queryHasil = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
             ->select(

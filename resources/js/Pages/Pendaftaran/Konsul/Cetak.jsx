@@ -37,11 +37,19 @@ export default function Cetak({ ruangan = [] }) {
     };
 
     const onRuanganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const handleStatusChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, statusKonsul: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, statusKonsul: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, statusKonsul: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onSubmit = (e) => {

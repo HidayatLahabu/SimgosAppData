@@ -38,15 +38,27 @@ export default function Cetak({ ruangan = [] }) {
     };
 
     const onRuanganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const handleStatusChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, statusKunjungan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, statusKunjungan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, statusKunjungan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const handlePasienChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, pasien: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, pasien: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, pasien: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onSubmit = (e) => {
@@ -97,11 +109,12 @@ export default function Cetak({ ruangan = [] }) {
                                     placeholder="Pilih Status Aktifitas Kunjungan"
                                     onChange={handleStatusChange}
                                     options={[
-                                        { value: 0, label: 'Batal Kunjungan' },
-                                        { value: 1, label: 'Sedang Dilayani' },
-                                        { value: 2, label: 'Selesai' },
+                                        { value: 1, label: 'Batal Kunjungan' },
+                                        { value: 2, label: 'Sedang Dilayani' },
+                                        { value: 3, label: 'Selesai' },
                                     ]}
                                 />
+
                             </div>
                             <div className="flex-1">
                                 <InputLabel htmlFor="pasien" value="Status Kunjungan" />

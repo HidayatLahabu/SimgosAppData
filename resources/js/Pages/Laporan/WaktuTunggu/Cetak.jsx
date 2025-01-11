@@ -29,11 +29,19 @@ export default function Cetak({
     }, []);
 
     const onRuanganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onDokterChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, dokter: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onSubmit = (e) => {
@@ -70,7 +78,6 @@ export default function Cetak({
                                             label: item.ID + '. ' + item.DESKRIPSI,
                                         })) : []}
                                     onChange={onRuanganChange}
-                                    isClearable={true}
                                 />
                             </div>
                             <div className="flex-1">
@@ -86,7 +93,6 @@ export default function Cetak({
                                             label: item.NIP + '. ' + item.DOKTER,
                                         })) : []}
                                     onChange={onDokterChange}
-                                    isClearable={true}
                                 />
                             </div>
                         </div>

@@ -45,6 +45,7 @@ export default function SelectInput({ className = '', options = [], ...props }) 
             menuPlacement="auto"
             menuPortalTarget={document.body}
             menuPosition="fixed"
+            isClearable={true}
         />
     );
 }

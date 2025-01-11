@@ -26,11 +26,19 @@ export default function Cetak() {
     }, []);
 
     const onJenisPenjaminChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, jenisPenjamin: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onJenisKunjunganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, jenisKunjungan: '' }));  // Atau handling sesuai kebutuhan
+        }
     };
 
     const onSubmit = (e) => {

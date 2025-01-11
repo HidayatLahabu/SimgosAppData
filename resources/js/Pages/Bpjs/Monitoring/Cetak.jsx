@@ -24,14 +24,6 @@ export default function Cetak() {
         }));
     }, []);
 
-    const onJenisPenjaminChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisPenjamin: selectedOption.value }));
-    };
-
-    const onJenisKunjunganChange = (selectedOption) => {
-        setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
-    };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
