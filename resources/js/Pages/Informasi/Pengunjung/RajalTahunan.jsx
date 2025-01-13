@@ -5,42 +5,42 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import { formatDate } from '@/utils/formatDate';
 
-export default function RajalTable({ tablePengunjung }) {
-    // State to track the current pagination links for each table
-    const [pengunjungLinks, setPengunjungLinks] = useState(tablePengunjung.linksPengunjung);
+export default function RajalTahunan({ rajalTahunan }) {
 
-    const handlePengunjungPageChange = (newLinks) => {
-        setPengunjungLinks(newLinks);
-    };
+    const headers = [
+        { name: "TAHUN", className: "w-[10%]" },
+        { name: "RAWAT JALAN", className: "text-right" },
+        { name: "RAWAT DARURAT", className: "text-right" },
+        { name: "JUMLAH", className: "text-right" },
+    ];
 
     return (
         <div className="max-w-full mx-auto w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Pengunjung Rawat Jalan & Darurat Harian
+                        Pengunjung Rawat Jalan & Darurat Tahunan
                     </h1>
+
                     <Table>
                         <TableHeader>
                             <tr>
-                                <TableHeaderCell className='text-nowrap'>TANGGAL</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT JALAN</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>RAWAT DARURAT</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>JUMLAH</TableHeaderCell>
-                                <TableHeaderCell className='w-[13%]'>LAST UPDATED</TableHeaderCell>
+                                {headers.map((header, index) => (
+                                    <TableHeaderCell key={index} className={header.className || ""}>
+                                        {header.name}
+                                    </TableHeaderCell>
+                                ))}
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(tablePengunjung?.dataPengunjung) && tablePengunjung.dataPengunjung.length > 0 ? (
-                                tablePengunjung.dataPengunjung.map((data, index) => (
-                                    <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
-                                        <TableCell>{formatDate(data.tanggal)}</TableCell>
+                            {rajalTahunan.data.length > 0 ? (
+                                rajalTahunan.data.map((data, index) => (
+                                    <TableRow key={data.bulan} isEven={index % 2 === 0}>
+                                        <TableCell>{data.tahun}</TableCell>
                                         <TableCell className='text-right'>{data.rajal}</TableCell>
                                         <TableCell className='text-right'>{data.darurat}</TableCell>
                                         <TableCell className='text-right'>{data.semua}</TableCell>
-                                        <TableCell className='text-nowrap'>{data.lastUpdated}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -50,13 +50,9 @@ export default function RajalTable({ tablePengunjung }) {
                             )}
                         </tbody>
                     </Table>
-                    <Pagination
-                        links={pengunjungLinks}
-                        onPageChange={handlePengunjungPageChange}
-                    />
+                    <Pagination links={rajalTahunan.links} />
                 </div>
             </div>
         </div>
-    )
+    );
 }
-

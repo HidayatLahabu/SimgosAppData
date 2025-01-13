@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function KunjunganBulanan({ kunjunganBulanan }) {
 
@@ -47,9 +48,9 @@ export default function KunjunganBulanan({ kunjunganBulanan }) {
                                     <TableRow key={data.bulan} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{bulanNames[data.bulan - 1]}</TableCell>
-                                        <TableCell className='text-right'>{data.rajal}</TableCell>
-                                        <TableCell className='text-right'>{data.darurat}</TableCell>
-                                        <TableCell className='text-right'>{data.ranap}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.rajal)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.darurat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.ranap)}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (

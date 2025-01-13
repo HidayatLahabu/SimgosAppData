@@ -11,38 +11,36 @@ class StatistikKunjunganController extends Controller
 {
     public function index()
     {
-        $kunjungan = $this->getKunjungan();
-        $dataKunjungan = $kunjungan->orderByDesc('statistikKunjungan.TANGGAL')->paginate(7)->appends(request()->query());
-        $dataKunjungan = $dataKunjungan->toArray();
+        $kunjunganHarian = $this->getKunjunganHarian();
+        $dataKunjunganHarian = $kunjunganHarian->orderByDesc('statistikKunjungan.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataKunjunganHarian = $dataKunjunganHarian->toArray();
 
-        $rujukan = $this->getRujukan();
-        $dataRujukan = $rujukan->orderByDesc('statistikRujukan.TANGGAL')->paginate(7)->appends(request()->query());
-        $dataRujukan = $dataRujukan->toArray();
+        $rujukanHarian = $this->getRujukanHarian();
+        $dataRujukanHarian = $rujukanHarian->orderByDesc('statistikRujukan.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataRujukanHarian = $dataRujukanHarian->toArray();
 
-        $kunjunganMingguan = $this->getWeeklyKunjungan();
+        $kunjunganMingguan = $this->getKunjunganMingguan();
         $dataKunjunganMingguan = $kunjunganMingguan->paginate(4)->appends(request()->query());
         $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
 
-        $rujukanMingguan = $this->getWeeklyRujukan();
+        $rujukanMingguan = $this->getRujukanMingguan();
         $dataRujukanMingguan = $rujukanMingguan->paginate(4)->appends(request()->query());
         $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
         $perPage = 12; // Items per page
-        $kunjunganBulanan = $this->getMonthlyKunjungan($perPage);
-        $rujukanBulanan = $this->getMonthlyRujukan($perPage);
-
-        $perPage = 5; // Items per page
-        $kunjunganTahunan = $this->getYearlyKunjungan($perPage);
-        $rujukanTahunan = $this->getYearlyRujukan($perPage);
+        $kunjunganBulanan = $this->getKunjunganBulanan($perPage);
+        $rujukanBulanan = $this->getRujukanBulanan($perPage);
+        $kunjunganTahunan = $this->getKunjunganTahunan($perPage);
+        $rujukanTahunan = $this->getRujukanTahunan($perPage);
 
         return inertia("Informasi/StatistikKunjungan/Index", [
-            'kunjungan' => [
-                'dataKunjungan' => $dataKunjungan['data'],
-                'linksKunjungan' => $dataKunjungan['links'],
+            'kunjunganHarian' => [
+                'data' => $dataKunjunganHarian['data'],
+                'links' => $dataKunjunganHarian['links'],
             ],
-            'rujukan' => [
-                'dataRujukan' => $dataRujukan['data'],
-                'linksRujukan' => $dataRujukan['links'],
+            'rujukanHarian' => [
+                'data' => $dataRujukanHarian['data'],
+                'links' => $dataRujukanHarian['links'],
             ],
             'kunjunganMingguan' => [
                 'dataKunjunganMingguan' => $dataKunjunganMingguan['data'],
@@ -59,7 +57,7 @@ class StatistikKunjunganController extends Controller
         ]);
     }
 
-    protected function getKunjungan()
+    protected function getKunjunganHarian()
     {
         return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
@@ -75,7 +73,7 @@ class StatistikKunjunganController extends Controller
             ->groupBy('statistikKunjungan.TANGGAL');
     }
 
-    protected function getRujukan()
+    protected function getRujukanHarian()
     {
         return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
             ->select(
@@ -91,15 +89,15 @@ class StatistikKunjunganController extends Controller
             ->groupBy('statistikRujukan.TANGGAL');
     }
 
-    protected function getWeeklyKunjungan()
+    protected function getKunjunganMingguan()
     {
         return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
                 DB::raw('YEAR(statistikKunjungan.TANGGAL) as tahun'),
                 DB::raw('WEEK(statistikKunjungan.TANGGAL, 1) as minggu'),
-                DB::raw('SUM(statistikKunjungan.RJ) as total_rj'),
-                DB::raw('SUM(statistikKunjungan.RD) as total_rd'),
-                DB::raw('SUM(statistikKunjungan.RI) as total_ri')
+                DB::raw('SUM(statistikKunjungan.RJ) as rajal'),
+                DB::raw('SUM(statistikKunjungan.RD) as darurat'),
+                DB::raw('SUM(statistikKunjungan.RI) as ranap')
             )
             ->where(function ($query) {
                 $query->where('statistikKunjungan.RJ', '>', 0)
@@ -114,7 +112,7 @@ class StatistikKunjunganController extends Controller
             ->orderBy('minggu', 'desc');
     }
 
-    protected function getWeeklyRujukan()
+    protected function getRujukanMingguan()
     {
         return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
             ->select(
@@ -137,7 +135,7 @@ class StatistikKunjunganController extends Controller
             ->orderBy('minggu', 'desc');
     }
 
-    protected function getMonthlyKunjungan($perPage)
+    protected function getKunjunganBulanan($perPage)
     {
         return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
@@ -159,7 +157,7 @@ class StatistikKunjunganController extends Controller
             ->paginate($perPage);
     }
 
-    protected function getMonthlyRujukan($perPage)
+    protected function getRujukanBulanan($perPage)
     {
         return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
             ->select(
@@ -178,14 +176,14 @@ class StatistikKunjunganController extends Controller
             ->paginate($perPage);
     }
 
-    protected function getYearlyKunjungan($perPage)
+    protected function getKunjunganTahunan($perPage)
     {
         return DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
-                DB::raw('SUM(statistikKunjungan.RJ) as rajalTahun'),
-                DB::raw('SUM(statistikKunjungan.RD) as daruratTahun'),
-                DB::raw('SUM(statistikKunjungan.RI) as ranapTahun'),
-                DB::raw('YEAR(statistikKunjungan.TANGGAL) as kunjunganTahun')
+                DB::raw('SUM(statistikKunjungan.RJ) as rajal'),
+                DB::raw('SUM(statistikKunjungan.RD) as darurat'),
+                DB::raw('SUM(statistikKunjungan.RI) as ranap'),
+                DB::raw('YEAR(statistikKunjungan.TANGGAL) as tahun')
             )
             ->havingRaw('SUM(statistikKunjungan.RJ) > 0')
             ->orHavingRaw('SUM(statistikKunjungan.RD) > 0')
@@ -197,14 +195,14 @@ class StatistikKunjunganController extends Controller
             ->paginate($perPage);
     }
 
-    protected function getYearlyRujukan($perPage)
+    protected function getRujukanTahunan($perPage)
     {
         return DB::connection('mysql12')->table('informasi.statistik_rujukan as statistikRujukan')
             ->select(
-                DB::raw('SUM(statistikRujukan.MASUK) as masukTahun'),
-                DB::raw('SUM(statistikRujukan.KELUAR) as keluarTahun'),
-                DB::raw('SUM(statistikRujukan.BALIK) as balikTahun'),
-                DB::raw('YEAR(statistikRujukan.TANGGAL) as rujukanTahun'),
+                DB::raw('SUM(statistikRujukan.MASUK) as masuk'),
+                DB::raw('SUM(statistikRujukan.KELUAR) as keluar'),
+                DB::raw('SUM(statistikRujukan.BALIK) as balik'),
+                DB::raw('YEAR(statistikRujukan.TANGGAL) as tahun'),
             )
             ->groupBy(
                 DB::raw('YEAR(statistikRujukan.TANGGAL)')

@@ -6,8 +6,9 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 
-export default function RajalMingguanTable({ rajalMingguan }) {
-    const [rajalMingguanLinks, setRajalMingguanLinks] = useState(rajalMingguan.linksRajalMingguan);
+export default function RajalMingguan({ rajalMingguan }) {
+
+    const [rajalMingguanLinks, setRajalMingguanLinks] = useState(rajalMingguan.links);
 
     const handleRajalMingguanChange = (newLinks) => {
         setRajalMingguanLinks(newLinks);
@@ -31,8 +32,8 @@ export default function RajalMingguanTable({ rajalMingguan }) {
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(rajalMingguan?.dataRajalMingguan) && rajalMingguan.dataRajalMingguan.length > 0 ? (
-                                rajalMingguan.dataRajalMingguan.map((data, index) => (
+                            {Array.isArray(rajalMingguan?.data) && rajalMingguan.data.length > 0 ? (
+                                rajalMingguan.data.map((data, index) => (
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>

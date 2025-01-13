@@ -5,42 +5,42 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
-import { formatDate } from '@/utils/formatDate';
 
-export default function RanapTable({ tableRanap }) {
+export default function RanapTahunan({ ranapTahunan }) {
 
-    const [ranapLinks, setRanapLinks] = useState(tableRanap.linksRanap);
-
-    const handleRanapPageChange = (newLinks) => {
-        setRanapLinks(newLinks);
-    };
+    const headers = [
+        { name: "TAHUN", className: "w-[10%]" },
+        { name: "PASIEN MASUK", className: "text-right" },
+        { name: "PASIEN DIRAWAT", className: "text-right" },
+        { name: "PASIEN KELUAR", className: "text-right" },
+    ];
 
     return (
         <div className="max-w-full mx-auto w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h1 className="uppercase text-center font-extrabold text-xl text-indigo-700 dark:text-gray-200 mb-2">
-                        Pengunjung Rawat Inap Harian
+                        Pengunjung Rawat Inap Tahunan
                     </h1>
+
                     <Table>
                         <TableHeader>
                             <tr>
-                                <TableHeaderCell className='text-nowrap'>TANGGAL</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>PASIEN MASUK</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>PASIEN DIRAWAT</TableHeaderCell>
-                                <TableHeaderCell className='text-right'>PASIEN KELUAR</TableHeaderCell>
-                                <TableHeaderCell className='w-[13%]'>TANGGAL UPDATED</TableHeaderCell>
+                                {headers.map((header, index) => (
+                                    <TableHeaderCell key={index} className={header.className || ""}>
+                                        {header.name}
+                                    </TableHeaderCell>
+                                ))}
                             </tr>
                         </TableHeader>
                         <tbody>
-                            {Array.isArray(tableRanap?.dataRanap) && tableRanap.dataRanap.length > 0 ? (
-                                tableRanap.dataRanap.map((data, index) => (
-                                    <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
-                                        <TableCell>{formatDate(data.tanggal)}</TableCell>
+                            {ranapTahunan.data.length > 0 ? (
+                                ranapTahunan.data.map((data, index) => (
+                                    <TableRow key={data.bulan} isEven={index % 2 === 0}>
+                                        <TableCell>{data.tahun}</TableCell>
                                         <TableCell className='text-right'>{data.masuk}</TableCell>
                                         <TableCell className='text-right'>{data.dirawat}</TableCell>
                                         <TableCell className='text-right'>{data.keluar}</TableCell>
-                                        <TableCell className='text-nowrap'>{data.lastUpdated}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
@@ -50,14 +50,9 @@ export default function RanapTable({ tableRanap }) {
                             )}
                         </tbody>
                     </Table>
-                    <Pagination
-                        links={ranapLinks}
-                        onPageChange={handleRanapPageChange}
-                    />
-
+                    <Pagination links={ranapTahunan.links} />
                 </div>
             </div>
         </div>
-    )
+    );
 }
-

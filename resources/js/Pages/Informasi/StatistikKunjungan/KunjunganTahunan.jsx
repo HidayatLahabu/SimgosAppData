@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function KunjunganTahunan({ kunjunganTahunan }) {
 
@@ -38,11 +39,11 @@ export default function KunjunganTahunan({ kunjunganTahunan }) {
                         <tbody>
                             {kunjunganTahunan.data.length > 0 ? (
                                 kunjunganTahunan.data.map((data, index) => (
-                                    <TableRow key={data.kunjunganTahun} isEven={index % 2 === 0}>
-                                        <TableCell>{data.kunjunganTahun}</TableCell>
-                                        <TableCell className='text-right'>{data.rajalTahun}</TableCell>
-                                        <TableCell className='text-right'>{data.daruratTahun}</TableCell>
-                                        <TableCell className='text-right'>{data.ranapTahun}</TableCell>
+                                    <TableRow key={data.tahun} isEven={index % 2 === 0}>
+                                        <TableCell>{data.tahun}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.rajal)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.darurat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.ranap)}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (

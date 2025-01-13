@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function KunjunganMingguan({ kunjunganMingguan }) {
     const [kunjunganMingguanLinks, setKunjunganMingguanLinks] = useState(kunjunganMingguan.linksKunjunganMingguan || []);
@@ -36,9 +37,9 @@ export default function KunjunganMingguan({ kunjunganMingguan }) {
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rj}</TableCell>
-                                        <TableCell className='text-right'>{data.total_rd}</TableCell>
-                                        <TableCell className='text-right'>{data.total_ri}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.rajal)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.darurat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.ranap)}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (

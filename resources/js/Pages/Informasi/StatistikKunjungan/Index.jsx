@@ -3,8 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import KunjunganBulanan from './KunjunganBulanan';
 import RujukanBulanan from './RujukanBulanan';
-import Kunjungan from './Kunjungan';
-import Rujukan from './Rujukan';
+import KunjunganHarian from './KunjunganHarian';
+import RujukanHarian from './RujukanHarian';
 import KunjunganMingguan from './KunjunganMingguan';
 import RujukanMingguan from './RujukanMingguan';
 import KunjunganTahunan from './KunjunganTahunan';
@@ -13,8 +13,8 @@ import Cetak from './Cetak';
 
 export default function Index({
     auth,
-    kunjungan,
-    rujukan,
+    kunjunganHarian,
+    rujukanHarian,
     kunjunganMingguan,
     rujukanMingguan,
     kunjunganBulanan,
@@ -29,10 +29,10 @@ export default function Index({
 
             <div className="p-5 flex flex-wrap w-full">
                 <div className="w-1/2 pr-2">
-                    <Kunjungan kunjungan={kunjungan} />
+                    <KunjunganHarian kunjunganHarian={kunjunganHarian} />
                 </div>
                 <div className="w-1/2 pl-2">
-                    <Rujukan rujukan={rujukan} />
+                    <RujukanHarian rujukanHarian={rujukanHarian} />
                 </div>
             </div>
 

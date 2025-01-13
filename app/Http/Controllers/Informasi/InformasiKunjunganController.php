@@ -162,7 +162,6 @@ class InformasiKunjunganController extends Controller
 
         // Ambil nilai input
         $ruangan = $request->input('ruangan');
-        //dd($ruangan);
         $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->format('Y-m-d H:i:s');
         $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->format('Y-m-d H:i:s');
 

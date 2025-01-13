@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function PrintTahunan({
     kunjunganTahunan,
@@ -25,18 +26,18 @@ export default function PrintTahunan({
                         </thead>
                         <tbody>
                             {kunjunganTahunan.map((item, key) => (
-                                <tr key={item.minggu} className="border-b bg-white dark:border-gray-500">
+                                <tr key={item.tahun} className="border-b bg-white dark:border-gray-500">
                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                         {item.tahun}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.rajal}
+                                        {formatRibuan(item.rajal)}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.darurat}
+                                        {formatRibuan(item.darurat)}
                                     </td>
                                     <td className="px-3 py-2 border text-nowrap text-right border-gray-500 border-solid">
-                                        {item.ranap}
+                                        {formatRibuan(item.ranap)}
                                     </td>
                                 </tr>
                             ))}
@@ -56,18 +57,18 @@ export default function PrintTahunan({
                         </thead>
                         <tbody>
                             {rujukanTahunan.map((item, key) => (
-                                <tr key={item.minggu} className="border-b bg-white dark:border-gray-500">
+                                <tr key={item.tahun} className="border-b bg-white dark:border-gray-500">
                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                         {item.tahun}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.masuk}
+                                        {formatRibuan(item.masuk)}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.keluar}
+                                        {formatRibuan(item.keluar)}
                                     </td>
                                     <td className="px-3 py-2 border text-right border-gray-500 border-solid">
-                                        {item.balik}
+                                        {formatRibuan(item.balik)}
                                     </td>
                                 </tr>
                             ))}
