@@ -529,8 +529,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
         Route::get('/kunjungan-print', [InformasiKunjunganController::class, 'print'])->name('informasiKunjungan.print');
         Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
-        Route::get('/pengunjung-print', [InformasiPengunjungController::class, 'print'])->name('pengunjung.print');
+        Route::get('/pengunjung-print', [InformasiPengunjungController::class, 'print'])->name('informasiPengunjung.print');
         Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
+        Route::get('/penunjang-print', [InformasiPenunjangController::class, 'print'])->name('informasiPenunjang.print');
     });
 });
 

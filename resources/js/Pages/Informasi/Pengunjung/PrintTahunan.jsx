@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function PrintTahunan({
     rajalTahunan,
@@ -30,13 +31,13 @@ export default function PrintTahunan({
                                         {item.tahun}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.rajal}
+                                        {formatRibuan(item.rajal)}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.darurat}
+                                        {formatRibuan(item.darurat)}
                                     </td>
                                     <td className="px-3 py-2 border text-nowrap text-right border-gray-500 border-solid">
-                                        {item.semua}
+                                        {formatRibuan(item.semua)}
                                     </td>
                                 </tr>
                             ))}
@@ -46,7 +47,7 @@ export default function PrintTahunan({
 
                 <div className="w-1/2">
                     <h2 className="text-center font-bold text-2xl">
-                        RAWAT JALAN & RAWAT DARURAT TAHUNAN
+                        RAWAT INAP TAHUNAN
                     </h2>
 
                     <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 border border-gray-500">
@@ -65,13 +66,13 @@ export default function PrintTahunan({
                                         {item.tahun}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.masuk}
+                                        {formatRibuan(item.masuk)}
                                     </td>
                                     <td className="px-3 py-2 text-nowrap text-right border border-gray-500 border-solid">
-                                        {item.dirawat}
+                                        {formatRibuan(item.dirawat)}
                                     </td>
                                     <td className="px-3 py-2 border text-right border-gray-500 border-solid">
-                                        {item.keluar}
+                                        {formatRibuan(item.keluar)}
                                     </td>
                                 </tr>
                             ))}

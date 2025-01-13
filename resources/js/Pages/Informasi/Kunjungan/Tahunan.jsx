@@ -5,15 +5,15 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Tahunan({ tahunan }) {
 
     const headers = [
         { name: "TAHUN", className: "w-[9%]" },
-        { name: "JENIS KUNJUNGAN" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
-        { name: "LAST UPDATED" },
+        { name: "LAST UPDATED", className: "w-[25%]" },
     ];
 
     return (
@@ -41,9 +41,8 @@ export default function Tahunan({ tahunan }) {
                                         tahunan.data.map((data, index) => (
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{data.tahun}</TableCell>
-                                                <TableCell>{data.jenisKunjungan}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
-                                                <TableCell className='text-right'>{data.jumlah}</TableCell>
+                                                <TableCell className='text-right'>{formatRibuan(data.jumlah)}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>
                                             </TableRow>
                                         ))

@@ -308,7 +308,8 @@ class InformasiPengunjungController extends Controller
                 DB::raw('SUM(pengunjung.VALUE) as semua'),
                 DB::raw('YEAR(pengunjung.TANGGAL) as tahun'),
             )
-            ->whereBetween('pengunjung.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where(DB::raw('YEAR(pengunjung.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(pengunjung.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
             ->groupBy(
                 DB::raw('YEAR(pengunjung.TANGGAL)'),
             )
@@ -322,7 +323,8 @@ class InformasiPengunjungController extends Controller
                 DB::raw('SUM(CASE WHEN pasienRanap.ID = "3" THEN pasienRanap.VALUE ELSE 0 END) as keluar'),
                 DB::raw('YEAR(pasienRanap.TANGGAL) as tahun'),
             )
-            ->whereBetween('pasienRanap.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where(DB::raw('YEAR(pasienRanap.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(pasienRanap.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
             ->groupBy(
                 DB::raw('YEAR(pasienRanap.TANGGAL)'),
             )

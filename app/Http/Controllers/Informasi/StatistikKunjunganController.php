@@ -358,7 +358,8 @@ class StatistikKunjunganController extends Controller
                 DB::raw('SUM(statistikKunjungan.RD) as darurat'),
                 DB::raw('SUM(statistikKunjungan.RI) as ranap'),
             )
-            ->whereBetween('statistikKunjungan.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where(DB::raw('YEAR(statistikKunjungan.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(statistikKunjungan.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
             ->groupBy(DB::raw('YEAR(statistikKunjungan.TANGGAL)'))
             ->orderByDesc(DB::raw('YEAR(statistikKunjungan.TANGGAL)'))
             ->get();
@@ -370,7 +371,8 @@ class StatistikKunjunganController extends Controller
                 DB::raw('SUM(statistikRujukan.KELUAR) as keluar'),
                 DB::raw('SUM(statistikRujukan.BALIK) as balik')
             )
-            ->whereBetween('statistikRujukan.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where(DB::raw('YEAR(statistikRujukan.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(statistikRujukan.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
             ->groupBy(DB::raw('YEAR(statistikRujukan.TANGGAL)'))
             ->orderByDesc(DB::raw('YEAR(statistikRujukan.TANGGAL)'))
             ->get();

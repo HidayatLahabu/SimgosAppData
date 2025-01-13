@@ -7,11 +7,10 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function Mingguan({ mingguan }) {
+export default function Tahunan({ tahunan }) {
 
     const headers = [
-        { name: "TAHUN", className: "w-[9%]" },
-        { name: "MINGGU KE", className: "w-[15%]" },
+        { name: "TAHUN", className: "w-[7%]" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
         { name: "LAST UPDATED", className: "w-[25%]" },
@@ -24,7 +23,7 @@ export default function Mingguan({ mingguan }) {
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">
-                                Kunjungan Rawat Jalan Mingguan
+                                Kunjungan Instalasi Penunjang Tahunan
                             </h1>
 
                             <Table>
@@ -37,12 +36,11 @@ export default function Mingguan({ mingguan }) {
                                         ))}
                                     </tr>
                                 </TableHeader>
-                                <tbody>
-                                    {mingguan.data.length > 0 ? (
-                                        mingguan.data.map((data, index) => (
+                                <tbody className='text-sm'>
+                                    {tahunan.data.length > 0 ? (
+                                        tahunan.data.map((data, index) => (
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{data.tahun}</TableCell>
-                                                <TableCell>{data.minggu}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
                                                 <TableCell className='text-right'>{formatRibuan(data.jumlah)}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>
@@ -55,7 +53,7 @@ export default function Mingguan({ mingguan }) {
                                     )}
                                 </tbody>
                             </Table>
-                            <Pagination links={mingguan.links} />
+                            <Pagination links={tahunan.links} />
                         </div>
                     </div>
                 </div>

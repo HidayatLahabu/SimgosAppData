@@ -249,7 +249,8 @@ class InformasiKunjunganController extends Controller
                 DB::raw('YEAR(kunjungan.TANGGAL) as tahun'),
                 DB::raw('SUM(kunjungan.VALUE) as jumlah')
             )
-            ->whereBetween('kunjungan.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where(DB::raw('YEAR(kunjungan.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(kunjungan.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
             ->when($ruangan, fn($tahunan) => $tahunan->where('kunjungan.IDSUBUNIT', $ruangan))
             ->groupBy(
                 'kunjungan.IDSUBUNIT',

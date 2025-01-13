@@ -1,6 +1,4 @@
 import React from 'react';
-import { router } from "@inertiajs/react";
-import TextInput from "@/Components/TextInput";
 import Pagination from "@/Components/Pagination";
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
@@ -8,43 +6,16 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function Harian({ harian, queryParams = {} }) {
+export default function Harian({ harian }) {
 
     const headers = [
-        { name: "TANGGAL", className: "w-[9%]" },
-        { name: "JENIS KUNJUNGAN" },
+        { name: "TANGGAL", className: "w-[10%]" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
-        { name: "LAST UPDATED" },
+        { name: "LAST UPDATED", className: "w-[25%]" },
     ];
-
-    // Function to handle search input changes
-    const searchFieldChanged = (search, value) => {
-        const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
-        if (value) {
-            updatedParams[search] = value;
-        } else {
-            delete updatedParams[search];
-        }
-        // Update the URL and fetch new data based on updatedParams
-        router.get(route('informasiKunjungan.index'), updatedParams, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    };
-
-    // Function to handle change in search input
-    const onInputChange = (search, e) => {
-        const value = e.target.value;
-        searchFieldChanged(search, value);
-    };
-
-    // Function to handle Enter key press in search input
-    const onKeyPress = (search, e) => {
-        if (e.key !== 'Enter') return;
-        searchFieldChanged(search, e.target.value);
-    };
 
     return (
         <div className="py-5">
@@ -57,7 +28,6 @@ export default function Harian({ harian, queryParams = {} }) {
                             </h1>
 
                             <Table>
-
                                 <TableHeader>
                                     <tr>
                                         {headers.map((header, index) => (
@@ -72,9 +42,8 @@ export default function Harian({ harian, queryParams = {} }) {
                                         harian.data.map((data, index) => (
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{formatDate(data.tanggal)}</TableCell>
-                                                <TableCell>{data.jenisKunjungan}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
-                                                <TableCell className='text-right'>{data.jumlah}</TableCell>
+                                                <TableCell className='text-right'>{formatRibuan(data.jumlah)}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>
                                             </TableRow>
                                         ))

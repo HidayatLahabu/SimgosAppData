@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function RanapMingguan({ ranapMingguan }) {
 
@@ -37,9 +38,9 @@ export default function RanapMingguan({ ranapMingguan }) {
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>
-                                        <TableCell className='text-right'>{data.masuk}</TableCell>
-                                        <TableCell className='text-right'>{data.dirawat}</TableCell>
-                                        <TableCell className='text-right'>{data.keluar}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.masuk)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.dirawat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.keluar)}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (

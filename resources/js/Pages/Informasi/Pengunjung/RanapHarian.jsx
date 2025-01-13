@@ -6,6 +6,7 @@ import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function RanapHarian({ ranapHarian }) {
 
@@ -37,9 +38,9 @@ export default function RanapHarian({ ranapHarian }) {
                                 ranapHarian.data.map((data, index) => (
                                     <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
                                         <TableCell>{formatDate(data.tanggal)}</TableCell>
-                                        <TableCell className='text-right'>{data.masuk}</TableCell>
-                                        <TableCell className='text-right'>{data.dirawat}</TableCell>
-                                        <TableCell className='text-right'>{data.keluar}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.masuk)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.dirawat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.keluar)}</TableCell>
                                         <TableCell className='text-nowrap'>{data.lastUpdated}</TableCell>
                                     </TableRow>
                                 ))

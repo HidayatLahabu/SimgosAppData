@@ -43,35 +43,23 @@ export default function Print({
                                     : `Selang Tanggal : ${formatDate(dariTanggal)} s.d ${formatDate(sampaiTanggal)}`}
                             </p>
                             {/* Tampilkan hanya PrintHarian jika dariTanggal === sampaiTanggal */}
-                            {isSingleDay ? (
-                                <PrintHarian
-                                    kunjunganHarian={kunjunganHarian}
-                                    rujukanHarian={rujukanHarian}
-                                    dariTanggal={dariTanggal}
-                                    sampaiTanggal={sampaiTanggal}
-                                />
-                            ) : (
-                                <>
-                                    <PrintHarian
-                                        kunjunganHarian={kunjunganHarian}
-                                        rujukanHarian={rujukanHarian}
-                                        dariTanggal={dariTanggal}
-                                        sampaiTanggal={sampaiTanggal}
-                                    />
-                                    <PrintMingguan
-                                        kunjunganMingguan={kunjunganMingguan}
-                                        rujukanMingguan={rujukanMingguan}
-                                    />
-                                    <PrintBulanan
-                                        kunjunganBulanan={kunjunganBulanan}
-                                        rujukanBulanan={rujukanBulanan}
-                                    />
-                                    <PrintTahunan
-                                        kunjunganTahunan={kunjunganTahunan}
-                                        rujukanTahunan={rujukanTahunan}
-                                    />
-                                </>
-                            )}
+
+                            <PrintHarian
+                                kunjunganHarian={kunjunganHarian}
+                                rujukanHarian={rujukanHarian}
+                            />
+                            <PrintMingguan
+                                kunjunganMingguan={kunjunganMingguan}
+                                rujukanMingguan={rujukanMingguan}
+                            />
+                            <PrintBulanan
+                                kunjunganBulanan={kunjunganBulanan}
+                                rujukanBulanan={rujukanBulanan}
+                            />
+                            <PrintTahunan
+                                kunjunganTahunan={kunjunganTahunan}
+                                rujukanTahunan={rujukanTahunan}
+                            />
 
                         </div>
                     </div>

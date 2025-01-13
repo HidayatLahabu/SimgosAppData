@@ -32,7 +32,7 @@ export default function Print({
                     <div className="w-full bg-white overflow-hidden">
                         <div className="p-2 bg-white">
                             <h1 className="text-center font-bold text-2xl">
-                                INFORMASI KUNJUNGAN RAWAT JALAN
+                                INFORMASI KUNJUNGAN INSTALASI PENUNJANG
                             </h1>
                             <h2 className="text-center font-bold text-2xl uppercase">
                                 RUANGAN LAYANAN : {namaRuangan}

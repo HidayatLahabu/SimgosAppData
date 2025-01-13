@@ -38,9 +38,9 @@ export default function RajalHarian({ rajalHarian }) {
                                 rajalHarian.data.map((data, index) => (
                                     <TableRow key={data.tanggalUpdated} isEven={index % 2 === 0}>
                                         <TableCell>{formatDate(data.tanggal)}</TableCell>
-                                        <TableCell className='text-right'>{data.rajal}</TableCell>
-                                        <TableCell className='text-right'>{data.darurat}</TableCell>
-                                        <TableCell className='text-right'>{data.semua}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.rajal)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.darurat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.semua)}</TableCell>
                                         <TableCell className='text-nowrap'>{data.lastUpdated}</TableCell>
                                     </TableRow>
                                 ))

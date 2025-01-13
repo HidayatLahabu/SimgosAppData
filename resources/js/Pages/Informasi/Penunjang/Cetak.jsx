@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
+import SelectTwoInput from "@/Components/SelectTwoInput";
 
-export default function Cetak() {
+export default function Cetak({
+    ruangan,
+}) {
 
     const { data, setData } = useForm({
         dari_tanggal: '',
@@ -24,6 +27,14 @@ export default function Cetak() {
         }));
     }, []);
 
+    const onRuanganChange = (selectedOption) => {
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
+        }
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -31,7 +42,7 @@ export default function Cetak() {
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("informasiPengunjung.print") + "?" + queryString, "_blank");
+        window.open(route("informasiPenunjang.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -42,9 +53,27 @@ export default function Cetak() {
                         onSubmit={onSubmit}
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Informasi Pengunjung</h1>
+                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Kunjungan Rawat Jalan</h1>
 
                         <div className="mt-4 flex space-x-4">
+                            <div className="flex-1">
+                                <InputLabel
+                                    htmlFor="ruangan"
+                                    value="Ruangan Tujuan" />
+                                <SelectTwoInput
+                                    id="ruangan"
+                                    name="ruangan"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Ruangan"
+                                    options={Array.isArray(ruangan) ?
+                                        ruangan.map((item) => ({
+                                            value: item.ID,
+                                            label: item.ID + '. ' + item.DESKRIPSI,
+                                        })) : []}
+                                    onChange={onRuanganChange}
+                                    isClearable={true}
+                                />
+                            </div>
                             <div className="flex-1">
                                 <InputLabel
                                     htmlFor="dari_tanggal"

@@ -5,18 +5,16 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Bulanan({ bulanan }) {
 
     const headers = [
         { name: "TAHUN", className: "w-[7%]" },
-        { name: "BULAN", className: "w-[9%]" },
-        { name: "JENIS KUNJUNGAN", className: "w-[12%]" },
-        { name: "INSTALASI" },
-        { name: "UNIT" },
+        { name: "BULAN" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
-        { name: "LAST UPDATED", className: "w-[12%]" },
+        { name: "LAST UPDATED", className: "w-[25%]" },
     ];
 
     // Array nama bulan
@@ -27,7 +25,7 @@ export default function Bulanan({ bulanan }) {
 
     return (
         <div className="py-5">
-            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
+            <div className="max-w-8xl mx-auto sm:pl-5 sm:pr-2 lg:pl-5 lg:pr-2">
                 <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                         <div className="overflow-auto w-full">
@@ -51,9 +49,6 @@ export default function Bulanan({ bulanan }) {
                                             <TableRow key={data.lastUpdated} isEven={index % 2 === 0}>
                                                 <TableCell>{data.tahun}</TableCell>
                                                 <TableCell>{bulanNames[data.bulan - 1]}</TableCell>
-                                                <TableCell>{data.jenisKunjungan}</TableCell>
-                                                <TableCell>{data.instalasi}</TableCell>
-                                                <TableCell>{data.unit}</TableCell>
                                                 <TableCell>{data.subUnit}</TableCell>
                                                 <TableCell className='text-right'>{data.jumlah}</TableCell>
                                                 <TableCell>{data.lastUpdated}</TableCell>

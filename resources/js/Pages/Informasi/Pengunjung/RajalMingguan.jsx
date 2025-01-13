@@ -5,6 +5,7 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function RajalMingguan({ rajalMingguan }) {
 
@@ -37,9 +38,9 @@ export default function RajalMingguan({ rajalMingguan }) {
                                     <TableRow key={data.minggu} isEven={index % 2 === 0}>
                                         <TableCell>{data.tahun}</TableCell>
                                         <TableCell>{data.minggu}</TableCell>
-                                        <TableCell className='text-right'>{data.rajal}</TableCell>
-                                        <TableCell className='text-right'>{data.darurat}</TableCell>
-                                        <TableCell className='text-right'>{data.semua}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.rajal)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.darurat)}</TableCell>
+                                        <TableCell className='text-right'>{formatRibuan(data.semua)}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (

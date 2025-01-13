@@ -7,7 +7,7 @@ export default function PrintMingguan({
 
 
     return (
-        <div className="overflow-auto">
+        <div className="overflow-auto mt-2 ml-5">
             <h1 className="text-center font-bold text-2xl">
                 MINGGUAN
             </h1>
@@ -18,7 +18,7 @@ export default function PrintMingguan({
                         <th className="px-3 py-2 border border-gray-500 border-solid w-[15%]">MINGGU</th>
                         <th className="px-3 py-2 border border-gray-500 border-solid">SUB UNIT</th>
                         <th className="px-3 py-2 border border-gray-500 border-solid text-right w-[10%]">JUMLAH</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid w-[25%]">TANGGAL UPDATE</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid w-[25%]">LAST UPDATE</th>
                     </tr>
                 </thead>
                 <tbody>
