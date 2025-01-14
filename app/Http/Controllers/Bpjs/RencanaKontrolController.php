@@ -77,35 +77,38 @@ class RencanaKontrolController extends Controller
         // Start building the query using the query builder
         $query = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
+                'pasien.NORM as norm',
+                'peserta.nama as namaPasien',
                 'rekon.noSurat',
-                'rekon.nomor as noSep',
                 'rekon.tglRencanaKontrol as tanggal',
                 'poli.nama as poliTujuan',
-                'pasien.NORM as norm',
-                'peserta.nama'
+                'dpjp.nama as namaDokter',
+                'pasienBpjs.nama as pasienNama',
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
+            ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
-            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik');
+            ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
+            ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
+            ->groupBy(
+                'rekon.noSurat',
+                'pasien.NORM',
+                'peserta.nama',
+                'rekon.tglRencanaKontrol',
+                'poli.nama',
+                'dpjp.nama',
+                'pasienBpjs.nama'
+            );
 
-        // Clone query for count calculation
-        $countQuery = clone $query;
-
-        switch ($filter) {
-            case 'hariIni':
-                $query->whereDate('rekon.tglRencanaKontrol', now()->format('Y-m-d'));
-                $countQuery->whereDate('rekon.tglRencanaKontrol', now()->format('Y-m-d'));
-                $header = 'HARI INI';
-                $text = 'PASIEN';
-                break;
-
-            default:
-                abort(404, 'Filter not found');
+        // Add filter based on the provided filter
+        if ($filter === 'hariIni') {
+            $query->whereDate('rekon.tglRencanaKontrol', now()->format('Y-m-d'));
+            $header = 'HARI INI';
+            $text = 'PASIEN';
+        } else {
+            abort(404, 'Filter not found');
         }
-
-        // Get count
-        $count = $countQuery->count();
 
         // Add search filter if provided
         if ($searchSubject) {
@@ -117,8 +120,9 @@ class RencanaKontrolController extends Controller
             });
         }
 
-        // Paginate the results
+        // Get paginated data and total count
         $data = $query->paginate(5)->appends(request()->query());
+        $count = $data->total(); // Get total count directly from the paginated data
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -135,6 +139,7 @@ class RencanaKontrolController extends Controller
             'text' => $text,
         ]);
     }
+
 
     public function detail($id)
     {
