@@ -45,7 +45,7 @@ export default function LaporanRl31({
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <h1 className="uppercase text-center font-bold text-2xl pb-2">LAPORAN RL 3.1</h1>
                             <p className="text-center pb-4">
-                                <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} - {formatDate(tgl_akhir)}
+                                <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)}
                             </p>
                             <div className="overflow-x-auto">
                                 <Table>

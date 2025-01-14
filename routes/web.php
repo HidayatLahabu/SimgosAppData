@@ -520,6 +520,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('laporanRl31', [LaporanRl31Controller::class, 'index'])->name('laporanRl31.index');
         Route::get('/laporanRl31-print', [LaporanRl31Controller::class, 'print'])->name('laporanRl31.print');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
+        Route::get('/laporanRl51-print', [LaporanRl51Controller::class, 'print'])->name('laporanRl51.print');
         Route::get('laporanWaktuTunggu', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTunggu.index');
         Route::get('/laporanWaktuTunggu-print', [LaporanWaktuTungguRegistrasiController::class, 'print'])->name('laporanWaktuTunggu.print');
     });

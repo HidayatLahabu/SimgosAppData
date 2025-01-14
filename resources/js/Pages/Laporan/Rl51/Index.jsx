@@ -2,30 +2,29 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { formatDate } from '@/utils/formatDate';
-import { formatRibuan } from '@/utils/formatRibuan';
+import Cetak from './Cetak';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
-
-    // Check if items is defined and is an array
-    if (!Array.isArray(items)) {
-        console.error('Expected items to be an array but received:', items);
-        return <div>Error: Data not available</div>;
-    }
+export default function LaporanRl51({
+    auth,
+    tgl_awal,
+    tgl_akhir,
+    data,
+}) {
 
     const headers = [
         { name: "KODE RS", className: "w-[7%]" },
         { name: "NAMA RUMAH SAKIT" },
         { name: "KOTA/KABUPATEN" },
-        { name: "TAHUN", className: "text-center w-[9%]" },
-        { name: "JENIS PENGUNJUNG", className: "w-[16%]" },
-        { name: "JUMLAH PENGUNJUNG", className: "text-right w-[13%]" },
+        { name: "JENIS KUNJUNGAN", className: "w-[14%]" },
+        { name: "JENIS PENGUNJUNG", className: "w-[14%]" },
+        { name: "JUMLAH KUNJUNGAN", className: "text-right w-[13%]" },
     ];
-
 
     return (
         <AuthenticatedLayout user={auth.user}>
@@ -34,12 +33,15 @@ export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
-                        <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                            <h1 className="uppercase text-center font-bold text-2xl pb-2">LAPORAN RL 5.1</h1>
-                            <p className="text-center pb-4">
-                                <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} - {formatDate(tgl_akhir)}
-                            </p>
+                        <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
+                            LAPORAN RL 5.1
+                        </h1>
+                        <p className="text-center text-gray-100 pb-4">
+                            <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)}
+                        </p>
+                        <div className="pl-5 pr-5 pb-5 pt-3 text-gray-900 dark:text-gray-100 w-full">
                             <div className="overflow-x-auto">
+
                                 <Table>
                                     <TableHeader>
                                         <tr>
@@ -51,17 +53,19 @@ export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
                                         </tr>
                                     </TableHeader>
                                     <tbody>
-                                        {items.map((data, index) => (
-                                            <TableRow key={data.KODE} isEven={index % 2 === 0}>
-                                                <TableCell>{data.KODE}</TableCell>
-                                                <TableCell>{data.NAMAINST}</TableCell>
-                                                <TableCell className='uppercase'>{data.KOTA}</TableCell>
-                                                <TableCell className='text-center'>{data.TAHUN}</TableCell>
-                                                <TableCell>{data.DESKRIPSI}</TableCell>
-                                                <TableCell className='text-right'>{data.JUMLAH} PASIEN</TableCell>
+                                        {data.map((item, index) => (
+                                            <TableRow key={`${item.KODE}-${index}`} isEven={index % 2 === 0}>
+                                                <TableCell>{item.KODE}</TableCell>
+                                                <TableCell>{item.NAMAINST}</TableCell>
+                                                <TableCell className="uppercase">{item.KOTA}</TableCell>
+                                                <TableCell className='uppercase'>{item.JENIS_KUNJUNGAN}</TableCell>
+                                                <TableCell>{item.DESKRIPSI}</TableCell>
+                                                <TableCell className="text-right">
+                                                    {formatRibuan(item.JUMLAH)} PASIEN
+                                                </TableCell>
                                             </TableRow>
                                         ))}
-                                        {items.length === 0 && (
+                                        {data.length === 0 && (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
                                                 <td colSpan={headers.length} className="px-3 py-3 text-center">
                                                     Tidak ada data yang dapat ditampilkan
@@ -75,6 +79,12 @@ export default function LaporanRl51({ auth, items, tgl_awal, tgl_akhir }) {
                     </div>
                 </div>
             </div>
+
+            <div className="w-full">
+                <Cetak
+                />
+            </div>
+
         </AuthenticatedLayout>
     );
 }

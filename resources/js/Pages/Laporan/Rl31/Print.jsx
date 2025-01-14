@@ -26,7 +26,7 @@ export default function Print({
                                     LAPORAN RL 3.1
                                 </h1>
                                 <p className="text-center">
-                                    <strong>Periode Tanggal: {formatDate(tgl_awal)} - {formatDate(tgl_akhir)} </strong>
+                                    <strong>Periode Tanggal: {formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)} </strong>
                                 </p>
 
                                 <div className="py-3 overflow-auto">
