@@ -176,7 +176,7 @@ class MonitoringRekonController extends Controller
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'monitoring.noKartu')
             ->whereBetween('monitoring.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
             ->where('monitoring.jnsKontrol', 2)
-            ->orderBy('monitoring.tglRencanaKontrol')
+            ->orderByDesc('monitoring.tglRencanaKontrol')
             ->orderBy('monitoring.nama')
             ->get();
 

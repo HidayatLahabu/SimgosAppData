@@ -208,6 +208,7 @@ class RencanaKontrolController extends Controller
             ->leftJoin('bpjs.monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
             ->whereBetween('rekon.tglRencanaKontrol', [$dariTanggal, $sampaiTanggal])
             ->where('rekon.jnsKontrol', 2)
+            ->orderByDesc('rekon.tglRencanaKontrol')
             ->orderBy('peserta.nama')
             ->orderBy('pasienBpjs.nama')
             ->get();
