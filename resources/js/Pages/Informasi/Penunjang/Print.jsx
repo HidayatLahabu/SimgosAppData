@@ -57,12 +57,12 @@ export default function Print({
                                             />
 
                                         </div>
-                                        <div className="w-1/2 pr-5 pt-5">
+                                        <div className="w-1/2 pr-5">
                                             <PrintBulanan
                                                 bulanan={bulanan}
                                             />
                                         </div>
-                                        <div className="w-1/2 pt-5">
+                                        <div className="w-1/2">
                                             <PrintTahunan
                                                 tahunan={tahunan}
                                             />
@@ -81,12 +81,12 @@ export default function Print({
                                             <PrintMingguan
                                                 mingguan={mingguan}
                                             />
-                                            <div className='pt-5'>
+                                            <div>
                                                 <PrintBulanan
                                                     bulanan={bulanan}
                                                 />
                                             </div>
-                                            <div className='pt-5'>
+                                            <div>
                                                 <PrintTahunan
                                                     tahunan={tahunan}
                                                 />

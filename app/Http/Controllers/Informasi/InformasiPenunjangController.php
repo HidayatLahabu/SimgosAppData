@@ -172,100 +172,105 @@ class InformasiPenunjangController extends Controller
         $namaRuangan = $ruangan ? MasterRuanganModel::where('ID', $ruangan)->value('DESKRIPSI') : 'SEMUA RUANGAN';
 
         // Query Harian
-        $harian = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        $harian = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
-                'kunjungan.TANGGAL as tanggal',
-                'kunjungan.IDSUBUNIT as idSubUnit',
-                DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
-                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
-                DB::raw('SUM(kunjungan.VALUE) as jumlah'),
-                DB::raw('MAX(kunjungan.LASTUPDATED) as lastUpdated')
+                'penunjang.TANGGAL as tanggal',
+                'penunjang.IDSUBUNIT as idSubUnit',
+                DB::raw('MIN(penunjang.DESKRIPSI) as jenisKunjungan'),
+                DB::raw('MIN(penunjang.INSTALASI) as instalasi'),
+                DB::raw('MIN(penunjang.UNIT) as unit'),
+                DB::raw('MIN(penunjang.SUBUNIT) as subUnit'),
+                DB::raw('SUM(penunjang.VALUE) as jumlah'),
+                DB::raw('MAX(penunjang.LASTUPDATED) as lastUpdated')
             )
-            ->whereBetween('kunjungan.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->when($ruangan, fn($harian) => $harian->where('kunjungan.IDSUBUNIT', $ruangan))
-            ->groupBy('kunjungan.TANGGAL', 'kunjungan.IDSUBUNIT', 'kunjungan.SUBUNIT')
-            ->orderByDesc('kunjungan.TANGGAL')
-            ->orderBy('kunjungan.SUBUNIT')
+            ->whereBetween('penunjang.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->when($ruangan, fn($harian) => $harian->where('penunjang.IDSUBUNIT', $ruangan))
+            ->groupBy('penunjang.TANGGAL', 'penunjang.IDSUBUNIT', 'penunjang.SUBUNIT')
+            ->orderByDesc('penunjang.TANGGAL')
+            ->orderBy('penunjang.SUBUNIT')
             ->get();
 
         // Query Mingguan
-        $mingguan = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        $mingguan = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
-                'kunjungan.IDSUBUNIT as idSubUnit',
-                DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
-                DB::raw('MIN(kunjungan.INSTALASI) as instalasi'),
-                DB::raw('MIN(kunjungan.UNIT) as unit'),
-                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
-                DB::raw('MAX(kunjungan.LASTUPDATED) as lastUpdated'),
-                DB::raw('YEAR(kunjungan.TANGGAL) as tahun'),
-                DB::raw('WEEK(kunjungan.TANGGAL, 1) as minggu'),
-                DB::raw('SUM(kunjungan.VALUE) as jumlah')
+                DB::raw('MIN(penunjang.TANGGAL) as tanggal'),
+                'penunjang.IDSUBUNIT as idSubUnit',
+                DB::raw('MIN(penunjang.DESKRIPSI) as jenisKunjungan'),
+                DB::raw('MIN(penunjang.INSTALASI) as instalasi'),
+                DB::raw('MIN(penunjang.UNIT) as unit'),
+                DB::raw('MIN(penunjang.SUBUNIT) as subUnit'),
+                DB::raw('SUM(penunjang.VALUE) as jumlah'),
+                DB::raw('MAX(penunjang.LASTUPDATED) as lastUpdated'),
+                DB::raw('YEAR(penunjang.TANGGAL) as tahun'),
+                DB::raw('WEEK(penunjang.TANGGAL, 1) as minggu'),
             )
-            ->whereBetween('kunjungan.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->when($ruangan, fn($mingguan) => $mingguan->where('kunjungan.IDSUBUNIT', $ruangan))
+            ->whereBetween('penunjang.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->when($ruangan, fn($mingguan) => $mingguan->where('penunjang.IDSUBUNIT', $ruangan))
             ->groupBy(
-                'kunjungan.IDSUBUNIT',
-                DB::raw('YEAR(kunjungan.TANGGAL)'),
-                DB::raw('WEEK(kunjungan.TANGGAL, 1)'),
-                'kunjungan.SUBUNIT'
+                'penunjang.IDSUBUNIT',
+                DB::raw('YEAR(penunjang.TANGGAL)'),
+                DB::raw('WEEK(penunjang.TANGGAL, 1)'),
+                'penunjang.SUBUNIT'
             )
             ->orderBy('tahun', 'desc')
             ->orderBy('minggu', 'desc')
-            ->orderBy('kunjungan.SUBUNIT')
+            ->orderBy('penunjang.SUBUNIT')
             ->get();
 
         // Query Bulanan
-        $bulanan = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        $bulanan = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
-                'kunjungan.IDSUBUNIT as idSubUnit',
-                DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
-                DB::raw('MIN(kunjungan.INSTALASI) as instalasi'),
-                DB::raw('MIN(kunjungan.UNIT) as unit'),
-                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
-                DB::raw('MAX(kunjungan.LASTUPDATED) as lastUpdated'),
-                DB::raw('YEAR(kunjungan.TANGGAL) as tahun'),
-                DB::raw('MONTH(kunjungan.TANGGAL) as bulan'),
-                DB::raw('SUM(kunjungan.VALUE) as jumlah')
+                DB::raw('MIN(penunjang.TANGGAL) as tanggal'),
+                'penunjang.IDSUBUNIT as idSubUnit',
+                DB::raw('MIN(penunjang.DESKRIPSI) as jenisKunjungan'),
+                DB::raw('MIN(penunjang.INSTALASI) as instalasi'),
+                DB::raw('MIN(penunjang.UNIT) as unit'),
+                DB::raw('MIN(penunjang.SUBUNIT) as subUnit'),
+                DB::raw('SUM(penunjang.VALUE) as jumlah'),
+                DB::raw('MAX(penunjang.LASTUPDATED) as lastUpdated'),
+                DB::raw('YEAR(penunjang.TANGGAL) as tahun'),
+                DB::raw('MONTH(penunjang.TANGGAL) as bulan'),
             )
-            ->whereBetween('kunjungan.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->when($ruangan, fn($bulanan) => $bulanan->where('kunjungan.IDSUBUNIT', $ruangan))
+            ->whereBetween('penunjang.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->when($ruangan, fn($bulanan) => $bulanan->where('penunjang.IDSUBUNIT', $ruangan))
             ->groupBy(
-                'kunjungan.IDSUBUNIT',
-                DB::raw('YEAR(kunjungan.TANGGAL)'),
-                DB::raw('MONTH(kunjungan.TANGGAL)'),
-                'kunjungan.SUBUNIT'
+                'penunjang.IDSUBUNIT',
+                DB::raw('YEAR(penunjang.TANGGAL)'),
+                DB::raw('MONTH(penunjang.TANGGAL)'),
+                'penunjang.SUBUNIT'
             )
-            ->orderBy(DB::raw('YEAR(kunjungan.TANGGAL)'), 'desc')
-            ->orderBy(DB::raw('MONTH(kunjungan.TANGGAL)'), 'desc')
-            ->orderBy('kunjungan.SUBUNIT')
+            ->orderBy(DB::raw('YEAR(penunjang.TANGGAL)'), 'desc')
+            ->orderBy(DB::raw('MONTH(penunjang.TANGGAL)'), 'desc')
+            ->orderBy('penunjang.SUBUNIT')
             ->get();
 
         // Query Tahunan
-        $tahunan = DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+        $tahunan = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
             ->select(
-                'kunjungan.IDSUBUNIT as idSubUnit',
-                DB::raw('MIN(kunjungan.DESKRIPSI) as jenisKunjungan'),
-                DB::raw('MIN(kunjungan.INSTALASI) as instalasi'),
-                DB::raw('MIN(kunjungan.UNIT) as unit'),
-                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
-                DB::raw('MAX(kunjungan.LASTUPDATED) as lastUpdated'),
-                DB::raw('YEAR(kunjungan.TANGGAL) as tahun'),
-                DB::raw('SUM(kunjungan.VALUE) as jumlah')
+                DB::raw('MIN(penunjang.TANGGAL) as tanggal'),
+                'penunjang.IDSUBUNIT as idSubUnit',
+                DB::raw('MIN(penunjang.DESKRIPSI) as jenisKunjungan'),
+                DB::raw('MIN(penunjang.INSTALASI) as instalasi'),
+                DB::raw('MIN(penunjang.UNIT) as unit'),
+                DB::raw('MIN(penunjang.SUBUNIT) as subUnit'),
+                DB::raw('SUM(penunjang.VALUE) as jumlah'),
+                DB::raw('MAX(penunjang.LASTUPDATED) as lastUpdated'),
+                DB::raw('YEAR(penunjang.TANGGAL) as tahun'),
             )
-            ->where(DB::raw('YEAR(kunjungan.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
-            ->where(DB::raw('YEAR(kunjungan.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
-            ->when($ruangan, fn($tahunan) => $tahunan->where('kunjungan.IDSUBUNIT', $ruangan))
+            ->where(DB::raw('YEAR(penunjang.TANGGAL)'), '>=', DB::raw("YEAR('$dariTanggal')"))
+            ->where(DB::raw('YEAR(penunjang.TANGGAL)'), '<=', DB::raw("YEAR('$sampaiTanggal')"))
+            ->when($ruangan, fn($tahunan) => $tahunan->where('penunjang.IDSUBUNIT', $ruangan))
             ->groupBy(
-                'kunjungan.IDSUBUNIT',
-                DB::raw('YEAR(kunjungan.TANGGAL)'),
-                'kunjungan.SUBUNIT'
+                'penunjang.IDSUBUNIT',
+                DB::raw('YEAR(penunjang.TANGGAL)'),
+                'penunjang.SUBUNIT'
             )
-            ->orderBy(DB::raw('YEAR(kunjungan.TANGGAL)'), 'desc')
-            ->orderBy('kunjungan.SUBUNIT')
+            ->orderBy(DB::raw('YEAR(penunjang.TANGGAL)'), 'desc')
+            ->orderBy('penunjang.SUBUNIT')
             ->get();
 
         // Kirim data ke frontend menggunakan Inertia
-        return inertia("Informasi/Kunjungan/Print", [
+        return inertia("Informasi/Penunjang/Print", [
             'harian'        => $harian,
             'mingguan'      => $mingguan,
             'bulanan'       => $bulanan,

@@ -11,7 +11,7 @@ export default function PrintBulanan({
     ];
 
     return (
-        <div className="overflow-auto mt-5 ml-5">
+        <div className="overflow-auto mt-5">
             <h1 className="text-center font-bold text-2xl">
                 BULANAN
             </h1>

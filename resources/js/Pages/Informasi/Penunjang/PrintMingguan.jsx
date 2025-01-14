@@ -7,7 +7,7 @@ export default function PrintMingguan({
 
 
     return (
-        <div className="overflow-auto mt-2 ml-5">
+        <div className="overflow-auto mt-2">
             <h1 className="text-center font-bold text-2xl">
                 MINGGUAN
             </h1>

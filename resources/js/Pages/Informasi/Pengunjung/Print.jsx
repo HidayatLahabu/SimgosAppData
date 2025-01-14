@@ -28,7 +28,7 @@ export default function Print({
 
     return (
         <div className="h-screen w-screen bg-white">
-            <Head title="Laporan" />
+            <Head title="Informasi" />
 
             <div className="content">
                 <div className="w-full mx-auto sm:px-6 lg:px-5">

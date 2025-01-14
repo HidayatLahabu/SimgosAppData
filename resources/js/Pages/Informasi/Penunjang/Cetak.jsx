@@ -53,7 +53,7 @@ export default function Cetak({
                         onSubmit={onSubmit}
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Kunjungan Rawat Jalan</h1>
+                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Kunjungan Instalasi Penunjang</h1>
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">

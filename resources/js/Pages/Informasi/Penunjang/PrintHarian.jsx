@@ -7,7 +7,7 @@ export default function PrintHarian({
 }) {
 
     return (
-        <div className="overflow-auto mt-2 mr-5">
+        <div className="overflow-auto mt-2">
             <h1 className="text-center font-bold text-2xl">
                 HARIAN
             </h1>
