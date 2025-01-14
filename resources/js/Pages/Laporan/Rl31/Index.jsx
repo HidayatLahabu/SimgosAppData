@@ -8,8 +8,14 @@ import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import Cetak from './Cetak';
 
-export default function LaporanRl31({ auth, items, tgl_awal, tgl_akhir }) {
+export default function LaporanRl31({
+    auth,
+    items,
+    tgl_awal,
+    tgl_akhir
+}) {
 
     const headers = [
         { name: "JENIS PELAYANAN" },
@@ -56,24 +62,24 @@ export default function LaporanRl31({ auth, items, tgl_awal, tgl_akhir }) {
                                         {items.map((data, index) => (
                                             <TableRow key={data.KODE}>
                                                 <TableCell>{data.DESKRIPSI}</TableCell>
-                                                <TableCell className='text-center'>{data.AWAL}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.AWAL)}</TableCell>
                                                 <TableCell className="text-center">
-                                                    {parseFloat(data.MASUK || 0) + parseFloat(data.PINDAHAN || 0)}
+                                                    {formatRibuan(parseFloat(data.MASUK || 0) + parseFloat(data.PINDAHAN || 0))}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {parseFloat(data.DIPINDAHKAN || 0) + parseFloat(data.HIDUP || 0)}
+                                                    {formatRibuan(parseFloat(data.DIPINDAHKAN || 0) + parseFloat(data.HIDUP || 0))}
                                                 </TableCell>
-                                                <TableCell className='text-center'>{data.MATIKURANG48}</TableCell>
-                                                <TableCell className='text-center'>{data.MATILEBIH48}</TableCell>
-                                                <TableCell className='text-center'>{data.LD}</TableCell>
-                                                <TableCell className='text-center'>{data.SISA}</TableCell>
-                                                <TableCell className='text-center'>{data.HP}</TableCell>
-                                                <TableCell className='text-center'>{data.VVIP}</TableCell>
-                                                <TableCell className='text-center'>{data.VIP}</TableCell>
-                                                <TableCell className='text-center'>{data.KLSI}</TableCell>
-                                                <TableCell className='text-center'>{data.KLSII}</TableCell>
-                                                <TableCell className='text-center'>{data.KLSIII}</TableCell>
-                                                <TableCell className='text-center'>{data.KLSKHUSUS}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.MATIKURANG48)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.MATILEBIH48)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.LD)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.SISA)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.HP)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.VVIP)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.VIP)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.KLSI)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.KLSII)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.KLSIII)}</TableCell>
+                                                <TableCell className='text-center'>{formatRibuan(data.KLSKHUSUS)}</TableCell>
                                             </TableRow>
                                         ))}
                                         {items.length === 0 && (
@@ -90,6 +96,12 @@ export default function LaporanRl31({ auth, items, tgl_awal, tgl_akhir }) {
                     </div>
                 </div>
             </div>
+
+            <div className="w-full">
+                <Cetak
+                />
+            </div>
+
         </AuthenticatedLayout>
     );
 }
