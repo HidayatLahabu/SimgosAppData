@@ -27,11 +27,13 @@ class StatistikKunjunganController extends Controller
         $dataRujukanMingguan = $rujukanMingguan->paginate(4)->appends(request()->query());
         $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
-        $perPage = 12; // Items per page
-        $kunjunganBulanan = $this->getKunjunganBulanan($perPage);
-        $rujukanBulanan = $this->getRujukanBulanan($perPage);
-        $kunjunganTahunan = $this->getKunjunganTahunan($perPage);
-        $rujukanTahunan = $this->getRujukanTahunan($perPage);
+        $pageBulan = 12; // Items per page
+        $kunjunganBulanan = $this->getKunjunganBulanan($pageBulan);
+        $rujukanBulanan = $this->getRujukanBulanan($pageBulan);
+
+        $pageTahun = 5;
+        $kunjunganTahunan = $this->getKunjunganTahunan($pageTahun);
+        $rujukanTahunan = $this->getRujukanTahunan($pageTahun);
 
         return inertia("Informasi/StatistikKunjungan/Index", [
             'kunjunganHarian' => [

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Informasi;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
