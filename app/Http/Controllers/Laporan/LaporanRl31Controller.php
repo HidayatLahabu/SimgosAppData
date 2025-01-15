@@ -28,6 +28,9 @@ class LaporanRl31Controller extends Controller
                 $row->DIPINDAHKAN + $row->HIDUP !== 0 ||
                 // Cek kolom lainnya
                 (!is_null($row->AWAL) && $row->AWAL !== 0) ||
+                (!is_null($row->PINDAHAN) && $row->PINDAHAN !== 0) ||
+                (!is_null($row->DIPINDAHKAN) && $row->DIPINDAHKAN !== 0) ||
+                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
                 (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
                 (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0) ||
                 (!is_null($row->LD) && $row->LD !== 0) ||
@@ -62,6 +65,7 @@ class LaporanRl31Controller extends Controller
 
         // Panggil prosedur yang telah dibuat
         $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
+        //dd($data);
 
         $filteredData = array_values(array_filter($data, function ($row) {
             return (
@@ -71,6 +75,9 @@ class LaporanRl31Controller extends Controller
                 $row->DIPINDAHKAN + $row->HIDUP !== 0 ||
                 // Cek kolom lainnya
                 (!is_null($row->AWAL) && $row->AWAL !== 0) ||
+                (!is_null($row->PINDAHAN) && $row->PINDAHAN !== 0) ||
+                (!is_null($row->DIPINDAHKAN) && $row->DIPINDAHKAN !== 0) ||
+                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
                 (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
                 (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0) ||
                 (!is_null($row->LD) && $row->LD !== 0) ||

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Bpjs\BatalControlController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -22,6 +21,7 @@ use App\Http\Controllers\Master\TindakanController;
 use App\Http\Controllers\Inventory\BarangController;
 use App\Http\Controllers\Logs\PenggunaLogController;
 use App\Http\Controllers\Master\ReferensiController;
+use App\Http\Controllers\Bpjs\BatalControlController;
 use App\Http\Controllers\Bpjs\PengajuanSepController;
 use App\Http\Controllers\Layanan\RadiologiController;
 use App\Http\Controllers\Satusehat\AllergyController;
@@ -38,6 +38,7 @@ use App\Http\Controllers\Satusehat\SpecimenController;
 use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
 use App\Http\Controllers\Laporan\LaporanRl12Controller;
+use App\Http\Controllers\Laporan\LaporanRl31Controller;
 use App\Http\Controllers\Laporan\LaporanRl51Controller;
 use App\Http\Controllers\Medicalrecord\AskepController;
 use App\Http\Controllers\Satusehat\ConditionController;
@@ -55,6 +56,7 @@ use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
+use App\Http\Controllers\Chart\ChartPendaftaranController;
 use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\OrganizationController;
@@ -64,7 +66,6 @@ use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Medicalrecord\AnamnesisController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
-use App\Http\Controllers\Pendaftaran\MedicalRecordController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
@@ -76,9 +77,8 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
-use App\Http\Controllers\Laporan\LaporanRl31Controller;
-use App\Http\Controllers\Laporan\LaporanWaktuTungguRegistrasiController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
+use App\Http\Controllers\Laporan\LaporanWaktuTungguRegistrasiController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -534,6 +534,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pengunjung-print', [InformasiPengunjungController::class, 'print'])->name('informasiPengunjung.print');
         Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
         Route::get('/penunjang-print', [InformasiPenunjangController::class, 'print'])->name('informasiPenunjang.print');
+    });
+
+    Route::prefix('chart')->namespace('App\Http\Controllers\Chart')->group(function () {
+        Route::get('chartPendaftaran', [ChartPendaftaranController::class, 'index'])->name('chartPendaftaran.index');
+        Route::get('chartBpjs', [ChartPendaftaranController::class, 'index'])->name('chartBpjs.index');
+        Route::get('chartLayanan', [ChartPendaftaranController::class, 'index'])->name('chartLayanan.index');
+        Route::get('chartInformasi', [ChartPendaftaranController::class, 'index'])->name('chartInformasi.index');
+        Route::get('chartLaporan', [ChartPendaftaranController::class, 'index'])->name('chartLaporan.index');
     });
 });
 

@@ -109,9 +109,6 @@ export default function Dashboard({
                 </div>
             </div>
 
-
-
-
             <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
                 Kunjungan Bulanan
             </h1>

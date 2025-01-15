@@ -27,10 +27,11 @@ export default function NavigationLogs() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('logsBridge.index') ||
-            route().current('logsAkses.index') ||
-            route().current('logsRequest.index') ||
-            route().current('logsPengguna.index');
+        return route().current('chartPendaftaran.index') ||
+            route().current('chartBpjs.index') ||
+            route().current('chartLayanan.index') ||
+            route().current('chartInformasi.index') ||
+            route().current('chartLaporan.index');
     };
 
     return (
@@ -40,37 +41,44 @@ export default function NavigationLogs() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Logs
+                Chart
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('logsBridge.index')}
-                        active={route().current('logsBridge.index')}
+                        href={route('chartPendaftaran.index')}
+                        active={route().current('chartPendaftaran.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Bridge Logs
+                        Pendaftaran
                     </NavLink>
                     <NavLink
-                        href={route('logsAkses.index')}
-                        active={route().current('logsAkses.index')}
+                        href={route('chartBpjs.index')}
+                        active={route().current('chartBpjs.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengguna Akses
+                        BPJS
                     </NavLink>
                     <NavLink
-                        href={route('logsRequest.index')}
-                        active={route().current('logsRequest.index')}
+                        href={route('chartLayanan.index')}
+                        active={route().current('chartLayanan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengguna Request
+                        Layanan
                     </NavLink>
                     <NavLink
-                        href={route('logsPengguna.index')}
-                        active={route().current('logsPengguna.index')}
+                        href={route('chartInformasi.index')}
+                        active={route().current('chartInformasi.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengguna Aplikasi
+                        Informasi
+                    </NavLink>
+                    <NavLink
+                        href={route('chartLaporan.index')}
+                        active={route().current('chartLaporan.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Laporan
                     </NavLink>
                 </div>
             )}

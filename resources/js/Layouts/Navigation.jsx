@@ -13,6 +13,7 @@ import NavigationMedicalrecord from '@/Components/NavigationMedicalrecord';
 import NavigationInformasi from '@/Components/NavigationInformasi';
 import NavigationKontrol from '@/Components/NavigationKontrol';
 import NavigationManajemen from '@/Components/NavigationManajemen';
+import NavigationChart from '@/Components/NavigationChart';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -44,6 +45,7 @@ export default function Navigation({ user }) {
                         </NavLink>
                         <NavigationManajemen />
                         <NavigationLaporan />
+                        <NavigationChart />
                     </>
 
                 ) :
@@ -57,6 +59,7 @@ export default function Navigation({ user }) {
                             <NavigationInventory />
                             <NavigationInformasi />
                             <NavigationLaporan />
+                            <NavigationChart />
                             <NavigationLogs />
                             <NavigationMaster />
                         </>
