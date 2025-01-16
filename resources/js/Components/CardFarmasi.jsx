@@ -1,7 +1,7 @@
 import React from "react";
 import { UserGroupIcon, HomeIcon, DocumentCheckIcon, ClipboardDocumentCheckIcon, ClipboardDocumentListIcon } from "@heroicons/react/16/solid";
 
-const CardPenunjang = ({
+const CardFarmasi = ({
     ruangan,
     jumlahOrder,
     jumlahTindakan,
@@ -33,7 +33,7 @@ const CardPenunjang = ({
                 <div className="flex items-center">
                     <DocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Tindakan : {jumlahTindakan}
+                        Detail : {jumlahTindakan}
                     </p>
                 </div>
             </div>
@@ -42,13 +42,13 @@ const CardPenunjang = ({
                 <div className="flex items-center">
                     <ClipboardDocumentListIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Hasil : {jumlahHasil}
+                        Telaah : {jumlahHasil}
                     </p>
                 </div>
                 <div className="flex items-center">
                     <ClipboardDocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Catatan : {catatanHasil}
+                        Retur : {catatanHasil}
                     </p>
                 </div>
             </div>
@@ -56,4 +56,5 @@ const CardPenunjang = ({
     );
 };
 
-export default CardPenunjang;
+export default CardFarmasi;
+

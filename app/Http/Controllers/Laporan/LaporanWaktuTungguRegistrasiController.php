@@ -81,7 +81,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
                 DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
-                DB::raw("DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s') as SELISIH"),
+                DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
             ])
             ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
             ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
@@ -218,7 +218,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
                 DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
-                DB::raw("DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s') as SELISIH"),
+                DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
             ])
             ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
             ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
@@ -257,11 +257,11 @@ class LaporanWaktuTungguRegistrasiController extends Controller
 
         // Kirim data ke frontend menggunakan Inertia
         return inertia("Laporan/WaktuTunggu/Print", [
-            'data'              => $data,
-            'dariTanggal'       => $dariTanggal,
-            'sampaiTanggal'     => $sampaiTanggal,
-            'namaRuangan'       => $namaRuangan,
-            'namaDokter'    => $namaDokter,
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaDokter' => $namaDokter,
         ]);
     }
 }

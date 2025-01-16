@@ -1,7 +1,7 @@
 import React from "react";
 import CardPenunjang from "@/Components/CardPenunjang";
+import CardFarmasi from "@/Components/CardFarmasi";
 import { formatRibuan } from "@/utils/formatRibuan";
-
 
 export default function LayananPenunjang({
     dataLaboratorium,
@@ -15,7 +15,7 @@ export default function LayananPenunjang({
     return (
         <div className="max-w-full mx-auto sm:pl-5 lg:pl-5 w-full">
             <div className="text-gray-900 dark:text-gray-100 w-full">
-                <div className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 gap-3">
                     <CardPenunjang
                         ruangan="LABORATORIUM"
                         jumlahOrder={formatRibuan(dataLaboratorium.orderLab)}
@@ -32,6 +32,15 @@ export default function LayananPenunjang({
                         jumlahHasil={formatRibuan(hasilRadiologi.hasilRad)}
                         catatanHasil={formatRibuan(catatanRadiologi.catatanRad)}
                         iconColor="text-pink-500"
+                    />
+
+                    <CardFarmasi
+                        ruangan="FARMASI"
+                        jumlahOrder={formatRibuan(dataRadiologi.orderRad)}
+                        jumlahTindakan={formatRibuan(dataRadiologi.tindakanRad)}
+                        jumlahHasil={formatRibuan(hasilRadiologi.hasilRad)}
+                        catatanHasil={formatRibuan(catatanRadiologi.catatanRad)}
+                        iconColor="text-amber-500"
                     />
                 </div>
             </div>
