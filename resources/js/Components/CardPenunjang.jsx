@@ -4,10 +4,10 @@ import { UserGroupIcon, HomeIcon, DocumentCheckIcon, ClipboardDocumentCheckIcon,
 
 const CardPenunjang = ({
     ruangan,
-    kunjunganTotal,
-    kunjunganStatus,
-    orderStatus,
-    hasilStatus,
+    jumlahOrder,
+    jumlahTindakan,
+    catatanHasil,
+    jumlahHasil,
     iconColor = "text-white",
     borderColor = "border-gray-700",
     bgGradient = "bg-gradient-to-r from-indigo-800 to-indigo-900",
@@ -27,28 +27,28 @@ const CardPenunjang = ({
             <div className="flex items-center mb-3 text-left">
                 <UserGroupIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                    Kunjungan Diterima: {kunjunganStatus}
+                    Jumlah Order: {jumlahOrder}
                 </p>
             </div>
 
             <div className="flex items-center mb-3 text-left">
                 <DocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                    Jumlah Order: {kunjunganTotal}
+                    Jumlah Tindakan: {jumlahTindakan}
                 </p>
             </div>
 
             <div className="flex items-center mb-3 text-left">
                 <ClipboardDocumentListIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                    Order Final : {orderStatus}
+                    Jumlah Hasil : {jumlahHasil}
                 </p>
             </div>
 
             <div className="flex items-center mb-2 text-left">
                 <ClipboardDocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                    Final Hasil: {hasilStatus}
+                    Catatan Hasil: {catatanHasil}
                 </p>
             </div>
         </div>

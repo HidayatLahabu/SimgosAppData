@@ -37,7 +37,11 @@ export default function Dashboard({
     waktuTungguTercepat,
     waktuTungguTerlama,
     dataLaboratorium,
+    hasilLaboratorium,
+    catatanLaboratorium,
     dataRadiologi,
+    hasilRadiologi,
+    catatanRadiologi,
 }) {
 
     const today = new Date();
@@ -102,7 +106,11 @@ export default function Dashboard({
                     </h1>
                     <LayananPenunjang
                         dataLaboratorium={dataLaboratorium}
+                        hasilLaboratorium={hasilLaboratorium}
+                        catatanLaboratorium={catatanLaboratorium}
                         dataRadiologi={dataRadiologi}
+                        hasilRadiologi={hasilRadiologi}
+                        catatanRadiologi={catatanRadiologi}
                     />
                 </div>
                 <div className="flex flex-col w-3/4 -mx-1 pr-5">

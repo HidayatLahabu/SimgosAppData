@@ -3,7 +3,14 @@ import CardPenunjang from "@/Components/CardPenunjang";
 import { formatRibuan } from "@/utils/formatRibuan";
 
 
-export default function LayananPenunjang({ dataLaboratorium, dataRadiologi }) {
+export default function LayananPenunjang({
+    dataLaboratorium,
+    hasilLaboratorium,
+    catatanLaboratorium,
+    dataRadiologi,
+    hasilRadiologi,
+    catatanRadiologi,
+}) {
 
     return (
         <div className="max-w-full mx-auto sm:pl-5 lg:pl-5 w-full">
@@ -11,19 +18,19 @@ export default function LayananPenunjang({ dataLaboratorium, dataRadiologi }) {
                 <div className="grid grid-cols-1 gap-2">
                     <CardPenunjang
                         ruangan="LABORATORIUM"
-                        kunjunganStatus={formatRibuan(dataLaboratorium.kunjunganStatus)}
-                        kunjunganTotal={formatRibuan(dataLaboratorium.kunjunganTotal)}
-                        orderStatus={formatRibuan(dataLaboratorium.orderStatus)}
-                        hasilStatus={formatRibuan(dataLaboratorium.hasilStatus)}
+                        jumlahOrder={formatRibuan(dataLaboratorium.orderLab)}
+                        jumlahTindakan={formatRibuan(dataLaboratorium.tindakanLab)}
+                        jumlahHasil={formatRibuan(hasilLaboratorium.hasilLab)}
+                        catatanHasil={formatRibuan(catatanLaboratorium.catatanLab)}
                         iconColor="text-orange-500"
                     />
 
                     <CardPenunjang
                         ruangan="RADIOLOGI"
-                        kunjunganTotal={formatRibuan(dataRadiologi.kunjunganTotal)}
-                        kunjunganStatus={formatRibuan(dataRadiologi.kunjunganStatus)}
-                        orderStatus={formatRibuan(dataRadiologi.orderStatus)}
-                        hasilStatus={formatRibuan(dataRadiologi.hasilStatus)}
+                        jumlahOrder={formatRibuan(dataRadiologi.orderRad)}
+                        jumlahTindakan={formatRibuan(dataRadiologi.tindakanRad)}
+                        jumlahHasil={formatRibuan(hasilRadiologi.hasilRad)}
+                        catatanHasil={formatRibuan(catatanRadiologi.catatanRad)}
                         iconColor="text-pink-500"
                     />
                 </div>

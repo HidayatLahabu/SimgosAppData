@@ -68,7 +68,12 @@ class DashboardController extends Controller
         $waktuTungguTerlama = $this->getWaktuTungguTerlama();
 
         $dataLaboratorium = $this->getLaboratorium();
+        $hasilLaboratorium = $this->getLaboratoriumHasil();
+        $catatanLaboratorium = $this->getLaboratoriumCatatan();
+
         $dataRadiologi = $this->getRadiologi();
+        $hasilRadiologi = $this->getRadiologi();
+        $catatanRadiologi = $this->getRadiologiCatatan();
 
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
@@ -99,7 +104,11 @@ class DashboardController extends Controller
             'waktuTungguTercepat' => $waktuTungguTercepat,
             'waktuTungguTerlama' => $waktuTungguTerlama,
             'dataLaboratorium' => $dataLaboratorium,
+            'hasilLaboratorium' => $hasilLaboratorium,
+            'catatanLaboratorium' => $catatanLaboratorium,
             'dataRadiologi' => $dataRadiologi,
+            'hasilRadiologi' => $hasilRadiologi,
+            'catatanRadiologi' => $catatanLaboratorium,
         ]);
     }
 
@@ -785,43 +794,94 @@ class DashboardController extends Controller
 
     public function getLaboratorium()
     {
-        $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
+        $data = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
             ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+            ->selectRaw('
+            COUNT(DISTINCT orderLab.NOMOR) as orderLab, 
+            COUNT(orderDetail.TINDAKAN) as tindakanLab
+        ')
+            ->whereDate('orderLab.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
 
-        $query->selectRaw('
-        COUNT(orderLab.TANGGAL) as kunjunganTotal,
-        SUM(CASE WHEN kunjungan.STATUS = 1 THEN 1 ELSE 0 END) as kunjunganStatus,
-        SUM(CASE WHEN orderLab.STATUS IN (1, 2) THEN 1 ELSE 0 END) as orderStatus,
-        SUM(CASE WHEN hasil.STATUS = 1 THEN 1 ELSE 0 END) as hasilStatus
-    ');
+        return $data ?? (object) [
+            'orderLab' => 0,
+            'tindakanLab' => 0,
+        ];
+    }
 
-        $query->whereDate('orderLab.TANGGAL', '=', Carbon::today()->toDateString());
 
-        // Return the first row (single result)
-        $data = $query->first();
-        return $data;
+    public function getLaboratoriumHasil()
+    {
+        $data = DB::connection('mysql7')->table('layanan.hasil_lab as hasilLab')
+            ->selectRaw('
+            COUNT(hasilLab.ID) as hasilLab
+        ')
+            ->whereDate('hasilLab.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
+
+        return $data ?? (object) [
+            'hasilLab' => 0,
+        ];
+    }
+
+    public function getLaboratoriumCatatan()
+    {
+        $data = DB::connection('mysql7')->table('layanan.catatan_hasil_lab as catatan')
+            ->selectRaw('
+                COUNT(catatan.KUNJUNGAN) as catatanLab
+            ')
+            ->whereDate('catatan.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
+
+        return $data ?? (object) [
+            'catatanLab' => 0
+        ];
     }
 
     public function getRadiologi()
     {
-        $query = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderRad.KUNJUNGAN')
+        $data = DB::connection('mysql7')->table('layanan.order_rad as orderRad')
             ->leftJoin('layanan.order_detil_rad as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderRad.NOMOR')
-            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+            ->selectRaw('
+                COUNT(DISTINCT orderRad.NOMOR) as orderRad, 
+                COUNT(orderDetail.TINDAKAN) as tindakanRad
+            ')
+            ->whereDate('orderRad.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
 
-        $query->selectRaw('
-        COUNT(orderRad.TANGGAL) as kunjunganTotal,
-        SUM(CASE WHEN kunjungan.STATUS = 1 THEN 1 ELSE 0 END) as kunjunganStatus,
-        SUM(CASE WHEN orderRad.STATUS IN (1, 2) THEN 1 ELSE 0 END) as orderStatus,
-        SUM(CASE WHEN hasil.STATUS = 1 THEN 1 ELSE 0 END) as hasilStatus
-    ');
+        return $data ?? (object) [
+            'orderRad' => 0,
+            'tindakanRad' => 0,
+        ];
+    }
 
-        $query->whereDate('orderRad.TANGGAL', '=', Carbon::today()->toDateString());
+    public function getRadiologiHasil()
+    {
+        $data = DB::connection('mysql7')->table('layanan.hasil_rad as hasilRad')
+            ->selectRaw('
+            COUNT(hasilRad.ID) as hasilRad
+        ')
+            ->whereDate('hasilRad.TANGGAL', '=', Carbon::today()->toDateString())
+            ->where('hasilRad.TANGGAL', 1)
+            ->first();
 
-        // Return the first row (single result)
-        $data = $query->first();
-        return $data;
+        return $data ?? (object) [
+            'hasilRad' => 0,
+        ];
+    }
+
+    public function getRadiologiCatatan()
+    {
+        $data = DB::connection('mysql7')->table('layanan.hasil_rad as hasilRad')
+            ->selectRaw('
+            COUNT(hasilRad.ID) as catatanRad
+        ')
+            ->whereDate('hasilRad.TANGGAL', '=', Carbon::today()->toDateString())
+            ->where('hasilRad.TANGGAL', 2)
+            ->first();
+
+        return $data ?? (object) [
+            'catatanRad' => 0,
+        ];
     }
 }
