@@ -91,7 +91,8 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             })
             ->join('master.ruangan as r', function ($join) {
                 $join->on('tp.RUANGAN', '=', 'r.ID')
-                    ->where('r.JENIS', '=', 5);
+                    ->where('r.JENIS', '=', 5)
+                    ->where('r.JENIS_KUNJUNGAN', 1);
             })
             ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
             ->whereIn('pd.STATUS', [1])
@@ -143,7 +144,8 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             })
             ->join('master.ruangan as r', function ($join) {
                 $join->on('tp.RUANGAN', '=', 'r.ID')
-                    ->where('r.JENIS', '=', 5);
+                    ->where('r.JENIS', '=', 5)
+                    ->where('r.JENIS_KUNJUNGAN', 1);
             })
             ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
             ->whereIn('pd.STATUS', [1])

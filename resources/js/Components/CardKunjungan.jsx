@@ -1,42 +1,95 @@
 import React from "react";
-import { formatRibuan } from "@/utils/formatRibuan";
+import { Bar } from "react-chartjs-2";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
 
-const CardKunjungan = ({ title, todayValue, date, yesterdayValue, yesterdayDate }) => {
+// Register the required chart components
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-    const formattedTime = date
-        ? date.split(' ')[1]
-        : null;
+const CardKunjungan = ({ title, todayValue, date, yesterdayValue, chartData, barColor, titleColor }) => {
+    // Calculate the difference between today's and yesterday's values
+    const difference = todayValue - yesterdayValue;
+
+    // Define chart options
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context) => `${context.dataset.label}: ${context.raw}`,
+                },
+            },
+        },
+        scales: {
+            x: {
+                grid: {
+                    display: false,
+                },
+                ticks: {
+                    font: {
+                        size: 10,
+                    },
+                    color: 'rgb(176, 175, 153)',
+                },
+            },
+            y: {
+                grid: {
+                    display: true,
+                },
+                ticks: {
+                    font: {
+                        size: 10,
+                    },
+                    precision: 0,
+                    color: 'rgb(176, 175, 153)',
+                },
+            },
+        },
+    };
+
+    // Prepare chart data
+    const data = {
+        labels: chartData.labels,
+        datasets: [
+            {
+                label: title,
+                data: chartData.values,
+                backgroundColor: barColor || "rgba(75, 192, 192, 0.6)",
+                borderColor: barColor || "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+            },
+        ],
+    };
 
     return (
-        <div className="flex items-center p-5 bg-gradient-to-r from-indigo-800 to-indigo-900 rounded-lg shadow-lg text-white space-x-4 hover:bg-gradient-to-r hover:from-indigo-700 hover:to-indigo-800 hover:shadow-xl transform hover:scale-105 transition-transform duration-300 group">
-            {/* Bagian Kiri */}
-            <div className="flex-1">
-                <h2 className="text-lg font-bold text-yellow-500 uppercase group-hover:text-white transition-colors duration-300">
+        <div className="bg-white dark:bg-indigo-950 shadow-md rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+                {/* Title with customizable color */}
+                <h2
+                    className="text-xl font-bold"
+                    style={{ color: titleColor || "inherit" }}
+                >
                     {title}
                 </h2>
-                {date && todayValue !== 0 ? (
-                    <p className="text-xs text-gray-300 mt-1 group-hover:text-yellow-500 transition-colors duration-300">
-                        Update: {formattedTime}
-                    </p>
-                ) : (
-                    <p className="text-xs text-gray-300 mt-1 group-hover:text-red-500 transition-colors duration-300">
-                        Belum Terupdate
-                    </p>
-                )}
-                {/* <p className="text-xl text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
-                    {yesterdayDate}: {yesterdayValue}
-                </p> */}
-                <p className="text-sm text-red-400 mt-1 group-hover:text-gray-200 transition-colors duration-300">
-                    Sebelumnya: {yesterdayValue}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {date ? `Tanggal Update : ${new Date(date).toLocaleDateString()}` : "Belum Diupdate"}
                 </p>
             </div>
 
-            {/* Bagian Kanan */}
-            <div className="flex items-center justify-center text-5xl font-extrabold text-green-500 group-hover:text-yellow-500 transition-colors duration-300">
-                {formatRibuan(todayValue)}
+            <div className="mt-4">
+                <Bar data={data} options={options} />
             </div>
         </div>
-
     );
 };
 

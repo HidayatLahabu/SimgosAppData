@@ -51,8 +51,8 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(93, 181, 232)",
-                        backgroundColor: "rgba(93, 181, 232, 0.3)",
+                        borderColor: "rgba(252, 236, 61)",
+                        backgroundColor: "rgba(252, 236, 61, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,

@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
+const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -22,40 +22,36 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
         ];
 
         // Map data untuk tahun ini dan tahun lalu
-        const tahunIniCounts = Array(12).fill(0);
+        const tahunIniCounts = Array(12).fill(0); // Default semua bulan = 0
         const tahunLaluCounts = Array(12).fill(0);
 
-        mutasiTahunIni.forEach((item) => {
-            tahunIniCounts[item.bulan - 1] = item.total;
+        kunjunganTahunIni.forEach((item) => {
+            tahunIniCounts[item.bulan - 1] = item.total; // bulan di index 0-11
         });
 
-        mutasiTahunLalu.forEach((item) => {
+        kunjunganTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
         // Chart untuk perbandingan antara tahun ini dan tahun lalu
         chartInstance = new Chart(ctx, {
-            type: "line",
+            type: "bar",
             data: {
                 labels: bulan,
                 datasets: [
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(245, 130, 178)",
-                        backgroundColor: "rgba(245, 130, 178, 0.3)",
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
+                        backgroundColor: "rgba(28, 185, 237, 0.6)",
+                        borderColor: "rgba(28, 185, 237)",
+                        borderWidth: 1,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(93, 181, 232)",
-                        backgroundColor: "rgba(93, 181, 232, 0.3)",
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
+                        backgroundColor: "rgba(245, 155, 66, 0.6)",
+                        borderColor: "rgba(245, 155, 66)",
+                        borderWidth: 1,
                     },
                 ],
             },
@@ -74,13 +70,15 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                         },
                     },
                 },
+                barThickness: 30,
+                grouped: true,
             },
         });
 
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [mutasiTahunIni, mutasiTahunLalu]);
+    }, [kunjunganTahunIni, kunjunganTahunLalu]);
 
     return (
         <div className="p-5 flex flex-wrap w-full">
@@ -89,7 +87,7 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Mutasi Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +98,4 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
     );
 };
 
-export default Mutasi;
+export default Pendaftaran;

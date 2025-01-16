@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\LayananResepModel;
 use App\Models\BpjsKunjunganModel;
+use App\Models\BpjsRekonModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\BpjsRujukanMasukModel;
 use App\Models\InformasiPenunjangModel;
@@ -43,6 +44,7 @@ class DashboardController extends Controller
         $konsul = $this->getKonsul();
         $mutasi = $this->getMutasi();
         $kunjunganBpjs = $this->getKunjunganBpjs();
+        $rencanaKontrol = $this->getRencanaKontrol();
         $laboratorium = $this->getOrderLaboratorium();
         $radiologi = $this->getOrderRadiologi();
         $resep = $this->getOrderResep();
@@ -62,6 +64,9 @@ class DashboardController extends Controller
         $laboratoriumBulanan = $this->getMonthlyLaboratorium();
         $radiologiBulanan = $this->getMonthlyRadiologi();
 
+        $waktuTungguTercepat = $this->getWaktuTungguTercepat();
+        $waktuTungguTerlama = $this->getWaktuTungguTerlama();
+
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
             'pendaftaran' => $pendaftaran,
@@ -69,6 +74,7 @@ class DashboardController extends Controller
             'konsul' => $konsul,
             'mutasi' => $mutasi,
             'kunjunganBpjs' => $kunjunganBpjs,
+            'rencanaKontrol' => $rencanaKontrol,
             'laboratorium' => $laboratorium,
             'radiologi' => $radiologi,
             'resep' => $resep,
@@ -87,6 +93,8 @@ class DashboardController extends Controller
             'rawatInapBulanan' => $rawatInapBulanan,
             'laboratoriumBulanan' => $laboratoriumBulanan,
             'radiologiBulanan' => $radiologiBulanan,
+            'waktuTungguTercepat' => $waktuTungguTercepat,
+            'waktuTungguTerlama' => $waktuTungguTerlama,
         ]);
     }
 
@@ -133,6 +141,15 @@ class DashboardController extends Controller
     protected function getKunjunganBpjs()
     {
         return BpjsKunjunganModel::whereBetween('tglSEP', [
+            now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
+            now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
+        ])
+            ->count();
+    }
+
+    protected function getRencanaKontrol()
+    {
+        return BpjsRekonModel::whereBetween('tglRencanaKontrol', [
             now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
             now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
         ])
@@ -425,102 +442,40 @@ class DashboardController extends Controller
 
     protected function getStatistikKunjungan()
     {
+        $lastFiveDaysData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+            ->select(
+                'statistikKunjungan.RJ as rajal',
+                'statistikKunjungan.RD as darurat',
+                'statistikKunjungan.RI as ranap',
+                'statistikKunjungan.TANGGAL as tanggal'
+            )
+            ->where(function ($query) {
+                $query->where('statistikKunjungan.RJ', '>', 0)
+                    ->orWhere('statistikKunjungan.RD', '>', 0)
+                    ->orWhere('statistikKunjungan.RI', '>', 0);
+            })
+            ->whereBetween('statistikKunjungan.TANGGAL', [now()->subDays(7)->toDateString(), now()->toDateString()])
+            ->orderBy('statistikKunjungan.TANGGAL', 'asc')
+            ->get()
+            ->map(function ($item) {
+                // Format the 'tanggal' field to dd-mm-yyyy
+                $item->tanggal = Carbon::parse($item->tanggal)->format('d/m/Y');
+                return $item;
+            });
+
+        // Data statistik kunjungan untuk hari ini
         $todayData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
             ->select(
-                'statistikKunjungan.RJ as rajal',
-                'statistikKunjungan.RD as darurat',
-                'statistikKunjungan.RI as ranap',
-                'statistikKunjungan.TANGGAL_UPDATED as tanggalUpdated',
+                'statistikKunjungan.TANGGAL as updated'
             )
-            ->where(function ($query) {
-                $query->where('statistikKunjungan.RJ', '>', 0)
-                    ->orWhere('statistikKunjungan.RD', '>', 0)
-                    ->orWhere('statistikKunjungan.RI', '>', 0);
-            })
-            ->whereDate('statistikKunjungan.TANGGAL', '=', now()->toDateString())
+            ->whereDate('statistikKunjungan.TANGGAL', now()->toDateString())
             ->first();
 
-        $yesterdayData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
-            ->select(
-                'statistikKunjungan.RJ as rajal',
-                'statistikKunjungan.RD as darurat',
-                'statistikKunjungan.RI as ranap',
-                'statistikKunjungan.TANGGAL as tanggal',
-            )
-            ->where(function ($query) {
-                $query->where('statistikKunjungan.RJ', '>', 0)
-                    ->orWhere('statistikKunjungan.RD', '>', 0)
-                    ->orWhere('statistikKunjungan.RI', '>', 0);
-            })
-            ->whereDate('statistikKunjungan.TANGGAL', '=', now()->subDay()->toDateString())
-            ->first();
-
-        $todayLab = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
-            ->selectRaw(
-                'SUM(penunjang.VALUE) as total_value, 
-                MAX(penunjang.LASTUPDATED) as last_updated,
-                penunjang.TANGGAL'
-            )
-            ->where('penunjang.ID', '4')
-            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
-            ->groupBy('penunjang.TANGGAL')
-            ->first();
-
-        $yesterdayLab = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
-            ->selectRaw(
-                'SUM(penunjang.VALUE) as total_value, 
-                MAX(penunjang.TANGGAL) as tanggal'
-            )
-            ->where('penunjang.ID', '4')
-            ->whereDate('penunjang.TANGGAL', '=', now()->subDay()->toDateString())
-            ->groupBy('penunjang.TANGGAL')
-            ->first();
-
-        $todayRadiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
-            ->selectRaw(
-                'SUM(penunjang.VALUE) as total_value, 
-                MAX(penunjang.LASTUPDATED) as last_updated,
-                penunjang.TANGGAL'
-            )
-            ->where('penunjang.ID', '5')
-            ->whereDate('penunjang.TANGGAL', '=', now()->toDateString())
-            ->groupBy('penunjang.TANGGAL')
-            ->first();
-
-        $yesterdayRadiologi = DB::connection('mysql12')->table('informasi.penunjang as penunjang')
-            ->selectRaw(
-                'SUM(penunjang.VALUE) as total_value, 
-                MAX(penunjang.TANGGAL) as tanggal'
-            )
-            ->where('penunjang.ID', '5')
-            ->whereDate('penunjang.TANGGAL', '=', now()->subDay()->toDateString())
-            ->groupBy('penunjang.TANGGAL')
-            ->first();
-
-        // Mengembalikan hasil jika ada data, jika tidak ada data return default value
         return [
-            'todayRajal' => (float) ($todayData->rajal ?? 0),
-            'todayRanap' => (float) ($todayData->ranap ?? 0),
-            'todayDarurat' => (float) ($todayData->darurat ?? 0),
-            'todayUpdated' => $todayData->tanggalUpdated ?? null,
-
-            'yesterdayRajal' => (float) ($yesterdayData->rajal ?? 0),
-            'yesterdayRanap' => (float) ($yesterdayData->ranap ?? 0),
-            'yesterdayDarurat' => (float) ($yesterdayData->darurat ?? 0),
-            'yesterdayUpdated' => $yesterdayData->tanggal ?? null,
-
-            'todayLabData' => (float) ($todayLab->total_value ?? 0),
-            'todayLabUpdate' => $todayLab->last_updated ?? null,
-            'yesterdayLabData' => (float) ($yesterdayLab->total_value ?? 0),
-            'yesterdayUpdateLab' => $yesterdayLab->tanggal ?? null,
-
-            'todayRadiologi' => (float) ($todayRadiologi->total_value ?? 0),
-            'todayRadiologiUpdate' => $todayRadiologi->last_updated ?? null,
-            'yesterdayRadiologi' => (float) ($yesterdayRadiologi->total_value ?? 0),
-            'yesterdayRadiologiUpdate' => $yesterdayRadiologi->tanggal ?? null,
+            'todayUpdated' => $todayData->updated ?? null,
+            'lastFiveDaysData' => $lastFiveDaysData,
         ];
     }
-
 
     protected function getMonthlyRawatJalan()
     {
@@ -727,5 +682,99 @@ class DashboardController extends Controller
         ")
             ->orderByRaw("FIELD(BULAN, 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember')")
             ->get();
+    }
+
+    public function getWaktuTungguTercepat()
+    {
+        $vRuangan = '%';
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+            ->select([
+                'r.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
+                DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK)) as WAKTU_TUNGGU_RATA_RATA"),
+                DB::raw("COUNT(tp.NOPEN) as JUMLAH_PASIEN"),
+                DB::raw("MONTH(tk.MASUK) as BULAN"),
+                DB::raw("YEAR(tk.MASUK) as TAHUN"),
+            ])
+            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
+            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
+            ->join('pendaftaran.kunjungan as tk', function ($join) {
+                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
+                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            })
+            ->join('master.ruangan as r', function ($join) {
+                $join->on('tp.RUANGAN', '=', 'r.ID')
+                    ->where('r.JENIS', '=', 5)
+                    ->where('r.JENIS_KUNJUNGAN', 1);
+            })
+            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
+            ->whereIn('pd.STATUS', [1])
+            ->whereNull('tk.REF')
+            ->whereIn('tk.STATUS', [1, 2])
+            ->where('tp.RUANGAN', 'LIKE', $vRuangan)
+            ->whereYear('tk.MASUK', '=', date('Y'))
+            ->whereMonth('tk.MASUK', '=', date('m'));
+
+        // Apply ordering and pagination
+        $data = $query->groupBy(
+            DB::raw('MONTH(tk.MASUK)'),
+            DB::raw('YEAR(tk.MASUK)'),
+            'dok.NIP',
+            'r.DESKRIPSI'
+        )
+            ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK))"), 'asc')
+            ->first();
+
+        // Return paginated data
+        return $data;
+    }
+
+    public function getWaktuTungguTerlama()
+    {
+        $vRuangan = '%';
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+            ->select([
+                'r.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
+                DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK)) as WAKTU_TUNGGU_RATA_RATA"),
+                DB::raw("COUNT(tp.NOPEN) as JUMLAH_PASIEN"),
+                DB::raw("MONTH(tk.MASUK) as BULAN"),
+                DB::raw("YEAR(tk.MASUK) as TAHUN"),
+            ])
+            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
+            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
+            ->join('pendaftaran.kunjungan as tk', function ($join) {
+                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
+                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            })
+            ->join('master.ruangan as r', function ($join) {
+                $join->on('tp.RUANGAN', '=', 'r.ID')
+                    ->where('r.JENIS', '=', 5)
+                    ->where('r.JENIS_KUNJUNGAN', 1);
+            })
+            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
+            ->whereIn('pd.STATUS', [1])
+            ->whereNull('tk.REF')
+            ->whereIn('tk.STATUS', [1, 2])
+            ->where('tp.RUANGAN', 'LIKE', $vRuangan)
+            ->whereYear('tk.MASUK', '=', date('Y'))
+            ->whereMonth('tk.MASUK', '=', date('m'));
+
+        // Apply ordering and pagination
+        $data = $query->groupBy(
+            DB::raw('MONTH(tk.MASUK)'),
+            DB::raw('YEAR(tk.MASUK)'),
+            'dok.NIP',
+            'r.DESKRIPSI'
+        )
+            ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK))"), 'desc')
+            ->first();
+
+        // Return paginated data
+        return $data;
     }
 }
