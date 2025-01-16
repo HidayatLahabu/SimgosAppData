@@ -473,7 +473,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($item) {
                 // Format the 'tanggal' field to dd-mm-yyyy
-                $item->tanggal = Carbon::parse($item->tanggal)->format('d/m/Y');
+                $item->tanggal = Carbon::parse($item->tanggal)->format('d M');
                 return $item;
             });
 
