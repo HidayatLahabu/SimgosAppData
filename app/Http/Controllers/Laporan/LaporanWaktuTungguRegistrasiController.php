@@ -52,8 +52,6 @@ class LaporanWaktuTungguRegistrasiController extends Controller
             ->where('ruangan.DESKRIPSI', 'NOT LIKE', '%Umum%')
             ->get();
 
-        //dd($dokter);
-
         // Return the data to the Inertia.js view
         return inertia('Laporan/WaktuTunggu/Index', [
             'dataTable' => [
@@ -82,6 +80,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
                 DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
+                DB::raw("DATEDIFF(tk.MASUK, pd.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(tk.MASUK, pd.TANGGAL)) as SELISIH_DETIK"),
             ])
             ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
             ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
@@ -219,6 +218,7 @@ class LaporanWaktuTungguRegistrasiController extends Controller
                 DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
                 DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
+                DB::raw("DATEDIFF(tk.MASUK, pd.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(tk.MASUK, pd.TANGGAL)) as SELISIH_DETIK"),
             ])
             ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
             ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')

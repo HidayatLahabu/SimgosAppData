@@ -48,10 +48,9 @@ export default function Harian({ dataTable, queryParams = {} }) {
         searchFieldChanged(search, e.target.value);
     };
 
-    const convertTimeToMinutes = (timeString) => {
-        const [hours, minutes, seconds] = timeString.split(":").map(Number);
-        return hours * 60 + minutes + seconds / 60;
-    };
+    function convertTimeToMinutes(seconds) {
+        return Math.floor(seconds / 60); // Mengubah detik menjadi menit
+    }
 
     return (
         <div className="py-5">
@@ -91,7 +90,7 @@ export default function Harian({ dataTable, queryParams = {} }) {
                                         dataTable.data.map((data, index) => (
                                             <TableRow
                                                 key={data.NOMOR}
-                                                className={`${convertTimeToMinutes(data.SELISIH) > 60 ? 'text-red-400' : ''
+                                                className={`${convertTimeToMinutes(data.SELISIH_DETIK) > 60 ? 'text-red-400' : ''
                                                     }`}
                                             >
                                                 <TableCell>{data.NORM}</TableCell>

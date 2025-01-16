@@ -9,10 +9,9 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
     }, []);
 
     // Fungsi untuk mengonversi waktu (format HH:MM:SS) ke menit
-    const convertTimeToMinutes = (timeString) => {
-        const [hours, minutes] = timeString.split(':').map(Number);
-        return hours * 60 + minutes;
-    };
+    function convertTimeToMinutes(seconds) {
+        return Math.floor(seconds / 60); // Mengubah detik menjadi menit
+    }
 
     return (
         <div className="h-screen w-screen bg-white">
@@ -48,7 +47,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => {
-                                            const isLongWait = convertTimeToMinutes(item.SELISIH) > 60;
+                                            const isLongWait = convertTimeToMinutes(item.SELISIH_DETIK) > 60;
                                             return (
                                                 <tr key={item.noSurat} className={`${isLongWait ? 'text-red-600' : ''} border-b bg-white dark:border-gray-500`}>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
