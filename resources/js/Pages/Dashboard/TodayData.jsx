@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from "@/Components/Card";
-import { UsersIcon, UserPlusIcon, UserGroupIcon, BoldIcon, ClipboardIcon, DocumentCheckIcon, EyeDropperIcon, ArrowRightCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/16/solid';
+import { UsersIcon, UserPlusIcon, UserGroupIcon, BoldIcon, DocumentTextIcon, DocumentCheckIcon, EyeDropperIcon, ArrowRightCircleIcon, ExclamationTriangleIcon, BeakerIcon } from '@heroicons/react/16/solid';
 
 export default function TodayData({
     pendaftaran,
@@ -92,7 +92,7 @@ export default function TodayData({
                         valueSize="text-normal"
                         value={laboratorium}
                         description=''
-                        icon={EyeDropperIcon}
+                        icon={BeakerIcon}
                         iconColor="text-orange-500"
                     />
                     <Card
@@ -112,7 +112,7 @@ export default function TodayData({
                         valueSize="text-normal"
                         value={resep}
                         description=''
-                        icon={ClipboardIcon}
+                        icon={DocumentTextIcon}
                         iconColor="text-cyan-500"
                     />
                     <Card

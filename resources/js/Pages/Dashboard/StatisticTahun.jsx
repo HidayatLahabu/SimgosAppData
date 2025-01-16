@@ -4,42 +4,54 @@ import CardYear from "@/Components/CardYear";
 export default function StatisticTahun({
     statistikTahunIni,
     statistikTahunLalu,
+    statistikBulanIni,
+    statistikBulanLalu,
 }) {
     return (
         <div className="max-w-full mx-auto sm:pl-5 sm:pr-2 lg:px- w-full">
             <div className="text-gray-900 dark:text-gray-100 w-full">
-                {/* Grid Container */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
-                    {/* Card Items */}
                     <CardYear
-                        title="BOR"
-                        value={statistikTahunIni.BOR}
-                        lastValue={statistikTahunLalu.BOR}
+                        title="Bed Occupancy Rate"
+                        yearValue={statistikTahunIni.BOR}
+                        lastYearValue={statistikTahunLalu.BOR}
+                        monthValue={statistikBulanIni.BOR}
+                        lastMonthValue={statistikBulanLalu.BOR}
                     />
                     <CardYear
-                        title="AVLOS"
-                        value={statistikTahunIni.AVLOS}
-                        lastValue={statistikTahunLalu.AVLOS}
+                        title="Average Length of Stay"
+                        yearValue={statistikTahunIni.AVLOS}
+                        lastYearValue={statistikTahunLalu.AVLOS}
+                        monthValue={statistikBulanIni.AVLOS}
+                        lastMonthValue={statistikBulanLalu.AVLOS}
                     />
                     <CardYear
-                        title="BTO"
-                        value={statistikTahunIni.BTO}
-                        lastValue={statistikTahunLalu.BTO}
+                        title="Bed Turn Over"
+                        yearValue={statistikTahunIni.BTO}
+                        lastYearValue={statistikTahunLalu.BTO}
+                        monthValue={statistikBulanIni.BTO}
+                        lastMonthValue={statistikBulanLalu.BTO}
                     />
                     <CardYear
-                        title="TOI"
-                        value={statistikTahunIni.TOI}
-                        lastValue={statistikTahunLalu.TOI}
+                        title="Turn Over Interval"
+                        yearValue={statistikTahunIni.TOI}
+                        lastYearValue={statistikTahunLalu.TOI}
+                        monthValue={statistikBulanIni.TOI}
+                        lastMonthValue={statistikBulanLalu.TOI}
                     />
                     <CardYear
-                        title="NDR"
-                        value={statistikTahunIni.NDR}
-                        lastValue={statistikTahunLalu.NDR}
+                        title="Net Death Rate"
+                        yearValue={statistikTahunIni.NDR}
+                        lastYearValue={statistikTahunLalu.NDR}
+                        monthValue={statistikBulanIni.NDR}
+                        lastMonthValue={statistikBulanLalu.NDR}
                     />
                     <CardYear
-                        title="GDR"
-                        value={statistikTahunIni.GDR}
-                        lastValue={statistikTahunLalu.GDR}
+                        title="Gross Death Rate"
+                        yearValue={statistikTahunIni.GDR}
+                        lastYearValue={statistikTahunLalu.GDR}
+                        monthValue={statistikBulanIni.GDR}
+                        lastMonthValue={statistikBulanLalu.GDR}
                     />
                 </div>
             </div>

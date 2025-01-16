@@ -10,6 +10,7 @@ import RanapBulanan from './Dashboard/RanapBulanan'
 import LaboratoriumBulanan from './Dashboard/LaboratoriumBulanan';
 import RadiologiBulanan from './Dashboard/RadiologiBulanan';
 import WaktuTunggu from './Dashboard/WaktuTunggu';
+import LayananPenunjang from './Dashboard/LayananPenunjang';
 
 export default function Dashboard({
     auth,
@@ -35,6 +36,8 @@ export default function Dashboard({
     radiologiBulanan,
     waktuTungguTercepat,
     waktuTungguTerlama,
+    dataLaboratorium,
+    dataRadiologi,
 }) {
 
     const today = new Date();
@@ -88,39 +91,37 @@ export default function Dashboard({
                 </div>
             </div>
 
-
-
             <div className="pb-2 flex flex-wrap w-full">
                 <KunjunganHarian statistikKunjungan={statistikKunjungan} />
             </div>
 
-            <div className="flex flex-row gap-7 justify-center items-start w-full">
-                <div className="flex flex-col w-1/2 -mx-1 pl-1">
-                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
-                        Data Tahun Ini
+            <div className="flex flex-row gap-2 justify-center items-start w-full">
+                <div className="flex flex-col w-1/4">
+                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl dark:text-yellow-400">
+                        Layanan Penunjang
+                    </h1>
+                    <LayananPenunjang
+                        dataLaboratorium={dataLaboratorium}
+                        dataRadiologi={dataRadiologi}
+                    />
+                </div>
+                <div className="flex flex-col w-3/4 -mx-1 pr-5">
+                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl dark:text-yellow-400">
+                        Indikator Pelayanan
                     </h1>
                     <div className="pb-2 flex flex-wrap w-full">
                         <StatisticTahun
                             statistikTahunIni={statistikTahunIni}
                             statistikTahunLalu={statistikTahunLalu}
-                        />
-                    </div>
-                </div>
-
-                <div className="flex flex-col w-1/2 -mx-1">
-                    <h1 className="pt-3 uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
-                        Data Bulan Ini
-                    </h1>
-                    <div className="pb-2 flex flex-wrap w-full pr-1">
-                        <StatisticBulan
                             statistikBulanIni={statistikBulanIni}
                             statistikBulanLalu={statistikBulanLalu}
                         />
                     </div>
                 </div>
+
             </div>
 
-            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400 mb-2">
+            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
                 Kunjungan Bulanan
             </h1>
             <div className="pb-5 flex flex-wrap w-full">

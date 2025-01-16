@@ -6,7 +6,7 @@ export default function StatisticBulan({
     statistikBulanLalu,
 }) {
     return (
-        <div className="max-w-full mx-auto sm:pr-5 lg:px- w-full">
+        <div className="max-w-full mx-auto sm:pl-5 lg:pl-5 w-full">
             <div className="text-gray-900 dark:text-gray-100 w-full">
                 {/* Grid Container */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">

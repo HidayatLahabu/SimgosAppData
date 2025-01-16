@@ -1,6 +1,6 @@
 import React from "react";
 import { formatRibuan } from "@/utils/formatRibuan"; // Pastikan fungsi ini tersedia
-import { UsersIcon, HomeIcon, ClockIcon } from "@heroicons/react/16/solid";
+import { UserIcon, UsersIcon, HomeIcon, ClockIcon } from "@heroicons/react/16/solid";
 
 const CardWaktuTunggu = ({
     href,
@@ -22,11 +22,9 @@ const CardWaktuTunggu = ({
                 : "group-hover:text-yellow-400";
 
     return (
-        <a
-            href={href}
+        <div
             className={`flex flex-col px-5 py-5 bg-gradient-to-r ${bgGradient} rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 border ${borderColor} group`}
         >
-            {/* Ruangan */}
             <div className="flex items-center mb-2 text-left">
                 <HomeIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
                 <h2 className="text-sm uppercase font-bold text-gray-200 group-hover:text-yellow-500">
@@ -34,15 +32,13 @@ const CardWaktuTunggu = ({
                 </h2>
             </div>
 
-            {/* DPJP */}
             <div className="flex items-center mb-3 text-left">
-                <UsersIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
+                <UserIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
                     {dpjp}
                 </p>
             </div>
 
-            {/* Jumlah Pasien dan Waktu Tunggu */}
             <div className="flex justify-between items-center w-full">
                 {/* Pasien */}
                 <div className="flex items-center mb-2">
@@ -52,7 +48,6 @@ const CardWaktuTunggu = ({
                     </p>
                 </div>
 
-                {/* Waktu Tunggu */}
                 <div className="flex items-center mb-2">
                     <ClockIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
                     <p
@@ -62,7 +57,7 @@ const CardWaktuTunggu = ({
                     </p>
                 </div>
             </div>
-        </a>
+        </div>
     );
 };
 
