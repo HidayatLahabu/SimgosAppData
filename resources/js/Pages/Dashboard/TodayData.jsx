@@ -28,7 +28,7 @@ export default function TodayData({
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 mb-4">
                     <Card
                         href={isAdmin ? route("pendaftaran.index") : null}
-                        title="PENDAFTARAN PASIEN"
+                        title="PENDAFTARAN"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={pendaftaran}
@@ -37,7 +37,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("kunjungan.index") : null}
-                        title="PENERIMAAN KUNJUNGAN PASIEN"
+                        title="KUNJUNGAN"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={kunjungan}
@@ -47,7 +47,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("konsul.index") : null}
-                        title="PERMINTAAN KONSULTASI"
+                        title="KONSULTASI"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={konsul}
@@ -57,7 +57,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("mutasi.index") : null}
-                        title="PERMINTAAN MUTASI PASIEN"
+                        title="MUTASI"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={mutasi}
@@ -67,7 +67,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("kunjunganBpjs.index") : null}
-                        title="PASIEN BPJS KESEHATAN"
+                        title="PASIEN BPJS"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={kunjunganBpjs}
@@ -77,7 +77,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("rekonBpjs.index") : null}
-                        title="RENCANA KONTROL HARI INI"
+                        title="KONTROL HARI INI"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={rencanaKontrol}
@@ -87,7 +87,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("layananLab.index") : null}
-                        title="ORDER PEMERIKSAAN LABORATORIUM"
+                        title="LABORATORIUM"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={laboratorium}
@@ -97,7 +97,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("layananRad.index") : null}
-                        title="ORDER PEMERIKSAAN RADIOLOGI"
+                        title="RADIOLOGI"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={radiologi}
@@ -107,7 +107,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("layananResep.index") : null}
-                        title="ORDER FARMASI/RESEP"
+                        title="FARMASI/RESEP"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={resep}
@@ -117,7 +117,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("layananPulang.index") : null}
-                        title="PASIEN PULANG RAWAT INAP"
+                        title="PASIEN PULANG"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={pulang}
