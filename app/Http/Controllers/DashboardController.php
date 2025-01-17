@@ -72,7 +72,7 @@ class DashboardController extends Controller
         $catatanLaboratorium = $this->getLaboratoriumCatatan();
 
         $dataRadiologi = $this->getRadiologi();
-        $hasilRadiologi = $this->getRadiologi();
+        $hasilRadiologi = $this->getRadiologiHasil();
         $catatanRadiologi = $this->getRadiologiCatatan();
 
         $dataFarmasi = $this->getFarmasi();
@@ -866,10 +866,9 @@ class DashboardController extends Controller
     {
         $data = DB::connection('mysql7')->table('layanan.hasil_rad as hasilRad')
             ->selectRaw('
-            COUNT(hasilRad.ID) as hasilRad
-        ')
+                COUNT(hasilRad.ID) as hasilRad
+            ')
             ->whereDate('hasilRad.TANGGAL', '=', Carbon::today()->toDateString())
-            ->where('hasilRad.TANGGAL', 1)
             ->first();
 
         return $data ?? (object) [
