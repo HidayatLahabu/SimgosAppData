@@ -31,7 +31,7 @@ export default function Cetak() {
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("laporanRl32.print") + "?" + queryString, "_blank");
+        window.open(route("laporanRl314.print") + "?" + queryString, "_blank");
     };
 
     return (

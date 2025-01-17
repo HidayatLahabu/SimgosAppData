@@ -43,7 +43,7 @@ export default function LaporanRl31({
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                            <h1 className="uppercase text-center font-bold text-2xl pb-2">LAPORAN RL 3.1</h1>
+                            <h1 className="uppercase text-center font-bold text-2xl pb-2">LAPORAN RL 3.1 - RAWAT INAP</h1>
                             <p className="text-center pb-4">
                                 <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)}
                             </p>

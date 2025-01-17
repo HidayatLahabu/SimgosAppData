@@ -18,16 +18,16 @@ export default function LaporanRl51({
 }) {
 
     const headers = [
-        { name: "KODE RS", className: "w-[7%]" },
-        { name: "NAMA RUMAH SAKIT" },
-        { name: "JENIS PELAYANAN", className: "w-[14%]" },
-        { name: "TOTAL PASIEN RUJUKAN", className: "text-wrap text-center w-[14%]" },
-        { name: "TOTAL PASIEN NON RUJUKAN", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN DIRAWAT", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN DIRUJUK", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN PULANG", className: "text-wrap text-center w-[13%]" },
-        { name: "MENINGGAL DI IGD", className: "text-wrap text-center w-[13%]" },
-        { name: "DOA", className: "text-wrap text-center w-[13%]" },
+        { name: "JENIS SPESIALISASI", className: "w-[16%]" },
+        { name: "RUJUKAN DITERIMA DARI PUSKESMAS", className: "text-wrap text-center" },
+        { name: "RUJUKAN DITERIMA DARI FASILITAS KESEHATAN", className: "text-wrap text-center" },
+        { name: "RUJUKAN DITERIMA DARI RS LAIN", className: "text-wrap text-center" },
+        { name: "RUJUKAN DIKEMBALIKAN KE PUSKESMAS", className: "text-wrap text-center" },
+        { name: "RUJUKAN DIKEMBALIKAN KE FASILITAS KESEHATAN", className: "text-wrap text-center" },
+        { name: "RUJUKAN DIKEMBALIKAN KE RS ASAL", className: "text-wrap text-center" },
+        { name: "DIRUJUK PASIEN RUJUKAN", className: "text-wrap text-center" },
+        { name: "DIRUJUK PASIEN DATANG SENDIRI", className: "text-wrap text-center" },
+        { name: "DIRUJUK DITERIMA KEMBALI", className: "text-wrap text-center" },
     ];
 
     return (
@@ -39,7 +39,7 @@ export default function LaporanRl51({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN RL 3.2 - RAWAT DARURAT
+                            LAPORAN RL 3.14 - RUJUKAN
                         </h1>
                         <p className="text-center text-gray-100 pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)}
@@ -49,7 +49,7 @@ export default function LaporanRl51({
 
                                 <Table>
                                     <TableHeader>
-                                        <tr>
+                                        <tr className='text-xs'>
                                             {headers.map((header, index) => (
                                                 <TableHeaderCell key={index} className={header.className || ""}>
                                                     {header.name}
@@ -59,30 +59,34 @@ export default function LaporanRl51({
                                     </TableHeader>
                                     <tbody>
                                         {data.map((item, index) => (
-                                            <TableRow key={`${item.KODERS}-${index}`} isEven={index % 2 === 0}>
-                                                <TableCell>{item.KODERS}</TableCell>
-                                                <TableCell>{item.NAMAINST}</TableCell>
+                                            <TableRow key={`${item.KODERS}-${index}`} isEven={index % 2 === 0} className='text-xs'>
                                                 <TableCell className='uppercase'>{item.DESKRIPSI}</TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.RUJUKAN)}
+                                                    {formatRibuan(item.PUSKESMAS)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.NONRUJUKAN)}
+                                                    {formatRibuan(item.FASKES)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.DIRAWAT)}
+                                                    {formatRibuan(item.RS)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.DIRUJUK)}
+                                                    {formatRibuan(item.KEMBALIPUSKESMAS)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.PULANG)}
+                                                    {formatRibuan(item.KEMBALIFASKES)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.MENINGGAL)}
+                                                    {formatRibuan(item.KEMBALIRS)}
                                                 </TableCell>
                                                 <TableCell className="text-center">
-                                                    {formatRibuan(item.DOA)}
+                                                    {formatRibuan(item.PASIENRUJUKAN)}
+                                                </TableCell>
+                                                <TableCell className="text-center">
+                                                    {formatRibuan(item.DATANGSENDIRI)}
+                                                </TableCell>
+                                                <TableCell className="text-center">
+                                                    {formatRibuan(item.DITERIMAKEMBALI)}
                                                 </TableCell>
                                             </TableRow>
                                         ))}
@@ -98,14 +102,14 @@ export default function LaporanRl51({
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
 
             <div className="w-full">
                 <Cetak
                 />
             </div>
 
-        </AuthenticatedLayout>
+        </AuthenticatedLayout >
     );
 }

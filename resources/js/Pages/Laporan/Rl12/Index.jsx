@@ -33,8 +33,6 @@ export default function LaporanRl12({ auth,
         <AuthenticatedLayout user={auth.user}>
             <Head title="Laporan" />
 
-
-
             <Indikator
                 tahunIni={tahunIni}
                 ttidurIni={ttidurIni}

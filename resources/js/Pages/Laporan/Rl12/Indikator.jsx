@@ -30,7 +30,7 @@ export default function ThisYear({
             <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
                 <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                     <div className="max-w-full mx-auto w-full pt-3 text-white">
-                        <h1 className="uppercase text-center font-bold text-2xl">LAPORAN RL 1.2</h1>
+                        <h1 className="uppercase text-center font-bold text-2xl">LAPORAN RL 1.2 - Indikator Pelayanan</h1>
                         <p className="text-center font-bold">Sumber : Database Informasi</p>
                     </div>
                     <div className="px-5 pb-3 text-gray-900 dark:text-gray-100 w-full">

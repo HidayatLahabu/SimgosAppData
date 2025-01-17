@@ -23,7 +23,7 @@ export default function Print({
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN RL 3.1
+                                    LAPORAN RL 3.1 - RAWAT INAP
                                 </h1>
                                 <p className="text-center">
                                     <strong>Periode Tanggal: {formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)} </strong>

@@ -23,7 +23,7 @@ export default function Print({
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN RL 3.2 - RAWAT DARURAT
+                                    LAPORAN RL 3.14 - RUJUKAN
                                 </h1>
                                 <p className="text-center">
                                     <strong>Periode Tanggal: {formatDate(tgl_awal)} s.d {formatDate(tgl_akhir)} </strong>
@@ -35,14 +35,16 @@ export default function Print({
                                             <tr>
                                                 <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">KODE RS</th>
                                                 <th className="px-3 py-2 border border-gray-500 border-solid">NAMA RUMAH SAKIT</th>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[14%]">JENIS PELAYANAN</th>
-                                                <th className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid w-[14%]">TOTAL PASIEN RUJUKAN</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TOTAL PASIEN NON RUJUKAN</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN DIRAWAT</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN DIRUJUK</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN PULANG</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">MENINGGAL DI IGD</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">DOA</th>
+                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[14%]">JENIS SPESIALISASI</th>
+                                                <th className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid w-[14%]">RUJUKAN DITERIMA DARI PUSKESMAS</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">RUJUKAN DITERIMA DARI FASILITAS KESEHATAN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">RUJUKAN DITERIMA DARI RS LAIN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">RUJUKAN DIKEMBALIKAN KE PUSKESMAS</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">RUJUKAN DIKEMBALIKAN KE FASILITAS KESEHATAN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">RUJUKAN DIKEMBALIKAN KE RS ASAL</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">DIRUJUK PASIEN RUJUKAN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">DIRUJUK DATANG SENDIRI</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">DIRUJUK DITERIMA KEMBALI</th>
                                             </tr>
                                         </thead>
 
@@ -59,25 +61,31 @@ export default function Print({
                                                         {item.DESKRIPSI}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.RUJUKAN)}
+                                                        {formatRibuan(item.PUSKESMAS)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.NONRUJUKAN)}
+                                                        {formatRibuan(item.FASKES)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.DIRAWAT)}
+                                                        {formatRibuan(item.RS)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.DIRUJUK)}
+                                                        {formatRibuan(item.KEMBALIPUSKESMAS)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.PULANG)}
+                                                        {formatRibuan(item.KEMBALIFASKES)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.MENINGGAL)}
+                                                        {formatRibuan(item.KEMBALIRS)}
                                                     </td>
                                                     <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.DOA)}
+                                                        {formatRibuan(item.PASIENRUJUKAN)}
+                                                    </td>
+                                                    <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {formatRibuan(item.DATANGSENDIRI)}
+                                                    </td>
+                                                    <td className="text-center px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {formatRibuan(item.DITERIMAKEMBALI)}
                                                     </td>
                                                 </tr>
                                             ))}

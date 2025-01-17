@@ -35,7 +35,7 @@ export default function Print({
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN RL 1.2 <br />TAHUN {tahun}
+                                    LAPORAN RL 1.2 - INDIKATOR PELAYANAN <br />TAHUN {tahun}
                                 </h1>
 
                                 <Kunjungan
