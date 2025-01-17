@@ -10,6 +10,9 @@ export default function LayananPenunjang({
     dataRadiologi,
     hasilRadiologi,
     catatanRadiologi,
+    dataFarmasi,
+    orderFarmasi,
+    telaahFarmasi,
 }) {
 
     return (
@@ -36,10 +39,10 @@ export default function LayananPenunjang({
 
                     <CardFarmasi
                         ruangan="FARMASI"
-                        jumlahOrder={formatRibuan(dataRadiologi.orderRad)}
-                        jumlahTindakan={formatRibuan(dataRadiologi.tindakanRad)}
-                        jumlahHasil={formatRibuan(hasilRadiologi.hasilRad)}
-                        catatanHasil={formatRibuan(catatanRadiologi.catatanRad)}
+                        kunjungan={formatRibuan(dataFarmasi.jumlahKunjungan)}
+                        order={formatRibuan(orderFarmasi.jumlahOrder)}
+                        detail={formatRibuan(orderFarmasi.jumlahDetail)}
+                        telaah={formatRibuan(telaahFarmasi.jumlahTelaah)}
                         iconColor="text-amber-500"
                     />
                 </div>

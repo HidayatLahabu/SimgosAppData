@@ -3,10 +3,10 @@ import { UserGroupIcon, HomeIcon, DocumentCheckIcon, ClipboardDocumentCheckIcon,
 
 const CardFarmasi = ({
     ruangan,
-    jumlahOrder,
-    jumlahTindakan,
-    catatanHasil,
-    jumlahHasil,
+    kunjungan,
+    order,
+    detail,
+    telaah,
     iconColor = "text-white",
     borderColor = "border-gray-700",
     bgGradient = "bg-gradient-to-r from-indigo-800 to-indigo-900",
@@ -27,13 +27,13 @@ const CardFarmasi = ({
                 <div className="flex items-center">
                     <UserGroupIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Order : {jumlahOrder}
+                        Kunjungan : {kunjungan}
                     </p>
                 </div>
                 <div className="flex items-center">
                     <DocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Detail : {jumlahTindakan}
+                        Order : {order}
                     </p>
                 </div>
             </div>
@@ -42,13 +42,13 @@ const CardFarmasi = ({
                 <div className="flex items-center">
                     <ClipboardDocumentListIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Telaah : {jumlahHasil}
+                        Detail : {detail}
                     </p>
                 </div>
                 <div className="flex items-center">
                     <ClipboardDocumentCheckIcon className={`w-5 h-5 mr-2 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
-                        Retur : {catatanHasil}
+                        Telaah : {telaah}
                     </p>
                 </div>
             </div>

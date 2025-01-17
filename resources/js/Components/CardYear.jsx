@@ -46,10 +46,10 @@ const CardCombined = ({
 
                 {/* Section for Month Data */}
                 <div className="text-left w-1/2">
-                    <p className="text-lg font-semibold text-white">
+                    <p className="text-lg font-semibold text-cyan-200">
                         Bulan Ini
                     </p>
-                    <p className={`${valueSize} font-semibold text-white group-hover:text-yellow-400`}>
+                    <p className={`${valueSize} font-semibold text-cyan-200 group-hover:text-yellow-400`}>
                         {formatRibuan(monthValue)}
                     </p>
                     <p className="text-sm font-medium text-gray-400 mt-2 group-hover:text-yellow-500">

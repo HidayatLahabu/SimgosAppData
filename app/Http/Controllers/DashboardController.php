@@ -75,6 +75,10 @@ class DashboardController extends Controller
         $hasilRadiologi = $this->getRadiologi();
         $catatanRadiologi = $this->getRadiologiCatatan();
 
+        $dataFarmasi = $this->getFarmasi();
+        $dataFarmasiOrder = $this->getFarmasiOrder();
+        $dataTelaahFarmasi = $this->getFarmasiTelaah();
+
         // Pass the data to the Inertia view
         return Inertia::render('Dashboard', [
             'pendaftaran' => $pendaftaran,
@@ -108,7 +112,10 @@ class DashboardController extends Controller
             'catatanLaboratorium' => $catatanLaboratorium,
             'dataRadiologi' => $dataRadiologi,
             'hasilRadiologi' => $hasilRadiologi,
-            'catatanRadiologi' => $catatanLaboratorium,
+            'catatanRadiologi' => $catatanRadiologi,
+            'dataFarmasi' => $dataFarmasi,
+            'orderFarmasi' => $dataFarmasiOrder,
+            'telaahFarmasi' => $dataTelaahFarmasi,
         ]);
     }
 
@@ -882,6 +889,52 @@ class DashboardController extends Controller
 
         return $data ?? (object) [
             'catatanRad' => 0,
+        ];
+    }
+
+    public function getFarmasi()
+    {
+        $data = DB::connection('mysql7')->table('layanan.farmasi as farmasi')
+            ->selectRaw('
+                COUNT(farmasi.ID) as jumlahKunjungan
+            ')
+            ->whereDate('farmasi.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
+
+        return $data ?? (object) [
+            'jumlahKunjungan' => 0,
+        ];
+    }
+
+    public function getFarmasiOrder()
+    {
+        $data = DB::connection('mysql7')->table('layanan.order_resep as orderResep')
+            ->leftJoin('layanan.order_detil_resep as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderResep.NOMOR')
+            ->selectRaw('
+            COUNT(orderResep.NOMOR) as jumlahOrder, 
+            COUNT(orderDetail.ORDER_ID) as jumlahDetail
+        ')
+            ->whereDate('orderResep.TANGGAL', '=', Carbon::today()->toDateString())
+            ->first();
+
+        return $data ?? (object) [
+            'jumlahOrder' => 0,
+            'jumlahDetail' => 0,
+        ];
+    }
+
+    public function getFarmasiTelaah()
+    {
+
+        $data = DB::connection('mysql7')->table('layanan.telaah_awal_resep as telaahAwal')
+            ->selectRaw('
+                COUNT(DISTINCT telaahAwal.RESEP) as jumlahTelaah
+            ')
+            ->whereDate('telaahAwal.INPUT_TIME', '=', Carbon::today()->toDateString())
+            ->first();
+
+        return $data ?? (object) [
+            'jumlahTelaah' => 0,
         ];
     }
 }

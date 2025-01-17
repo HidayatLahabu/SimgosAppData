@@ -42,6 +42,9 @@ export default function Dashboard({
     dataRadiologi,
     hasilRadiologi,
     catatanRadiologi,
+    dataFarmasi,
+    orderFarmasi,
+    telaahFarmasi,
 }) {
 
     const today = new Date();
@@ -111,6 +114,9 @@ export default function Dashboard({
                         dataRadiologi={dataRadiologi}
                         hasilRadiologi={hasilRadiologi}
                         catatanRadiologi={catatanRadiologi}
+                        dataFarmasi={dataFarmasi}
+                        orderFarmasi={orderFarmasi}
+                        telaahFarmasi={telaahFarmasi}
                     />
                 </div>
                 <div className="flex flex-col w-3/4 -mx-1 pr-5">
