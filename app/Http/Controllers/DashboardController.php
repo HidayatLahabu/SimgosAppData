@@ -824,6 +824,7 @@ class DashboardController extends Controller
             COUNT(hasilLab.ID) as hasilLab
         ')
             ->whereDate('hasilLab.TANGGAL', '=', Carbon::today()->toDateString())
+            ->where('hasilLab.STATUS', 1)
             ->first();
 
         return $data ?? (object) [
@@ -838,6 +839,7 @@ class DashboardController extends Controller
                 COUNT(catatan.KUNJUNGAN) as catatanLab
             ')
             ->whereDate('catatan.TANGGAL', '=', Carbon::today()->toDateString())
+            ->where('catatan.STATUS', 1)
             ->first();
 
         return $data ?? (object) [
@@ -880,10 +882,10 @@ class DashboardController extends Controller
     {
         $data = DB::connection('mysql7')->table('layanan.hasil_rad as hasilRad')
             ->selectRaw('
-            COUNT(hasilRad.ID) as catatanRad
-        ')
+                COUNT(hasilRad.ID) as catatanRad
+            ')
             ->whereDate('hasilRad.TANGGAL', '=', Carbon::today()->toDateString())
-            ->where('hasilRad.TANGGAL', 2)
+            ->where('hasilRad.STATUS', 1)
             ->first();
 
         return $data ?? (object) [
