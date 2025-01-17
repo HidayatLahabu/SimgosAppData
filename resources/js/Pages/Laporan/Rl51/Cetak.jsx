@@ -36,7 +36,7 @@ export default function Cetak() {
 
     return (
         <div>
-            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
+            <div className="max-w-8xl mx-auto sm:px-6 lg:px-5 pb-2">
                 <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg">
                     <form
                         onSubmit={onSubmit}

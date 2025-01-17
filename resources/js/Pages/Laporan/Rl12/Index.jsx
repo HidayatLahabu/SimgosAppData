@@ -33,10 +33,7 @@ export default function LaporanRl12({ auth,
         <AuthenticatedLayout user={auth.user}>
             <Head title="Laporan" />
 
-            <div className="max-w-full mx-auto w-full pt-3 text-yellow-500">
-                <h1 className="uppercase text-center font-bold text-2xl">LAPORAN RL 1.2</h1>
-                <p className="text-center font-bold">Sumber : Database Informasi</p>
-            </div>
+
 
             <Indikator
                 tahunIni={tahunIni}

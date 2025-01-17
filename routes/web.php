@@ -39,6 +39,7 @@ use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
 use App\Http\Controllers\Laporan\LaporanRl12Controller;
 use App\Http\Controllers\Laporan\LaporanRl31Controller;
+use App\Http\Controllers\Laporan\LaporanRl32Controller;
 use App\Http\Controllers\Laporan\LaporanRl51Controller;
 use App\Http\Controllers\Medicalrecord\AskepController;
 use App\Http\Controllers\Satusehat\ConditionController;
@@ -519,6 +520,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/laporanRl12-print', [LaporanRl12Controller::class, 'print'])->name('laporanRl12.print');
         Route::get('laporanRl31', [LaporanRl31Controller::class, 'index'])->name('laporanRl31.index');
         Route::get('/laporanRl31-print', [LaporanRl31Controller::class, 'print'])->name('laporanRl31.print');
+        Route::get('laporanRl32', [LaporanRl32Controller::class, 'index'])->name('laporanRl32.index');
+        Route::get('/laporanRl32-print', [LaporanRl32Controller::class, 'print'])->name('laporanRl32.print');
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('/laporanRl51-print', [LaporanRl51Controller::class, 'print'])->name('laporanRl51.print');
         Route::get('laporanWaktuTunggu', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTunggu.index');

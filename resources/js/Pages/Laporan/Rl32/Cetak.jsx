@@ -2,12 +2,8 @@ import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import InputLabel from "@/Components/InputLabel";
 import TextInput from "@/Components/TextInput";
-import SelectTwoInput from "@/Components/SelectTwoInput";
 
-export default function Cetak({
-    ruangan,
-    dokter,
-}) {
+export default function Cetak() {
 
     const { data, setData } = useForm({
         dari_tanggal: '',
@@ -28,22 +24,6 @@ export default function Cetak({
         }));
     }, []);
 
-    const onRuanganChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
-    const onDokterChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, dokter: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -51,51 +31,20 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("laporanWaktuTunggu.print") + "?" + queryString, "_blank");
+        window.open(route("laporanRl51.print") + "?" + queryString, "_blank");
     };
 
     return (
-        <div className="pt-2">
+        <div>
             <div className="max-w-8xl mx-auto sm:px-6 lg:px-5 pb-2">
                 <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg">
                     <form
                         onSubmit={onSubmit}
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Waktu Tunggu Rawat Jalan</h1>
-
-                        <div className="mt-4 flex space-x-4">
-                            <div className="flex-1">
-                                <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
-                                <SelectTwoInput
-                                    id="ruangan"
-                                    name="ruangan"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Ruangan"
-                                    options={Array.isArray(ruangan) ?
-                                        ruangan.map((item) => ({
-                                            value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
-                                        })) : []}
-                                    onChange={onRuanganChange}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <InputLabel htmlFor="dokter" value="Dokter Penanggungjawab" />
-                                <SelectTwoInput
-                                    id="dokter"
-                                    name="dokter"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Dokter Penanggungjawab"
-                                    options={Array.isArray(dokter) ?
-                                        dokter.map((item) => ({
-                                            value: item.NIP,
-                                            label: item.NIP + '. ' + item.DOKTER,
-                                        })) : []}
-                                    onChange={onDokterChange}
-                                />
-                            </div>
-                        </div>
+                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">
+                            Cetak Laporan RL 3.2
+                        </h1>
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">

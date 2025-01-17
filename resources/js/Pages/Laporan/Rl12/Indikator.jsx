@@ -29,7 +29,11 @@ export default function ThisYear({
         <div className="pt-3 pb-5 flex flex-wrap w-full">
             <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
                 <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
-                    <div className="px-5 py-3 text-gray-900 dark:text-gray-100 w-full">
+                    <div className="max-w-full mx-auto w-full pt-3 text-white">
+                        <h1 className="uppercase text-center font-bold text-2xl">LAPORAN RL 1.2</h1>
+                        <p className="text-center font-bold">Sumber : Database Informasi</p>
+                    </div>
+                    <div className="px-5 pb-3 text-gray-900 dark:text-gray-100 w-full">
                         <div className="bg-white dark:bg-indigo-950 rounded-lg shadow-lg p-2">
                             <table className="min-w-full table-auto mt-2 border border-gray-500 dark:border-gray-600">
                                 <thead>
