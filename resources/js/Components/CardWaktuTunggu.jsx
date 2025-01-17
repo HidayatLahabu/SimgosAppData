@@ -13,6 +13,7 @@ const CardWaktuTunggu = ({
     iconColor = "text-white",
     borderColor = "border-gray-700",
     bgGradient = "bg-gradient-to-r from-indigo-800 to-indigo-900",
+    keterangan = 'Waktu tunggu rata-rata poliklinik bulan berjalan',
 }) => {
     const waktuStatusClass =
         waktuStatus === "tercepat"
@@ -23,7 +24,7 @@ const CardWaktuTunggu = ({
 
     return (
         <div
-            className={`flex flex-col px-5 py-5 bg-gradient-to-r ${bgGradient} rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 border ${borderColor} group`}
+            className={`flex flex-col px-5 py-4 bg-gradient-to-r ${bgGradient} rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-200 border ${borderColor} group`}
         >
             <div className="flex items-center mb-2 text-left">
                 <HomeIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
@@ -32,7 +33,7 @@ const CardWaktuTunggu = ({
                 </h2>
             </div>
 
-            <div className="flex items-center mb-3 text-left">
+            <div className="flex items-center mb-2 text-left">
                 <UserIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
                 <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
                     {dpjp}
@@ -41,7 +42,7 @@ const CardWaktuTunggu = ({
 
             <div className="flex justify-between items-center w-full">
                 {/* Pasien */}
-                <div className="flex items-center mb-2">
+                <div className="flex items-center mb-1">
                     <UsersIcon className={`w-5 h-5 mr-1 ${iconColor}`} />
                     <p className="text-sm font-semibold text-gray-300 group-hover:text-gray-100">
                         Pasien: {formatRibuan(jumlahPasien)}
@@ -57,6 +58,7 @@ const CardWaktuTunggu = ({
                     </p>
                 </div>
             </div>
+            <p className="text-xs text-yellow-400 text-center -mb-1">{keterangan}</p>
         </div>
     );
 };

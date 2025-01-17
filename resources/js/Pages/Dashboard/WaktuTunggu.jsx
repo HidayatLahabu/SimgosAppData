@@ -31,8 +31,9 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         jumlahPasien={waktuTungguTercepat.JUMLAH_PASIEN}
                         waktuTunggu={waktuTungguMenitCepat}
                         waktuStatus="Tercepat"
-                        waktuColor="text-green-500"
+                        waktuColor="text-gray-100"
                         iconColor="text-green-500"
+                        keterangan='Rata-rata Poliklinik Tercepat'
                     />
 
                     <CardWaktuTunggu
@@ -41,9 +42,10 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         jumlahPasien={waktuTungguTerlama.JUMLAH_PASIEN}
                         waktuTunggu={waktuTungguMenitLama}
                         waktuStatus="normal"
-                        waktuColor="text-red-500"
+                        waktuColor="text-gray-100"
                         iconColor="text-red-500"
                         icon={UsersIcon}
+                        keterangan='Rata-rata Poliklinik Terlama'
                     />
                 </div>
             </div>
