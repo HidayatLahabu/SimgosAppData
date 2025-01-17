@@ -42,15 +42,15 @@ const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLal
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        backgroundColor: "rgba(28, 185, 237, 0.6)",
-                        borderColor: "rgba(28, 185, 237)",
+                        backgroundColor: "rgba(250, 181, 5, 0.8)",
+                        borderColor: "rgba(250, 181, 5)",
                         borderWidth: 1,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        backgroundColor: "rgba(245, 155, 66, 0.6)",
-                        borderColor: "rgba(245, 155, 66)",
+                        backgroundColor: "rgba(89, 218, 44, 0.8)",
+                        borderColor: "rgba(89, 218, 44)",
                         borderWidth: 1,
                     },
                 ],
@@ -87,7 +87,7 @@ const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLal
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan BPJS Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>

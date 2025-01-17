@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
+const Rekon = ({ rekonTahunIni, rekonTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,11 +25,11 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        mutasiTahunIni.forEach((item) => {
+        rekonTahunIni.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        mutasiTahunLalu.forEach((item) => {
+        rekonTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
@@ -42,8 +42,8 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(245, 130, 178)",
-                        backgroundColor: "rgba(245, 130, 178, 0.3)",
+                        borderColor: "rgba(240, 155, 20)",
+                        backgroundColor: "rgba(240, 155, 20, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -51,8 +51,8 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(252, 236, 61)",
-                        backgroundColor: "rgba(252, 236, 61, 0.3)",
+                        borderColor: "rgba(241, 88, 214)",
+                        backgroundColor: "rgba(241, 88, 214, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -80,7 +80,7 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [mutasiTahunIni, mutasiTahunLalu]);
+    }, [rekonTahunIni, rekonTahunLalu]);
 
     return (
         <div className="p-5 flex flex-wrap w-full">
@@ -89,7 +89,7 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Mutasi Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Rencana Kontrol Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +100,4 @@ const Mutasi = ({ mutasiTahunIni, mutasiTahunLalu, tahunIni, tahunLalu }) => {
     );
 };
 
-export default Mutasi;
+export default Rekon;

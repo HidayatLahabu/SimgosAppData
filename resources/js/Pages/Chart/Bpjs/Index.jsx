@@ -2,22 +2,22 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Kunjungan from './Kunjungan';
-import Pendaftaran from './Pendaftaran';
-import Konsul from './Konsul';
-import Mutasi from './Mutasi';
+import Peserta from './Peserta';
+import Rekon from './Rekon';
+import Monitoring from './Monitoring';
 
 export default function Index({
     auth,
     tahunIni,
     tahunLalu,
-    pendaftaranTahunIni,
-    pendaftaranTahunLalu,
+    bpjsTahunIni,
+    bpjsTahunLalu,
     kunjunganTahunIni,
     kunjunganTahunLalu,
-    konsulTahunIni,
-    konsulTahunLalu,
-    mutasiTahunIni,
-    mutasiTahunLalu,
+    rekonTahunIni,
+    rekonTahunLalu,
+    monitoringTahunIni,
+    monitoringTahunLalu,
 }) {
 
     return (
@@ -26,11 +26,11 @@ export default function Index({
 
             <div className="flex flex-wrap w-full">
                 <div className="w-1/2">
-                    <Pendaftaran
+                    <Peserta
                         tahunIni={tahunIni}
                         tahunLalu={tahunLalu}
-                        pendaftaranTahunIni={pendaftaranTahunIni}
-                        pendaftaranTahunLalu={pendaftaranTahunLalu}
+                        bpjsTahunIni={bpjsTahunIni}
+                        bpjsTahunLalu={bpjsTahunLalu}
                     />
                 </div>
                 <div className="w-1/2">
@@ -45,19 +45,19 @@ export default function Index({
 
             <div className="flex flex-wrap w-full">
                 <div className="w-1/2">
-                    <Konsul
+                    <Rekon
                         tahunIni={tahunIni}
                         tahunLalu={tahunLalu}
-                        konsulTahunIni={konsulTahunIni}
-                        konsulTahunLalu={konsulTahunLalu}
+                        rekonTahunIni={rekonTahunIni}
+                        rekonTahunLalu={rekonTahunLalu}
                     />
                 </div>
                 <div className="w-1/2">
-                    <Mutasi
+                    <Monitoring
                         tahunIni={tahunIni}
                         tahunLalu={tahunLalu}
-                        mutasiTahunIni={mutasiTahunIni}
-                        mutasiTahunLalu={mutasiTahunLalu}
+                        monitoringTahunIni={monitoringTahunIni}
+                        monitoringTahunLalu={monitoringTahunLalu}
                     />
                 </div>
             </div>

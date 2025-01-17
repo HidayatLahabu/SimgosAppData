@@ -13,132 +13,132 @@ class ChartBpjsController extends Controller
         $tahunIni = now()->year;
         $tahunLalu = $tahunIni - 1;
 
-        $dataPendaftaranTahunIni =  $this->pendaftaranTahunIni($tahunIni);
-        $dataPendaftaranTahunLalu =  $this->pendaftaranTahunLalu($tahunLalu);
+        $dataBpjsTahunIni =  $this->bpjsTahunIni($tahunIni);
+        $dataBpjsTahunLalu =  $this->bpjsTahunLalu($tahunLalu);
 
         $dataKunjunganTahunIni =  $this->kunjunganTahunIni($tahunIni);
         $dataKunjunganTahunLalu =  $this->kunjunganTahunLalu($tahunLalu);
 
-        $dataKonsulTahunIni =  $this->konsulTahunIni($tahunIni);
-        $dataKonsulTahunLalu =  $this->konsulTahunLalu($tahunLalu);
+        $dataRekonTahunIni =  $this->rekonTahunIni($tahunIni);
+        $dataRekonTahunLalu =  $this->rekonTahunLalu($tahunLalu);
 
-        $dataMutasiTahunIni =  $this->mutasiTahunIni($tahunIni);
-        $dataMutasiTahunLalu =  $this->mutasiTahunLalu($tahunLalu);
+        $dataMonitoringTahunIni =  $this->monitoringTahunIni($tahunIni);
+        $dataMonitoringTahunLalu =  $this->monitoringTahunIni($tahunLalu);
 
-        return inertia("Chart/Pendaftaran/Index", [
+        return inertia("Chart/Bpjs/Index", [
             'tahunIni' => $tahunIni,
             'tahunLalu' => $tahunLalu,
-            'pendaftaranTahunIni' => $dataPendaftaranTahunIni->toArray(),
-            'pendaftaranTahunLalu' => $dataPendaftaranTahunLalu->toArray(),
+            'bpjsTahunIni' => $dataBpjsTahunIni->toArray(),
+            'bpjsTahunLalu' => $dataBpjsTahunLalu->toArray(),
             'kunjunganTahunIni' => $dataKunjunganTahunIni->toArray(),
             'kunjunganTahunLalu' => $dataKunjunganTahunLalu->toArray(),
-            'konsulTahunIni' => $dataKonsulTahunIni->toArray(),
-            'konsulTahunLalu' => $dataKonsulTahunLalu->toArray(),
-            'mutasiTahunIni' => $dataMutasiTahunIni->toArray(),
-            'mutasiTahunLalu' => $dataMutasiTahunLalu->toArray(),
+            'rekonTahunIni' => $dataRekonTahunIni->toArray(),
+            'rekonTahunLalu' => $dataRekonTahunLalu->toArray(),
+            'monitoringTahunIni' => $dataMonitoringTahunIni->toArray(),
+            'monitoringTahunLalu' => $dataMonitoringTahunLalu->toArray(),
         ]);
     }
 
-    private function pendaftaranTahunIni($tahun)
+    private function bpjsTahunIni($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+        return DB::connection('mysql6')->table('bpjs.peserta as peserta')
             ->select(
-                DB::raw('YEAR(pendaftaran.TANGGAL) as tahun'),
-                DB::raw('MONTH(pendaftaran.TANGGAL) as bulan'),
-                DB::raw('COUNT(pendaftaran.NOMOR) as total')
+                DB::raw('YEAR(peserta.tanggal) as tahun'),
+                DB::raw('MONTH(peserta.tanggal) as bulan'),
+                DB::raw('COUNT(peserta.noKartu) as total')
             )
-            ->whereYear('pendaftaran.TANGGAL', $tahun)
+            ->whereYear('peserta.tanggal', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
-    private function pendaftaranTahunLalu($tahun)
+    private function bpjsTahunLalu($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+        return DB::connection('mysql5')->table('bpjs.peserta as peserta')
             ->select(
-                DB::raw('YEAR(pendaftaran.TANGGAL) as tahun'),
-                DB::raw('MONTH(pendaftaran.TANGGAL) as bulan'),
-                DB::raw('COUNT(pendaftaran.NOMOR) as total')
+                DB::raw('YEAR(peserta.tanggal) as tahun'),
+                DB::raw('MONTH(peserta.tanggal) as bulan'),
+                DB::raw('COUNT(peserta.noKartu) as total')
             )
-            ->whereYear('pendaftaran.TANGGAL', $tahun)
+            ->whereYear('peserta.tanggal', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
     private function kunjunganTahunIni($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+        return DB::connection('mysql6')->table('bpjs.kunjungan as kunjungan')
             ->select(
-                DB::raw('YEAR(kunjungan.MASUK) as tahun'),
-                DB::raw('MONTH(kunjungan.MASUK) as bulan'),
-                DB::raw('COUNT(kunjungan.NOMOR) as total')
+                DB::raw('YEAR(kunjungan.tglSEP) as tahun'),
+                DB::raw('MONTH(kunjungan.tglSEP) as bulan'),
+                DB::raw('COUNT(kunjungan.noSEP) as total')
             )
-            ->whereYear('kunjungan.MASUK', $tahun)
+            ->whereYear('kunjungan.tglSEP', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
     private function kunjunganTahunLalu($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
+        return DB::connection('mysql6')->table('bpjs.kunjungan as kunjungan')
             ->select(
-                DB::raw('YEAR(kunjungan.MASUK) as tahun'),
-                DB::raw('MONTH(kunjungan.MASUK) as bulan'),
-                DB::raw('COUNT(kunjungan.NOMOR) as total')
+                DB::raw('YEAR(kunjungan.tglSEP) as tahun'),
+                DB::raw('MONTH(kunjungan.tglSEP) as bulan'),
+                DB::raw('COUNT(kunjungan.noSEP) as total')
             )
-            ->whereYear('kunjungan.MASUK', $tahun)
+            ->whereYear('kunjungan.tglSEP', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
-    private function konsulTahunIni($tahun)
+    private function rekonTahunIni($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
+        return DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
-                DB::raw('YEAR(konsul.TANGGAL) as tahun'),
-                DB::raw('MONTH(konsul.TANGGAL) as bulan'),
-                DB::raw('COUNT(konsul.NOMOR) as total')
+                DB::raw('YEAR(rekon.tglRencanaKontrol) as tahun'),
+                DB::raw('MONTH(rekon.tglRencanaKontrol) as bulan'),
+                DB::raw('COUNT(rekon.noSurat) as total')
             )
-            ->whereYear('konsul.TANGGAL', $tahun)
+            ->whereYear('rekon.tglRencanaKontrol', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
-    private function konsulTahunLalu($tahun)
+    private function rekonTahunLalu($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
+        return DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
-                DB::raw('YEAR(konsul.TANGGAL) as tahun'),
-                DB::raw('MONTH(konsul.TANGGAL) as bulan'),
-                DB::raw('COUNT(konsul.NOMOR) as total')
+                DB::raw('YEAR(rekon.tglRencanaKontrol) as tahun'),
+                DB::raw('MONTH(rekon.tglRencanaKontrol) as bulan'),
+                DB::raw('COUNT(rekon.noSurat) as total')
             )
-            ->whereYear('konsul.TANGGAL', $tahun)
+            ->whereYear('rekon.tglRencanaKontrol', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
-    private function mutasiTahunIni($tahun)
+    private function monitoringTahunIni($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
+        return DB::connection('mysql6')->table('bpjs.monitoring_rencana_kontrol as monitoring')
             ->select(
-                DB::raw('YEAR(mutasi.TANGGAL) as tahun'),
-                DB::raw('MONTH(mutasi.TANGGAL) as bulan'),
-                DB::raw('COUNT(mutasi.NOMOR) as total')
+                DB::raw('YEAR(monitoring.tglRencanaKontrol) as tahun'),
+                DB::raw('MONTH(monitoring.tglRencanaKontrol) as bulan'),
+                DB::raw('COUNT(monitoring.noSuratKontrol) as total')
             )
-            ->whereYear('mutasi.TANGGAL', $tahun)
+            ->whereYear('monitoring.tglRencanaKontrol', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }
 
-    private function mutasiTahunLalu($tahun)
+    private function monitoringTahunLalu($tahun)
     {
-        return DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
+        return DB::connection('mysql6')->table('bpjs.monitoring_rencana_kontrol as monitoring')
             ->select(
-                DB::raw('YEAR(mutasi.TANGGAL) as tahun'),
-                DB::raw('MONTH(mutasi.TANGGAL) as bulan'),
-                DB::raw('COUNT(mutasi.NOMOR) as total')
+                DB::raw('YEAR(monitoring.tglRencanaKontrol) as tahun'),
+                DB::raw('MONTH(monitoring.tglRencanaKontrol) as bulan'),
+                DB::raw('COUNT(monitoring.noSuratKontrol) as total')
             )
-            ->whereYear('mutasi.TANGGAL', $tahun)
+            ->whereYear('monitoring.tglRencanaKontrol', $tahun)
             ->groupBy('tahun', 'bulan')
             ->get();
     }

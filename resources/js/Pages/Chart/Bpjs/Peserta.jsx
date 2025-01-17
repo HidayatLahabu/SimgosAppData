@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Konsul = ({ konsulTahunIni, konsulTahunLalu, tahunIni, tahunLalu }) => {
+const Peserta = ({ bpjsTahunIni, bpjsTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,37 +25,33 @@ const Konsul = ({ konsulTahunIni, konsulTahunLalu, tahunIni, tahunLalu }) => {
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        konsulTahunIni.forEach((item) => {
+        bpjsTahunIni.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        konsulTahunLalu.forEach((item) => {
+        bpjsTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
         // Chart untuk perbandingan antara tahun ini dan tahun lalu
         chartInstance = new Chart(ctx, {
-            type: "line",
+            type: "bar",
             data: {
                 labels: bulan,
                 datasets: [
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(190, 70, 250)",
-                        backgroundColor: "rgba(190, 70, 250, 0.3)",
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
+                        backgroundColor: "rgba(102, 62, 245, 0.8)",
+                        borderColor: "rgba(102, 62, 245)",
+                        borderWidth: 1,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(52, 227, 175)",
-                        backgroundColor: "rgba(52, 227, 175, 0.3)",
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
+                        backgroundColor: "rgba(5, 161, 250, 0.8)",
+                        borderColor: "rgba(5, 161, 250)",
+                        borderWidth: 1,
                     },
                 ],
             },
@@ -72,15 +68,19 @@ const Konsul = ({ konsulTahunIni, konsulTahunLalu, tahunIni, tahunLalu }) => {
                         ticks: {
                             color: 'rgb(176, 175, 153)',
                         },
+                        barPercentage: 0.4,
+                        categoryPercentage: 0.8,
                     },
                 },
+                barThickness: 30,
+                grouped: true,  // Untuk memastikan bar perbandingan
             },
         });
 
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [konsulTahunIni, konsulTahunLalu]);
+    }, [bpjsTahunIni, bpjsTahunLalu]);
 
     return (
         <div className="p-5 flex flex-wrap w-full">
@@ -89,7 +89,7 @@ const Konsul = ({ konsulTahunIni, konsulTahunLalu, tahunIni, tahunLalu }) => {
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Konsul Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Peserta BPJS Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +100,4 @@ const Konsul = ({ konsulTahunIni, konsulTahunLalu, tahunIni, tahunLalu }) => {
     );
 };
 
-export default Konsul;
+export default Peserta;

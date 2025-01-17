@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahunLalu }) => {
+const Mutasi = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,33 +25,37 @@ const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahu
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        pendaftaranTahunIni.forEach((item) => {
+        monitoringTahunIni.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        pendaftaranTahunLalu.forEach((item) => {
+        monitoringTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
         // Chart untuk perbandingan antara tahun ini dan tahun lalu
         chartInstance = new Chart(ctx, {
-            type: "bar",
+            type: "line",
             data: {
                 labels: bulan,
                 datasets: [
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        backgroundColor: "rgba(94, 184, 26, 0.6)",
-                        borderColor: "rgba(94, 184, 26)",
-                        borderWidth: 1,
+                        borderColor: "rgba(88, 241, 233)",
+                        backgroundColor: "rgba(88, 241, 233, 0.3)",
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        backgroundColor: "rgba(232, 223, 14, 0.6)",
-                        borderColor: "rgba(232, 223, 14)",
-                        borderWidth: 1,
+                        borderColor: "rgba(149, 161, 151)",
+                        backgroundColor: "rgba(149, 161, 151, 0.3)",
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
                     },
                 ],
             },
@@ -68,19 +72,15 @@ const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahu
                         ticks: {
                             color: 'rgb(176, 175, 153)',
                         },
-                        barPercentage: 0.4,
-                        categoryPercentage: 0.8,
                     },
                 },
-                barThickness: 30,
-                grouped: true,  // Untuk memastikan bar perbandingan
             },
         });
 
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [pendaftaranTahunIni, pendaftaranTahunLalu]);
+    }, [monitoringTahunIni, monitoringTahunLalu]);
 
     return (
         <div className="p-5 flex flex-wrap w-full">
@@ -89,7 +89,7 @@ const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahu
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Pendaftaran Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Monitoring Rekon Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +100,4 @@ const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahu
     );
 };
 
-export default Pendaftaran;
+export default Mutasi;

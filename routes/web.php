@@ -14,6 +14,7 @@ use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PerawatController;
 use App\Http\Controllers\Master\RuanganController;
 use App\Http\Controllers\Bpjs\PesertaBpjController;
+use App\Http\Controllers\Chart\ChartBpjsController;
 use App\Http\Controllers\Inventory\OrderController;
 use App\Http\Controllers\Inventory\StockController;
 use App\Http\Controllers\Logs\BridgeLogsController;
@@ -549,7 +550,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('chart')->namespace('App\Http\Controllers\Chart')->group(function () {
         Route::get('chartPendaftaran', [ChartPendaftaranController::class, 'index'])->name('chartPendaftaran.index');
-        Route::get('chartBpjs', [ChartPendaftaranController::class, 'index'])->name('chartBpjs.index');
+        Route::get('chartBpjs', [ChartBpjsController::class, 'index'])->name('chartBpjs.index');
         Route::get('chartLayanan', [ChartPendaftaranController::class, 'index'])->name('chartLayanan.index');
         Route::get('chartInformasi', [ChartPendaftaranController::class, 'index'])->name('chartInformasi.index');
         Route::get('chartLaporan', [ChartPendaftaranController::class, 'index'])->name('chartLaporan.index');
