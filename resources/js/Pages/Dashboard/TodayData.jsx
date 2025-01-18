@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from "@/Components/Card";
-import { UsersIcon, UserPlusIcon, UserGroupIcon, BoldIcon, DocumentTextIcon, DocumentCheckIcon, EyeDropperIcon, ArrowRightCircleIcon, ExclamationTriangleIcon, BeakerIcon } from '@heroicons/react/16/solid';
+import { UsersIcon, UserPlusIcon, UserGroupIcon, BoldIcon, DocumentTextIcon, DocumentCheckIcon, UserCircleIcon, ArrowRightCircleIcon, ExclamationTriangleIcon, BeakerIcon } from '@heroicons/react/16/solid';
 
 export default function TodayData({
     pendaftaran,
@@ -8,7 +8,7 @@ export default function TodayData({
     konsul,
     mutasi,
     kunjunganBpjs,
-    rencanaKontrol,
+    penggunaLogin,
     laboratorium,
     radiologi,
     resep,
@@ -73,13 +73,13 @@ export default function TodayData({
                         iconColor="text-lime-500"
                     />
                     <Card
-                        href={isAdmin ? route("rekonBpjs.index") : null}
-                        title="KONTROL HARI INI"
+                        href={isAdmin ? route("logsPengguna.index") : null}
+                        title="PENGGUNA LOGIN "
                         titleSize="text-normal"
                         valueSize="text-normal"
-                        value={rencanaKontrol}
+                        value={penggunaLogin}
                         description=''
-                        icon={DocumentCheckIcon}
+                        icon={UserCircleIcon}
                         iconColor="text-violet-500"
                     />
                     <Card

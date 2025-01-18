@@ -14,7 +14,7 @@ export default function Dashboard({
     konsul,
     mutasi,
     kunjunganBpjs,
-    rencanaKontrol,
+    penggunaLogin,
     laboratorium,
     radiologi,
     resep,
@@ -78,7 +78,7 @@ export default function Dashboard({
                         radiologi={radiologi}
                         resep={resep}
                         pulang={pulang}
-                        rencanaKontrol={rencanaKontrol}
+                        penggunaLogin={penggunaLogin}
                     />
                 </div>
 

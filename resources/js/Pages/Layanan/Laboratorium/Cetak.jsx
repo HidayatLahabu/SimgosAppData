@@ -41,14 +41,6 @@ export default function Cetak() {
         }
     };
 
-    const onJenisHasilChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, jenisHasil: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, jenisHasil: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
     const onSubmit = (e) => {
         e.preventDefault();
 

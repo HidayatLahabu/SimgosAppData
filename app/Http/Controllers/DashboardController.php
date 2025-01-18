@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AplikasiPenggunaLogModel;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ class DashboardController extends Controller
         $konsul = $this->getKonsul();
         $mutasi = $this->getMutasi();
         $kunjunganBpjs = $this->getKunjunganBpjs();
-        $rencanaKontrol = $this->getRencanaKontrol();
+        $penggunaLogin = $this->getPenggunaLogin();
         $laboratorium = $this->getOrderLaboratorium();
         $radiologi = $this->getOrderRadiologi();
         $resep = $this->getOrderResep();
@@ -81,7 +82,7 @@ class DashboardController extends Controller
             'konsul' => $konsul,
             'mutasi' => $mutasi,
             'kunjunganBpjs' => $kunjunganBpjs,
-            'rencanaKontrol' => $rencanaKontrol,
+            'penggunaLogin' => $penggunaLogin,
             'laboratorium' => $laboratorium,
             'radiologi' => $radiologi,
             'resep' => $resep,
@@ -156,9 +157,9 @@ class DashboardController extends Controller
             ->count();
     }
 
-    protected function getRencanaKontrol()
+    protected function getPenggunaLogin()
     {
-        return BpjsRekonModel::whereBetween('tglRencanaKontrol', [
+        return AplikasiPenggunaLogModel::whereBetween('TANGGAL_AKSES', [
             now()->startOfDay(),  // Mulai dari pukul 00:00:00 hari ini
             now()->endOfDay()     // Sampai dengan pukul 23:59:59 hari ini
         ])

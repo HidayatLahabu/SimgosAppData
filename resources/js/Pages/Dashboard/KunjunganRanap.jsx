@@ -95,7 +95,7 @@ const KunjunganRanap = ({ kunjunganRanap }) => {
                     <div className="bg-white bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg  overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan Rawat Inap</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan Rawat Inap Sampai Hari Ini</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
