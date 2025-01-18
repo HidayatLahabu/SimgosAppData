@@ -21,9 +21,6 @@ export default function TodayData({
     return (
 
         <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
-            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
-                Input Data
-            </h1>
             <div className="text-gray-900 dark:text-gray-100 w-full">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 mb-4">
                     <Card

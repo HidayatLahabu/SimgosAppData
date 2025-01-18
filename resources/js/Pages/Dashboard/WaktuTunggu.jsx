@@ -20,9 +20,6 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
 
     return (
         <div className="max-w-full mx-auto sm:pr-5 lg:pr-5 w-full">
-            <h1 className="uppercase text-center font-extrabold text-2xl text-indigo-700 dark:text-yellow-400">
-                Waktu Tunggu
-            </h1>
             <div className="text-gray-900 dark:text-gray-100 w-full">
                 <div className="grid grid-cols-1 gap-2">
                     <CardWaktuTunggu
@@ -33,7 +30,7 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         waktuStatus="Tercepat"
                         waktuColor="text-gray-100"
                         iconColor="text-green-500"
-                        keterangan='Rata-rata Poliklinik Tercepat'
+                        keterangan='Rata-rata Waktu Tunggu Tercepat'
                     />
 
                     <CardWaktuTunggu
@@ -45,7 +42,7 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         waktuColor="text-gray-100"
                         iconColor="text-red-500"
                         icon={UsersIcon}
-                        keterangan='Rata-rata Poliklinik Terlama'
+                        keterangan='Rata-rata Waktu Tunggu Terlama'
                     />
                 </div>
             </div>

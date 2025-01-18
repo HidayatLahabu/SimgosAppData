@@ -326,7 +326,10 @@ class LaboratoriumController extends Controller
             $penjamin = 'BPJS KESEHATAN';
 
             // Tambahkan kolom nomor SEP untuk pasien BPJS
-            $query->addSelect('jenisPenjamin.NOMOR as nomorSEP');
+            $query->addSelect([
+                'jenisPenjamin.NOMOR as nomorSEP',
+                'kunjunganBpjs.tglSEP as tanggalSEP',
+            ]);
 
             // Filter berdasarkan jenis kunjungan
             if ($jenisKunjungan == 1) {
@@ -339,14 +342,16 @@ class LaboratoriumController extends Controller
         }
 
         // Filter berdasarkan tanggal
-        $data = $query->where('hasilLab.HASIL', '!=', '')
+        $data = $query
             ->whereBetween('hasilLab.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->where('hasilLab.HASIL', '!=', '')
+            ->where('tindakanMedis.STATUS', 1)
             ->where('tindakan.STATUS', 1)
             ->where('tindakan.JENIS', 8)
             ->where('parameterTindakan.STATUS', 1)
+            ->where('hasilLab.STATUS', 1)
             ->orderBy('hasilLab.TANGGAL')
             ->cursor();
-        // ->get();
 
         // Kirim data ke frontend menggunakan Inertia
         return inertia("Layanan/Laboratorium/Print", [

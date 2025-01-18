@@ -15,7 +15,7 @@ const Card = ({
     return (
         <a
             href={href}
-            className="flex-1 px-5 py-4 bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 border border-gray-300 dark:border-gray-700 group flex flex-col items-center"
+            className="flex-1 px-5 py-4 bg-gradient-to-r from-indigo-800 to-indigo-900 hover:from-indigo-700 hover:to-indigo-800 text-center rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 border border-gray-300 dark:border-gray-700 group flex flex-col items-center"
         >
 
             {Icon && (

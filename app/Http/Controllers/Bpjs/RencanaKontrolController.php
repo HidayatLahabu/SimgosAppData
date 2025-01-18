@@ -140,7 +140,6 @@ class RencanaKontrolController extends Controller
         ]);
     }
 
-
     public function detail($id)
     {
         // Fetch the specific data

@@ -298,7 +298,10 @@ class RadiologiController extends Controller
                 }); // Pasien BPJS
             $penjamin = 'BPJS KESEHATAN';
 
-            $query->addSelect(DB::raw('IFNULL(jenisPenjamin.NOMOR, "") as nomorSEP'));
+            $query->addSelect(
+                DB::raw('IFNULL(jenisPenjamin.NOMOR, "") as nomorSEP'),
+                'kunjunganBpjs.tglSEP as tanggalSEP',
+            );
 
             if ($jenisKunjungan == 1) {
                 $query->where('kunjunganBpjs.jenisPelayanan', 1); // Pasien Rawat Inap

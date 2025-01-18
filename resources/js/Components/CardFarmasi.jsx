@@ -8,13 +8,11 @@ const CardFarmasi = ({
     detail,
     telaah,
     iconColor = "text-white",
-    borderColor = "border-gray-700",
-    bgGradient = "bg-gradient-to-r from-indigo-800 to-indigo-900",
 }) => {
 
     return (
         <div
-            className={`flex flex-col px-5 py-5 bg-gradient-to-r ${bgGradient} rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-transform duration-300 border ${borderColor} group`}
+            className="flex flex-col px-5 py-5 bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg shadow-lg hover:shadow-xl transform hover:from-indigo-700 hover:to-indigo-800 transition-transform duration-300 border border-gray-300 dark:border-gray-700 group"
         >
             <div className="flex items-center mb-2 text-left">
                 <HomeIcon className={`w-5 h-5 mr-2 ${iconColor}`} />

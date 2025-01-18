@@ -60,7 +60,7 @@ export default function LaporanRl51({
                                     <tbody>
                                         {data.map((item, index) => (
                                             <TableRow key={`${item.KODERS}-${index}`} isEven={index % 2 === 0} className='text-xs'>
-                                                <TableCell className='uppercase'>{item.DESKRIPSI}</TableCell>
+                                                <TableCell>{item.DESKRIPSI}</TableCell>
                                                 <TableCell className="text-center">
                                                     {formatRibuan(item.PUSKESMAS)}
                                                 </TableCell>

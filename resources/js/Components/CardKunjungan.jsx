@@ -72,7 +72,7 @@ const CardKunjungan = ({ title, todayValue, date, yesterdayValue, chartData, bar
     };
 
     return (
-        <div className="bg-white dark:bg-indigo-950 shadow-md rounded-lg p-4">
+        <div className="bg-white bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg shadow-lg p-4">
             <div className="flex items-center justify-between mb-2">
                 {/* Title with customizable color */}
                 <h2
