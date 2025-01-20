@@ -79,7 +79,7 @@ export default function TodayData({
                         valueSize="text-normal"
                         value={penggunaLogin}
                         description=''
-                        icon={UserCircleIcon}
+                        icon={DocumentCheckIcon}
                         iconColor="text-violet-500"
                     />
                     <Card

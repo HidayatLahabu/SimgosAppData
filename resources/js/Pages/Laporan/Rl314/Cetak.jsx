@@ -43,7 +43,7 @@ export default function Cetak() {
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">
-                            Cetak Laporan RL 3.2
+                            Cetak Laporan RL 3.14
                         </h1>
 
                         <div className="mt-4 flex space-x-4">
