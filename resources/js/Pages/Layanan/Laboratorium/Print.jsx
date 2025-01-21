@@ -34,6 +34,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">ID HASIL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
                                             {jenisPenjamin === "BPJS KESEHATAN" && (
@@ -50,6 +51,9 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                         {data.map((item, key) => (
                                             <tr key={item.id} className="border-b bg-white dark:border-gray-500">
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    {item.idHasil}
+                                                </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.norm}
                                                 </td>

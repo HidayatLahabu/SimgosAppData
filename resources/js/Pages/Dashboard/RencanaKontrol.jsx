@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
+import { formatDate } from '@/utils/formatDate';
 
 // Mendaftarkan elemen Chart.js
 Chart.register(...registerables);
@@ -73,7 +74,7 @@ const RencanaKontrol = ({ rekonBpjs }) => {
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
                                 <h1 className="uppercase text-center font-bold text-lg">
-                                    Rencana Kontrol <br /> Hari Ini
+                                    Rencana Kontrol <br /> {formatDate(rekonBpjs.tanggal)}
                                 </h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>

@@ -580,17 +580,36 @@ class DashboardController extends Controller
 
     public function getRekonData()
     {
+        $today = Carbon::today();
+        $yesterday = $today->copy()->subDay(); // Mengambil tanggal 1 hari sebelumnya
 
+        // Query utama untuk tanggal hari ini
         $data = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->selectRaw(
-                'COUNT(rekon.noSurat) AS direncanakan, 
+                'MAX(rekon.tglRencanaKontrol) AS tanggal,
+                COUNT(rekon.noSurat) AS direncanakan, 
                 COUNT(monitor.noSuratKontrol) AS berkunjungan, 
                 COUNT(rekon.noSurat) - COUNT(monitor.noSuratKontrol) AS berhalangan'
             )
             ->leftJoin('bpjs.monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
-            ->whereDate('rekon.tglRencanaKontrol', '=', Carbon::today()->toDateString())
+            ->whereDate('rekon.tglRencanaKontrol', '=', $today->toDateString())
             ->where('rekon.jnsKontrol', 2)
             ->first();
+
+        // Jika data kosong (null atau direncanakan == 0), ambil data dari 1 hari sebelumnya
+        if (!$data || $data->direncanakan == 0) {
+            $data = DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
+                ->selectRaw(
+                    'MAX(rekon.tglRencanaKontrol) AS tanggal,
+                    COUNT(rekon.noSurat) AS direncanakan, 
+                    COUNT(monitor.noSuratKontrol) AS berkunjungan, 
+                    COUNT(rekon.noSurat) - COUNT(monitor.noSuratKontrol) AS berhalangan'
+                )
+                ->leftJoin('bpjs.monitoring_rencana_kontrol as monitor', 'monitor.noSuratKontrol', '=', 'rekon.noSurat')
+                ->whereDate('rekon.tglRencanaKontrol', '=', $yesterday->toDateString())
+                ->where('rekon.jnsKontrol', 2)
+                ->first();
+        }
 
         return $data;
     }
