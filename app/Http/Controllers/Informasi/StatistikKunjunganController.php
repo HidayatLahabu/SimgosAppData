@@ -12,22 +12,22 @@ class StatistikKunjunganController extends Controller
     public function index()
     {
         $kunjunganHarian = $this->getKunjunganHarian();
-        $dataKunjunganHarian = $kunjunganHarian->orderByDesc('statistikKunjungan.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataKunjunganHarian = $kunjunganHarian->orderByDesc('statistikKunjungan.TANGGAL')->paginate(5)->appends(request()->query());
         $dataKunjunganHarian = $dataKunjunganHarian->toArray();
 
         $rujukanHarian = $this->getRujukanHarian();
-        $dataRujukanHarian = $rujukanHarian->orderByDesc('statistikRujukan.TANGGAL')->paginate(7)->appends(request()->query());
+        $dataRujukanHarian = $rujukanHarian->orderByDesc('statistikRujukan.TANGGAL')->paginate(5)->appends(request()->query());
         $dataRujukanHarian = $dataRujukanHarian->toArray();
 
         $kunjunganMingguan = $this->getKunjunganMingguan();
-        $dataKunjunganMingguan = $kunjunganMingguan->paginate(4)->appends(request()->query());
+        $dataKunjunganMingguan = $kunjunganMingguan->paginate(5)->appends(request()->query());
         $dataKunjunganMingguan = $dataKunjunganMingguan->toArray();
 
         $rujukanMingguan = $this->getRujukanMingguan();
-        $dataRujukanMingguan = $rujukanMingguan->paginate(4)->appends(request()->query());
+        $dataRujukanMingguan = $rujukanMingguan->paginate(5)->appends(request()->query());
         $dataRujukanMingguan = $dataRujukanMingguan->toArray();
 
-        $pageBulan = 12; // Items per page
+        $pageBulan = 5; // Items per page
         $kunjunganBulanan = $this->getKunjunganBulanan($pageBulan);
         $rujukanBulanan = $this->getRujukanBulanan($pageBulan);
 
