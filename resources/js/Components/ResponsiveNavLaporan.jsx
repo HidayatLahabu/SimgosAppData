@@ -33,6 +33,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('laporanRl31.index')}>Laporan RL 3.1</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRl32.index')}>Laporan RL 3.2</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRl314.index')}>Laporan RL 3.14</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('laporanRl315.index')}>Laporan RL 3.15</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRl51.index')}>Laporan RL 5.1</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanWaktuTunggu.index')}>Laporan Waktu Tunggu</ResponsiveNavLink>
                         </div>

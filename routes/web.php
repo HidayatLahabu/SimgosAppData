@@ -51,6 +51,7 @@ use App\Http\Controllers\Inventory\PenerimaanController;
 use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Laporan\LaporanRl314Controller;
+use App\Http\Controllers\Laporan\LaporanRl315Controller;
 use App\Http\Controllers\Layanan\LaboratoriumController;
 use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
@@ -529,6 +530,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('laporanRl314', [LaporanRl314Controller::class, 'index'])->name('laporanRl314.index');
         Route::get('/laporanRl314-print', [LaporanRl314Controller::class, 'print'])->name('laporanRl314.print');
+
+        Route::get('laporanRl315', [LaporanRl315Controller::class, 'index'])->name('laporanRl315.index');
+        Route::get('/laporanRl315-print', [LaporanRl315Controller::class, 'print'])->name('laporanRl315.print');
 
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('/laporanRl51-print', [LaporanRl51Controller::class, 'print'])->name('laporanRl51.print');

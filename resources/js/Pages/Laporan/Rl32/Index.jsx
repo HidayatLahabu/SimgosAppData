@@ -10,7 +10,7 @@ import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
 import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function LaporanRl51({
+export default function LaporanRl32({
     auth,
     tgl_awal,
     tgl_akhir,

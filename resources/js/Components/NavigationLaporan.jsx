@@ -31,6 +31,7 @@ export default function NavigationLaporan() {
             route().current('laporanRl31.index') ||
             route().current('laporanRl32.index') ||
             route().current('laporanRl314.index') ||
+            route().current('laporanRl315.index') ||
             route().current('laporanRl51.index') ||
             route().current('laporanWaktuTunggu.index');
     };
@@ -73,6 +74,13 @@ export default function NavigationLaporan() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Laporan RL 3.14
+                    </NavLink>
+                    <NavLink
+                        href={route('laporanRl315.index')}
+                        active={route().current('laporanRl315.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Laporan RL 3.15
                     </NavLink>
                     <NavLink
                         href={route('laporanRl51.index')}
