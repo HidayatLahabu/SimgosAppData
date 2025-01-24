@@ -69,7 +69,6 @@ class LaporanPengunjungPerPasienController extends Controller
         $dataArray = $data->toArray();
 
         $ruangan = MasterRuanganModel::where('JENIS', 5)
-            ->whereIn('JENIS_KUNJUNGAN', [1])
             ->where('STATUS', 1)
             ->orderBy('DESKRIPSI')
             ->get();
