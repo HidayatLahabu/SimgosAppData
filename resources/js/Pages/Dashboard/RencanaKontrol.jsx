@@ -70,7 +70,7 @@ const RencanaKontrol = ({ rekonBpjs }) => {
         <div className="pr-5 pl-2 flex flex-wrap w-full">
             <div className="w-full">
                 <div className="max-w-full mx-auto w-full">
-                    <div className="bg-white bg-gradient-to-r from-indigo-800 to-indigo-900 text-center rounded-lg overflow-hidden shadow-sm sm:rounded-lg w-full">
+                    <div className="bg-white dark:bg-indigo-900 text-center rounded-lg overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
                                 <h1 className="uppercase text-center font-bold text-lg">

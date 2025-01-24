@@ -81,6 +81,8 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\LaporanPengunjungController;
+use App\Http\Controllers\Laporan\LaporanPengunjungPerPasienController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LaporanWaktuTungguRegistrasiController;
 
@@ -536,6 +538,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('/laporanRl51-print', [LaporanRl51Controller::class, 'print'])->name('laporanRl51.print');
+
+        Route::get('pengunjungPerPasien', [LaporanPengunjungPerPasienController::class, 'index'])->name('pengunjungPerPasien.index');
+        Route::get('/pengunjungPerPasien-print', [LaporanPengunjungPerPasienController::class, 'print'])->name('pengunjungPerPasien.print');
 
         Route::get('laporanWaktuTunggu', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTunggu.index');
         Route::get('/laporanWaktuTunggu-print', [LaporanWaktuTungguRegistrasiController::class, 'print'])->name('laporanWaktuTunggu.print');

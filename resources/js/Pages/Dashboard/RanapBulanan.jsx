@@ -22,7 +22,7 @@ export default function RanapBulanan({ rawatInapBulanan = [] }) {
 
     return (
         <div className="max-w-full mx-auto sm:pl-1 sm:pr-1 lg:pl-1 lg:pr-1 w-full">
-            <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
+            <div className="bg-white bg-gradient-to-r from-indigo-800 to-indigo-900 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                     <h2 className="uppercase text-center font-extrabold text-indigo-700 dark:text-yellow-500 mb-2">
                         Rawat Inap

@@ -33,7 +33,8 @@ export default function NavigationLaporan() {
             route().current('laporanRl314.index') ||
             route().current('laporanRl315.index') ||
             route().current('laporanRl51.index') ||
-            route().current('laporanWaktuTunggu.index');
+            route().current('laporanWaktuTunggu.index') ||
+            route().current('pengunjungPerPasien.index');
     };
 
     return (
@@ -95,6 +96,13 @@ export default function NavigationLaporan() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Waktu Tunggu
+                    </NavLink>
+                    <NavLink
+                        href={route('pengunjungPerPasien.index')}
+                        active={route().current('pengunjungPerPasien.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Pengunjung Per Pasien
                     </NavLink>
                 </div>
             )}
