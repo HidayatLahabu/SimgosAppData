@@ -78,9 +78,33 @@ class LaporanPengunjungPerPasienController extends Controller
             ->orderBy('ID')
             ->get();
 
+        $dokter = DB::connection('mysql2')->table('master.dokter as dokter')
+            ->select([
+                'dokter.ID',
+                'dokter.NIP',
+                DB::raw('CONCAT(
+                    IFNULL(pegawai.GELAR_DEPAN, ""), " ",
+                    pegawai.NAMA, " ",
+                    IFNULL(pegawai.GELAR_BELAKANG, "")
+                ) as DOKTER'),
+                'ruangan.DESKRIPSI as RUANGAN',
+            ])
+            ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
+            ->leftJoin('master.dokter_ruangan as dpjpRuangan', 'dokter.ID', '=', 'dpjpRuangan.DOKTER')
+            ->leftJoin('master.ruangan as ruangan', 'dpjpRuangan.RUANGAN', '=', 'ruangan.ID')
+            ->where('dokter.STATUS', 1)
+            ->whereNotNull('pegawai.NAMA')
+            ->where('ruangan.JENIS_KUNJUNGAN', 1)
+            ->where('ruangan.STATUS', 1)
+            ->where('ruangan.JENIS', 5)
+            ->where('ruangan.DESKRIPSI', 'NOT LIKE', '%Umum%')
+            ->orderBy('pegawai.NAMA')
+            ->get();
+
         return inertia('Laporan/PengunjungPerPasien/Index', [
             'ruangan' => $ruangan,
             'caraBayar' => $caraBayar,
+            'dokter' =>  $dokter,
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
@@ -96,11 +120,13 @@ class LaporanPengunjungPerPasienController extends Controller
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
             'ruangan'  => 'nullable|integer',
             'caraBayar' => 'nullable|integer',
+            'dokter' => 'nullable|integer',
         ]);
 
         // Ambil nilai input
         $ruangan  = $request->input('ruangan');
         $caraBayar = $request->input('caraBayar');
+        $dokter = $request->input('dokter');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
         $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
@@ -144,15 +170,17 @@ class LaporanPengunjungPerPasienController extends Controller
                 'p.TANGGAL',
             ]);
 
-        // Apply 'cara_bayar' filter if provided
         if ($ruangan) {
             $query->where('tp.RUANGAN', 'LIKE', $ruangan);
         }
 
-        $cara_bayar = 0;
-        // Apply 'cara_bayar' filter if provided
-        if ($cara_bayar != 0) {
+        $caraBayar = 0;
+        if ($caraBayar) {
             $query->where('pj.JENIS', '=', $caraBayar);
+        }
+
+        if ($dokter) {
+            $query->where('tp.DOKTER', '=', $dokter);
         }
 
         // Filter berdasarkan tanggal

@@ -7,6 +7,7 @@ import SelectTwoInput from "@/Components/SelectTwoInput";
 export default function Cetak({
     ruangan,
     caraBayar,
+    dokter,
 }) {
 
     const { data, setData } = useForm({
@@ -38,6 +39,14 @@ export default function Cetak({
             setData(prevData => ({ ...prevData, caraBayar: selectedOption.value }));
         } else {
             setData(prevData => ({ ...prevData, caraBayar: '' }));  // Atau handling sesuai kebutuhan
+        }
+    };
+
+    const onDokterChange = (selectedOption) => {
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, dokter: '' }));  // Atau handling sesuai kebutuhan
         }
     };
 
@@ -90,6 +99,21 @@ export default function Cetak({
                                             label: item.ID + '. ' + item.DESKRIPSI,
                                         })) : []}
                                     onChange={onBayarChange}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <InputLabel htmlFor="dokter" value="Dokter Penanggungjawab" />
+                                <SelectTwoInput
+                                    id="dokter"
+                                    name="dokter"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Dokter Penanggungjawab"
+                                    options={Array.isArray(dokter) ?
+                                        dokter.map((item) => ({
+                                            value: item.ID,
+                                            label: item.ID + '. ' + item.DOKTER,
+                                        })) : []}
+                                    onChange={onDokterChange}
                                 />
                             </div>
                         </div>

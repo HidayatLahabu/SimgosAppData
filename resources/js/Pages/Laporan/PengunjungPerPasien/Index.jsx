@@ -16,6 +16,7 @@ export default function PengunjungPerPasien({
     dataTable,
     ruangan,
     caraBayar,
+    dokter,
     queryParams = {},
 }) {
 
@@ -137,6 +138,7 @@ export default function PengunjungPerPasien({
                 <Cetak
                     caraBayar={caraBayar}
                     ruangan={ruangan}
+                    dokter={dokter}
                 />
             </div>
 
