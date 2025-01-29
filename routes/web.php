@@ -70,10 +70,12 @@ use App\Http\Controllers\Inventory\BarangRuanganController;
 use App\Http\Controllers\Medicalrecord\AnamnesisController;
 use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
+use App\Http\Controllers\Laporan\PengunjungPerHariController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
+use App\Http\Controllers\Laporan\PengunjungPerPasienController;
 use App\Http\Controllers\Medicalrecord\JadwalKontrolController;
 use App\Http\Controllers\Satusehat\MedicationRequestController;
 use App\Http\Controllers\Informasi\InformasiKunjunganController;
@@ -81,10 +83,8 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
-use App\Http\Controllers\Laporan\LaporanPengunjungController;
-use App\Http\Controllers\Laporan\LaporanPengunjungPerPasienController;
+use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
-use App\Http\Controllers\Laporan\LaporanWaktuTungguRegistrasiController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -539,11 +539,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('laporanRl51', [LaporanRl51Controller::class, 'index'])->name('laporanRl51.index');
         Route::get('/laporanRl51-print', [LaporanRl51Controller::class, 'print'])->name('laporanRl51.print');
 
-        Route::get('pengunjungPerPasien', [LaporanPengunjungPerPasienController::class, 'index'])->name('pengunjungPerPasien.index');
-        Route::get('/pengunjungPerPasien-print', [LaporanPengunjungPerPasienController::class, 'print'])->name('pengunjungPerPasien.print');
+        Route::get('pengunjungPerPasien', [PengunjungPerPasienController::class, 'index'])->name('pengunjungPerPasien.index');
+        Route::get('/pengunjungPerPasien-print', [PengunjungPerPasienController::class, 'print'])->name('pengunjungPerPasien.print');
 
-        Route::get('laporanWaktuTunggu', [LaporanWaktuTungguRegistrasiController::class, 'index'])->name('laporanWaktuTunggu.index');
-        Route::get('/laporanWaktuTunggu-print', [LaporanWaktuTungguRegistrasiController::class, 'print'])->name('laporanWaktuTunggu.print');
+        Route::get('pengunjungPerHari', [PengunjungPerHariController::class, 'index'])->name('pengunjungPerHari.index');
+        Route::get('/pengunjungPerHari-print', [PengunjungPerHariController::class, 'print'])->name('pengunjungPerHari.print');
+
+        Route::get('pengunjungWaktuTunggu', [WaktuTungguRegistrasiController::class, 'index'])->name('pengunjungWaktuTunggu.index');
+        Route::get('/pengunjungWaktuTunggu-print', [WaktuTungguRegistrasiController::class, 'print'])->name('pengunjungWaktuTunggu.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

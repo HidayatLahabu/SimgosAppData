@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\MasterReferensiModel;
 
-class LaporanPengunjungPerPasienController extends Controller
+class PengunjungPerPasienController extends Controller
 {
     public function index(Request $request)
     {

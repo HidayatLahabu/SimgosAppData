@@ -8,7 +8,7 @@ use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
-class LaporanWaktuTungguRegistrasiController extends Controller
+class WaktuTungguRegistrasiController extends Controller
 {
     public function index(Request $request)
     {

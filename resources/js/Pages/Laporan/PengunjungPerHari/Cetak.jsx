@@ -6,7 +6,6 @@ import SelectTwoInput from "@/Components/SelectTwoInput";
 
 export default function Cetak({
     ruangan,
-    dokter,
 }) {
 
     const { data, setData } = useForm({
@@ -36,6 +35,14 @@ export default function Cetak({
         }
     };
 
+    const onBayarChange = (selectedOption) => {
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, caraBayar: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, caraBayar: '' }));  // Atau handling sesuai kebutuhan
+        }
+    };
+
     const onDokterChange = (selectedOption) => {
         if (selectedOption && selectedOption.value) {
             setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
@@ -51,7 +58,7 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("pengunjungWaktuTunggu.print") + "?" + queryString, "_blank");
+        window.open(route("pengunjungPerHari.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -62,7 +69,7 @@ export default function Cetak({
                         onSubmit={onSubmit}
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Waktu Tunggu Rawat Jalan</h1>
+                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Pengunjung Per Hari</h1>
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
@@ -80,24 +87,6 @@ export default function Cetak({
                                     onChange={onRuanganChange}
                                 />
                             </div>
-                            <div className="flex-1">
-                                <InputLabel htmlFor="dokter" value="Dokter Penanggungjawab" />
-                                <SelectTwoInput
-                                    id="dokter"
-                                    name="dokter"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Dokter Penanggungjawab"
-                                    options={Array.isArray(dokter) ?
-                                        dokter.map((item) => ({
-                                            value: item.NIP,
-                                            label: item.NIP + '. ' + item.DOKTER,
-                                        })) : []}
-                                    onChange={onDokterChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
                                 <InputLabel
                                     htmlFor="dari_tanggal"
