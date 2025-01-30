@@ -15,13 +15,21 @@ class CommandRouteGenerator extends Command
                             {--types : Generate a TypeScript declaration file.}
                             {--types-only : Generate only a TypeScript declaration file.}
                             {--url=}
-                            {--group=}';
+                            {--group=}
+                            {--except= : Route name patterns to exclude.}
+                            {--only= : Route name patterns to include.}';
 
     protected $description = 'Generate a JavaScript file containing Ziggy’s routes and configuration.';
 
     public function handle(Filesystem $filesystem)
     {
         $ziggy = new Ziggy($this->option('group'), $this->option('url') ? url($this->option('url')) : null);
+
+        if ($this->option('except') && ! $this->option('only')) {
+            $ziggy->filter(explode(',', $this->option('except')), false);
+        } else if ($this->option('only') && ! $this->option('except')) {
+            $ziggy->filter(explode(',', $this->option('only')));
+        }
 
         $path = $this->argument('path') ?? config('ziggy.output.path', 'resources/js/ziggy.js');
 
