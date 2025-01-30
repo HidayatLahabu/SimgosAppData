@@ -83,6 +83,7 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 
@@ -544,6 +545,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('pengunjungPerHari', [PengunjungPerHariController::class, 'index'])->name('pengunjungPerHari.index');
         Route::get('/pengunjungPerHari-print', [PengunjungPerHariController::class, 'print'])->name('pengunjungPerHari.print');
+
+        Route::get('pengunjungCaraBayar', [PengunjungCaraBayarController::class, 'index'])->name('pengunjungCaraBayar.index');
+        Route::get('/pengunjungCaraBayar-print', [PengunjungCaraBayarController::class, 'print'])->name('pengunjungCaraBayar.print');
 
         Route::get('pengunjungWaktuTunggu', [WaktuTungguRegistrasiController::class, 'index'])->name('pengunjungWaktuTunggu.index');
         Route::get('/pengunjungWaktuTunggu-print', [WaktuTungguRegistrasiController::class, 'print'])->name('pengunjungWaktuTunggu.print');

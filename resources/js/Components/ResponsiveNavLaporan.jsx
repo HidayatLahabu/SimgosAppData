@@ -37,6 +37,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('laporanRl51.index')}>Laporan RL 5.1</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('pengunjungPerPasien.index')}>Pengunjung Per Pasien</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('pengunjungPerHari.index')}>Pengunjung Per Hari</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('pengunjungCaraBayar.index')}>Pengunjung Cara Bayar</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('pengunjungWaktuTunggu.index')}>Waktu Tunggu</ResponsiveNavLink>
                         </div>
                     </div>

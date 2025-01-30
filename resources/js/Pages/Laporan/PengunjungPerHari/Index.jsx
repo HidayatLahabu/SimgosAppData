@@ -21,7 +21,7 @@ export default function PengunjungPerHari({
     const headers = [
         { name: "TANGGAL" },
         { name: "LAKI-LAKI", className: "text-center w-[9%]" },
-        { name: "PEREMPUAN", className: "text-center [9%]" },
+        { name: "PEREMPUAN", className: "text-center W-[9%]" },
         { name: "BARU", className: "text-center w-[7%]" },
         { name: "LAMA", className: "text-center w-[7%]" },
         { name: "UMUM", className: "text-center w-[7%]" },

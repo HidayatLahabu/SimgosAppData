@@ -12,11 +12,11 @@ class PengunjungPerHariController extends Controller
 {
     public function index()
     {
-        // Tanggal awal bulan berjalan
-        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+        // Tanggal awal tahun
+        $tgl_awal = Carbon::now()->startOfYear()->format('Y-m-d 00:00:00');
 
         // Tanggal hari ini
-        $tgl_akhir = Carbon::now()->toDateString();
+        $tgl_akhir = Carbon::now()->endOfDay()->format('Y-m-d 23:59:59');
 
         $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
@@ -92,7 +92,6 @@ class PengunjungPerHariController extends Controller
             'dari_tanggal'   => 'required|date',
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
             'ruangan'  => 'nullable|integer',
-            'caraBayar' => 'nullable|integer',
         ]);
 
         // Ambil nilai input
@@ -152,15 +151,15 @@ class PengunjungPerHariController extends Controller
 
         if ($ruangan) {
             $query->where('tujuanPasien.RUANGAN', 'LIKE', $ruangan);
+
+            $ruangan = MasterRuanganModel::where('ID', $ruangan)
+                ->value('DESKRIPSI');
         }
 
         // Filter berdasarkan tanggal
         $data = $query
             ->whereBetween(DB::raw('DATE(kunjungan.MASUK)'), [$dariTanggal, $sampaiTanggal])
             ->get();
-
-        $ruangan = MasterRuanganModel::where('ID', $ruangan)
-            ->value('DESKRIPSI');
 
         return inertia("Laporan/PengunjungPerHari/Print", [
             'data' => $data,
