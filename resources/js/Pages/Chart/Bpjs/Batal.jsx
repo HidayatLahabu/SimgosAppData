@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLalu }) => {
+const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,11 +25,11 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        monitoringTahunIni.forEach((item) => {
+        batalTahunIni.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        monitoringTahunLalu.forEach((item) => {
+        batalTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
@@ -42,8 +42,8 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(88, 241, 233)",
-                        backgroundColor: "rgba(88, 241, 233, 0.3)",
+                        borderColor: "rgba(224, 9, 27)",
+                        backgroundColor: "rgba(224, 9, 27, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -51,8 +51,8 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(149, 161, 151)",
-                        backgroundColor: "rgba(149, 161, 151, 0.3)",
+                        borderColor: "rgba(240, 103, 5)",
+                        backgroundColor: "rgba(240, 103, 5, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -80,16 +80,16 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [monitoringTahunIni, monitoringTahunLalu]);
+    }, [batalTahunIni, batalTahunLalu]);
 
     return (
-        <div className="px-2 py-5 flex flex-col w-full h-full">
+        <div className="pr-5 pl-2 py-5 flex flex-col w-full h-full">
             <div className="w-full flex-1">
                 <div className="max-w-full mx-auto w-full h-full">
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full h-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full h-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-normal">Monitoring Rekon Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-normal">Batal Kontrol Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +100,4 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
     );
 };
 
-export default Monitoring;
+export default Batal;

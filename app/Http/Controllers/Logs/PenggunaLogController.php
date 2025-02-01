@@ -20,6 +20,7 @@ class PenggunaLogController extends Controller
         $query = DB::connection('mysql9')->table('aplikasi.pengguna_log as penggunaLog')
             ->select(
                 'penggunaLog.ID as id',
+                'penggunaLog.PENGGUNA as penggunaId',
                 'penggunaLog.TANGGAL_AKSES as mulai',
                 'penggunaLog.LOKASI_AKSES as asal',
                 'penggunaLog.TUJUAN_AKSES as tujuan',

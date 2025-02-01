@@ -13,7 +13,8 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
         { name: "ID" },
-        { name: "PENGGUNA" },
+        { name: "PENGGUNA ID" },
+        { name: "PENGGUNA NAMA" },
         { name: "TANGGAL AKSES" },
         { name: "LOKASI AKSES" },
         { name: "TUJUAN AKSES" },
@@ -62,7 +63,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -87,6 +88,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.id} isEven={index % 2 === 0}>
                                                     <TableCell>{data.id}</TableCell>
+                                                    <TableCell>{data.penggunaId}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.mulai}</TableCell>
                                                     <TableCell>{data.asal}</TableCell>
@@ -96,7 +98,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

@@ -83,13 +83,13 @@ const Rekon = ({ rekonTahunIni, rekonTahunLalu, tahunIni, tahunLalu }) => {
     }, [rekonTahunIni, rekonTahunLalu]);
 
     return (
-        <div className="p-5 flex flex-wrap w-full">
-            <div className="w-full">
-                <div className="max-w-full mx-auto w-full">
-                    <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
-                        <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
+        <div className="pl-5 pr-2 py-5 flex flex-col w-full h-full">
+            <div className="w-full flex-1">
+                <div className="max-w-full mx-auto w-full h-full">
+                    <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full h-full">
+                        <div className="p-5 text-gray-900 dark:text-gray-100 w-full h-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Rencana Kontrol Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-normal">Rencana Kontrol Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>

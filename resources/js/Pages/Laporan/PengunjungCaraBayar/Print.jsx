@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
 
@@ -56,19 +57,19 @@ export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
                                                         {item.CARABAYAR}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {item.LAKILAKI || 0}
+                                                        {formatRibuan(item.LAKILAKI) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {item.PEREMPUAN || 0}
+                                                        {formatRibuan(item.PEREMPUAN) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {item.BARU || 0}
+                                                        {formatRibuan(item.BARU) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {item.LAMA || 0}
+                                                        {formatRibuan(item.LAMA) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {item.JUMLAH || 0}
+                                                        {formatRibuan(item.JUMLAH) || 0}
                                                     </td>
                                                 </tr>
                                             );

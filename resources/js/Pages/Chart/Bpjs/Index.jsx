@@ -5,6 +5,8 @@ import Kunjungan from './Kunjungan';
 import Peserta from './Peserta';
 import Rekon from './Rekon';
 import Monitoring from './Monitoring';
+import Batal from './Batal';
+import Kontrol from './Kontrol';
 
 export default function Index({
     auth,
@@ -18,6 +20,10 @@ export default function Index({
     rekonTahunLalu,
     monitoringTahunIni,
     monitoringTahunLalu,
+    batalTahunIni,
+    batalTahunLalu,
+    kontrolTahunIni,
+    kontrolTahunLalu,
 }) {
 
     return (
@@ -43,8 +49,8 @@ export default function Index({
                 </div>
             </div>
 
-            <div className="flex flex-wrap w-full">
-                <div className="w-1/2">
+            <div className="flex flex-wrap w-full h-full items-stretch">
+                <div className="w-1/3 flex">
                     <Rekon
                         tahunIni={tahunIni}
                         tahunLalu={tahunLalu}
@@ -52,7 +58,7 @@ export default function Index({
                         rekonTahunLalu={rekonTahunLalu}
                     />
                 </div>
-                <div className="w-1/2">
+                <div className="w-1/3 flex">
                     <Monitoring
                         tahunIni={tahunIni}
                         tahunLalu={tahunLalu}
@@ -60,8 +66,28 @@ export default function Index({
                         monitoringTahunLalu={monitoringTahunLalu}
                     />
                 </div>
+                <div className="w-1/3 flex">
+                    <Batal
+                        tahunIni={tahunIni}
+                        tahunLalu={tahunLalu}
+                        batalTahunIni={batalTahunIni}
+                        batalTahunLalu={batalTahunLalu}
+                    />
+                </div>
             </div>
 
+            <div className="flex flex-col w-full">
+                <Kontrol
+                    tahunIni={tahunIni}
+                    tahunLalu={tahunLalu}
+                    rekonTahunIni={kontrolTahunIni.rekon}
+                    monitoringTahunIni={kontrolTahunIni.monitoring}
+                    batalTahunIni={kontrolTahunIni.batal}
+                    rekonTahunLalu={kontrolTahunLalu.rekon}
+                    monitoringTahunLalu={kontrolTahunLalu.monitoring}
+                    batalTahunLalu={kontrolTahunLalu.batal}
+                />
+            </div>
         </AuthenticatedLayout>
     );
 }
