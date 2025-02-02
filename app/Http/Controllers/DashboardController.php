@@ -8,11 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\LayananResepModel;
 use App\Models\BpjsKunjunganModel;
-use App\Models\BpjsRekonModel;
 use Illuminate\Support\Facades\DB;
-use App\Models\BpjsRujukanMasukModel;
-use App\Models\InformasiPenunjangModel;
-use App\Models\InformasiStatistikKunjunganModel;
 use App\Models\LayananRadiologiModel;
 use App\Models\PendaftaranKonsulModel;
 use App\Models\PendaftaranMutasiModel;
@@ -37,24 +33,37 @@ class DashboardController extends Controller
 
         // Tahun lalu
         $tahunLalu = Carbon::now()->subYear()->startOfYear()->year;
+        $tahunLaluBulan = (int)$bulanIni === 1 ? $tahunIni - 1 : $tahunIni;
         $bulanLalu = Carbon::now()->subMonth()->format('m');
         $ttidurLalu = env('TTIDURLALU', 246);
 
         $pendaftaran = $this->getPendaftaran();
+
         $kunjungan = $this->getKunjungan();
+
         $konsul = $this->getKonsul();
+
         $mutasi = $this->getMutasi();
+
         $kunjunganBpjs = $this->getKunjunganBpjs();
+
         $penggunaLogin = $this->getPenggunaLogin();
+
         $laboratorium = $this->getOrderLaboratorium();
+
         $radiologi = $this->getOrderRadiologi();
+
         $resep = $this->getOrderResep();
+
         $pulang = $this->getPasienPulang();
+
         $statistikKunjungan = $this->getStatistikKunjungan();
+
         $statistikTahunIni = $this->getStatistikTahun($tahunIni, $ttidurIni) ?? 0;
         $statistikTahunLalu = $this->getStatistikTahun($tahunLalu, $ttidurLalu) ?? 0;
-        $statistikBulanIni = $this->getStatistikBulan($tahunIni, $bulanIni, $ttidurIni);
-        $statistikBulanLalu = $this->getStatistikBulan($tahunLalu, $bulanLalu, $ttidurLalu);
+
+        $statistikBulanIni = $this->getStatistikBulan($tahunIni, $bulanIni, $ttidurIni) ?? 0;
+        $statistikBulanLalu = $this->getStatistikBulan($tahunLaluBulan, $bulanLalu, $ttidurLalu) ?? 0;
 
         $waktuTungguTercepat = $this->getWaktuTungguTercepat();
         $waktuTungguTerlama = $this->getWaktuTungguTerlama();
