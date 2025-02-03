@@ -4,7 +4,7 @@ import { Head } from "@inertiajs/react";
 import DetailPoa from './DetailPoa';
 import DetailPov from './DetailPov';
 import ButtonBack from '@/Components/Button/ButtonBack';
-import Table from "@/Components/Table";
+import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
