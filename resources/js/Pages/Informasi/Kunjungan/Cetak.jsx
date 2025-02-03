@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
-import InputLabel from "@/Components/InputLabel";
-import TextInput from "@/Components/TextInput";
-import SelectTwoInput from "@/Components/SelectTwoInput";
+import InputLabel from "@/Components/Input/InputLabel";
+import TextInput from "@/Components/Input/TextInput";
+import SelectTwoInput from "@/Components/Select/SelectTwoInput";
 
 export default function Cetak({
     ruangan,

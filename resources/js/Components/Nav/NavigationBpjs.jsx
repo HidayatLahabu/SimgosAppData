@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import NavLink from '@/Components/NavLink';
+import NavLink from '@/Components/Nav/NavLink';
 
 export default function NavigationBpjs() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

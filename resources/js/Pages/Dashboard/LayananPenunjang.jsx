@@ -1,6 +1,6 @@
 import React from "react";
-import CardPenunjang from "@/Components/CardPenunjang";
-import CardFarmasi from "@/Components/CardFarmasi";
+import CardPenunjang from "@/Components/Card/CardPenunjang";
+import CardFarmasi from "@/Components/Card/CardFarmasi";
 import { formatRibuan } from "@/utils/formatRibuan";
 
 export default function LayananPenunjang({

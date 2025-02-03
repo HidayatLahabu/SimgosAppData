@@ -1,6 +1,16 @@
 import React from 'react';
-import Card from "@/Components/Card";
-import { UsersIcon, UserPlusIcon, UserGroupIcon, BoldIcon, DocumentTextIcon, DocumentCheckIcon, UserCircleIcon, ArrowRightCircleIcon, ExclamationTriangleIcon, BeakerIcon } from '@heroicons/react/16/solid';
+import Card from "@/Components/Card/Card";
+import {
+    UsersIcon,
+    UserPlusIcon,
+    UserGroupIcon,
+    BoldIcon,
+    DocumentTextIcon,
+    DocumentCheckIcon,
+    ArrowRightCircleIcon,
+    ExclamationTriangleIcon,
+    BeakerIcon
+} from '@heroicons/react/16/solid';
 
 export default function TodayData({
     pendaftaran,

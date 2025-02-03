@@ -1,5 +1,5 @@
 import React from 'react';
-import CardYear from "@/Components/CardYear";
+import CardYear from "@/Components/Card/CardYear";
 
 export default function StatisticTahun({
     statistikTahunIni,

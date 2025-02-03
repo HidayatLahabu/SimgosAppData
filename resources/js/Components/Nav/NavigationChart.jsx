@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import NavLink from '@/Components/NavLink';
+import NavLink from '@/Components/Nav/NavLink';
 
-export default function NavigationManajemen() {
+export default function NavigationLogs() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,7 +27,11 @@ export default function NavigationManajemen() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('layananRad.index');
+        return route().current('chartPendaftaran.index') ||
+            route().current('chartBpjs.index') ||
+            route().current('chartLayanan.index') ||
+            route().current('chartInformasi.index') ||
+            route().current('chartLaporan.index');
     };
 
     return (
@@ -37,39 +41,45 @@ export default function NavigationManajemen() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Informasi
+                Chart
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('statistikKunjungan.index')}
-                        active={route().current('statistikKunjungan.index')}
+                        href={route('chartPendaftaran.index')}
+                        active={route().current('chartPendaftaran.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Statistik
+                        Pendaftaran
                     </NavLink>
                     <NavLink
-                        href={route('informasiKunjungan.index')}
-                        active={route().current('informasiKunjungan.index')}
+                        href={route('chartBpjs.index')}
+                        active={route().current('chartBpjs.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Rawat Jalan
+                        BPJS
                     </NavLink>
                     <NavLink
-                        href={route('informasiPengunjung.index')}
-                        active={route().current('informasiPengunjung.index')}
+                        href={route('chartLayanan.index')}
+                        active={route().current('chartLayanan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pengunjung
+                        Layanan
                     </NavLink>
                     <NavLink
-                        href={route('informasiPenunjang.index')}
-                        active={route().current('informasiPenunjang.index')}
+                        href={route('chartInformasi.index')}
+                        active={route().current('chartInformasi.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Penunjang
+                        Informasi
                     </NavLink>
-
+                    <NavLink
+                        href={route('chartLaporan.index')}
+                        active={route().current('chartLaporan.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Laporan
+                    </NavLink>
                 </div>
             )}
         </div>

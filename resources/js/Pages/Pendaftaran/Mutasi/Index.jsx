@@ -1,18 +1,18 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
-import TextInput from "@/Components/TextInput";
+import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/ButtonDetail";
-import ButtonTime from '@/Components/ButtonTime';
-import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
-import TableRow from "@/Components/TableRow";
-import TableCell from "@/Components/TableCell";
-import CardMenu from "@/Components/CardMenu";
+import ButtonDetail from "@/Components/Button/ButtonDetail";
+import ButtonTime from '@/Components/Button/ButtonTime';
+import Table from "@/Components/Table/Table";
+import TableHeader from "@/Components/Table/TableHeader";
+import TableHeaderCell from "@/Components/Table/TableHeaderCell";
+import TableRow from "@/Components/Table/TableRow";
+import TableCell from "@/Components/Table/TableCell";
+import TableCellMenu from "@/Components/Table/TableCellMenu";
+import CardMenu from "@/Components/Card/CardMenu";
 import Cetak from "./Cetak"
-import TableCellMenu from "@/Components/TableCellMenu";
 
 export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 

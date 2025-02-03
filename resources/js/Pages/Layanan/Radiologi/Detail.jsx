@@ -2,12 +2,12 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import DetailHasil from './DetailHasil';
-import ButtonBack from '@/Components/ButtonBack';
-import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
-import TableRow from "@/Components/TableRow";
-import TableCell from "@/Components/TableCell";
+import ButtonBack from '@/Components/Button/ButtonBack';
+import Table from "@/Components/Table/Table";
+import TableHeader from "@/Components/Table/TableHeader";
+import TableHeaderCell from "@/Components/Table/TableHeaderCell";
+import TableRow from "@/Components/Table/TableRow";
+import TableCell from "@/Components/Table/TableCell";
 
 export default function Detail({ auth, detail, detailHasil }) {
 

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import NavLink from '@/Components/NavLink';
+import NavLink from '@/Components/Nav/NavLink';
 
-export default function NavigationLogs() {
+export default function NavigationMedicalrecord() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,11 +27,10 @@ export default function NavigationLogs() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('chartPendaftaran.index') ||
-            route().current('chartBpjs.index') ||
-            route().current('chartLayanan.index') ||
-            route().current('chartInformasi.index') ||
-            route().current('chartLaporan.index');
+        return route().current('anamnesis.index') ||
+            route().current('askep.index') ||
+            route().current('cppt.index') ||
+            route().current('jadwalKontrol.index');
     };
 
     return (
@@ -41,45 +40,39 @@ export default function NavigationLogs() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Chart
+                Medicalrecord
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('chartPendaftaran.index')}
-                        active={route().current('chartPendaftaran.index')}
+                        href={route('anamnesis.index')}
+                        active={route().current('anamnesis.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pendaftaran
+                        Anamnesis
                     </NavLink>
                     <NavLink
-                        href={route('chartBpjs.index')}
-                        active={route().current('chartBpjs.index')}
+                        href={route('askep.index')}
+                        active={route().current('askep.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        BPJS
+                        Asuhan Keperawatan
                     </NavLink>
                     <NavLink
-                        href={route('chartLayanan.index')}
-                        active={route().current('chartLayanan.index')}
+                        href={route('cppt.index')}
+                        active={route().current('cppt.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Layanan
+                        CPPT
                     </NavLink>
                     <NavLink
-                        href={route('chartInformasi.index')}
-                        active={route().current('chartInformasi.index')}
+                        href={route('jadwalKontrol.index')}
+                        active={route().current('jadwalKontrol.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Informasi
+                        Jadwal Kontrol
                     </NavLink>
-                    <NavLink
-                        href={route('chartLaporan.index')}
-                        active={route().current('chartLaporan.index')}
-                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
-                    >
-                        Laporan
-                    </NavLink>
+
                 </div>
             )}
         </div>

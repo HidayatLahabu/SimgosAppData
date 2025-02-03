@@ -1,7 +1,7 @@
 import React from 'react';
-import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
+import Table from "@/Components/Table/Table";
+import TableHeader from "@/Components/Table/TableHeader";
+import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 
 export default function SatuSehatTable({ items = [] }) {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import CardMonth from "@/Components/CardMonth";
+import CardMonth from "@/Components/Card/CardMonth";
 
 export default function StatisticBulan({
     statistikBulanIni,

@@ -1,5 +1,5 @@
 import React from 'react';
-import CardKunjungan from "@/Components/CardKunjungan";
+import CardKunjungan from "@/Components/Card/CardKunjungan";
 import { formatDate } from '@/utils/formatDate';
 
 export default function KunjunganHarian({ statistikKunjungan }) {

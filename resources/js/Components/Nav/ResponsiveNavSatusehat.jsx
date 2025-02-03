@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import ResponsiveNavLink from '@/Components/Nav/ResponsiveNavLink';
 
 export default function ResponsiveNavSatusehat() {
     const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import ResponsiveNavLink from '@/Components/Nav/ResponsiveNavLink';
 
-export default function ResponsiveNavPendaftaran() {
+export default function ResponsiveNavLogs() {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -14,7 +14,7 @@ export default function ResponsiveNavPendaftaran() {
                 onClick={toggleDropdown}
                 className="w-full flex items-center justify-between ps-3 pe-4 py-2 border-l-4 border-transparent text-gray-600 dark:text-amber-400 hover:text-gray-800 dark:hover:text-amber-300 hover:bg-gray-50 dark:hover:bg-indigo-800 hover:border-gray-300 dark:hover:border-gray-600 text-base font-medium focus:outline-none transition duration-150 ease-in-out"
             >
-                Pendaftaran
+                Logs
                 <svg
                     className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                     fill="none"
@@ -29,12 +29,11 @@ export default function ResponsiveNavPendaftaran() {
                 <div className="absolute left-0 mt-1 w-full rounded-md shadow-lg bg-white dark:bg-indigo-950 z-10">
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
-                            <ResponsiveNavLink href={route('pendaftaran.index')}>Pendaftaran</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('kunjungan.index')}>Kunjungan</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('konsul.index')}>Konsul</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('mutasi.index')}>Mutasi</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('antrian.index')}>Antrian Ruangan</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('reservasi.index')}>Reservasi</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartPendaftaran.index')}>Pendaftaran</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartBpjs.index')}>BPJS</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartLayanan.index')}>Layanan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartInformasi.index')}>Informasi</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartLaporan.index')}>Laporan</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

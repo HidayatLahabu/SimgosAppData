@@ -1,19 +1,19 @@
 import React from 'react';
-import NavLink from '@/Components/NavLink';
-import NavigationSatusehat from '@/Components/NavigationSatusehat';
-import NavigationInventory from '@/Components/NavigationInventory';
-import NavigationMaster from '@/Components/NavigationMaster';
-import NavigationPendaftaran from '@/Components/NavigationPendaftaran';
-import NavigationBpjs from '@/Components/NavigationBpjs';
-import NavigationLayanan from '@/Components/NavigationLayanan';
-import NavigationLogs from '@/Components/NavigationLogs';
-import NavigationLaporan from '@/Components/NavigationLaporan';
-import NavigationRadiologi from '@/Components/NavigationRadiologi';
-import NavigationMedicalrecord from '@/Components/NavigationMedicalrecord';
-import NavigationInformasi from '@/Components/NavigationInformasi';
-import NavigationKontrol from '@/Components/NavigationKontrol';
-import NavigationManajemen from '@/Components/NavigationManajemen';
-import NavigationChart from '@/Components/NavigationChart';
+import NavLink from '@/Components/Nav/NavLink';
+import NavigationSatusehat from '@/Components/Nav/NavigationSatusehat';
+import NavigationInventory from '@/Components/Nav/NavigationInventory';
+import NavigationMaster from '@/Components/Nav/NavigationMaster';
+import NavigationPendaftaran from '@/Components/Nav/NavigationPendaftaran';
+import NavigationBpjs from '@/Components/Nav/NavigationBpjs';
+import NavigationLayanan from '@/Components/Nav/NavigationLayanan';
+import NavigationLogs from '@/Components/Nav/NavigationLogs';
+import NavigationLaporan from '@/Components/Nav/NavigationLaporan';
+import NavigationRadiologi from '@/Components/Nav/NavigationRadiologi';
+import NavigationMedicalrecord from '@/Components/Nav/NavigationMedicalrecord';
+import NavigationInformasi from '@/Components/Nav/NavigationInformasi';
+import NavigationKontrol from '@/Components/Nav/NavigationKontrol';
+import NavigationManajemen from '@/Components/Nav/NavigationManajemen';
+import NavigationChart from '@/Components/Nav/NavigationChart';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import NavLink from '@/Components/NavLink';
+import NavLink from '@/Components/Nav/NavLink';
 
-export default function NavigationLayanan() {
+export default function NavigationLogs() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,10 +27,10 @@ export default function NavigationLayanan() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('layananLab.index') ||
-            route().current('layananRad.index') ||
-            route().current('layananResep.index') ||
-            route().current('layananPulang.index');
+        return route().current('logsBridge.index') ||
+            route().current('logsAkses.index') ||
+            route().current('logsRequest.index') ||
+            route().current('logsPengguna.index');
     };
 
     return (
@@ -40,37 +40,37 @@ export default function NavigationLayanan() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Layanan
+                Logs
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
                     <NavLink
-                        href={route('layananLab.index')}
-                        active={route().current('layananLab.index')}
+                        href={route('logsBridge.index')}
+                        active={route().current('logsBridge.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laboratorium
+                        Bridge Logs
                     </NavLink>
                     <NavLink
-                        href={route('layananRad.index')}
-                        active={route().current('layananRad.index')}
+                        href={route('logsAkses.index')}
+                        active={route().current('logsAkses.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Radiologi
+                        Pengguna Akses
                     </NavLink>
                     <NavLink
-                        href={route('layananResep.index')}
-                        active={route().current('layananResep.index')}
+                        href={route('logsRequest.index')}
+                        active={route().current('logsRequest.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Resep
+                        Pengguna Request
                     </NavLink>
                     <NavLink
-                        href={route('layananPulang.index')}
-                        active={route().current('layananPulang.index')}
+                        href={route('logsPengguna.index')}
+                        active={route().current('logsPengguna.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Pasien Pulang
+                        Pengguna Aplikasi
                     </NavLink>
                 </div>
             )}

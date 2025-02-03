@@ -1,5 +1,5 @@
 import React from "react";
-import CardWaktuTunggu from "@/Components/CardWaktuTunggu";
+import CardWaktuTunggu from "@/Components/Card/CardWaktuTunggu";
 import { UsersIcon } from "@heroicons/react/16/solid";
 
 const convertSecondsToHMS = (seconds) => {

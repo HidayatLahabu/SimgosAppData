@@ -1,16 +1,16 @@
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import ResponsiveNavSatusehat from '@/Components/ResponsiveNavSatusehat';
-import ResponsiveNavPendaftaran from '@/Components/ResponsiveNavPendaftaran';
-import ResponsiveNavBpjs from '@/Components/ResponsiveNavBpjs';
-import ResponsiveNavLayanan from '@/Components/ResponsiveNavLayanan';
-import ResponsiveNavInventory from '@/Components/ResponsiveNavInventory';
-import ResponsiveNavLogs from '@/Components/ResponsiveNavLogs';
-import ResponsiveNavMaster from '@/Components/ResponsiveNavMaster';
-import ResponsiveNavLaporan from '@/Components/ResponsiveNavLaporan';
-import ResponsiveNavMedicalrecord from '@/Components/ResponsiveNavMedicalrecord';
-import ResponsiveNavRadiologi from '@/Components/ResponsiveNavRadiologi';
-import ResponsiveNavInformasi from '@/Components/ResponsiveNavInformasi';
-import ResponsiveNavChart from '@/Components/ResponsiveNavChart';
+import ResponsiveNavLink from '@/Components/Nav/ResponsiveNavLink';
+import ResponsiveNavSatusehat from '@/Components/Nav/ResponsiveNavSatusehat';
+import ResponsiveNavPendaftaran from '@/Components/Nav/ResponsiveNavPendaftaran';
+import ResponsiveNavBpjs from '@/Components/Nav/ResponsiveNavBpjs';
+import ResponsiveNavLayanan from '@/Components/Nav/ResponsiveNavLayanan';
+import ResponsiveNavInventory from '@/Components/Nav/ResponsiveNavInventory';
+import ResponsiveNavLogs from '@/Components/Nav/ResponsiveNavLogs';
+import ResponsiveNavMaster from '@/Components/Nav/ResponsiveNavMaster';
+import ResponsiveNavLaporan from '@/Components/Nav/ResponsiveNavLaporan';
+import ResponsiveNavMedicalrecord from '@/Components/Nav/ResponsiveNavMedicalrecord';
+import ResponsiveNavRadiologi from '@/Components/Nav/ResponsiveNavRadiologi';
+import ResponsiveNavInformasi from '@/Components/Nav/ResponsiveNavInformasi';
+import ResponsiveNavChart from '@/Components/Nav/ResponsiveNavChart';
 
 export default function MobileNavigation({ user }) {
     const userName = user.name || '';

@@ -1,8 +1,8 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import ButtonBack from '@/Components/ButtonBack';
-import TableSatusehat from "@/Components/TableSatusehat";
+import ButtonBack from '@/Components/Button/ButtonBack';
+import TableSatusehat from "@/Components/Table/TableSatusehat";
 
 export default function Detail({ auth, detail }) {
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Dropdown from '@/Components/Dropdown';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import ResponsiveNavLink from '@/Components/Nav/ResponsiveNavLink';
 import Navigation from './Navigation';
 import MobileNavigation from './MobileNavigation';
 

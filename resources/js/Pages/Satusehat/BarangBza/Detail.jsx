@@ -3,12 +3,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import DetailPoa from './DetailPoa';
 import DetailPov from './DetailPov';
-import ButtonBack from '@/Components/ButtonBack';
+import ButtonBack from '@/Components/Button/ButtonBack';
 import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
-import TableRow from "@/Components/TableRow";
-import TableCell from "@/Components/TableCell";
+import TableHeader from "@/Components/Table/TableHeader";
+import TableHeaderCell from "@/Components/Table/TableHeaderCell";
+import TableRow from "@/Components/Table/TableRow";
+import TableCell from "@/Components/Table/TableCell";
 
 export default function Detail({ auth, detail, detailPoa, detailPov }) {
 

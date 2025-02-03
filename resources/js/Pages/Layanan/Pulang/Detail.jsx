@@ -1,13 +1,13 @@
 import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import ButtonBack from '@/Components/ButtonBack';
+import ButtonBack from '@/Components/Button/ButtonBack';
 import DetailMeninggal from './DetailMeninggal';
-import Table from "@/Components/Table";
-import TableHeader from "@/Components/TableHeader";
-import TableHeaderCell from "@/Components/TableHeaderCell";
-import TableRow from "@/Components/TableRow";
-import TableCell from "@/Components/TableCell";
+import Table from "@/Components/Table/Table";
+import TableHeader from "@/Components/Table/TableHeader";
+import TableHeaderCell from "@/Components/Table/TableHeaderCell";
+import TableRow from "@/Components/Table/TableRow";
+import TableCell from "@/Components/Table/TableCell";
 
 export default function Detail({ auth, detail, detailMeninggal }) {
 
