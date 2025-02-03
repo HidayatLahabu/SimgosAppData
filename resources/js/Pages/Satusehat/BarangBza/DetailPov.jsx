@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from "@/Components/Table";
+import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
