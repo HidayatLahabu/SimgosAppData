@@ -33,10 +33,11 @@ export default function NavigationLaporan() {
             route().current('laporanRl314.index') ||
             route().current('laporanRl315.index') ||
             route().current('laporanRl51.index') ||
-            route().current('laporanWaktuTunggu.index') ||
+            route().current('pengunjungWaktuTunggu.index') ||
             route().current('pengunjungPerPasien.index') ||
             route().current('pengunjungPerHari.index') ||
-            route().current('pengunjungCaraBayar.index');
+            route().current('pengunjungCaraBayar.index') ||
+            route().current('pengunjungRekap.index');
     };
 
     const navLinks = [
@@ -49,6 +50,7 @@ export default function NavigationLaporan() {
         { label: 'Pengunjung Per Pasien', route: 'pengunjungPerPasien.index' },
         { label: 'Pengunjung Per Hari', route: 'pengunjungPerHari.index' },
         { label: 'Pengunjung Cara Bayar', route: 'pengunjungCaraBayar.index' },
+        { label: 'Pengunjung Rekap', route: 'pengunjungRekap.index' },
         { label: 'Waktu Tunggu', route: 'pengunjungWaktuTunggu.index' },
     ];
 

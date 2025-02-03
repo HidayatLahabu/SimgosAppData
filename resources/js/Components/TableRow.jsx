@@ -1,4 +1,3 @@
-// TableRow.jsx
 export default function TableRow({ children, isEven, className = "" }) {
     return (
         <tr

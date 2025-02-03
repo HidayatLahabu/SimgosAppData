@@ -1,29 +1,30 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import Pagination from "@/Components/Pagination";
 import Cetak from './Cetak';
 import Table from "@/Components/Table";
 import TableHeader from "@/Components/TableHeader";
 import TableHeaderCell from "@/Components/TableHeaderCell";
 import TableRow from "@/Components/TableRow";
 import TableCell from "@/Components/TableCell";
+import TableFooter from "@/Components/TableFooter";
+import TableFooterCell from "@/Components/TableFooterCell";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function PengunjungPerHari({
+export default function PengunjungRekap({
     auth,
     dataTable,
     ruangan,
     tglAwal,
     tglAkhir,
+    total,
 }) {
 
     const headers = [
-        { name: "TANGGAL" },
+        { name: "DESKRIPSI" },
         { name: "LAKI-LAKI", className: "text-center w-[9%]" },
         { name: "PEREMPUAN", className: "text-center w-[9%]" },
-        { name: "BARU", className: "text-center w-[7%]" },
-        { name: "LAMA", className: "text-center w-[7%]" },
         { name: "UMUM", className: "text-center w-[7%]" },
         { name: "JKN", className: "text-center w-[7%]" },
         { name: "INHEALT", className: "text-center w-[7%]" },
@@ -38,10 +39,9 @@ export default function PengunjungPerHari({
 
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
-
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN PENGUNJUNG PER HARI
+                            LAPORAN REKAPITULASI PENGUNJUNG
                         </h1>
                         <p className="text-center text-white pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
@@ -59,32 +59,44 @@ export default function PengunjungPerHari({
                                         </tr>
                                     </TableHeader>
                                     <tbody>
-                                        {dataTable.data.length > 0 ? (
-                                            dataTable.data.map((data, index) => (
-                                                <TableRow key={data.TANGGAL} isEven={index % 2 === 0}>
-                                                    <TableCell>{formatDate(data.TANGGAL)}</TableCell>
-                                                    <TableCell className='text-center'>{data.LAKILAKI || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.PEREMPUAN || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.BARU || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.LAMA || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.UMUM || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.JKN || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.INHEALT || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.JKD || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.IKS || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.JUMLAH || 0}</TableCell>
+                                        {Array.isArray(dataTable) && dataTable.length > 0 ? (
+                                            dataTable.map((data, index) => (
+                                                <TableRow key={data.IDSTATUSPENGUNJUNG} isEven={index % 2 === 0}>
+                                                    <TableCell>
+                                                        {data.IDSTATUSPENGUNJUNG === 1 ? "Pengunjung Baru" : "Pengunjung Lama"}
+                                                    </TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.LAKILAKI) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.PEREMPUAN) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.UMUM) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JKN) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.INHEALT) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JKD) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.IKS) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="11" className="px-3 py-3 text-center">
+                                                <td colSpan="7" className="px-3 py-3 text-center">
                                                     Tidak ada data yang dapat ditampilkan
                                                 </td>
                                             </tr>
                                         )}
                                     </tbody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableFooterCell className='text-right'>TOTAL</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.LAKILAKI) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.PEREMPUAN) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.UMUM) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.JKN) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.INHEALTH) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.JKD) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.IKS) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                        </TableRow>
+                                    </TableFooter>
                                 </Table>
-                                <Pagination links={dataTable.links} />
                             </div>
                         </div>
                     </div>
@@ -100,3 +112,4 @@ export default function PengunjungPerHari({
         </AuthenticatedLayout >
     );
 }
+

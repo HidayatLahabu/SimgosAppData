@@ -8,11 +8,6 @@ export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
         import('@/../../resources/css/print.css');
     }, []);
 
-    // Fungsi untuk mengonversi waktu (format HH:MM:SS) ke menit
-    function convertTimeToMinutes(seconds) {
-        return Math.floor(seconds / 60); // Mengubah detik menjadi menit
-    }
-
     return (
         <div className="h-screen w-screen bg-white">
             <Head title="Laporan" />
