@@ -83,6 +83,7 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
@@ -552,6 +553,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('pengunjungRekap', [PengunjungRekapController::class, 'index'])->name('pengunjungRekap.index');
         Route::get('/pengunjungRekap-print', [PengunjungRekapController::class, 'print'])->name('pengunjungRekap.print');
+
+        Route::get('pengunjungBelumGroup', [PengunjungBelumGroupController::class, 'index'])->name('pengunjungBelumGroup.index');
+        Route::get('/pengunjungBelumGroup-print', [PengunjungBelumGroupController::class, 'print'])->name('pengunjungBelumGroup.print');
 
         Route::get('pengunjungWaktuTunggu', [WaktuTungguRegistrasiController::class, 'index'])->name('pengunjungWaktuTunggu.index');
         Route::get('/pengunjungWaktuTunggu-print', [WaktuTungguRegistrasiController::class, 'print'])->name('pengunjungWaktuTunggu.print');

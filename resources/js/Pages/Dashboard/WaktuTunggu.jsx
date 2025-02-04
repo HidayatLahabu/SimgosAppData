@@ -30,7 +30,7 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         waktuStatus="Tercepat"
                         waktuColor="text-gray-100"
                         iconColor="text-green-500"
-                        keterangan='Rata-rata Waktu Tunggu Tercepat'
+                        keterangan='Rata-rata Waktu Tunggu Tercepat Bulan Ini'
                     />
 
                     <CardWaktuTunggu
@@ -42,7 +42,7 @@ export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama })
                         waktuColor="text-gray-100"
                         iconColor="text-red-500"
                         icon={UsersIcon}
-                        keterangan='Rata-rata Waktu Tunggu Terlama'
+                        keterangan='Rata-rata Waktu Tunggu Terlama Bulan Ini'
                     />
                 </div>
             </div>
