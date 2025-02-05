@@ -4,10 +4,7 @@ import InputLabel from "@/Components/Input/InputLabel";
 import TextInput from "@/Components/Input/TextInput";
 import SelectTwoInput from "@/Components/Select/SelectTwoInput";
 
-export default function Cetak({
-    ruangan,
-    caraBayar,
-}) {
+export default function Cetak() {
 
     const { data, setData } = useForm({
         dari_tanggal: '',
@@ -28,22 +25,6 @@ export default function Cetak({
         }));
     }, []);
 
-    const onRuanganChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
-    const onBayarChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, caraBayar: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, caraBayar: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -63,39 +44,6 @@ export default function Cetak({
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Pengunjung  Pasien Belum Grouping</h1>
-
-                        <div className="mt-4 flex space-x-4">
-                            <div className="flex-1">
-                                <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
-                                <SelectTwoInput
-                                    id="ruangan"
-                                    name="ruangan"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Ruangan"
-                                    options={Array.isArray(ruangan) ?
-                                        ruangan.map((item) => ({
-                                            value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
-                                        })) : []}
-                                    onChange={onRuanganChange}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <InputLabel htmlFor="caraBayar" value="Cara Bayar" />
-                                <SelectTwoInput
-                                    id="caraBayar"
-                                    name="caraBayar"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Cara Bayar"
-                                    options={Array.isArray(caraBayar) ?
-                                        caraBayar.map((item) => ({
-                                            value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
-                                        })) : []}
-                                    onChange={onBayarChange}
-                                />
-                            </div>
-                        </div>
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">

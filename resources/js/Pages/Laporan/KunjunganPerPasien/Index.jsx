@@ -11,7 +11,7 @@ import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 
-export default function PengunjungPerPasien({
+export default function KunjunganPerPasien({
     auth,
     dataTable,
     ruangan,
@@ -21,7 +21,6 @@ export default function PengunjungPerPasien({
 }) {
 
     const headers = [
-        { name: "NOPEN", className: "w-[6%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN", className: "text-center" },
         { name: "STATUS", className: "text-center w-[4%]" },
@@ -40,7 +39,7 @@ export default function PengunjungPerPasien({
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('pengunjungPerPasien.index'), updatedParams, {
+        router.get(route('kunjunganPerPasien.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -67,7 +66,7 @@ export default function PengunjungPerPasien({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN PENGUNJUNG PER PASIEN
+                            LAPORAN KUNJUNGAN PER PASIEN
                         </h1>
                         <p className="text-center text-gray-100 pb-4">
                             <strong>Tanggal: </strong>{new Date().toLocaleDateString('id-ID', {
@@ -107,8 +106,7 @@ export default function PengunjungPerPasien({
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <TableRow key={data.NOPEN} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.NOPEN}</TableCell>
+                                                <TableRow key={data.NORM} isEven={index % 2 === 0}>
                                                     <TableCell>{data.NORM}</TableCell>
                                                     <TableCell>{data.NAMA_LENGKAP}</TableCell>
                                                     <TableCell>{data.STATUSPENGUNJUNG}</TableCell>

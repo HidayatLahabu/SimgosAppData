@@ -38,7 +38,7 @@ export default function NavigationLaporan() {
             route().current('pengunjungPerHari.index') ||
             route().current('pengunjungCaraBayar.index') ||
             route().current('pengunjungRekap.index') ||
-            route().current('pengunjungBelumGroup.index');
+            route().current('kunjunganPerPasien.index');
     };
 
     const navLinks = [
@@ -52,8 +52,8 @@ export default function NavigationLaporan() {
         { label: 'Pengunjung Per Hari', route: 'pengunjungPerHari.index' },
         { label: 'Pengunjung Cara Bayar', route: 'pengunjungCaraBayar.index' },
         { label: 'Pengunjung Rekap', route: 'pengunjungRekap.index' },
-        { label: 'Pasien Belum Grouping', route: 'pengunjungBelumGroup.index' },
         { label: 'Waktu Tunggu', route: 'pengunjungWaktuTunggu.index' },
+        { label: 'Kunjungan Per Pasien', route: 'kunjunganPerPasien.index' },
     ];
 
     // Sort the links alphabetically by label

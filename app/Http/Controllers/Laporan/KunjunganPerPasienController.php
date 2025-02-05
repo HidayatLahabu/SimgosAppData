@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\MasterReferensiModel;
 
-class PengunjungPerPasienController extends Controller
+class KunjunganPerPasienController extends Controller
 {
     public function index()
     {
@@ -40,8 +40,8 @@ class PengunjungPerPasienController extends Controller
             })
             ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
             ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->whereDate('pendaftaran.TANGGAL', '=', DB::raw('CURRENT_DATE'))
-            ->whereIn('pendaftaran.STATUS', [1, 2])
+            ->whereDate('kunjungan.MASUK', '=', DB::raw('CURRENT_DATE'))
+            ->whereIn('kunjungan.STATUS', [1, 2])
             ->groupBy([
                 'pendaftaran.NOMOR',
                 'pasien.NORM',
@@ -64,7 +64,7 @@ class PengunjungPerPasienController extends Controller
             });
         }
 
-        $data = $query->orderByDesc('pendaftaran.TANGGAL')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('kunjungan.MASUK')->paginate(5)->appends(request()->query());
         $dataArray = $data->toArray();
 
         $ruangan = MasterRuanganModel::where('JENIS', 5)
@@ -100,13 +100,13 @@ class PengunjungPerPasienController extends Controller
             ->orderBy('pegawai.NAMA')
             ->get();
 
-        return inertia('Laporan/PengunjungPerPasien/Index', [
+        return inertia('Laporan/KunjunganPerPasien/Index', [
             'ruangan' => $ruangan,
             'caraBayar' => $caraBayar,
             'dokter' =>  $dokter,
             'dataTable' => [
-                'data' => $dataArray['data'], // Only the paginated data
-                'links' => $dataArray['links'], // Pagination links
+                'data' => $dataArray['data'],
+                'links' => $dataArray['links'],
             ],
             'queryParams' => request()->all(),
         ]);
@@ -136,7 +136,7 @@ class PengunjungPerPasienController extends Controller
                 'pendaftaran.NOMOR as NOPEN',
                 'pasien.NORM as NORM',
                 DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_LENGKAP'),
-                DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
+                DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
                 DB::raw("DATE_FORMAT(kunjungan.KELUAR, '%d-%m-%Y %H:%i:%s') as TGLKELUAR"),
                 'referensi.DESKRIPSI as CARABAYAR',
                 DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG'),
@@ -156,7 +156,7 @@ class PengunjungPerPasienController extends Controller
             })
             ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
             ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->whereIn('pendaftaran.STATUS', [1, 2])
+            ->whereIn('kunjungan.STATUS', [1, 2])
             ->groupBy([
                 'pendaftaran.NOMOR',
                 'pasien.NORM',
@@ -182,11 +182,10 @@ class PengunjungPerPasienController extends Controller
 
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->orderBy('pendaftaran.TANGGAL')
+            ->whereBetween('kunjungan.MASUK', [$dariTanggal, $sampaiTanggal])
             ->get();
 
-        return inertia("Laporan/PengunjungPerPasien/Print", [
+        return inertia("Laporan/KunjunganPerPasien/Print", [
             'data' => $data,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,

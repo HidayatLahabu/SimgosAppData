@@ -8,11 +8,6 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
         import('@/../../resources/css/print.css');
     }, []);
 
-    // Fungsi untuk mengonversi waktu (format HH:MM:SS) ke menit
-    function convertTimeToMinutes(seconds) {
-        return Math.floor(seconds / 60); // Mengubah detik menjadi menit
-    }
-
     return (
         <div className="h-screen w-screen bg-white">
             <Head title="Laporan" />
@@ -23,7 +18,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN WAKTU TUNGGU
+                                    LAPORAN KUNJUNGAN PER PASIEN
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -31,49 +26,48 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                         : `Selang Tanggal : ${formatDate(dariTanggal)} s.d ${formatDate(sampaiTanggal)}`}
                                 </p>
 
-                                <table className="w-full text-[11px] text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
-                                    <thead className="text-[11px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
+                                <table className="w-full text-[10px] text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
+                                    <thead className="text-[10px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">PENDAFTARAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">RUANGAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">DPJP</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">TANGGAL REGISTRASI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">TANGGAL DITERIMA</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">WAKTU TUNGGU</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">STATUS</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL MASUK</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">CARA BAYAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">UNIT PELAYANAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">DOKTER</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => {
-                                            const isLongWait = convertTimeToMinutes(item.SELISIH_DETIK) > 60;
                                             return (
-                                                <tr key={item.noSurat} className={`${isLongWait ? 'text-red-600' : ''} border-b bg-white dark:border-gray-500`}>
+                                                <tr key={item.NORM} className="border-b bg-white dark:border-gray-500">
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    <td className="px-3 py-2 border border-gray-500 border-solid">
                                                         {item.NORM}
                                                     </td>
-                                                    <td className="px-3 py-2 border border-gray-500 border-solid">
-                                                        {item.NAMALENGKAP}
+                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {item.NAMA_LENGKAP}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.NOPEN}
+                                                        {item.STATUSPENGUNJUNG}
                                                     </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.UNITPELAYANAN}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.DOKTER_REG}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.TGLREG}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
                                                         {item.TGLTERIMA}
                                                     </td>
+                                                    <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
+                                                        {item.TGLKELUAR}
+                                                    </td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.SELISIH}
+                                                        {item.CARABAYAR}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.UNITPELAYANAN}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.DOKTER_REG}
                                                     </td>
                                                 </tr>
                                             );

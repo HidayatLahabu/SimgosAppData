@@ -90,20 +90,18 @@ class PengunjungBelumGroupController extends Controller
         $request->validate([
             'dari_tanggal'   => 'required|date',
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
-            'ruangan'  => 'nullable|integer',
-            'caraBayar' => 'nullable|integer',
         ]);
 
         // Ambil nilai input
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
-        $ruangan = $request->input('ruangan') ?: '%';
-        $caraBayar = $request->input('caraBayar') ?: 0;
-        $laporan = 7;
+        $RUANGAN = '%';
+        $LAPORAN = 7;
+        $CARABAYAR = 0;
 
         $data = DB::connection('mysql10')->select(
             'CALL laporan.LaporanPengunjungBelumGrouping(?, ?, ?, ?, ?)',
-            [$dariTanggal, $sampaiTanggal, $ruangan, $laporan, $caraBayar]
+            [$dariTanggal, $sampaiTanggal, $RUANGAN, $LAPORAN, $CARABAYAR]
         );
 
 

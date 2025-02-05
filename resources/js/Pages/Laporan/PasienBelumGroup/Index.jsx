@@ -13,8 +13,6 @@ import { formatDate } from '@/utils/formatDate';
 export default function PengunjungPerPasien({
     auth,
     dataTable,
-    ruangan,
-    caraBayar,
     tglAwal,
     tglAkhir,
 }) {
@@ -58,7 +56,7 @@ export default function PengunjungPerPasien({
                                         </tr>
                                     </TableHeader>
                                     <tbody>
-                                        
+
                                         {dataTable.data.map((data, index) => (
                                             <TableRow key={data.NOPEN} isEven={index % 2 === 0}>
                                                 <TableCell>{data.NOPEN}</TableCell>
@@ -89,10 +87,7 @@ export default function PengunjungPerPasien({
             </div >
 
             <div className="w-full">
-                <Cetak
-                    caraBayar={caraBayar}
-                    ruangan={ruangan}
-                />
+                <Cetak />
             </div>
 
         </AuthenticatedLayout >
