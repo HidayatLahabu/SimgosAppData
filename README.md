@@ -69,7 +69,7 @@ Untuk menarik pembaruan terbaru:
     Linux: Navigasi ke /var/www/html/SimgosAppData dan jalankan git pull di terminal atau download repo,
     kemudian extract serta  ulangi langkah 2 hingga 5 di atas
     Selanjutnya lakukan perintah composer update dan npm update, mengantisipasi jika terdapat perubahan 
-    pada laravel package dan node package. Setelah itu lakukan perintah npm build, jika di butuhkan
+    pada laravel package dan node package. Setelah itu lakukan perintah npm run build, jika di butuhkan
     Windows: Jika dideploy di Windows, kloning ulang repositori dan ulangi langkah 2 hingga 5 di atas.
 
 Tip : 
