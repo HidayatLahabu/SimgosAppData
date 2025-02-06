@@ -19,11 +19,11 @@ class JadwalKontrolController extends Controller
                 'jadwalKontrol.ID as id',
                 'jadwalKontrol.KUNJUNGAN as kunjungan',
                 'pasien.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'jadwalKontrol.TANGGAL as tanggal',
                 'jadwalKontrol.JAM as jam',
                 'ruangan.DESKRIPSI as ruangan',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as oleh'),
                 'jadwalKontrol.DIBUAT_TANGGAL as dibuat',
                 'jadwalKontrol.STATUS as status',
             )
@@ -72,11 +72,11 @@ class JadwalKontrolController extends Controller
                 'jadwalKontrol.ID as id',
                 'jadwalKontrol.KUNJUNGAN as kunjungan',
                 'pasien.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'jadwalKontrol.TANGGAL as tanggal',
                 'jadwalKontrol.JAM as jam',
                 'ruangan.DESKRIPSI as ruangan',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as oleh'),
                 'jadwalKontrol.DIBUAT_TANGGAL as dibuat',
                 'jadwalKontrol.STATUS as status',
             )
@@ -165,12 +165,12 @@ class JadwalKontrolController extends Controller
         $query = DB::connection('mysql11')->table('medicalrecord.jadwal_kontrol as jadwalKontrol')
             ->select([
                 'jadwalKontrol.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                DB::raw('CONCAT(dokter.GELAR_DEPAN, " ", dokter.NAMA, " ", dokter.GELAR_BELAKANG) as DOKTER'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER'),
                 'tujuan.DESKRIPSI as TUJUAN',
                 'ruangan.DESKRIPSI as RUANGAN_RAWATAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'jadwalKontrol.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')

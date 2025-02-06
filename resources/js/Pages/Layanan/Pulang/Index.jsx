@@ -102,9 +102,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, keada
                                                     <TableCell>{data.kunjungan}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.keadaan}</TableCell>
-                                                    <TableCell>
-                                                        {data.gelarDepan}. <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}
-                                                    </TableCell>
+                                                    <TableCell>{data.dpjp}</TableCell>
                                                     <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("layananPulang.detail", { id: data.id })}

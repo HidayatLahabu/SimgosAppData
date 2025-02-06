@@ -38,11 +38,9 @@ class LaboratoriumController extends Controller
                 orderLab.NOMOR as nomor,
                 MIN(orderLab.TANGGAL) as tanggal,
                 MIN(orderLab.KUNJUNGAN) as kunjungan,
-                MIN(pegawai.NAMA) as dokter,
-                MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-                MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-                MIN(pasien.NORM) as norm,
-                MIN(pasien.NAMA) as nama,
+                master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
+                MIN(pasien.NORM) as norm,                
+                master.getNamaLengkap(pasien.NORM) as nama,
                 MIN(kunjungan.STATUS) as statusKunjungan,
                 MIN(orderLab.STATUS) as statusOrder,
                 MIN(hasil.STATUS) as statusHasil
@@ -117,18 +115,16 @@ class LaboratoriumController extends Controller
         // Membangun query data dengan grouping dan seleksi
         $dataQuery = clone $baseQuery;
         $dataQuery->selectRaw('
-            orderLab.NOMOR as nomor,
-            MIN(orderLab.TANGGAL) as tanggal,
-            MIN(orderLab.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(kunjungan.STATUS) as statusKunjungan,
-            MIN(orderLab.STATUS) as statusOrder,
-            MIN(hasil.STATUS) as statusHasil
-        ')
+                orderLab.NOMOR as nomor,
+                MIN(orderLab.TANGGAL) as tanggal,
+                MIN(orderLab.KUNJUNGAN) as kunjungan,
+                master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
+                MIN(pasien.NORM) as norm,                
+                master.getNamaLengkap(pasien.NORM) as nama,
+                MIN(kunjungan.STATUS) as statusKunjungan,
+                MIN(orderLab.STATUS) as statusOrder,
+                MIN(hasil.STATUS) as statusHasil
+            ')
             ->groupBy('orderLab.NOMOR');
 
         // Membangun query count
@@ -174,8 +170,8 @@ class LaboratoriumController extends Controller
                 'order.KUNJUNGAN',
                 'order.TANGGAL',
                 'pasien.NORM',
-                'pasien.NAMA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_ASAL'),
                 'ruangan.DESKRIPSI as TUJUAN',
                 'order.CITO',
                 'pengguna.NAMA as OLEH',
@@ -201,7 +197,6 @@ class LaboratoriumController extends Controller
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'order.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'order.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'order.OLEH')
             ->where('order.NOMOR', $id)
@@ -231,13 +226,12 @@ class LaboratoriumController extends Controller
                 'catatan.KUNJUNGAN',
                 'catatan.TANGGAL',
                 'catatan.CATATAN',
-                DB::raw('CONCAT(dokterLab.GELAR_DEPAN, " ", dokterLab.NAMA, " ", dokterLab.GELAR_BELAKANG) as DOKTER_LAB'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_LAB'),
                 'catatan.STATUS',
             )
             ->leftJoin('layanan.catatan_hasil_lab as catatan', 'catatan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('layanan.order_lab as order', 'order.NOMOR', '=', 'kunjungan.REF')
-            ->leftJoin('master.dokter as pegawaiLab', 'pegawaiLab.ID', '=', 'catatan.DOKTER')
-            ->leftJoin('master.pegawai as dokterLab', 'dokterLab.NIP', '=', 'pegawaiLab.NIP')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'catatan.DOKTER')
             ->where('kunjungan.REF', $catatanID)
             ->first();
 
@@ -287,14 +281,13 @@ class LaboratoriumController extends Controller
                     'hasilLab.HASIL as hasil',
                     'hasilLab.SATUAN as satuan',
                     'pendaftaran.NORM as norm',
-                    'pasien.NAMA as namaPasien',
-                    DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
+                    DB::raw('master.getNamaLengkap(pasien.NORM) as namaPasien'),
+                    DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as pelaksana'),
                     'parameterTindakan.PARAMETER as parameterTindakan',
                 ])
                 ->join('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilLab.TINDAKAN_MEDIS')
                 ->join('master.parameter_tindakan_lab as parameterTindakan', 'parameterTindakan.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
                 ->join('aplikasi.pengguna as dokter', 'dokter.ID', '=', 'hasilLab.OLEH')
-                ->join('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
                 ->join('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
                 ->join('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
                 ->join('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
@@ -341,8 +334,8 @@ class LaboratoriumController extends Controller
                     'hasilLab.HASIL as hasil',
                     'hasilLab.SATUAN as satuan',
                     'pendaftaran.NORM as norm',
-                    'pasien.NAMA as namaPasien',
-                    DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
+                    DB::raw('master.getNamaLengkap(pasien.NORM) as namaPasien'),
+                    DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as pelaksana'),
                     'parameterTindakan.PARAMETER as parameterTindakan',
                     'jenisPenjamin.NOMOR as nomorSEP',
                     'kunjunganBpjs.tglSEP as tanggalSEP',
@@ -350,7 +343,6 @@ class LaboratoriumController extends Controller
                 ->join('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilLab.TINDAKAN_MEDIS')
                 ->join('master.parameter_tindakan_lab as parameterTindakan', 'parameterTindakan.ID', '=', 'hasilLab.PARAMETER_TINDAKAN')
                 ->join('aplikasi.pengguna as dokter', 'dokter.ID', '=', 'hasilLab.OLEH')
-                ->join('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
                 ->join('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
                 ->join('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
                 ->join('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')

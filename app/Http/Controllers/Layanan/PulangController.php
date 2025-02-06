@@ -41,17 +41,15 @@ class PulangController extends Controller
 
         // Group by 'pulang.ID' and select aggregated fields
         $query->selectRaw('
-            pulang.ID as id,
-            MIN(pulang.TANGGAL) as tanggal,
-            MIN(pulang.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(refCara.DESKRIPSI) as cara,
-            MIN(refKeadaan.DESKRIPSI) as keadaan
-        ')
+                pulang.ID as id,
+                MIN(pulang.TANGGAL) as tanggal,
+                MIN(pulang.KUNJUNGAN) as kunjungan,
+                master.getNamaLengkapPegawai(dokter.NIP) as dpjp,
+                MIN(pasien.NORM) as norm,
+                master.getNamaLengkap(pasien.NORM) as nama,
+                MIN(refCara.DESKRIPSI) as cara,
+                MIN(refKeadaan.DESKRIPSI) as keadaan
+            ')
             ->groupBy('pulang.ID');
 
         // Paginate the results
@@ -133,16 +131,14 @@ class PulangController extends Controller
         $dataQuery = clone $baseQuery;
         $dataQuery->selectRaw('
             pulang.ID as id,
-            MIN(pulang.TANGGAL) as tanggal,
-            MIN(pulang.KUNJUNGAN) as kunjungan,
-            MIN(pegawai.NAMA) as dokter,
-            MIN(pegawai.GELAR_DEPAN) as gelarDepan,
-            MIN(pegawai.GELAR_BELAKANG) as gelarBelakang,
-            MIN(pasien.NORM) as norm,
-            MIN(pasien.NAMA) as nama,
-            MIN(refCara.DESKRIPSI) as cara,
-            MIN(refKeadaan.DESKRIPSI) as keadaan
-        ')
+                MIN(pulang.TANGGAL) as tanggal,
+                MIN(pulang.KUNJUNGAN) as kunjungan,
+                master.getNamaLengkapPegawai(dokter.NIP) as dpjp,
+                MIN(pasien.NORM) as norm,
+                master.getNamaLengkap(pasien.NORM) as nama,
+                MIN(refCara.DESKRIPSI) as cara,
+                MIN(refKeadaan.DESKRIPSI) as keadaan
+            ')
             ->groupBy('pulang.ID');
 
         // Membangun query count
@@ -193,18 +189,17 @@ class PulangController extends Controller
                 'pulang.NOPEN as NOMOR_PENDAFTARAN',
                 'pulang.TANGGAL as TANGGAL',
                 'pasien.NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
                 'refCara.DESKRIPSI as CARA',
                 'refKeadaan.DESKRIPSI as KEADAAN',
                 'pulang.DIAGNOSA as DIAGNOSA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER'),
                 'pengguna.NAMA as OLEH',
                 'pulang.STATUS as STATUS',
             )
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'pulang.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pulang.DOKTER')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pulang.OLEH')
             ->leftJoin('master.referensi as refCara', function ($join) {
                 $join->on('refCara.ID', '=', 'pulang.CARA')
@@ -224,10 +219,10 @@ class PulangController extends Controller
         $queryMeninggal = DB::connection('mysql7')->table('layanan.pasien_meninggal as meninggal')
             ->select(
                 'meninggal.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER'),
                 'pemulasaran.DESKRIPSI as RENCANA_PEMULASARAN',
                 'bahasa.DESKRIPSI as BAHASA',
-                DB::raw('CONCAT(verifikator.GELAR_DEPAN, " ", verifikator.NAMA, " ", verifikator.GELAR_BELAKANG) as VERIFIKATOR'),
+                DB::raw('master.getNamaLengkapPegawai(verifikator.NIP) as VERIFIKATOR'),
                 'operasi.DESKRIPSI as JENIS_OPERASI',
                 'pengguna.NAMA as OLEH',
             )
@@ -299,11 +294,10 @@ class PulangController extends Controller
                 pulang.ID as idPulang,
                 pulang.TANGGAL as tanggal,
                 pulang.KUNJUNGAN as kunjungan,
-                pegawai.NAMA as dokter,
-                pegawai.GELAR_DEPAN as gelarDepan,
-                pegawai.GELAR_BELAKANG as gelarBelakang,
+                master.getNamaLengkapPegawai(dokter.NIP) as dpjp,
                 pasien.NORM as norm,
                 pasien.NAMA as namaPasien,
+                master.getNamaLengkap(pasien.NORM) as namaPasien,
                 refKeadaan.DESKRIPSI as keadaan
             ');
 

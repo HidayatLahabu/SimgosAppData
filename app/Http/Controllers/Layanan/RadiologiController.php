@@ -37,11 +37,9 @@ class RadiologiController extends Controller
             orderRad.NOMOR as nomor,
             orderRad.TANGGAL as tanggal,
             orderRad.KUNJUNGAN as kunjungan,
-            pegawai.NAMA as dokter,
-            pegawai.GELAR_DEPAN as gelarDepan,
-            pegawai.GELAR_BELAKANG as gelarBelakang,
+            master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
             pasien.NORM as norm,
-            pasien.NAMA as nama,
+            master.getNamaLengkap(pasien.NORM) as nama,
             kunjungan.STATUS as statusKunjungan,
             orderRad.STATUS as statusOrder,
             hasilRad.STATUS as statusHasil
@@ -75,8 +73,8 @@ class RadiologiController extends Controller
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('layanan.order_detil_rad as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderRad.NOMOR')
-            ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+            ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.ORDER_ID', '=', 'orderRad.NOMOR')
+            ->leftJoin('layanan.hasil_rad as hasilRad', 'hasilRad.TINDAKAN_MEDIS', '=', 'orderRadDetail.REF');
 
         // Menerapkan filter waktu
         switch ($filter) {
@@ -116,18 +114,16 @@ class RadiologiController extends Controller
         $dataQuery = clone $baseQuery;
         $dataQuery
             ->selectRaw('
-            orderRad.NOMOR as nomor,
-            orderRad.TANGGAL as tanggal,
-            orderRad.KUNJUNGAN as kunjungan,
-            pegawai.NAMA as dokter,
-            pegawai.GELAR_DEPAN as gelarDepan,
-            pegawai.GELAR_BELAKANG as gelarBelakang,
-            pasien.NORM as norm,
-            pasien.NAMA as nama,
-            kunjungan.STATUS as statusKunjungan,
-            orderRad.STATUS as statusOrder,
-            hasil.STATUS as statusHasil
-        ');
+                orderRad.NOMOR as nomor,
+                orderRad.TANGGAL as tanggal,
+                orderRad.KUNJUNGAN as kunjungan,
+                master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
+                pasien.NORM as norm,
+                master.getNamaLengkap(pasien.NORM) as nama,
+                kunjungan.STATUS as statusKunjungan,
+                orderRad.STATUS as statusOrder,
+                hasilRad.STATUS as statusHasil
+            ');
 
         // Membangun query count
         $count = $baseQuery->distinct('orderRad.NOMOR')->count('orderRad.NOMOR');
@@ -172,8 +168,8 @@ class RadiologiController extends Controller
                 'order.KUNJUNGAN',
                 'order.TANGGAL',
                 'pasien.NORM',
-                'pasien.NAMA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_ASAL'),
                 'ruangan.DESKRIPSI as TUJUAN',
                 'order.CITO',
                 'pengguna.NAMA as OLEH',
@@ -206,7 +202,7 @@ class RadiologiController extends Controller
                 'hasil.HASIL',
                 'hasil.BTK',
                 'hasil.KRITIS',
-                'pengguna.NAMA as PENGGUNA',
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as PENGGUNA'),
                 'hasil.STATUS'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.REF', '=', 'orderRad.NOMOR')
@@ -214,7 +210,6 @@ class RadiologiController extends Controller
             ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
             ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('aplikasi.pengguna as pengguna', 'hasil.OLEH', '=', 'pengguna.ID')
             ->where('orderRad.NOMOR', $id)
             ->where('hasil.STATUS', 2)
@@ -263,7 +258,7 @@ class RadiologiController extends Controller
                 'tindakan.NAMA as namaTindakan',
                 'pendaftaran.NORM as norm',
                 'pasien.NAMA as namaPasien',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as pelaksana'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as pelaksana'),
             ])
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.ID', '=', 'hasilRad.TINDAKAN_MEDIS')
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'tindakanMedis.KUNJUNGAN')
@@ -271,7 +266,6 @@ class RadiologiController extends Controller
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasilRad.DOKTER')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('pendaftaran.tujuan_pasien as tujuanPasien', 'tujuanPasien.NOPEN', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuanPasien.RUANGAN');
 

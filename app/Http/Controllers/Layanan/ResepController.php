@@ -19,11 +19,9 @@ class ResepController extends Controller
                 'orderResep.NOMOR as nomor',
                 'orderResep.TANGGAL as tanggal',
                 'orderResep.KUNJUNGAN as kunjungan',
-                'pegawai.NAMA as dokter',
-                'pegawai.GELAR_DEPAN as gelarDepan',
-                'pegawai.GELAR_BELAKANG as gelarBelakang',
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as orderOleh'),
                 'pasien.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'peserta.noKartu'
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderResep.KUNJUNGAN')

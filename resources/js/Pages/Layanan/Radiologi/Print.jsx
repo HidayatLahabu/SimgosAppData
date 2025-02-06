@@ -30,16 +30,16 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
                                 </p>
 
-                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
-                                    <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
+                                <table className="w-full text-[11px] text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
+                                    <thead className="text-[11px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[8%]">ID HASIL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">ID HASIL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">TANGGAL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
                                             {jenisPenjamin === "BPJS KESEHATAN" && (
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[10%] text-wrap">NOMOR & TANGGAL SEP</th>
+                                                <th className="px-3 py-2 border border-gray-500 border-solid text-wrap">NOMOR & TANGGAL SEP</th>
                                             )}
                                             <th className="px-3 py-2 border border-gray-500 border-solid">TINDAKAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">PELAKSANA</th>

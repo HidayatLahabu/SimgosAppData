@@ -30,11 +30,11 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                     Selang Tanggal : {formatDate(dariTanggal)} s.d {formatDate(sampaiTanggal)}
                                 </p>
 
-                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
-                                    <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
+                                <table className="w-full text-[10px] text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
+                                    <thead className="text-[10px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">ID HASIL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">ID HASIL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
                                             {jenisPenjamin === "BPJS KESEHATAN" && (
@@ -43,7 +43,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                             <th className="px-3 py-2 border border-gray-500 border-solid">TINDAKAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">PARAMETER</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">HASIL</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[10%]">TANGGAL HASIL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">TANGGAL HASIL</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">PELAKSANA</th>
                                         </tr>
                                     </thead>
@@ -72,7 +72,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal, jenisKunjungan
                                                 <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
                                                     {item.hasil} {item.satuan}
                                                 </td>
-                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
                                                     {item.tanggalHasil}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">

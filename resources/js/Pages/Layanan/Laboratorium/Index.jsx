@@ -104,7 +104,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>
-                                                        {data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}
+                                                        {data.orderOleh}
                                                     </TableCell>
                                                     <TableCell>
                                                         {data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}

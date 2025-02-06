@@ -90,7 +90,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>{data.gelarDepan} <span className='uppercase'>{data.dokter}</span> {data.gelarBelakang}</TableCell>
+                                                    <TableCell>{data.orderOleh}</TableCell>
                                                     <TableCell>{data.noKartu ? (
                                                         <span>BPJS</span>
                                                     ) : (

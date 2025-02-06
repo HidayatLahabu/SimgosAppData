@@ -19,10 +19,10 @@ class AskepController extends Controller
                 'askep.ID as id',
                 'askep.KUNJUNGAN as kunjungan',
                 'pasien.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'askep.TANGGAL as tanggal',
                 'ruangan.DESKRIPSI as ruangan',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as oleh'),
                 'askep.STATUS as status',
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'askep.KUNJUNGAN')
@@ -70,10 +70,10 @@ class AskepController extends Controller
                 'askep.ID as id',
                 'askep.KUNJUNGAN as kunjungan',
                 'pasien.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'askep.TANGGAL as tanggal',
                 'ruangan.DESKRIPSI as ruangan',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as oleh'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as oleh'),
                 'askep.STATUS as status',
             )
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'askep.KUNJUNGAN')
@@ -161,10 +161,10 @@ class AskepController extends Controller
         $query = DB::connection('mysql11')->table('medicalrecord.asuhan_keperawatan as askep')
             ->select([
                 'askep.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
                 'ruangan.DESKRIPSI as RUANGAN_RAWATAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'askep.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
