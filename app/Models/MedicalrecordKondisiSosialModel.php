@@ -48,7 +48,7 @@ class MedicalrecordKondisiSosialModel extends Model
                 'kondisiSosial.PENGAMBIL_KEPUTUSAN_DALAM_KELUARGA as PENGAMBIL_KEPUTUSAN_DALAM_KELUARGA',
                 'kondisiSosial.PENGHASILAN_PERBULAN as PENGHASILAN_PERBULAN',
                 'kondisiSosial.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawaiKondisiSosial.GELAR_DEPAN, " ", pegawaiKondisiSosial.NAMA, " ", pegawaiKondisiSosial.GELAR_BELAKANG) as KONDISI_SOSIAL_OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawaiKondisiSosial.NIP) as KONDISI_SOSIAL_OLEH'),
                 'kondisiSosial.STATUS as STATUS_KONDISI_SOSIAL',
                 'hubunganPsikososial.ID as ID_HUBUNGAN_PSIKOSOSIAL',
                 'hubunganPsikososial.KECEMASAN_PASIEN_ATAU_KERABAT as KECEMASAN_PASIEN_ATAU_KERABAT',
@@ -63,7 +63,7 @@ class MedicalrecordKondisiSosialModel extends Model
                 'hubunganPsikososial.KETERANGAN_INDIKASI_KEBUTUHAN_KHUSUS as KETERANGAN_INDIKASI_KEBUTUHAN_KHUSUS',
                 'hubunganPsikososial.PILIHAN_HIDUP_PASIEN as PILIHAN_HIDUP_PASIEN',
                 'hubunganPsikososial.TANGGAL as PILIHAN_HIDUP_PASIEN',
-                DB::raw('CONCAT(pegawaiHubunganPsikososial.GELAR_DEPAN, " ", pegawaiHubunganPsikososial.NAMA, " ", pegawaiHubunganPsikososial.GELAR_BELAKANG) as HUBUNGAN_PSIKOSOSIAL_OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawaiHubunganPsikososial.NIP) as HUBUNGAN_PSIKOSOSIAL_OLEH'),
                 'hubunganPsikososial.STATUS as STATUS_HUBUNGAN_PSIKOSOSIAL',
             ])
             ->leftJoin('aplikasi.pengguna as penggunaKondisiSosial', 'penggunaKondisiSosial.ID', '=', 'kondisiSosial.OLEH')

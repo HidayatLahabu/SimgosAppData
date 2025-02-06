@@ -32,7 +32,7 @@ class MedicalrecordPemeriksaanTransfusiDarahModel extends Model
                 'pemeriksaanTransfusiDarah.JUMLAH_BAG as JUMLAH_BAG',
                 'pemeriksaanTransfusiDarah.JUMLAH_CC as JUMLAH_CC',
                 'pemeriksaanTransfusiDarah.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
                 'pemeriksaanTransfusiDarah.STATUS as STATUS',
                 'transfusiDarahDetail.ID as DETAIL_ID',
                 'transfusiDarahDetail.NOMOR_KANTONG as NOMOR_KANTONG',

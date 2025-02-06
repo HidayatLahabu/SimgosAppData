@@ -19,7 +19,7 @@ class KonsulController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
             ->select(
                 'konsul.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganAsal.DESKRIPSI as asal',
                 'ruanganTujuan.DESKRIPSI as tujuan',
@@ -73,11 +73,11 @@ class KonsulController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
             ->selectRaw('
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE(konsul.TANGGAL))) AS rata_rata_per_hari,
-            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(konsul.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(SUM(CASE WHEN konsul.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(konsul.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
-            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(konsul.TANGGAL))) AS rata_rata_per_tahun
-        ')
+                ROUND(COUNT(*) / COUNT(DISTINCT DATE(konsul.TANGGAL))) AS rata_rata_per_hari,
+                ROUND(COUNT(*) / COUNT(DISTINCT WEEK(konsul.TANGGAL, 1))) AS rata_rata_per_minggu,
+                ROUND(SUM(CASE WHEN konsul.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(konsul.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+                ROUND(COUNT(*) / COUNT(DISTINCT YEAR(konsul.TANGGAL))) AS rata_rata_per_tahun
+            ')
             ->whereIn('konsul.STATUS', [1, 2])
             ->where('konsul.TANGGAL', '>', '0000-00-00')
             ->whereNotNull('konsul.TANGGAL')
@@ -94,7 +94,7 @@ class KonsulController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
             ->select(
                 'konsul.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganAsal.DESKRIPSI as asal',
                 'ruanganTujuan.DESKRIPSI as tujuan',
@@ -192,11 +192,11 @@ class KonsulController extends Controller
                 'konsul.KUNJUNGAN as KUNJUNGAN',
                 'pendaftaran.NOMOR as PENDAFTARAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'konsul.ALASAN as ALASAN',
                 'konsul.PERMINTAAN_TINDAKAN as PERMINTAAN_TINDAKAN',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_ASAL'),
                 'konsul.STATUS as STATUS_KONSUL'
             ])
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'konsul.KUNJUNGAN')
@@ -247,7 +247,7 @@ class KonsulController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.konsul as konsul')
             ->select(
                 'konsul.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganAsal.DESKRIPSI as asal',
                 'ruanganTujuan.DESKRIPSI as tujuan',

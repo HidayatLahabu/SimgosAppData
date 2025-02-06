@@ -19,7 +19,7 @@ class AntrianRuanganController extends Controller
                 'antrian.ID as nomor',
                 'antrian.TANGGAL as tanggal',
                 'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'ruangan.DESKRIPSI as ruangan',
                 'antrian.NOMOR as urut',
                 'antrian.STATUS as status',
@@ -82,7 +82,7 @@ class AntrianRuanganController extends Controller
                 'antrian.ID as nomor',
                 'antrian.TANGGAL as tanggal',
                 'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'ruangan.DESKRIPSI as ruangan',
                 'antrian.NOMOR as urut',
                 'antrian.STATUS as status',
@@ -147,7 +147,7 @@ class AntrianRuanganController extends Controller
                 'antrian.ID as nomor',
                 'antrian.TANGGAL as tanggal',
                 'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'ruangan.DESKRIPSI as ruangan',
                 'antrian.NOMOR as urut',
                 'antrian.STATUS as status',
@@ -198,11 +198,11 @@ class AntrianRuanganController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.antrian_ruangan as antrian')
             ->selectRaw('
-            COUNT(*) AS total_antrian,
-            SUM(CASE WHEN antrian.STATUS = 0 THEN 1 ELSE 0 END) AS total_batal,
-            SUM(CASE WHEN antrian.STATUS = 1 THEN 1 ELSE 0 END) AS total_belum_diterima,
-            SUM(CASE WHEN antrian.STATUS = 2 THEN 1 ELSE 0 END) AS total_diterima
-        ')
+                COUNT(*) AS total_antrian,
+                SUM(CASE WHEN antrian.STATUS = 0 THEN 1 ELSE 0 END) AS total_batal,
+                SUM(CASE WHEN antrian.STATUS = 1 THEN 1 ELSE 0 END) AS total_belum_diterima,
+                SUM(CASE WHEN antrian.STATUS = 2 THEN 1 ELSE 0 END) AS total_diterima
+            ')
             ->leftJoin('pendaftaran.pendaftaran AS pendaftaran', 'pendaftaran.NOMOR', '=', 'antrian.REF')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->where('pasien.STATUS', 1)

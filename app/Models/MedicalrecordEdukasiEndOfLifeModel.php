@@ -28,7 +28,7 @@ class MedicalrecordEdukasiEndOfLifeModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.edukasi_end_of_life as edukasiEndOfLife')
             ->select([
                 'edukasiEndOfLife.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'edukasiEndOfLife.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

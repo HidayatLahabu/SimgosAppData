@@ -25,7 +25,7 @@ export default function PengunjungPerPasien({
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN", className: "text-center" },
         { name: "STATUS", className: "text-center w-[4%]" },
-        { name: "TANGGAL REGISTRASI", className: "text-wrap text-center w-[10%]" },
+        { name: "TANGGAL REGISTRASI", className: "text-wrap w-[10%]" },
         { name: "CARA BAYAR", className: "text-wrap" },
         { name: "UNIT PELAYANAN", className: "text-wrap" },
         { name: "DOKTER", className: "text-wrap" },
@@ -112,7 +112,7 @@ export default function PengunjungPerPasien({
                                                     <TableCell>{data.NORM}</TableCell>
                                                     <TableCell>{data.NAMA_LENGKAP}</TableCell>
                                                     <TableCell>{data.STATUSPENGUNJUNG}</TableCell>
-                                                    <TableCell>{data.TGLTERIMA}</TableCell>
+                                                    <TableCell>{data.TGLREG}</TableCell>
                                                     <TableCell>{data.CARABAYAR}</TableCell>
                                                     <TableCell>{data.UNITPELAYANAN}</TableCell>
                                                     <TableCell>{data.DOKTER_REG}</TableCell>

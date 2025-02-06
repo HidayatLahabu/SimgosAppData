@@ -24,7 +24,7 @@ class MedicalrecordPemeriksaanHidungModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_hidung as pemeriksaanHidung')
             ->select([
                 'pemeriksaanHidung.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanHidung.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

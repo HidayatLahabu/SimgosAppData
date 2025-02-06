@@ -130,11 +130,11 @@ class ReservasiController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.reservasi as reservasi')
             ->selectRaw('
-            COUNT(*) AS total_reservasi,
-            SUM(CASE WHEN STATUS = 0 THEN 1 ELSE 0 END) AS total_batal_reservasi,
-            SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END) AS total_proses_reservasi,
-            SUM(CASE WHEN STATUS = 2 THEN 1 ELSE 0 END) AS total_selesai_reservasi
-        ')
+                COUNT(*) AS total_reservasi,
+                SUM(CASE WHEN STATUS = 0 THEN 1 ELSE 0 END) AS total_batal_reservasi,
+                SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END) AS total_proses_reservasi,
+                SUM(CASE WHEN STATUS = 2 THEN 1 ELSE 0 END) AS total_selesai_reservasi
+            ')
             ->first();
     }
 }

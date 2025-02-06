@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
+export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan }) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');
@@ -47,7 +48,9 @@ export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
                                         {data.map((item, key) => {
                                             return (
                                                 <tr key={item.TANGGAL} className="border-b bg-white dark:border-gray-500">
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {key + 1}
+                                                    </td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                         {formatDate(item.TANGGAL)}
                                                     </td>
@@ -85,6 +88,21 @@ export default function Print({ data, dariTanggal, sampaiTanggal, ruangan }) {
                                             );
                                         })}
                                     </tbody>
+                                    <tfoot>
+                                        <tr className='bg-gray-300 font-bold text-sm'>
+                                            <td colSpan={2} className='px-2 py-2 text-right border border-gray-500 border-solid'>TOTAL</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LAKILAKI) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.PEREMPUAN) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BARU) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LAMA) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.UMUM) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKN) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.INHEALTH) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKD) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.IKS) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JUMLAH) || 0}</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>

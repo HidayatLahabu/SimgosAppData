@@ -7,6 +7,8 @@ import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
+import TableFooter from "@/Components/Table/TableFooter";
+import TableFooterCell from "@/Components/Table/TableFooterCell";
 import { formatDate } from '@/utils/formatDate';
 import { formatRibuan } from '@/utils/formatRibuan';
 
@@ -15,6 +17,7 @@ export default function PengunjungCaraBayar({
     dataTable,
     ruangan,
     caraBayar,
+    total,
     tglAwal,
     tglAkhir,
 }) {
@@ -75,6 +78,17 @@ export default function PengunjungCaraBayar({
                                             </tr>
                                         )}
                                     </tbody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableFooterCell className='text-right'></TableFooterCell>
+                                            <TableFooterCell className='text-right'>TOTAL</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.LAKILAKI) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.PEREMPUAN) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BARU) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.LAMA) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                        </TableRow>
+                                    </TableFooter>
                                 </Table>
                             </div>
                         </div>

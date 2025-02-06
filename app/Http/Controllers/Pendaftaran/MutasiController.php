@@ -19,7 +19,7 @@ class MutasiController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
             ->select(
                 'mutasi.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganTujuan.DESKRIPSI as tujuan',
                 'mutasi.TANGGAL as tanggal',
@@ -72,11 +72,11 @@ class MutasiController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
             ->selectRaw('
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE(mutasi.TANGGAL))) AS rata_rata_per_hari,
-            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(mutasi.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(SUM(CASE WHEN mutasi.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(mutasi.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
-            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(mutasi.TANGGAL))) AS rata_rata_per_tahun
-        ')
+                ROUND(COUNT(*) / COUNT(DISTINCT DATE(mutasi.TANGGAL))) AS rata_rata_per_hari,
+                ROUND(COUNT(*) / COUNT(DISTINCT WEEK(mutasi.TANGGAL, 1))) AS rata_rata_per_minggu,
+                ROUND(SUM(CASE WHEN mutasi.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(mutasi.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+                ROUND(COUNT(*) / COUNT(DISTINCT YEAR(mutasi.TANGGAL))) AS rata_rata_per_tahun
+            ')
             ->whereIn('mutasi.STATUS', [1, 2])
             ->where('mutasi.TANGGAL', '>', '0000-00-00')
             ->whereNotNull('mutasi.TANGGAL')
@@ -93,7 +93,7 @@ class MutasiController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
             ->select(
                 'mutasi.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganTujuan.DESKRIPSI as tujuan',
                 'mutasi.TANGGAL as tanggal',
@@ -189,7 +189,7 @@ class MutasiController extends Controller
                 'mutasi.KUNJUNGAN as KUNJUNGAN',
                 'mutasi.TANGGAL as TANGGAL',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
                 'mutasi.STATUS as STATUS_MUTASI',
                 'mutasi_oleh.NAMA as MUTASI_OLEH',
                 'mutasi.STATUS as STATUS_MUTASI',
@@ -253,7 +253,7 @@ class MutasiController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.mutasi as mutasi')
             ->select(
                 'mutasi.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruanganTujuan.DESKRIPSI as tujuan',
                 'mutasi.TANGGAL as tanggal',

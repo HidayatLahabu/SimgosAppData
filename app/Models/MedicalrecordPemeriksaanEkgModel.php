@@ -24,8 +24,8 @@ class MedicalrecordPemeriksaanEkgModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_ekg as pemeriksaanEkg')
             ->select([
                 'pemeriksaanEkg.*',
-                DB::raw('CONCAT(tenagaMedis.GELAR_DEPAN, " ", tenagaMedis.NAMA, " ", tenagaMedis.GELAR_BELAKANG) as TENAGA_MEDIS'),
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                DB::raw('master.getNamaLengkapPegawai(tenagaMedis.NIP) as TENAGA_MEDIS'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanEkg.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

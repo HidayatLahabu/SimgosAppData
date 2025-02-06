@@ -26,8 +26,8 @@ class PengunjungCaraBayarController extends Controller
                 DB::raw('COUNT(pendaftaran.NOMOR) AS JUMLAH'),
                 DB::raw('SUM(IF(pasien.JENIS_KELAMIN = 1, 1, 0)) AS LAKILAKI'),
                 DB::raw('SUM(IF(pasien.JENIS_KELAMIN = 2, 1, 0)) AS PEREMPUAN'),
-                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(kunjungan.MASUK, "%d-%m-%Y"), 1, 0)) AS BARU'),
-                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") != DATE_FORMAT(kunjungan.MASUK, "%d-%m-%Y"), 1, 0)) AS LAMA'),
+                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 0)) AS BARU'),
+                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") != DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 0)) AS LAMA'),
             ])
             ->join('pendaftaran.pendaftaran as pendaftaran', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
@@ -48,8 +48,7 @@ class PengunjungCaraBayarController extends Controller
             ->leftJoin('master.ruangan as ruanganKunjungan', 'kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
             ->leftJoin('master.ruangan as ruanganSumber', 'ruanganSumber.ID', '=', 'ruanganKunjungan.ID')
             ->whereIn('pendaftaran.STATUS', [1, 2])
-            ->whereIn('kunjungan.STATUS', [1, 2])
-            ->whereBetween('kunjungan.MASUK', [$tgl_awal, $tgl_akhir])
+            ->whereBetween('pendaftaran.TANGGAL', [$tgl_awal, $tgl_akhir])
             ->where('tujuanPasien.RUANGAN', 'LIKE', '%')
             ->groupBy('referensi.ID', 'referensi.DESKRIPSI')
             ->get()
@@ -65,9 +64,28 @@ class PengunjungCaraBayarController extends Controller
             ->orderBy('ID')
             ->get();
 
+        // Inisialisasi variabel untuk menyimpan total
+        $total = [
+            'LAKILAKI' => 0,
+            'PEREMPUAN' => 0,
+            'BARU' => 0,
+            'LAMA' => 0,
+            'JUMLAH' => 0,
+        ];
+
+        // Loop melalui hasil query dan jumlahkan nilai
+        foreach ($query as $row) {
+            $total['LAKILAKI'] += $row->LAKILAKI;
+            $total['PEREMPUAN'] += $row->PEREMPUAN;
+            $total['BARU'] += $row->BARU;
+            $total['LAMA'] += $row->LAMA;
+            $total['JUMLAH'] += $row->JUMLAH;
+        }
+
         return inertia('Laporan/PengunjungCaraBayar/Index', [
             'ruangan' => $ruangan,
             'caraBayar' => $caraBayar,
+            'total' => $total,
             'dataTable' => $query,
             'tglAwal' => $tgl_awal,
             'tglAkhir' => $tgl_akhir,
@@ -98,8 +116,8 @@ class PengunjungCaraBayarController extends Controller
                 DB::raw('COUNT(pendaftaran.NOMOR) AS JUMLAH'),
                 DB::raw('SUM(IF(pasien.JENIS_KELAMIN = 1, 1, 0)) AS LAKILAKI'),
                 DB::raw('SUM(IF(pasien.JENIS_KELAMIN = 2, 1, 0)) AS PEREMPUAN'),
-                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(kunjungan.MASUK, "%d-%m-%Y"), 1, 0)) AS BARU'),
-                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") != DATE_FORMAT(kunjungan.MASUK, "%d-%m-%Y"), 1, 0)) AS LAMA'),
+                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 0)) AS BARU'),
+                DB::raw('SUM(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") != DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 0)) AS LAMA'),
             ])
             ->join('pendaftaran.pendaftaran as pendaftaran', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
@@ -120,7 +138,6 @@ class PengunjungCaraBayarController extends Controller
             ->leftJoin('master.ruangan as ruanganKunjungan', 'kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
             ->leftJoin('master.ruangan as ruanganSumber', 'ruanganSumber.ID', '=', 'ruanganKunjungan.ID')
             ->whereIn('pendaftaran.STATUS', [1, 2])
-            ->whereIn('kunjungan.STATUS', [1, 2])
             ->where(function ($query) use ($caraBayar) {
                 if ($caraBayar) {
                     $query->where('penjamin.JENIS', '=', $caraBayar);
@@ -135,9 +152,27 @@ class PengunjungCaraBayarController extends Controller
 
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween(DB::raw('DATE(kunjungan.MASUK)'), [$dariTanggal, $sampaiTanggal])
+            ->whereBetween(DB::raw('DATE(pendaftaran.TANGGAL)'), [$dariTanggal, $sampaiTanggal])
             ->get()
             ->toArray();
+
+        // Inisialisasi variabel untuk menyimpan total
+        $total = [
+            'LAKILAKI' => 0,
+            'PEREMPUAN' => 0,
+            'BARU' => 0,
+            'LAMA' => 0,
+            'JUMLAH' => 0,
+        ];
+
+        // Loop melalui hasil query dan jumlahkan nilai
+        foreach ($data as $row) {
+            $total['LAKILAKI'] += $row->LAKILAKI;
+            $total['PEREMPUAN'] += $row->PEREMPUAN;
+            $total['BARU'] += $row->BARU;
+            $total['LAMA'] += $row->LAMA;
+            $total['JUMLAH'] += $row->JUMLAH;
+        }
 
         // Fetch ruangan description only if ruangan is provided
         if ($ruangan) {
@@ -147,6 +182,7 @@ class PengunjungCaraBayarController extends Controller
         return inertia("Laporan/PengunjungCaraBayar/Print", [
             'data' => $data,
             'ruangan' => $ruangan,
+            'total' => $total,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,
         ]);

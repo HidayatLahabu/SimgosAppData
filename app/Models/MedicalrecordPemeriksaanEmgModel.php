@@ -24,13 +24,12 @@ class MedicalrecordPemeriksaanEmgModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.pemeriksaan_emg as pemeriksaanEmg')
             ->select([
                 'pemeriksaanEmg.*',
-                DB::raw('CONCAT(dokterEmg.GELAR_DEPAN, " ", dokterEmg.NAMA, " ", dokterEmg.GELAR_BELAKANG) as DOKTER'),
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'pemeriksaanEmg.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'pemeriksaanEmg.DOKTER')
-            ->leftJoin('master.pegawai as dokterEmg', 'dokterEmg.NIP', '=', 'dokter.NIP')
             ->where('pemeriksaanEmg.ID', $id)
             ->distinct()
             ->firstOrFail();

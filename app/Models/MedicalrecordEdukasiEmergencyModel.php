@@ -28,7 +28,7 @@ class MedicalrecordEdukasiEmergencyModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.edukasi_emergency as edukasiEmergency')
             ->select([
                 'edukasiEmergency.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH')
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'edukasiEmergency.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

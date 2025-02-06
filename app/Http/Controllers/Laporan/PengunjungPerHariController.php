@@ -20,10 +20,10 @@ class PengunjungPerHariController extends Controller
 
         $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                DB::raw('DATE(kunjungan.MASUK) as TANGGAL'),
+                DB::raw('DATE(pendaftaran.TANGGAL) as TANGGAL'),
                 DB::raw('COUNT(pendaftaran.NOMOR) as JUMLAH'),
-                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') = DATE_FORMAT(kunjungan.MASUK,'%d-%m-%Y'),1,0)) as BARU"),
-                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') != DATE_FORMAT(kunjungan.MASUK,'%d-%m-%Y'),1,0)) as LAMA"),
+                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') = DATE_FORMAT(pendaftaran.TANGGAL,'%d-%m-%Y'),1,0)) as BARU"),
+                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') != DATE_FORMAT(pendaftaran.TANGGAL,'%d-%m-%Y'),1,0)) as LAMA"),
                 DB::raw("SUM(IF(referensi.ID=1,1,0)) as UMUM"),
                 DB::raw("SUM(IF(referensi.ID=2,1,0)) as JKN"),
                 DB::raw("SUM(IF(referensi.ID=3,0,0)) as INHEALTH"),
@@ -31,7 +31,7 @@ class PengunjungPerHariController extends Controller
                 DB::raw("SUM(IF(kerjaSama.ID IS NOT NULL,1,0)) as IKS"),
                 DB::raw("SUM(IF(pasien.JENIS_KELAMIN=1,1,0)) as LAKILAKI"),
                 DB::raw("SUM(IF(pasien.JENIS_KELAMIN=2,1,0)) as PEREMPUAN"),
-                DB::raw("MAX(kunjungan.MASUK) as MASUK_TERAKHIR")
+                DB::raw("MAX(pendaftaran.TANGGAL) as MASUK_TERAKHIR")
             ])
             ->join('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
@@ -62,10 +62,9 @@ class PengunjungPerHariController extends Controller
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->whereNull('kunjungan.REF')
             ->where('ruangan.JENIS', '=', 5)
-            ->whereBetween(DB::raw('DATE(kunjungan.MASUK)'), [$tgl_awal, $tgl_akhir])
-            ->whereIn('kunjungan.STATUS', [1, 2])
-            ->groupBy(DB::raw('DATE(kunjungan.MASUK)'))
-            ->orderByDesc(DB::raw('DATE(kunjungan.MASUK)'));
+            ->whereBetween(DB::raw('DATE(pendaftaran.TANGGAL)'), [$tgl_awal, $tgl_akhir])
+            ->groupBy(DB::raw('DATE(pendaftaran.TANGGAL)'))
+            ->orderByDesc(DB::raw('DATE(pendaftaran.TANGGAL)'));
 
         $data = $query->paginate(5);
         $dataArray = $data->toArray();
@@ -103,10 +102,10 @@ class PengunjungPerHariController extends Controller
 
         $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                DB::raw('DATE(kunjungan.MASUK) as TANGGAL'),
+                DB::raw('DATE(pendaftaran.TANGGAL) as TANGGAL'),
                 DB::raw('COUNT(pendaftaran.NOMOR) as JUMLAH'),
-                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') = DATE_FORMAT(kunjungan.MASUK,'%d-%m-%Y'),1,0)) as BARU"),
-                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') != DATE_FORMAT(kunjungan.MASUK,'%d-%m-%Y'),1,0)) as LAMA"),
+                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') = DATE_FORMAT(pendaftaran.TANGGAL,'%d-%m-%Y'),1,0)) as BARU"),
+                DB::raw("SUM(IF(DATE_FORMAT(pasien.TANGGAL,'%d-%m-%Y') != DATE_FORMAT(pendaftaran.TANGGAL,'%d-%m-%Y'),1,0)) as LAMA"),
                 DB::raw("SUM(IF(referensi.ID=1,1,0)) as UMUM"),
                 DB::raw("SUM(IF(referensi.ID=2,1,0)) as JKN"),
                 DB::raw("SUM(IF(referensi.ID=3,0,0)) as INHEALTH"),
@@ -114,7 +113,7 @@ class PengunjungPerHariController extends Controller
                 DB::raw("SUM(IF(kerjaSama.ID IS NOT NULL,1,0)) as IKS"),
                 DB::raw("SUM(IF(pasien.JENIS_KELAMIN=1,1,0)) as LAKILAKI"),
                 DB::raw("SUM(IF(pasien.JENIS_KELAMIN=2,1,0)) as PEREMPUAN"),
-                DB::raw("MAX(kunjungan.MASUK) as MASUK_TERAKHIR")
+                DB::raw("MAX(pendaftaran.TANGGAL) as MASUK_TERAKHIR")
             ])
             ->join('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
@@ -145,9 +144,8 @@ class PengunjungPerHariController extends Controller
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->whereNull('kunjungan.REF')
             ->where('ruangan.JENIS', '=', 5)
-            ->whereIn('kunjungan.STATUS', [1, 2])
-            ->groupBy(DB::raw('DATE(kunjungan.MASUK)'))
-            ->orderByDesc(DB::raw('DATE(kunjungan.MASUK)'));
+            ->groupBy(DB::raw('DATE(pendaftaran.TANGGAL)'))
+            ->orderByDesc(DB::raw('DATE(pendaftaran.TANGGAL)'));
 
         if ($ruangan) {
             $query->where('tujuanPasien.RUANGAN', 'LIKE', $ruangan);
@@ -158,11 +156,40 @@ class PengunjungPerHariController extends Controller
 
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween(DB::raw('DATE(kunjungan.MASUK)'), [$dariTanggal, $sampaiTanggal])
+            ->whereBetween(DB::raw('DATE(pendaftaran.TANGGAL)'), [$dariTanggal, $sampaiTanggal])
             ->get();
+
+        // Inisialisasi variabel untuk menyimpan total
+        $total = [
+            'LAKILAKI' => 0,
+            'PEREMPUAN' => 0,
+            'BARU' => 0,
+            'LAMA' => 0,
+            'UMUM' => 0,
+            'JKN' => 0,
+            'INHEALTH' => 0,
+            'JKD' => 0,
+            'IKS' => 0,
+            'JUMLAH' => 0,
+        ];
+
+        // Loop melalui hasil query dan jumlahkan nilai
+        foreach ($data as $row) {
+            $total['LAKILAKI'] += $row->LAKILAKI;
+            $total['PEREMPUAN'] += $row->PEREMPUAN;
+            $total['BARU'] += $row->BARU;
+            $total['LAMA'] += $row->LAMA;
+            $total['UMUM'] += $row->UMUM;
+            $total['JKN'] += $row->JKN;
+            $total['INHEALTH'] += $row->INHEALTH;
+            $total['JKD'] += $row->JKD;
+            $total['IKS'] += $row->IKS;
+            $total['JUMLAH'] += $row->JUMLAH;
+        }
 
         return inertia("Laporan/PengunjungPerHari/Print", [
             'data' => $data,
+            'total' => $total,
             'ruangan' => $ruangan,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,

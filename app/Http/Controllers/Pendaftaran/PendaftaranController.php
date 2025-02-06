@@ -18,7 +18,7 @@ class PendaftaranController extends Controller
             ->select(
                 'pendaftaran.NOMOR as nomor',
                 'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pendaftaran.TANGGAL as tanggal',
                 'penjamin.NOMOR as penjamin',
                 'pendaftaran.STATUS as status',
@@ -62,11 +62,11 @@ class PendaftaranController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
             ->selectRaw('
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE(pendaftaran.TANGGAL))) AS rata_rata_per_hari,
-            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(pendaftaran.TANGGAL, 1))) AS rata_rata_per_minggu,
-            ROUND(SUM(CASE WHEN pendaftaran.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(pendaftaran.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
-            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(pendaftaran.TANGGAL))) AS rata_rata_per_tahun
-        ')
+                ROUND(COUNT(*) / COUNT(DISTINCT DATE(pendaftaran.TANGGAL))) AS rata_rata_per_hari,
+                ROUND(COUNT(*) / COUNT(DISTINCT WEEK(pendaftaran.TANGGAL, 1))) AS rata_rata_per_minggu,
+                ROUND(SUM(CASE WHEN pendaftaran.TANGGAL IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(pendaftaran.TANGGAL, "%Y-%m"))) AS rata_rata_per_bulan,
+                ROUND(COUNT(*) / COUNT(DISTINCT YEAR(pendaftaran.TANGGAL))) AS rata_rata_per_tahun
+            ')
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->where('pendaftaran.TANGGAL', '>', '0000-00-00')
             ->whereNotNull('pendaftaran.TANGGAL')
@@ -84,7 +84,7 @@ class PendaftaranController extends Controller
             ->select(
                 'pendaftaran.NOMOR as nomor',
                 'pendaftaran.NORM as norm',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pendaftaran.TANGGAL as tanggal',
                 'penjamin.NOMOR as penjamin',
                 'pendaftaran.STATUS as status',
@@ -177,7 +177,7 @@ class PendaftaranController extends Controller
             ->select([
                 'pendaftaran.NOMOR as NOMOR_PENDAFTARAN',
                 'pendaftaran.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
                 'pasien.TEMPAT_LAHIR as TEMPAT_LAHIR',
                 'pasien.TANGGAL_LAHIR as TANGGAL_LAHIR',
                 'kartu_asuransi_pasien.NOMOR as NOMOR_ASURANSI',
@@ -190,7 +190,7 @@ class PendaftaranController extends Controller
                 'penanggung_jawab_pasien.NAMA as PENANGGUNG_JAWAB_PASIEN',
                 'kip_penanggung_jawab_pasien.NOMOR as IDENTITAS_PENANGGUNG_JAWAB_PASIEN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DPJP'),
                 'pendaftaran.STATUS as STATUS_PASIEN',
                 'surat_rujukan_pasien.NOMOR as NOMOR_RUJUKAN_PASIEN',
                 'surat_rujukan_pasien.TANGGAL as TANGGAL_RUJUKAN_PASIEN',
@@ -254,7 +254,6 @@ class PendaftaranController extends Controller
             ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'tujuan_pasien.DOKTER')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.diagnosa_masuk as diagnosa_masuk', 'diagnosa_masuk.ID', '=', 'pendaftaran.DIAGNOSA_MASUK')
             ->leftJoin('master.mrconso as mrconso', 'mrconso.CODE', '=', 'diagnosa_masuk.ICD')
             ->leftJoin('pendaftaran.surat_rujukan_pasien as surat_rujukan_pasien', 'surat_rujukan_pasien.ID', '=', 'pendaftaran.RUJUKAN')

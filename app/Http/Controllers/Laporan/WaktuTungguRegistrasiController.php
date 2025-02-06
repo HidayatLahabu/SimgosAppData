@@ -15,14 +15,13 @@ class WaktuTungguRegistrasiController extends Controller
         // Get filter parameters from request
         $searchTerm = request('search') ? strtolower(request('search')) : null;
         $ruangan = '1021101';
-        $cara_bayar = 0;
         $perPage = 5;
 
         // Retrieve the report data
-        $reportData = $this->getLaporan($ruangan, $cara_bayar, $perPage, $searchTerm);
+        $reportData = $this->getLaporan($ruangan, $perPage, $searchTerm);
         $dataArray = $reportData->toArray();
 
-        $averageWaitData = $this->getRataRata($ruangan, $cara_bayar, $perPage, $searchTerm);
+        $averageWaitData = $this->getRataRata($ruangan, $perPage, $searchTerm);
 
         $ruangan = MasterRuanganModel::where('JENIS', 5)
             ->whereIn('JENIS_KUNJUNGAN', [1])
@@ -65,116 +64,106 @@ class WaktuTungguRegistrasiController extends Controller
         ]);
     }
 
-    public function getLaporan($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
+    public function getLaporan($ruangan, $perPage = 5, $searchTerm = null)
     {
         $vRuangan = $ruangan . '%';
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                'p.NORM as NORM',
-                DB::raw("CONCAT(master.getNamaLengkap(p.NORM)) as NAMALENGKAP"),
-                'pd.NOMOR as NOPEN',
-                'r.DESKRIPSI as UNITPELAYANAN',
-                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
-                DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
-                DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
-                DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
-                DB::raw("DATEDIFF(tk.MASUK, pd.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(tk.MASUK, pd.TANGGAL)) as SELISIH_DETIK"),
+                'pasien.NORM as NORM',
+                DB::raw("CONCAT(master.getNamaLengkap(pasien.NORM)) as NAMALENGKAP"),
+                'pendaftaran.NOMOR as NOPEN',
+                'ruangan.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG"),
+                DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
+                DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
+                DB::raw("CONCAT(DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), '%H:%i:%s')) as SELISIH"),
+                DB::raw("DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL)) as SELISIH_DETIK"),
             ])
-            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
-            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
-            ->join('pendaftaran.kunjungan as tk', function ($join) {
-                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
-                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            ->join('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
+            ->join('pendaftaran.kunjungan as kunjungan', function ($join) {
+                $join->on('pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+                    ->on('tujuanPasien.RUANGAN', '=', 'kunjungan.RUANGAN');
             })
-            ->join('master.ruangan as r', function ($join) {
-                $join->on('tp.RUANGAN', '=', 'r.ID')
-                    ->where('r.JENIS', '=', 5)
-                    ->where('r.JENIS_KUNJUNGAN', 1);
+            ->join('master.ruangan as ruangan', function ($join) {
+                $join->on('tujuanPasien.RUANGAN', '=', 'ruangan.ID')
+                    ->where('ruangan.JENIS', '=', 5)
+                    ->where('ruangan.JENIS_KUNJUNGAN', 1);
             })
-            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
-            ->whereIn('pd.STATUS', [1])
-            ->whereNull('tk.REF')
-            ->whereIn('tk.STATUS', [1, 2])
-            ->where('tp.RUANGAN', 'LIKE', $vRuangan);
-
-        // Apply 'cara_bayar' filter if provided
-        if ($cara_bayar != 0) {
-            $query->where('pj.JENIS', '=', $cara_bayar);
-        }
+            ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
+            ->whereIn('pendaftaran.STATUS', [1])
+            ->whereNull('kunjungan.REF')
+            ->whereIn('kunjungan.STATUS', [1, 2])
+            ->where('tujuanPasien.RUANGAN', 'LIKE', $vRuangan);
 
         // Add search filter if provided
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('p.NORM', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere(DB::raw("CONCAT(master.getNamaLengkap(p.NORM))"), 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('pd.NOMOR', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
+                $q->where('pasien.NORM', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere(DB::raw("CONCAT(master.getNamaLengkap(pasien.NORM))"), 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('pendaftaran.NOMOR', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere(DB::raw("master.getNamaLengkapPegawai(dokter.NIP)"), 'LIKE', "%{$searchTerm}%");
             });
         }
 
-        $data = $query->orderBy('pd.TANGGAL', 'desc')->paginate($perPage)->appends(request()->query());
+        $data = $query->orderBy('pendaftaran.TANGGAL', 'desc')->paginate($perPage)->appends(request()->query());
 
         // Return paginated data
         return $data;
     }
 
-    public function getRataRata($ruangan, $cara_bayar, $perPage = 5, $searchTerm = null)
+    public function getRataRata($ruangan, $perPage = 5, $searchTerm = null)
     {
         $vRuangan = $ruangan . '%';
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                'r.DESKRIPSI as UNITPELAYANAN',
+                'ruangan.DESKRIPSI as UNITPELAYANAN',
                 DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
-                DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK)) as AVERAGE_SELSIH"),
-                DB::raw("COUNT(tp.NOPEN) as JUMLAH_PASIEN"),
-                DB::raw("MONTH(tk.MASUK) as BULAN"),
-                DB::raw("YEAR(tk.MASUK) as TAHUN"),
+                DB::raw("AVG(TIMESTAMPDIFF(SECOND, pendaftaran.TANGGAL, kunjungan.MASUK)) as AVERAGE_SELSIH"),
+                DB::raw("COUNT(tujuanPasien.NOPEN) as JUMLAH_PASIEN"),
+                DB::raw("MONTH(kunjungan.MASUK) as BULAN"),
+                DB::raw("YEAR(kunjungan.MASUK) as TAHUN"),
             ])
-            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
-            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
-            ->join('pendaftaran.kunjungan as tk', function ($join) {
-                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
-                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            ->join('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
+            ->join('pendaftaran.kunjungan as kunjungan', function ($join) {
+                $join->on('pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+                    ->on('tujuanPasien.RUANGAN', '=', 'kunjungan.RUANGAN');
             })
-            ->join('master.ruangan as r', function ($join) {
-                $join->on('tp.RUANGAN', '=', 'r.ID')
-                    ->where('r.JENIS', '=', 5)
-                    ->where('r.JENIS_KUNJUNGAN', 1);
+            ->join('master.ruangan as ruangan', function ($join) {
+                $join->on('tujuanPasien.RUANGAN', '=', 'ruangan.ID')
+                    ->where('ruangan.JENIS', '=', 5)
+                    ->where('ruangan.JENIS_KUNJUNGAN', 1);
             })
-            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
-            ->whereIn('pd.STATUS', [1])
-            ->whereNull('tk.REF')
-            ->whereIn('tk.STATUS', [1, 2])
-            ->where('tp.RUANGAN', 'LIKE', $vRuangan);
-
-        // Apply 'cara_bayar' filter if provided
-        if ($cara_bayar != 0) {
-            $query->where('pj.JENIS', '=', $cara_bayar);
-        }
+            ->leftJoin('master.dokter as dok', 'tujuanPasien.DOKTER', '=', 'dok.ID')
+            ->whereIn('pendaftaran.STATUS', [1])
+            ->whereNull('kunjungan.REF')
+            ->whereIn('kunjungan.STATUS', [1, 2])
+            ->where('tujuanPasien.RUANGAN', 'LIKE', $vRuangan);
 
         // Add search filter if provided
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('r.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
+                $q->where('ruangan.DESKRIPSI', 'LIKE', "%{$searchTerm}%")
                     ->orWhere(DB::raw("master.getNamaLengkapPegawai(dok.NIP)"), 'LIKE', "%{$searchTerm}%");
             });
         }
 
         // Apply ordering and pagination
         $data = $query->groupBy(
-            DB::raw('MONTH(tk.MASUK)'),
-            DB::raw('YEAR(tk.MASUK)'),
+            DB::raw('MONTH(kunjungan.MASUK)'),
+            DB::raw('YEAR(kunjungan.MASUK)'),
             'dok.NIP',
-            'r.DESKRIPSI'
+            'ruangan.DESKRIPSI'
         )
-            ->orderBy(DB::raw('YEAR(tk.MASUK)'), 'desc') // Order by year descending
-            ->orderBy(DB::raw('MONTH(tk.MASUK)'), 'desc') // Order by month descending
-            ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pd.TANGGAL, tk.MASUK))"), 'asc')
+            ->orderBy(DB::raw('YEAR(kunjungan.MASUK)'), 'desc') // Order by year descending
+            ->orderBy(DB::raw('MONTH(kunjungan.MASUK)'), 'desc') // Order by month descending
+            ->orderBy(DB::raw("AVG(TIMESTAMPDIFF(SECOND, pendaftaran.TANGGAL, kunjungan.MASUK))"), 'asc')
             ->paginate($perPage)
             ->appends(request()->query());
 
@@ -208,51 +197,45 @@ class WaktuTungguRegistrasiController extends Controller
         $vRuangan = $ruangan . '%';
 
         // Start building the query using the query builder
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pd')
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([
-                'p.NORM as NORM',
-                DB::raw("CONCAT(master.getNamaLengkap(p.NORM)) as NAMALENGKAP"),
-                'pd.NOMOR as NOPEN',
-                'r.DESKRIPSI as UNITPELAYANAN',
-                DB::raw("master.getNamaLengkapPegawai(dok.NIP) as DOKTER_REG"),
-                DB::raw("DATE_FORMAT(pd.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
-                DB::raw("DATE_FORMAT(tk.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
-                DB::raw("CONCAT(DATEDIFF(tk.MASUK, pd.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(tk.MASUK, pd.TANGGAL), '%H:%i:%s')) as SELISIH"),
-                DB::raw("DATEDIFF(tk.MASUK, pd.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(tk.MASUK, pd.TANGGAL)) as SELISIH_DETIK"),
+                'pasien.NORM as NORM',
+                DB::raw("CONCAT(master.getNamaLengkap(pasien.NORM)) as NAMALENGKAP"),
+                'pendaftaran.NOMOR as NOPEN',
+                'ruangan.DESKRIPSI as UNITPELAYANAN',
+                DB::raw("master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG"),
+                DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
+                DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLTERIMA"),
+                DB::raw("CONCAT(DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), '%H:%i:%s')) as SELISIH"),
+                DB::raw("DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL) * 86400 + TIME_TO_SEC(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL)) as SELISIH_DETIK"),
             ])
-            ->join('master.pasien as p', 'pd.NORM', '=', 'p.NORM')
-            ->join('pendaftaran.tujuan_pasien as tp', 'pd.NOMOR', '=', 'tp.NOPEN')
-            ->join('pendaftaran.kunjungan as tk', function ($join) {
-                $join->on('pd.NOMOR', '=', 'tk.NOPEN')
-                    ->on('tp.RUANGAN', '=', 'tk.RUANGAN');
+            ->join('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
+            ->join('pendaftaran.kunjungan as kunjungan', function ($join) {
+                $join->on('pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+                    ->on('tujuanPasien.RUANGAN', '=', 'kunjungan.RUANGAN');
             })
-            ->join('master.ruangan as r', function ($join) {
-                $join->on('tp.RUANGAN', '=', 'r.ID')
-                    ->where('r.JENIS', '=', 5);
+            ->join('master.ruangan as ruangan', function ($join) {
+                $join->on('tujuanPasien.RUANGAN', '=', 'ruangan.ID')
+                    ->where('ruangan.JENIS', '=', 5);
             })
-            ->leftJoin('master.dokter as dok', 'tp.DOKTER', '=', 'dok.ID')
-            ->whereIn('pd.STATUS', [1])
-            ->whereNull('tk.REF')
-            ->whereIn('tk.STATUS', [1, 2]);
+            ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
+            ->whereIn('pendaftaran.STATUS', [1])
+            ->whereNull('kunjungan.REF')
+            ->whereIn('kunjungan.STATUS', [1, 2]);
 
         // Apply 'cara_bayar' filter if provided
         if ($ruangan) {
-            $query->where('tp.RUANGAN', 'LIKE', $vRuangan);
+            $query->where('tujuanPasien.RUANGAN', 'LIKE', $vRuangan);
         }
 
         if ($dokter) {
-            $query->where('dok.NIP', $dokter);
-        }
-
-        $cara_bayar = 0;
-        // Apply 'cara_bayar' filter if provided
-        if ($cara_bayar != 0) {
-            $query->where('pj.JENIS', '=', $cara_bayar);
+            $query->where('dokter.NIP', $dokter);
         }
 
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween('pd.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
             ->get();
 
         // Kirim data ke frontend menggunakan Inertia

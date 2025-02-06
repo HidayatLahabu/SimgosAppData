@@ -24,7 +24,7 @@ class MedicalrecordTindakanAbciModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.tindakan_abci as tindakanAbci')
             ->select([
                 'tindakanAbci.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'tindakanAbci.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

@@ -24,10 +24,10 @@ class MedicalrecordCpptModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.cppt as cppt')
             ->select([
                 'cppt.*',
-                DB::raw('CONCAT(tenagaMedis.GELAR_DEPAN, " ", tenagaMedis.NAMA, " ", tenagaMedis.GELAR_BELAKANG) as TENAGA_MEDIS'),
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(tenagaMedis.NIP) as TENAGA_MEDIS'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
                 'verifikasi.TANGGAL as TANGGAL_VERIFIKASI',
-                DB::raw('CONCAT(pegawaiVerifikasi.GELAR_DEPAN, " ", pegawaiVerifikasi.NAMA, " ", pegawaiVerifikasi.GELAR_BELAKANG) as VERIFIKASI_OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawaiVerifikasi.NIP) as VERIFIKASI_OLEH'),
             ])
             ->leftJoin('medicalrecord.verifikasi_cppt as verifikasi', 'verifikasi.ID', '=', 'cppt.VERIFIKASI')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'cppt.TENAGA_MEDIS')

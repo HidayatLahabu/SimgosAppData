@@ -22,7 +22,7 @@ class MedicalrecordDischargePlanningSkriningModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.discharge_planning_skrining as dischargePlanningSkrining')
             ->select([
                 'dischargePlanningSkrining.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'dischargePlanningSkrining.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

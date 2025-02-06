@@ -24,7 +24,7 @@ class MedicalrecordPenilaianBallanceCairanModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.penilaian_ballance_cairan as penilaianBallanceCairan')
             ->select([
                 'penilaianBallanceCairan.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
                 'penilaianBallanceCairanDetail.KELOMPOK as KELOMPOK',
                 'penilaianBallanceCairanDetail.DESKRIPSI as DESKRIPSI',
                 'penilaianBallanceCairanDetail.REFERENSI as REFERENSI',

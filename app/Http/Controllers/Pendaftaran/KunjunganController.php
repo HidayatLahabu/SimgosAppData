@@ -14,6 +14,7 @@ use App\Models\MedicalrecordAnamnesisModel;
 use App\Models\MedicalrecordAsuhanKeperawatanModel;
 use App\Models\MedicalrecordBatukModel;
 use App\Models\MedicalrecordCpptModel;
+use App\Models\MedicalrecordDiagnosaModel;
 use App\Models\MedicalrecordDischargePlanningFaktorRisikoModel;
 use App\Models\MedicalrecordDischargePlanningSkriningModel;
 use App\Models\MedicalrecordEdukasiEmergencyModel;
@@ -109,7 +110,7 @@ class KunjunganController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select(
                 'kunjungan.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
@@ -187,7 +188,7 @@ class KunjunganController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select(
                 'kunjungan.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
@@ -254,11 +255,11 @@ class KunjunganController extends Controller
     {
         return DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->selectRaw('
-            ROUND(COUNT(*) / COUNT(DISTINCT DATE(kunjungan.MASUK))) AS rata_rata_per_hari,
-            ROUND(COUNT(*) / COUNT(DISTINCT WEEK(kunjungan.MASUK, 1))) AS rata_rata_per_minggu,
-            ROUND(SUM(CASE WHEN kunjungan.MASUK IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(kunjungan.MASUK, "%Y-%m"))) AS rata_rata_per_bulan,
-            ROUND(COUNT(*) / COUNT(DISTINCT YEAR(kunjungan.MASUK))) AS rata_rata_per_tahun
-        ')
+                ROUND(COUNT(*) / COUNT(DISTINCT DATE(kunjungan.MASUK))) AS rata_rata_per_hari,
+                ROUND(COUNT(*) / COUNT(DISTINCT WEEK(kunjungan.MASUK, 1))) AS rata_rata_per_minggu,
+                ROUND(SUM(CASE WHEN kunjungan.MASUK IS NOT NULL THEN 1 ELSE 0 END) / COUNT(DISTINCT DATE_FORMAT(kunjungan.MASUK, "%Y-%m"))) AS rata_rata_per_bulan,
+                ROUND(COUNT(*) / COUNT(DISTINCT YEAR(kunjungan.MASUK))) AS rata_rata_per_tahun
+            ')
             ->whereIn('kunjungan.STATUS', [1, 2])
             ->where('kunjungan.MASUK', '>', '0000-00-00')
             ->whereNotNull('kunjungan.MASUK')
@@ -275,7 +276,7 @@ class KunjunganController extends Controller
         $query = DB::connection('mysql5')->table('pendaftaran.kunjungan as kunjungan')
             ->select(
                 'kunjungan.NOMOR as nomor',
-                'pasien.NAMA as nama',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
@@ -399,8 +400,8 @@ class KunjunganController extends Controller
                 'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
                 'kunjungan.NOPEN as NOMOR_PENDAFTARAN',
                 'pasien.NORM as NORM',
-                'pasien.NAMA as NAMA_PASIEN',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DPJP'),
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_PASIEN'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DPJP'),
                 'kunjungan.RUANGAN as ID_RUANGAN',
                 'ruangan.DESKRIPSI as RUANGAN_TUJUAN',
                 'ruang_kamar.KAMAR as KAMAR_TUJUAN',
@@ -431,7 +432,6 @@ class KunjunganController extends Controller
             ->leftJoin('master.ruang_kamar as ruang_kamar', 'ruang_kamar.RUANGAN', '=', 'kunjungan.RUANGAN')
             ->leftJoin('master.ruang_kamar_tidur as ruang_kamar_tidur', 'ruang_kamar_tidur.ID', '=', 'kunjungan.RUANG_KAMAR_TIDUR')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'kunjungan.DPJP')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.diagnosa_masuk as diagnosa_masuk', 'diagnosa_masuk.ID', '=', 'pendaftaran.DIAGNOSA_MASUK')
             ->leftJoin('aplikasi.pengguna as penerima_kunjungan', 'penerima_kunjungan.ID', '=', 'kunjungan.DITERIMA_OLEH')
             ->leftJoin('aplikasi.pengguna as final_kunjungan', 'final_kunjungan.ID', '=', 'kunjungan.FINAL_HASIL_OLEH')
@@ -450,18 +450,17 @@ class KunjunganController extends Controller
                 'kunjungan.NOMOR as nomorKunjungan',
                 'kunjungan.NOPEN as nomorPendaftaran',
                 'pasien.NORM as norm',
-                'pasien.NAMA as namaPasien',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as namaPasien'),
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
                 'kunjungan.KELUAR as keluar',
                 'kunjungan.STATUS as status',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as dpjp'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as dpjp'),
             ])
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'kunjungan.DPJP')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->where('kunjungan.NOMOR', $id)
             ->distinct()
             ->firstOrFail();
@@ -487,7 +486,7 @@ class KunjunganController extends Controller
                 'orderLab.*',
                 'pasien.NORM',
                 'pasien.NAMA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_ASAL'),
                 'ruangan.DESKRIPSI as TUJUAN',
                 'pengguna.NAMA as OLEH',
             )
@@ -495,7 +494,6 @@ class KunjunganController extends Controller
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'orderLab.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'orderLab.OLEH')
             ->where('orderLab.NOMOR', $id)
@@ -543,13 +541,12 @@ class KunjunganController extends Controller
                 'catatan.KUNJUNGAN',
                 'catatan.TANGGAL',
                 'catatan.CATATAN',
-                DB::raw('CONCAT(dokterLab.GELAR_DEPAN, " ", dokterLab.NAMA, " ", dokterLab.GELAR_BELAKANG) as DOKTER_LAB'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_LAB'),
                 'catatan.STATUS',
             )
             ->leftJoin('layanan.catatan_hasil_lab as catatan', 'catatan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('layanan.order_lab as order', 'order.NOMOR', '=', 'kunjungan.REF')
-            ->leftJoin('master.dokter as pegawaiLab', 'pegawaiLab.ID', '=', 'catatan.DOKTER')
-            ->leftJoin('master.pegawai as dokterLab', 'dokterLab.NIP', '=', 'pegawaiLab.NIP')
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'catatan.DOKTER')
             ->where('kunjungan.REF', $id)
             ->first();
 
@@ -565,7 +562,7 @@ class KunjunganController extends Controller
                 'orderRad.*',
                 'pasien.NORM',
                 'pasien.NAMA',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as DOKTER_ASAL'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_ASAL'),
                 'ruangan.DESKRIPSI as TUJUAN',
                 'pengguna.NAMA as OLEH',
             )
@@ -575,7 +572,6 @@ class KunjunganController extends Controller
             ->leftJoin('layanan.order_detil_rad as orderRadDetail', 'orderRadDetail.REF', '=', 'tindakanMedis.ID')
             ->leftJoin('layanan.order_rad as orderRad', 'orderRad.NOMOR', '=', 'orderRadDetail.ORDER_ID')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderRad.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'orderRad.TUJUAN')
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'orderRad.OLEH')
             ->where('kunjungan.NOMOR', $id)
@@ -611,8 +607,6 @@ class KunjunganController extends Controller
             ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
             ->leftJoin('layanan.hasil_rad as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
             ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'tindakanMedis.TINDAKAN')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'hasil.DOKTER')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->leftJoin('aplikasi.pengguna as pengguna', 'hasil.OLEH', '=', 'pengguna.ID')
             ->where('orderRad.NOMOR', $id)
             ->where('hasil.STATUS', 2)
@@ -626,8 +620,6 @@ class KunjunganController extends Controller
 
         // Return both data to the view
         return $queryHasil;
-
-        dd($queryHasil);
     }
 
     public function detail($id)
@@ -808,18 +800,17 @@ class KunjunganController extends Controller
                 'kunjungan.NOMOR as nomorKunjungan',
                 'kunjungan.NOPEN as nomorPendaftaran',
                 'pasien.NORM as norm',
-                'pasien.NAMA as namaPasien',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as namaPasien'),
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
                 'kunjungan.KELUAR as keluar',
                 'kunjungan.STATUS as status',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as dpjp'),
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as dpjp'),
             ])
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
             ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'kunjungan.DPJP')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
             ->where('kunjungan.NOPEN', $id)
             ->distinct()
             ->firstOrFail();
@@ -848,6 +839,7 @@ class KunjunganController extends Controller
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
             ->where('kunjungan.NOPEN', $id)
+            ->distinct()
             ->get();
 
         // Check if the record exists
@@ -871,48 +863,43 @@ class KunjunganController extends Controller
 
     public function detailDiagnosa($id)
     {
-        // Fetch the specific data
-        $query = DB::connection('mysql5')->table('medicalrecord.diagnosa as diagnosa')
-            ->select([
-                'diagnosa.ID as ID',
-                'diagnosa.NOPEN as NOMOR_PENDAFTARAN',
-                'kunjungan.NOMOR as NOMOR_KUNJUNGAN',
-                'diagnosa.KODE as KODE',
-                'diagnosa.DIAGNOSA as DIAGNOSA',
-                'diagnosa.UTAMA as UTAMA',
-                'diagnosa.INACBG as INACBG',
-                'diagnosa.BARU as BARU',
-                'diagnosa.TANGGAL as TANGGAL',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                'diagnosa.STATUS as STATUS',
-                'diagnosa.INA_GROUPER as INA_GROUPER',
-            ])
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOPEN', '=', 'diagnosa.NOPEN')
-            ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'diagnosa.OLEH')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')
-            ->where('diagnosa.ID', $id)
-            ->distinct()
-            ->first();
+        //get data from model by id
+        $query = MedicalrecordDiagnosaModel::getById($id);
 
-        $kunjungan = $query->NOMOR_KUNJUNGAN;
+        //get pasien data by kunjungan
+        $dataPasien = $this->getDataPasien($query->NOMOR_KUNJUNGAN);
+        $pendaftaran = $dataPasien->nomorPendaftaran;
+        $kunjungan   = $dataPasien->nomorKunjungan;
+        $pasien      = $dataPasien->namaPasien;
+        $norm        = $dataPasien->norm;
+        $ruangan     = $dataPasien->ruangan;
+        $status      = $dataPasien->status;
+        $masuk       = $dataPasien->masuk;
+        $keluar      = $dataPasien->keluar;
+        $dpjp        = $dataPasien->dpjp;
 
         return inertia("Pendaftaran/Kunjungan/DetailRme", [
-            'detail'            => $query,
-            'nomorKunjungan'    => $kunjungan,
-            'judulRme'          => 'DIAGNOSA',
+            'detail'           => $query,
+            'nomorKunjungan'   => $kunjungan,
+            'judulRme'         => 'DIAGNOSA',
+            'nomorPendaftaran' => $pendaftaran,
+            'namaPasien'       => $pasien,
+            'normPasien'       => $norm,
+            'ruanganTujuan'    => $ruangan,
+            'statusKunjungan'  => $status,
+            'tanggalMasuk'     => $masuk,
+            'tanggalKeluar'    => $keluar,
+            'dpjp'             => $dpjp,
         ]);
     }
 
     public function rekonsiliasiObatAdmisi($id)
     {
+        //get data from model by id
         $query = MedicalrecordRekonsiliasiObatModel::getById($id);
 
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
+        // get data pasien by kunjungan
+        $dataPasien = $this->getDataPasien($query->KUNJUNGAN);
         $pendaftaran = $dataPasien->nomorPendaftaran;
         $kunjungan   = $dataPasien->nomorKunjungan;
         $pasien      = $dataPasien->namaPasien;
@@ -957,12 +944,11 @@ class KunjunganController extends Controller
 
     public function rekonsiliasiObatTransfer($id)
     {
+        //get data from model by id
         $query = MedicalrecordRekonsiliasiTransferModel::getById($id);
 
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
+        //get data pasien by kunjungan
+        $dataPasien = $this->getDataPasien($query->KUNJUNGAN);
 
         // Ambil data dari hasil query
         $pendaftaran = $dataPasien->nomorPendaftaran;
@@ -1012,14 +998,11 @@ class KunjunganController extends Controller
 
     public function rekonsiliasiObatDischarge($id)
     {
+        //get data from model by id
         $query = MedicalrecordRekonsiliasiDischargeModel::getById($id);
 
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
+        //get data pasien by kunjungan
+        $dataPasien = $this->getDataPasien($query->KUNJUNGAN);
         $pendaftaran = $dataPasien->nomorPendaftaran;
         $kunjungan   = $dataPasien->nomorKunjungan;
         $pasien      = $dataPasien->namaPasien;
@@ -1070,12 +1053,8 @@ class KunjunganController extends Controller
         // Fetch the specific data using dynamic model
         $query = $model::getById($id);
 
-        $noKunjungan = $query->KUNJUNGAN;
-
-        // Panggil fungsi getDataPasien
-        $dataPasien = $this->getDataPasien($noKunjungan);
-
-        // Ambil data dari hasil query
+        // Get data pasien by kunjungan
+        $dataPasien = $this->getDataPasien($query->KUNJUNGAN);
         $pendaftaran = $dataPasien->nomorPendaftaran;
         $kunjungan   = $dataPasien->nomorKunjungan;
         $pasien      = $dataPasien->namaPasien;
@@ -1108,7 +1087,7 @@ class KunjunganController extends Controller
 
     public function askep($id)
     {
-        return $this->detailRme($id, MedicalrecordAsuhanKeperawatanModel::class, 'ASKEP');
+        return $this->detailRme($id, MedicalrecordAsuhanKeperawatanModel::class, 'ASUHAN KEPERAWATAN');
     }
 
     public function keluhanUtama($id)

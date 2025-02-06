@@ -49,7 +49,7 @@ class MedicalrecordTriageModel extends Model
                 'triage.KRITERIA as KRITERIA',
                 'triage.HANDOVER as HANDOVER',
                 'triage.PLAN as PLAN',
-                DB::raw('CONCAT(COALESCE(pegawai.GELAR_DEPAN, ""), " ", COALESCE(pegawai.NAMA, ""), " ", COALESCE(pegawai.GELAR_BELAKANG, "")) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
                 'triage.TANGGAL_FINAL as TANGGAL_FINAL',
                 'triage.STATUS as STATUS',
             ])

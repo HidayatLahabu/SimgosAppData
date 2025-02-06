@@ -28,8 +28,8 @@ class MedicalrecordPermasalahanGiziModel extends Model
         $query = DB::connection('mysql11')->table('medicalrecord.permasalahan_gizi as permasalahanGizi')
             ->select([
                 'permasalahanGizi.*',
-                DB::raw('CONCAT(pegawai.GELAR_DEPAN, " ", pegawai.NAMA, " ", pegawai.GELAR_BELAKANG) as OLEH'),
-                DB::raw('CONCAT(pegawaiValidasi.GELAR_DEPAN, " ", pegawaiValidasi.NAMA, " ", pegawaiValidasi.GELAR_BELAKANG) as USER_VALIDASI'),
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as OLEH'),
+                DB::raw('master.getNamaLengkapPegawai(pegawaiValidasi.NIP) as USER_VALIDASI'),
             ])
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'permasalahanGizi.OLEH')
             ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'pengguna.NIP')

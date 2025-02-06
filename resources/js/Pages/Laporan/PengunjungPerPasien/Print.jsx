@@ -35,7 +35,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">STATUS</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL REGISTRASI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL MASUK</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">CARA BAYAR</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">UNIT PELAYANAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">DOKTER</th>
@@ -59,10 +59,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                                         {item.STATUSPENGUNJUNG}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
-                                                        {item.TGLTERIMA}
+                                                        {item.TGLREG}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
-                                                        {item.TGLKELUAR}
+                                                        {item.TGLMASUK}
                                                     </td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                         {item.CARABAYAR}

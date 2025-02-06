@@ -24,7 +24,7 @@ export default function KunjunganPerPasien({
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN", className: "text-center" },
         { name: "STATUS", className: "text-center w-[4%]" },
-        { name: "TANGGAL REGISTRASI", className: "text-wrap text-center w-[10%]" },
+        { name: "TANGGAL MASUK", className: "text-wrap w-[10%]" },
         { name: "CARA BAYAR", className: "text-wrap" },
         { name: "UNIT PELAYANAN", className: "text-wrap" },
         { name: "DOKTER", className: "text-wrap" },
