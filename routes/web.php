@@ -83,7 +83,10 @@ use App\Http\Controllers\Informasi\InformasiPenunjangController;
 use App\Http\Controllers\Informasi\StatistikKunjunganController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\KunjunganCaraBayarController;
+use App\Http\Controllers\Laporan\KunjunganPerHariController;
 use App\Http\Controllers\Laporan\KunjunganPerPasienController;
+use App\Http\Controllers\Laporan\KunjunganPerUnitController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -563,6 +566,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjunganPerPasien', [KunjunganPerPasienController::class, 'index'])->name('kunjunganPerPasien.index');
         Route::get('/kunjunganPerPasien-print', [KunjunganPerPasienController::class, 'print'])->name('kunjunganPerPasien.print');
+
+        Route::get('kunjunganPerHari', [KunjunganPerHariController::class, 'index'])->name('kunjunganPerHari.index');
+        Route::get('/kunjunganPerHari-print', [KunjunganPerHariController::class, 'print'])->name('kunjunganPerHari.print');
+
+        Route::get('kunjunganCaraBayar', [KunjunganCaraBayarController::class, 'index'])->name('kunjunganCaraBayar.index');
+        Route::get('/kunjunganCaraBayar-print', [KunjunganCaraBayarController::class, 'print'])->name('kunjunganCaraBayar.print');
+
+        Route::get('kunjunganPerUnit', [KunjunganPerUnitController::class, 'index'])->name('kunjunganPerUnit.index');
+        Route::get('/kunjunganPerUnit-print', [KunjunganPerUnitController::class, 'print'])->name('kunjunganPerUnit.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

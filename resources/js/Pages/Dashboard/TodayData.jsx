@@ -84,7 +84,7 @@ export default function TodayData({
                     />
                     <Card
                         href={isAdmin ? route("logsPengguna.index") : null}
-                        title="PENGGUNA LOGIN "
+                        title="PENGGUNA"
                         titleSize="text-normal"
                         valueSize="text-normal"
                         value={penggunaLogin}

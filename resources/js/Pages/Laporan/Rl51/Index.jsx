@@ -59,9 +59,9 @@ export default function LaporanRl51({
                                                 <TableCell>{item.NAMAINST}</TableCell>
                                                 <TableCell className="uppercase">{item.KOTA}</TableCell>
                                                 <TableCell className='uppercase'>{item.JENIS_KUNJUNGAN}</TableCell>
-                                                <TableCell>{item.DESKRIPSI}</TableCell>
+                                                <TableCell className='uppercase'>{item.DESKRIPSI}</TableCell>
                                                 <TableCell className="text-right">
-                                                    {formatRibuan(item.JUMLAH)} PASIEN
+                                                    {formatRibuan(item.JUMLAH)}
                                                 </TableCell>
                                             </TableRow>
                                         ))}

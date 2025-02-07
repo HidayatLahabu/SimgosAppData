@@ -54,14 +54,14 @@ export default function Print({
                                                     <td className="px-3 py-2 border border-gray-500 border-solid">
                                                         {item.KOTA}
                                                     </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                    <td className="px-3 py-2 text-wrap uppercase border border-gray-500 border-solid">
                                                         {item.JENIS_KUNJUNGAN}
                                                     </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                    <td className="px-3 py-2 text-wrap uppercase border border-gray-500 border-solid">
                                                         {item.DESKRIPSI}
                                                     </td>
                                                     <td className="text-right px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {formatRibuan(item.JUMLAH)} PASIEN
+                                                        {formatRibuan(item.JUMLAH)}
                                                     </td>
                                                 </tr>
                                             ))}
