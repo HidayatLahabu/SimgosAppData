@@ -387,4 +387,105 @@ class LaboratoriumController extends Controller
             'jenisKunjungan'    => $kunjungan,
         ]);
     }
+
+    public function hasil()
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql7')->table('layanan.hasil_lab as hasil')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->leftJoin('master.tindakan as tindakanLab', 'tindakanMedis.TINDAKAN', '=', 'tindakanLab.ID')
+            ->leftJoin('master.parameter_tindakan_lab as parameter', 'hasil.PARAMETER_TINDAKAN', '=', 'parameter.ID')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM');
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Group by 'nomor' and select the first occurrence for other fields
+        $query->selectRaw('
+            hasil.TANGGAL as tanggal,
+            hasil.ID as idHasil,
+            kunjungan.NOMOR as kunjungan,
+            pendaftaran.NORM as norm,
+            master.getNamaLengkap(pasien.NORM) as namaPasien,
+            tindakanLab.NAMA as tindakan,
+            parameter.PARAMETER as parameter,
+            hasil.HASIL as hasil,
+            hasil.SATUAN as satuan,
+            hasil.STATUS as status
+        ')
+            ->where('hasil.HASIL', '!=', '');
+
+        // Paginate the results
+        $data = $query->orderByDesc('hasil.TANGGAL')->paginate(5)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Layanan/Laboratorium/Hasil", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all()
+        ]);
+    }
+
+    public function catatan()
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql7')->table('layanan.catatan_hasil_lab as catatan')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'catatan.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.dokter as dokter', 'catatan.DOKTER', '=', 'dokter.ID');
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Group by 'nomor' and select the first occurrence for other fields
+        $query->selectRaw('
+            catatan.TANGGAL as tanggal,
+            kunjungan.NOMOR as kunjungan,
+            pendaftaran.NORM as norm,
+            master.getNamaLengkap(pasien.NORM) as namaPasien,
+            catatan.CATATAN as catatan,
+            master.getNamaLengkapPegawai(dokter.NIP) as dokter
+        ')
+            ->where('catatan.CATATAN', '!=', '');
+
+
+        // Paginate the results
+        $data = $query->orderByDesc('catatan.TANGGAL')->paginate(5)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Layanan/Laboratorium/Catatan", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all()
+        ]);
+    }
 }

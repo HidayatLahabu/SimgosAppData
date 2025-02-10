@@ -3,28 +3,25 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/Button/ButtonDetail";
 import Cetak from "./Cetak"
-import ButtonTime from '@/Components/Button/ButtonTime';
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
-import TableCellMenu from "@/Components/Table/TableCellMenu";
 
-export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+export default function Hasil({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
     const headers = [
+        { name: "TANGGAL", className: "w-[6%]" },
+        { name: "ID HASIL", className: "w-[6%]" },
+        { name: "KUNJUNGAN", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
-        { name: "NOMOR ORDER", className: "text-center w-[12%]" },
-        { name: "TANGGAL", className: "text-center w-[11%]" },
-        { name: "ORDER OLEH" },
-        { name: "STATUS KUNJUNGAN", className: "w-[9%]" },
-        { name: "STATUS ORDER", className: "w-[9%]" },
-        { name: "STATUS HASIL", className: "w-[9%]" },
-        { name: "MENU", className: "text-center w-[5%]" },
+        { name: "TINDAKAN" },
+        { name: "PARAMETER" },
+        { name: "HASIL" },
+        { name: "SATUAN", className: "w-[5%]" },
     ];
 
     // Function to handle search input changes
@@ -36,7 +33,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('layananLab.index'), updatedParams, {
+        router.get(route('layananLab.hasil'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -65,7 +62,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Order Laboratorium {header} {totalCount} {text}</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Hasil Laboratorium {header} {totalCount} {text}</h1>
                                 <Table>
                                     <TableHeader>
                                         <tr>
@@ -74,14 +71,10 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor order"
+                                                        placeholder="Cari data berdasarkan NORM atau nama pasien"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
-                                                    <ButtonTime href={route("layananLab.filterByTime", "hariIni")} text="Hari Ini" />
-                                                    <ButtonTime href={route("layananLab.filterByTime", "mingguIni")} text="Minggu Ini" />
-                                                    <ButtonTime href={route("layananLab.filterByTime", "bulanIni")} text="Bulan Ini" />
-                                                    <ButtonTime href={route("layananLab.filterByTime", "tahunIni")} text="Tahun Ini" />
                                                 </div>
                                             </th>
                                         </tr>
@@ -98,28 +91,16 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <TableRow key={data.nomor} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.norm}</TableCell>
-                                                    <TableCell className='uppercase'>{data.nama}</TableCell>
-                                                    <TableCell>{data.nomor}</TableCell>
+                                                <TableRow key={data.idHasil} isEven={index % 2 === 0}>
                                                     <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>
-                                                        {data.orderOleh}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {data.statusKunjungan === 0 ? 'Batal' : data.statusKunjungan === 1 ? 'Sedang Dilayani' : data.statusKunjungan === 2 ? 'Selesai' : ''}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {data.statusOrder === 2 ? 'Sudah Final' : data.statusOrder === 1 ? 'Belum Final' : 'Batal'}
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        {data.statusHasil === 1 ? 'Sudah Final' : 'Belum Ada Hasil'}
-                                                    </TableCell>
-                                                    <TableCellMenu>
-                                                        <ButtonDetail
-                                                            href={route("layananLab.detail", { id: data.nomor })}
-                                                        />
-                                                    </TableCellMenu>
+                                                    <TableCell>{data.idHasil}</TableCell>
+                                                    <TableCell>{data.kunjungan}</TableCell>
+                                                    <TableCell>{data.norm}</TableCell>
+                                                    <TableCell>{data.namaPasien}</TableCell>
+                                                    <TableCell>{data.tindakan}</TableCell>
+                                                    <TableCell>{data.parameter}</TableCell>
+                                                    <TableCell>{data.hasil}</TableCell>
+                                                    <TableCell>{data.satuan}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
@@ -134,11 +115,6 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="w-full">
-                <Cetak
-                />
             </div>
         </AuthenticatedLayout>
     );

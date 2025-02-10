@@ -27,7 +27,9 @@ export default function NavigationLab() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('layananRad.index');
+        return route().current('layananLab.index') ||
+            route().current('layananLab.hasil') ||
+            route().current('layananLab.catatan');
     };
 
     return (
@@ -37,7 +39,7 @@ export default function NavigationLab() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Layanan
+                Laboratorium
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
@@ -46,7 +48,23 @@ export default function NavigationLab() {
                         active={route().current('layananLab.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laboratorium
+                        Data Order
+                    </NavLink>
+
+                    <NavLink
+                        href={route('layananLab.hasil')}
+                        active={route().current('layananLab.hasil')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Data Hasil
+                    </NavLink>
+
+                    <NavLink
+                        href={route('layananLab.catatan')}
+                        active={route().current('layananLab.catatan')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Catatan
                     </NavLink>
                 </div>
             )}
