@@ -28,6 +28,8 @@ export default function NavigationLayanan() {
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
         return route().current('layananLab.index') ||
+            route().current('layananLab.hasil') ||
+            route().current('layananLab.catatan') ||
             route().current('layananRad.index') ||
             route().current('layananResep.index') ||
             route().current('layananPulang.index');
@@ -49,21 +51,35 @@ export default function NavigationLayanan() {
                         active={route().current('layananLab.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laboratorium
+                        Order Laboratorium
+                    </NavLink>
+                    <NavLink
+                        href={route('layananLab.hasil')}
+                        active={route().current('layananLab.hasil')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Hasil Laboratorium
+                    </NavLink>
+                    <NavLink
+                        href={route('layananLab.catatan')}
+                        active={route().current('layananLab.catatan')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Catatan Laboratorium
                     </NavLink>
                     <NavLink
                         href={route('layananRad.index')}
                         active={route().current('layananRad.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Radiologi
+                        Order Radiologi
                     </NavLink>
                     <NavLink
                         href={route('layananResep.index')}
                         active={route().current('layananResep.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Resep
+                        Order Resep
                     </NavLink>
                     <NavLink
                         href={route('layananPulang.index')}

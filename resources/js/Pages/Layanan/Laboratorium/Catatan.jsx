@@ -13,7 +13,7 @@ import TableCell from "@/Components/Table/TableCell";
 export default function Catatan({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
     const headers = [
-        { name: "TANGGAL", className: "w-[6%]" },
+        { name: "TANGGAL", className: "w-[7%]" },
         { name: "KUNJUNGAN", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
@@ -68,7 +68,7 @@ export default function Catatan({ auth, dataTable, header, totalCount, text, que
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien atau nomor kunjungan"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />

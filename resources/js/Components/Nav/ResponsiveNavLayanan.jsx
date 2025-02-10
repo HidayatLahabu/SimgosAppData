@@ -29,7 +29,9 @@ export default function ResponsiveNavLayanan() {
                 <div className="absolute left-0 mt-1 w-full rounded-md shadow-lg bg-white dark:bg-indigo-950 z-10">
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
-                            <ResponsiveNavLink href={route('layananLab.index')}>Laboratorium</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('layananLab.index')}>Order Laboratorium</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('layananLab.hasil')}>Hasil Laboratorium</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('layananLab.catatan')}>Catatan Laboratorium</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananRad.index')}>Radiologi</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananResep.index')}>Resep</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('layananPulang.index')}>Pasien Pulang</ResponsiveNavLink>

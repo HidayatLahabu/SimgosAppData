@@ -13,7 +13,7 @@ import TableCell from "@/Components/Table/TableCell";
 export default function Hasil({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
 
     const headers = [
-        { name: "TANGGAL", className: "w-[6%]" },
+        { name: "TANGGAL", className: "w-[7%]" },
         { name: "ID HASIL", className: "w-[6%]" },
         { name: "KUNJUNGAN", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[6%]" },
@@ -71,7 +71,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien nomor kunjungan"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />

@@ -406,7 +406,8 @@ class LaboratoriumController extends Controller
         if ($searchSubject) {
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 
@@ -426,7 +427,7 @@ class LaboratoriumController extends Controller
             ->where('hasil.HASIL', '!=', '');
 
         // Paginate the results
-        $data = $query->orderByDesc('hasil.TANGGAL')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('hasil.TANGGAL')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
@@ -457,7 +458,8 @@ class LaboratoriumController extends Controller
         if ($searchSubject) {
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 
@@ -474,7 +476,7 @@ class LaboratoriumController extends Controller
 
 
         // Paginate the results
-        $data = $query->orderByDesc('catatan.TANGGAL')->paginate(5)->appends(request()->query());
+        $data = $query->orderByDesc('catatan.TANGGAL')->paginate(10)->appends(request()->query());
 
         // Convert data to array
         $dataArray = $data->toArray();
