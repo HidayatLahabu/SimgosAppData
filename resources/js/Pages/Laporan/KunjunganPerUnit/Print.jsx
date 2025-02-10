@@ -27,13 +27,13 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                         : `Selang Tanggal : ${formatDate(dariTanggal)} s.d ${formatDate(sampaiTanggal)}`}
                                 </p>
 
-                                <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
+                                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-900 mt-4 border border-gray-500">
                                     <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">UNIT LAYANAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">LAKI-LAKI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">PEREMPUAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">UNIT LAYANAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">LAKI-LAKI</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">PEREMPUAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">KASUS BARU</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">KASUS LAMA</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">UMUM</th>

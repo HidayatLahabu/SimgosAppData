@@ -44,6 +44,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('kunjunganPerHari.index')}>Kunjungan Per Hari</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kunjunganCaraBayar.index')}>Kunjungan Cara Bayar</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kunjunganPerUnit.index')}>Kunjungan Per Unit</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('kunjunganRekap.index')}>Kunjungan Rekap</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

@@ -14,9 +14,9 @@ import TableCellMenu from "@/Components/Table/TableCellMenu";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
+        { name: "NOMOR KARTU", className: "w-[10%]" },
         { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN" },
-        { name: "NOMOR KARTU", className: "w-[10%]" },
         { name: "NIK", className: "w-[12%]" },
         { name: "JENIS PESERTA" },
         { name: "STATUS PESERTA" },
@@ -99,9 +99,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.noKartu} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.noKartu}</TableCell>
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
-                                                    <TableCell>{data.noKartu}</TableCell>
                                                     <TableCell>{data.nik}</TableCell>
                                                     <TableCell>{data.nmJenisPeserta}</TableCell>
                                                     <TableCell>{data.ketStatusPeserta}</TableCell>

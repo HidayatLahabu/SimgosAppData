@@ -19,7 +19,7 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl uppercase">
-                                    LAPORAN KUNJUNGAN PER CARA BAYAR {ruangan ? `RUANGAN ${ruangan}` : ''}
+                                    LAPORAN REKAPITULASI KUNJUNGAN {ruangan ? `RUANGAN ${ruangan}` : ''}
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -31,25 +31,24 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                     <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">ID</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">CARA BAYAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">DESKRIPSI</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">LAKI-LAKI</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">PEREMPUAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">BARU</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">LAMA</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">UMUM</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">INHEALT</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKD</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">IKS</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JUMLAH</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => {
                                             return (
-                                                <tr key={item.IDCARABAYAR} className="border-b bg-white dark:border-gray-500">
+                                                <tr key={item.IDSTATUSPENGUNJUNG} className="border-b bg-white dark:border-gray-500">
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.IDCARABAYAR}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.CARABAYAR}
+                                                        {item.IDSTATUSPENGUNJUNG === 1 ? "Pengunjung Baru" : "Pengunjung Lama"}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
                                                         {formatRibuan(item.LAKILAKI) || 0}
@@ -58,10 +57,19 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                                         {formatRibuan(item.PEREMPUAN) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.BARU) || 0}
+                                                        {formatRibuan(item.UMUM) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.LAMA) || 0}
+                                                        {formatRibuan(item.JKN) || 0}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.INHEALT) || 0}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.JKD) || 0}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.IKS) || 0}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
                                                         {formatRibuan(item.JUMLAH) || 0}
@@ -72,11 +80,14 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                     </tbody>
                                     <tfoot>
                                         <tr className='bg-gray-300 font-bold text-sm'>
-                                            <td colSpan={3} className='px-2 py-2 text-right border border-gray-500 border-solid'>TOTAL</td>
+                                            <td colSpan={2} className='px-2 py-2 text-right border border-gray-500 border-solid'>TOTAL</td>
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LAKILAKI) || 0}</td>
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.PEREMPUAN) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BARU) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LAMA) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.UMUM) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKN) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.INHEALTH) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKD) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.IKS) || 0}</td>
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JUMLAH) || 0}</td>
                                         </tr>
                                     </tfoot>

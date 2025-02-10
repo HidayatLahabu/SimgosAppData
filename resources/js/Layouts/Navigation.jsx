@@ -14,6 +14,7 @@ import NavigationInformasi from '@/Components/Nav/NavigationInformasi';
 import NavigationKontrol from '@/Components/Nav/NavigationKontrol';
 import NavigationManajemen from '@/Components/Nav/NavigationManajemen';
 import NavigationChart from '@/Components/Nav/NavigationChart';
+import NavigationLab from '@/Components/Nav/NavigationLab';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -32,6 +33,8 @@ export default function Navigation({ user }) {
                 </div>
                 {userName.includes('Radiologi') ? (
                     <NavigationRadiologi />
+                ) : userName.includes('Laboratorium') ? (
+                    <NavigationLab />
                 ) : userName.includes('Pendaftaran') ? (
                     <NavigationKontrol />
                 ) : userName.includes('Manajemen') ? (

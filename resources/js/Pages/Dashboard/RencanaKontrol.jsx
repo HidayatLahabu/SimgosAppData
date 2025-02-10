@@ -28,12 +28,12 @@ const RencanaKontrol = ({ rekonBpjs }) => {
                         data: [direncanakan, berkunjungan, berhalangan],
                         backgroundColor: [
                             "rgba(54, 162, 235, 0.6)",
-                            "rgba(255, 205, 86, 0.6)",
+                            "rgba(250, 246, 5, 0.6)",
                             "rgba(255, 99, 132, 0.6)",
                         ],
                         borderColor: [
                             "rgba(54, 162, 235, 1)",
-                            "rgba(255, 205, 86, 1)",
+                            "rgba(250, 246, 5, 1)",
                             "rgba(255, 99, 132, 1)",
                         ],
                         borderWidth: 1,

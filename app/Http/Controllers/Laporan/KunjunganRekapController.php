@@ -8,7 +8,7 @@ use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
-class PengunjungRekapController extends Controller
+class KunjunganRekapController extends Controller
 {
     public function index()
     {
@@ -22,7 +22,7 @@ class PengunjungRekapController extends Controller
             ->table('master.pasien as pasien')
             ->select([
                 DB::raw('IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 2) AS IDSTATUSPENGUNJUNG'),
-                DB::raw('COUNT(pendaftaran.NOMOR) AS JUMLAH'),
+                DB::raw('COUNT(kunjungan.NOMOR) AS JUMLAH'),
                 DB::raw('SUM(IF(referensi.ID = 1, 1, 0)) AS UMUM'),
                 DB::raw('SUM(IF(referensi.ID = 2, 1, 0)) AS JKN'),
                 DB::raw('SUM(IF(referensi.ID = 3, 1, 0)) AS INHEALTH'),
@@ -64,9 +64,9 @@ class PengunjungRekapController extends Controller
                 $join->on('kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
                     ->where('ruanganKunjungan.JENIS', '=', 5);
             })
-            ->whereIn('pendaftaran.STATUS', [1, 2])
+            ->whereIn('kunjungan.STATUS', [1, 2])
             ->whereNull('kunjungan.REF')
-            ->whereBetween('pendaftaran.TANGGAL', [$tgl_awal, $tgl_akhir])
+            ->whereBetween('kunjungan.MASUK', [$tgl_awal, $tgl_akhir])
             ->where('tujuanPasien.RUANGAN', 'LIKE', '%')
             ->groupBy(DB::raw('IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 2)'));
 
@@ -103,7 +103,7 @@ class PengunjungRekapController extends Controller
         }
 
         // Return hasil ke frontend
-        return inertia('Laporan/PengunjungRekap/Index', [
+        return inertia('Laporan/KunjunganRekap/Index', [
             'ruangan' => $ruangan,
             'dataTable' => $data,
             'total' => $total,
@@ -132,7 +132,7 @@ class PengunjungRekapController extends Controller
             ->table('master.pasien as pasien')
             ->select([
                 DB::raw('IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 2) AS IDSTATUSPENGUNJUNG'),
-                DB::raw('COUNT(pendaftaran.NOMOR) AS JUMLAH'),
+                DB::raw('COUNT(kunjungan.NOMOR) AS JUMLAH'),
                 DB::raw('SUM(IF(referensi.ID = 1, 1, 0)) AS UMUM'),
                 DB::raw('SUM(IF(referensi.ID = 2, 1, 0)) AS JKN'),
                 DB::raw('SUM(IF(referensi.ID = 3, 1, 0)) AS INHEALTH'),
@@ -174,13 +174,13 @@ class PengunjungRekapController extends Controller
                 $join->on('kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
                     ->where('ruanganKunjungan.JENIS', '=', 5);
             })
-            ->whereIn('pendaftaran.STATUS', [1, 2])
+            ->whereIn('kunjungan.STATUS', [1, 2])
             ->whereNull('kunjungan.REF')
             ->groupBy(DB::raw('IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), 1, 2)'));
 
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween(DB::raw('DATE(pendaftaran.TANGGAL)'), [$dariTanggal, $sampaiTanggal])
+            ->whereBetween(DB::raw('DATE(kunjungan.MASUK)'), [$dariTanggal, $sampaiTanggal])
             ->get()
             ->toArray();
 
@@ -217,7 +217,7 @@ class PengunjungRekapController extends Controller
             $total['PEREMPUAN'] += $row->PEREMPUAN;
         }
 
-        return inertia("Laporan/PengunjungRekap/Print", [
+        return inertia("Laporan/KunjunganRekap/Print", [
             'data' => $data,
             'total' => $total,
             'ruangan' => $ruangan,

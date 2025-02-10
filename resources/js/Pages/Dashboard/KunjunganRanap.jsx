@@ -41,8 +41,8 @@ const KunjunganRanap = ({ kunjunganRanap }) => {
                     {
                         label: "Masuk",
                         data: masukData,
-                        backgroundColor: "rgba(245, 155, 66, 0.6)",
-                        borderColor: "rgba(245, 155, 66)",
+                        backgroundColor: "rgba(250, 50, 97, 0.6)",
+                        borderColor: "rgba(250, 50, 97)",
                         borderWidth: 1,
                     },
                     {

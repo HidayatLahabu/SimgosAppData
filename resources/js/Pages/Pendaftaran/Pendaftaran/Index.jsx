@@ -16,9 +16,9 @@ import CardMenu from "@/Components/Card/CardMenu";
 export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
 
     const headers = [
+        { name: "NOMOR", className: "w-[9%]" },
         { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN" },
-        { name: "NOMOR", className: "w-[9%]" },
         { name: "TANGGAL", className: "text-center w-[12%]" },
         { name: "PENJAMIN", className: "w-[15%]" },
         { name: "STATUS", className: "text-center w-[7%]" },
@@ -105,9 +105,9 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
-                                                    <TableCell>{data.nomor}</TableCell>
                                                     <TableCell className='text-center'>{data.tanggal}</TableCell>
                                                     <TableCell>{data.penjamin}</TableCell>
                                                     <TableCell className='text-center'>

@@ -87,6 +87,7 @@ use App\Http\Controllers\Laporan\KunjunganCaraBayarController;
 use App\Http\Controllers\Laporan\KunjunganPerHariController;
 use App\Http\Controllers\Laporan\KunjunganPerPasienController;
 use App\Http\Controllers\Laporan\KunjunganPerUnitController;
+use App\Http\Controllers\Laporan\KunjunganRekapController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -575,6 +576,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kunjunganPerUnit', [KunjunganPerUnitController::class, 'index'])->name('kunjunganPerUnit.index');
         Route::get('/kunjunganPerUnit-print', [KunjunganPerUnitController::class, 'print'])->name('kunjunganPerUnit.print');
+
+        Route::get('kunjunganRekap', [KunjunganRekapController::class, 'index'])->name('kunjunganRekap.index');
+        Route::get('/kunjunganRekap-print', [KunjunganRekapController::class, 'print'])->name('kunjunganRekap.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

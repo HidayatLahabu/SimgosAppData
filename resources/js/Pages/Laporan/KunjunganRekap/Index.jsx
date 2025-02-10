@@ -1,7 +1,6 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { formatDate } from '@/utils/formatDate';
 import Cetak from './Cetak';
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
@@ -10,30 +9,28 @@ import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import TableFooter from "@/Components/Table/TableFooter";
 import TableFooterCell from "@/Components/Table/TableFooterCell";
+import { formatDate } from '@/utils/formatDate';
 import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function KunjunganPerUnit({
+export default function PengunjungRekap({
     auth,
+    dataTable,
+    ruangan,
     tglAwal,
     tglAkhir,
-    dataTable,
     total,
-    ruangan,
-    caraBayar,
 }) {
 
     const headers = [
-        { name: "UNIT LAYANAN" },
-        { name: "LAKI-LAKI", className: "text-center w-[7%]" },
-        { name: "PEREMPUAN", className: "text-center  w-[7%]" },
-        { name: "KASUS BARU", className: "text-wrap text-center w-[7%]" },
-        { name: "KASUS LAMA", className: "text-wrap text-center w-[7%]" },
+        { name: "DESKRIPSI" },
+        { name: "LAKI-LAKI", className: "text-center w-[9%]" },
+        { name: "PEREMPUAN", className: "text-center w-[9%]" },
         { name: "UMUM", className: "text-center w-[7%]" },
         { name: "JKN", className: "text-center w-[7%]" },
         { name: "INHEALT", className: "text-center w-[7%]" },
         { name: "JKD", className: "text-center w-[7%]" },
         { name: "IKS", className: "text-center w-[7%]" },
-        { name: "JUMLAH", className: "text-center w-[7%]" },
+        { name: "JUMLAH", className: "text-center w-[9%]" },
     ];
 
     return (
@@ -42,17 +39,15 @@ export default function KunjunganPerUnit({
 
             <div className="py-5 flex flex-wrap w-full">
                 <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
-
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN KUNJUNGAN PER UNIT
+                            LAPORAN REKAPITULASI KUNJUNGAN
                         </h1>
-                        <p className="text-center text-gray-100 pb-4">
+                        <p className="text-center text-white pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
                         </p>
                         <div className="pl-5 pr-5 pb-5 text-gray-900 dark:text-gray-100 w-full">
                             <div className="overflow-x-auto">
-
                                 <Table>
                                     <TableHeader>
                                         <tr className='text-xs'>
@@ -64,44 +59,25 @@ export default function KunjunganPerUnit({
                                         </tr>
                                     </TableHeader>
                                     <tbody>
-                                        {dataTable.map((item, index) => (
-                                            <TableRow key={`${item.SUBUNIT}-${index}`} isEven={index % 2 === 0} className='text-xs'>
-                                                <TableCell>{item.SUBUNIT}</TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.LAKILAKI)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.PEREMPUAN)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.BARU)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.LAMA)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.UMUM)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.JKN)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.INHEALT)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.JKD)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.IKS)}
-                                                </TableCell>
-                                                <TableCell className="text-center">
-                                                    {formatRibuan(item.JUMLAH)}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                        {dataTable.length === 0 && (
+                                        {Array.isArray(dataTable) && dataTable.length > 0 ? (
+                                            dataTable.map((data, index) => (
+                                                <TableRow key={data.IDSTATUSPENGUNJUNG} isEven={index % 2 === 0}>
+                                                    <TableCell>
+                                                        {data.IDSTATUSPENGUNJUNG === 1 ? "Pengunjung Baru" : "Pengunjung Lama"}
+                                                    </TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.LAKILAKI) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.PEREMPUAN) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.UMUM) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JKN) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.INHEALT) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JKD) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.IKS) || 0}</TableCell>
+                                                    <TableCell className='text-center'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan={headers.length} className="px-3 py-3 text-center">
+                                                <td colSpan="7" className="px-3 py-3 text-center">
                                                     Tidak ada data yang dapat ditampilkan
                                                 </td>
                                             </tr>
@@ -112,11 +88,9 @@ export default function KunjunganPerUnit({
                                             <TableFooterCell className='text-right'>TOTAL</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.LAKILAKI) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.PEREMPUAN) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.BARU) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.LAMA) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.UMUM) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.JKN) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.INHEALT) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.INHEALTH) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.JKD) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.IKS) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
@@ -132,10 +106,10 @@ export default function KunjunganPerUnit({
             <div className="w-full">
                 <Cetak
                     ruangan={ruangan}
-                    caraBayar={caraBayar}
                 />
             </div>
 
         </AuthenticatedLayout >
     );
 }
+

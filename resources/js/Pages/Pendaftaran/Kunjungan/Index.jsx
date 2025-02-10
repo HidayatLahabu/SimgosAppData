@@ -17,9 +17,9 @@ import Cetak from "./Cetak"
 export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 
     const headers = [
+        { name: "NOMOR", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN" },
-        { name: "NOMOR", className: "text-center w-[12%]" },
         { name: "MASUK", className: "text-center w-[12%]" },
         { name: "KELUAR", className: "text-center w-[12%]" },
         { name: "RUANGAN TUJUAN" },
@@ -105,9 +105,9 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, r
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.nomor} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
-                                                    <TableCell>{data.nomor}</TableCell>
                                                     <TableCell>{data.masuk}</TableCell>
                                                     <TableCell>{data.keluar}</TableCell>
                                                     <TableCell>{data.ruangan}</TableCell>
