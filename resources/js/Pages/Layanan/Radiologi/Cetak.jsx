@@ -91,8 +91,13 @@ export default function Cetak() {
                                     placeholder="Pilih Jenis Kunjungan"
                                     onChange={onJenisKunjunganChange}
                                     options={[
-                                        { value: 1, label: 'Rawat Inap' },
-                                        { value: 2, label: 'Rawat Jalan' },
+                                        { value: 1, label: 'Rawat Jalan' },
+                                        { value: 2, label: 'Rawat Darurat' },
+                                        { value: 3, label: 'Rawat Inap' },
+                                        { value: 7, label: 'Poli Hemodialisa' },
+                                        { value: 5, label: 'Radiologi' },
+                                        { value: 6, label: 'Bedah Sentral' },
+                                        { value: 12, label: 'Kamar Bersalin' },
                                     ]}
                                 />
                             </div>
