@@ -4,7 +4,7 @@ import SelectTwoInput from "@/Components/Select/SelectTwoInput";
 import InputLabel from "@/Components/Input/InputLabel";
 import TextInput from "@/Components/Input/TextInput";
 
-export default function Cetak() {
+export default function Cetak({ ruangan }) {
 
     const { data, setData } = useForm({
         dari_tanggal: '',
@@ -33,11 +33,11 @@ export default function Cetak() {
         }
     };
 
-    const onJenisKunjunganChange = (selectedOption) => {
+    const onRuanganChange = (selectedOption) => {
         if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, jenisKunjungan: selectedOption.value }));
+            setData(prevData => ({ ...prevData, ruangan: selectedOption.value }));
         } else {
-            setData(prevData => ({ ...prevData, jenisKunjungan: '' }));  // Atau handling sesuai kebutuhan
+            setData(prevData => ({ ...prevData, ruangan: '' }));  // Atau handling sesuai kebutuhan
         }
     };
 
@@ -80,25 +80,18 @@ export default function Cetak() {
                                 />
                             </div>
                             <div className="flex-1">
-                                <InputLabel
-                                    htmlFor="jenisKunjungan"
-                                    value="Jenis Kunjungan"
-                                />
+                                <InputLabel htmlFor="ruangan" value="Ruangan Tujuan" />
                                 <SelectTwoInput
-                                    id="jenisKunjungan"
-                                    name="jenisKunjungan"
+                                    id="ruangan"
+                                    name="ruangan"
                                     className="mt-1 block w-full"
-                                    placeholder="Pilih Jenis Kunjungan"
-                                    onChange={onJenisKunjunganChange}
-                                    options={[
-                                        { value: 1, label: 'Rawat Jalan' },
-                                        { value: 2, label: 'Rawat Darurat' },
-                                        { value: 3, label: 'Rawat Inap' },
-                                        { value: 7, label: 'Poli Hemodialisa' },
-                                        { value: 4, label: 'Laboratorium' },
-                                        { value: 6, label: 'Bedah Sentral' },
-                                        { value: 12, label: 'Kamar Bersalin' },
-                                    ]}
+                                    placeholder="Pilih Ruangan"
+                                    options={Array.isArray(ruangan) ?
+                                        ruangan.map((item) => ({
+                                            value: item.JENIS_KUNJUNGAN,
+                                            label: item.JENIS_KUNJUNGAN + '. ' + item.DESKRIPSI,
+                                        })) : []}
+                                    onChange={onRuanganChange}
                                 />
                             </div>
                         </div>

@@ -13,7 +13,7 @@ import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import TableCellMenu from "@/Components/Table/TableCellMenu";
 
-export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+export default function Index({ auth, ruangan, dataTable, header, totalCount, text, queryParams = {} }) {
 
     const headers = [
         { name: "NORM", className: "w-[6%]" },
@@ -137,7 +137,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
             </div>
 
             <div className="w-full">
-                <Cetak
+                <Cetak ruangan={ruangan}
                 />
             </div>
         </AuthenticatedLayout>
