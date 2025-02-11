@@ -452,6 +452,15 @@ class LaboratoriumController extends Controller
                 ->where('ruangan.STATUS', 1)
                 ->where('ruangan.JENIS', 3)
                 ->where('ruangan.JENIS_KUNJUNGAN', $jenisKunjungan)
+                ->where(function ($query) {
+                    $query->where('ruangan.DESKRIPSI', 'LIKE', '%jalan%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%poli%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%inap%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%darurat%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%vk%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%bersalin%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%laboratorium%');
+                })
                 ->first();
 
             $kunjungan = $ruangan->namaRuangan;
