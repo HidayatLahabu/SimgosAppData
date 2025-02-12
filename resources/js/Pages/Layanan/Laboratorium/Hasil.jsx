@@ -71,7 +71,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM, nama pasien nomor kunjungan"
+                                                        placeholder="Cari data berdasarkan hasil ID, NORM, nama pasien nomor kunjungan"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -99,7 +99,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell>{data.namaPasien}</TableCell>
                                                     <TableCell>{data.tindakan}</TableCell>
                                                     <TableCell>{data.parameter}</TableCell>
-                                                    <TableCell>{data.hasil}</TableCell>
+                                                    <TableCell>{data.hasil.trim() === '' ? <span className='text-red-500'>Tidak Ada</span> : data.hasil}</TableCell>
                                                     <TableCell>{data.satuan}</TableCell>
                                                 </TableRow>
                                             ))

@@ -284,7 +284,8 @@ class LaboratoriumController extends Controller
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(hasil.ID) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 
@@ -300,8 +301,7 @@ class LaboratoriumController extends Controller
             hasil.HASIL as hasil,
             hasil.SATUAN as satuan,
             hasil.STATUS as status
-        ')
-            ->where('hasil.HASIL', '!=', '');
+        ');
 
         // Paginate the results
         $data = $query->orderByDesc('hasil.TANGGAL')->paginate(10)->appends(request()->query());
@@ -348,8 +348,7 @@ class LaboratoriumController extends Controller
             master.getNamaLengkap(pasien.NORM) as namaPasien,
             catatan.CATATAN as catatan,
             master.getNamaLengkapPegawai(dokter.NIP) as dokter
-        ')
-            ->where('catatan.CATATAN', '!=', '');
+        ');
 
 
         // Paginate the results
