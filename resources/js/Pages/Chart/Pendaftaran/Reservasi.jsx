@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
+const Mutasi = ({ reservasiTahunIni, reservasiTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,11 +25,11 @@ const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        batalTahunIni.forEach((item) => {
+        reservasiTahunIni.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        batalTahunLalu.forEach((item) => {
+        reservasiTahunLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
@@ -42,8 +42,8 @@ const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(224, 9, 27)",
-                        backgroundColor: "rgba(224, 9, 27, 0.3)",
+                        borderColor: "rgba(240, 186, 79)",
+                        backgroundColor: "rgba(240, 186, 79, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -51,8 +51,8 @@ const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(222, 73, 86)",
-                        backgroundColor: "rgba(222, 73, 86, 0.3)",
+                        borderColor: "rgba(240, 100, 79)",
+                        backgroundColor: "rgba(240, 100, 79, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -80,16 +80,16 @@ const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [batalTahunIni, batalTahunLalu]);
+    }, [reservasiTahunIni, reservasiTahunLalu]);
 
     return (
-        <div className="pr-5 pl-2 py-5 flex flex-col w-full h-full">
-            <div className="w-full flex-1">
-                <div className="max-w-full mx-auto w-full h-full">
-                    <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full h-full">
-                        <div className="p-5 text-gray-900 dark:text-gray-100 w-full h-full">
+        <div className="p-5 flex flex-wrap w-full">
+            <div className="w-full">
+                <div className="max-w-full mx-auto w-full">
+                    <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
+                        <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-normal">Batal Kontrol Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Reservasi Tahun {tahunIni} dan {tahunLalu}</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -100,4 +100,4 @@ const Batal = ({ batalTahunIni, batalTahunLalu, tahunIni, tahunLalu }) => {
     );
 };
 
-export default Batal;
+export default Mutasi;

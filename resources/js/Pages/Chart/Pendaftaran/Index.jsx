@@ -5,6 +5,8 @@ import Kunjungan from './Kunjungan';
 import Pendaftaran from './Pendaftaran';
 import Konsul from './Konsul';
 import Mutasi from './Mutasi';
+import Antrian from './Antrian';
+import Reservasi from './Reservasi';
 
 export default function Index({
     auth,
@@ -18,6 +20,10 @@ export default function Index({
     konsulTahunLalu,
     mutasiTahunIni,
     mutasiTahunLalu,
+    antrianTahunIni,
+    antrianTahunLalu,
+    reservasiTahunIni,
+    reservasiTahunLalu,
 }) {
 
     return (
@@ -58,6 +64,24 @@ export default function Index({
                         tahunLalu={tahunLalu}
                         mutasiTahunIni={mutasiTahunIni}
                         mutasiTahunLalu={mutasiTahunLalu}
+                    />
+                </div>
+            </div>
+            <div className="flex flex-wrap w-full">
+                <div className="w-1/2">
+                    <Antrian
+                        tahunIni={tahunIni}
+                        tahunLalu={tahunLalu}
+                        antrianTahunIni={antrianTahunIni}
+                        antrianTahunLalu={antrianTahunLalu}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <Reservasi
+                        tahunIni={tahunIni}
+                        tahunLalu={tahunLalu}
+                        reservasiTahunIni={reservasiTahunIni}
+                        reservasiTahunLalu={reservasiTahunLalu}
                     />
                 </div>
             </div>

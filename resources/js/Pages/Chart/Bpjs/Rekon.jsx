@@ -42,8 +42,8 @@ const Rekon = ({ rekonTahunIni, rekonTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(240, 155, 20)",
-                        backgroundColor: "rgba(240, 155, 20, 0.3)",
+                        borderColor: "rgba(12, 245, 54)",
+                        backgroundColor: "rgba(12, 245, 54, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -51,8 +51,8 @@ const Rekon = ({ rekonTahunIni, rekonTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(241, 88, 214)",
-                        backgroundColor: "rgba(241, 88, 214, 0.3)",
+                        borderColor: "rgba(11, 212, 155)",
+                        backgroundColor: "rgba(11, 212, 155, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,

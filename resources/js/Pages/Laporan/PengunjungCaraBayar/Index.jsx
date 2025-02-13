@@ -61,8 +61,8 @@ export default function PengunjungCaraBayar({
                                         {Array.isArray(dataTable) && dataTable.length > 0 ? (
                                             dataTable.map((data, index) => (
                                                 <TableRow key={data.IDCARABAYAR} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.IDCARABAYAR}</TableCell>
-                                                    <TableCell>{data.CARABAYAR || 0}</TableCell>
+                                                    <TableCell>{data.IDCARABAYAR || 0}</TableCell>
+                                                    <TableCell>{data.CARABAYAR || 'Tidak Teridentifikasi'}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.LAKILAKI) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.PEREMPUAN) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.BARU) || 0}</TableCell>

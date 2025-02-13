@@ -42,15 +42,15 @@ const Pendaftaran = ({ pendaftaranTahunIni, pendaftaranTahunLalu, tahunIni, tahu
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        backgroundColor: "rgba(94, 184, 26, 0.6)",
+                        backgroundColor: "rgba(94, 184, 26)",
                         borderColor: "rgba(94, 184, 26)",
                         borderWidth: 1,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        backgroundColor: "rgba(232, 223, 14, 0.6)",
-                        borderColor: "rgba(232, 223, 14)",
+                        backgroundColor: "rgba(94, 184, 26, 0.4)",
+                        borderColor: "rgba(94, 184, 26, 0.4)",
                         borderWidth: 1,
                     },
                 ],

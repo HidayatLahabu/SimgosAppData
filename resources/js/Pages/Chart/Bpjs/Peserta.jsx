@@ -42,15 +42,15 @@ const Peserta = ({ bpjsTahunIni, bpjsTahunLalu, tahunIni, tahunLalu }) => {
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        backgroundColor: "rgba(102, 62, 245, 0.8)",
+                        backgroundColor: "rgba(102, 62, 245)",
                         borderColor: "rgba(102, 62, 245)",
                         borderWidth: 1,
                     },
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        backgroundColor: "rgba(5, 161, 250, 0.8)",
-                        borderColor: "rgba(5, 161, 250)",
+                        backgroundColor: "rgba(102, 62, 245, 0.4)",
+                        borderColor: "rgba(102, 62, 245, 0.4)",
                         borderWidth: 1,
                     },
                 ],

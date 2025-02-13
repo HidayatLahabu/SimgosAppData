@@ -44,9 +44,6 @@ class PengunjungCaraBayarController extends Controller
             })
             ->leftJoin('pendaftaran.surat_rujukan_pasien as rujukan', 'pendaftaran.RUJUKAN', '=', 'rujukan.ID')
             ->leftJoin('master.ppk as ppk', 'rujukan.PPK', '=', 'ppk.ID')
-            ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->leftJoin('master.ruangan as ruanganKunjungan', 'kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
-            ->leftJoin('master.ruangan as ruanganSumber', 'ruanganSumber.ID', '=', 'ruanganKunjungan.ID')
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->whereBetween('pendaftaran.TANGGAL', [$tgl_awal, $tgl_akhir])
             ->where('tujuanPasien.RUANGAN', 'LIKE', '%')
@@ -134,9 +131,6 @@ class PengunjungCaraBayarController extends Controller
             })
             ->leftJoin('pendaftaran.surat_rujukan_pasien as rujukan', 'pendaftaran.RUJUKAN', '=', 'rujukan.ID')
             ->leftJoin('master.ppk as ppk', 'rujukan.PPK', '=', 'ppk.ID')
-            ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->leftJoin('master.ruangan as ruanganKunjungan', 'kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
-            ->leftJoin('master.ruangan as ruanganSumber', 'ruanganSumber.ID', '=', 'ruanganKunjungan.ID')
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->where(function ($query) use ($caraBayar) {
                 if ($caraBayar) {

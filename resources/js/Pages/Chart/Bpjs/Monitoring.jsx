@@ -42,8 +42,8 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
                     {
                         label: `Tahun ${tahunIni}`,
                         data: tahunIniCounts,
-                        borderColor: "rgba(88, 241, 233)",
-                        backgroundColor: "rgba(88, 241, 233, 0.3)",
+                        borderColor: "rgba(2, 87, 245)",
+                        backgroundColor: "rgba(2, 87, 245, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
@@ -51,8 +51,8 @@ const Monitoring = ({ monitoringTahunIni, monitoringTahunLalu, tahunIni, tahunLa
                     {
                         label: `Tahun ${tahunLalu}`,
                         data: tahunLaluCounts,
-                        borderColor: "rgba(149, 161, 151)",
-                        backgroundColor: "rgba(149, 161, 151, 0.3)",
+                        borderColor: "rgba(78, 120, 199)",
+                        backgroundColor: "rgba(78, 120, 199, 0.3)",
                         borderWidth: 2,
                         fill: true,
                         tension: 0.4,
