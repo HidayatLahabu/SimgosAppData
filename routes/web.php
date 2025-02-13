@@ -47,6 +47,7 @@ use App\Http\Controllers\Satusehat\ConditionController;
 use App\Http\Controllers\Satusehat\EncounterController;
 use App\Http\Controllers\Satusehat\ProcedureController;
 use App\Http\Controllers\Bpjs\MonitoringRekonController;
+use App\Http\Controllers\Chart\ChartLayananController;
 use App\Http\Controllers\Inventory\PenerimaanController;
 use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
@@ -476,6 +477,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [RadiologiController::class, 'index'])->name('layananRad.index');
         Route::get('/detail/{id}', [RadiologiController::class, 'detail'])->name('layananRad.detail');
         Route::get('/print', [RadiologiController::class, 'print'])->name('layananRad.print');
+        Route::get('/hasil', [RadiologiController::class, 'hasil'])->name('layananRad.hasil');
         Route::get('/filter/{filter}', [RadiologiController::class, 'filterByTime'])
             ->name('layananRad.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
@@ -597,7 +599,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('chart')->namespace('App\Http\Controllers\Chart')->group(function () {
         Route::get('chartPendaftaran', [ChartPendaftaranController::class, 'index'])->name('chartPendaftaran.index');
         Route::get('chartBpjs', [ChartBpjsController::class, 'index'])->name('chartBpjs.index');
-        Route::get('chartLayanan', [ChartPendaftaranController::class, 'index'])->name('chartLayanan.index');
+        Route::get('chartLayanan', [ChartLayananController::class, 'index'])->name('chartLayanan.index');
         Route::get('chartInformasi', [ChartPendaftaranController::class, 'index'])->name('chartInformasi.index');
         Route::get('chartLaporan', [ChartPendaftaranController::class, 'index'])->name('chartLaporan.index');
     });

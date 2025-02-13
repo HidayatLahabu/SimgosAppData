@@ -51,8 +51,25 @@ class RadiologiController extends Controller
         // Convert data to array
         $dataArray = $data->toArray();
 
+        $ruangan = DB::connection('mysql2')->table('master.ruangan as ruangan')
+            ->select('ruangan.JENIS_KUNJUNGAN', 'ruangan.DESKRIPSI')
+            ->where('ruangan.STATUS', 1)
+            ->where('ruangan.JENIS', 3)
+            ->where(function ($query) {
+                $query->where('ruangan.DESKRIPSI', 'LIKE', '%jalan%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%poli%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%inap%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%darurat%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%vk%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%bersalin%')
+                    ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%radiologi%');
+            })
+            ->orderBy('ruangan.JENIS_KUNJUNGAN')
+            ->get();
+
         // Return Inertia view with paginated data
         return inertia("Layanan/Radiologi/Index", [
+            'ruangan' => $ruangan,
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
@@ -228,19 +245,72 @@ class RadiologiController extends Controller
         ]);
     }
 
+    public function hasil()
+    {
+        // Get the search term from the request
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
+
+        // Start building the query using the query builder
+        $query = DB::connection('mysql7')->table('layanan.hasil_rad as hasil')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->leftJoin('master.tindakan as tindakanRad', 'tindakanMedis.TINDAKAN', '=', 'tindakanRad.ID')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM');
+
+        // Add search filter if provided
+        if ($searchSubject) {
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(hasil.ID) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Group by 'nomor' and select the first occurrence for other fields
+        $query->selectRaw('
+            hasil.TANGGAL as tanggal,
+            hasil.ID as idHasil,
+            kunjungan.NOMOR as kunjungan,
+            pendaftaran.NORM as norm,
+            master.getNamaLengkap(pasien.NORM) as namaPasien,
+            tindakanRad.NAMA as tindakan,
+            hasil.KLINIS as klinis,
+            hasil.KESAN as kesan,
+            hasil.USUL as usul,
+            hasil.HASIL as hasil
+        ');
+
+        // Paginate the results
+        $data = $query->orderByDesc('hasil.TANGGAL')->paginate(10)->appends(request()->query());
+
+        // Convert data to array
+        $dataArray = $data->toArray();
+
+        // Return Inertia view with paginated data
+        return inertia("Layanan/Radiologi/Hasil", [
+            'dataTable' => [
+                'data' => $dataArray['data'], // Only the paginated data
+                'links' => $dataArray['links'], // Pagination links
+            ],
+            'queryParams' => request()->all()
+        ]);
+    }
+
     public function print(Request $request)
     {
         // Validasi input
         $request->validate([
             'jenisPenjamin'  => 'nullable|integer',
-            'jenisKunjungan' => 'nullable|integer',
+            'ruangan' => 'nullable|integer',
             'dari_tanggal'   => 'required|date',
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
         ]);
 
         // Ambil nilai input
         $jenisPenjamin  = $request->input('jenisPenjamin');
-        $jenisKunjungan = $request->input('jenisKunjungan');
+        $jenisKunjungan = $request->input('ruangan');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
         $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
@@ -285,28 +355,36 @@ class RadiologiController extends Controller
                 ->groupBy('kunjunganBpjs.tglSEP', 'hasilRad.ID', 'jenisPenjamin.NOMOR');;
 
             $penjamin = 'BPJS KESEHATAN';
-        } else {
+        } elseif ($jenisPenjamin == 1) {
             $query->where('jenisPenjamin.NOMOR', '')->where('jenisPenjamin.JENIS', 1);
             $penjamin = 'Non BPJS KESEHATAN';
+        } else {
+            $query->where('jenisPenjamin.JENIS', '>', 0);
+            $penjamin = 'Semua Penjamin';
         }
 
-        // Filter berdasarkan jenis kunjungan
-        $kunjunganMap = [
-            1 => 'Rawat Jalan',
-            2 => 'Rawat Darurat',
-            3 => 'Rawat Inap',
-            7 => 'Hemodialisa',
-            5 => 'Radiologi',
-            6 => 'Bedan Sentral',
-            12 => 'Kamar Bersalin'
-        ];
-
-        if (isset($kunjunganMap[$jenisKunjungan])) {
+        if ($jenisKunjungan > 0) {
             $query->where('ruangan.JENIS_KUNJUNGAN', $jenisKunjungan);
-            $kunjungan = $kunjunganMap[$jenisKunjungan];
+
+            $ruangan = DB::connection('mysql2')->table('master.ruangan as ruangan')
+                ->select('ruangan.DESKRIPSI as namaRuangan')
+                ->where('ruangan.STATUS', 1)
+                ->where('ruangan.JENIS', 3)
+                ->where('ruangan.JENIS_KUNJUNGAN', $jenisKunjungan)
+                ->where(function ($query) {
+                    $query->where('ruangan.DESKRIPSI', 'LIKE', '%jalan%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%poli%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%inap%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%darurat%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%vk%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%bersalin%')
+                        ->orWhere('ruangan.DESKRIPSI', 'LIKE', '%radiologi%');
+                })
+                ->first();
+
+            $kunjungan = $ruangan->namaRuangan;
         } else {
-            $query->whereIn('ruangan.JENIS_KUNJUNGAN', [1, 2, 3, 7, 5, 6, 12]);
-            $kunjungan = 'Semua Kunjungan';
+            $query->where('ruangan.JENIS_KUNJUNGAN', '>', 0);
         }
 
         $data = $query->cursor();

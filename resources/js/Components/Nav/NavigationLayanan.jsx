@@ -31,6 +31,7 @@ export default function NavigationLayanan() {
             route().current('layananLab.hasil') ||
             route().current('layananLab.catatan') ||
             route().current('layananRad.index') ||
+            route().current('layananRad.hasil') ||
             route().current('layananResep.index') ||
             route().current('layananPulang.index');
     };
@@ -73,6 +74,13 @@ export default function NavigationLayanan() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Order Radiologi
+                    </NavLink>
+                    <NavLink
+                        href={route('layananRad.hasil')}
+                        active={route().current('layananRad.hasil')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Hasil Radiologi
                     </NavLink>
                     <NavLink
                         href={route('layananResep.index')}

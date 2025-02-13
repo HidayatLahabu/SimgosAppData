@@ -16,20 +16,20 @@ class ChartBpjsController extends Controller
         $tglAkhir = Carbon::now()->endOfDay()->format('Y-m-d');
         $tglAkhirLalu = Carbon::now()->subYear()->endOfYear()->format('Y-m-d');
 
-        $dataBpjsTahunIni =  $this->bpjsTahunIni($tahunIni);
-        $dataBpjsTahunLalu =  $this->bpjsTahunLalu($tahunLalu);
+        $dataBpjsTahunIni =  $this->peserta($tahunIni);
+        $dataBpjsTahunLalu =  $this->peserta($tahunLalu);
 
-        $dataKunjunganTahunIni =  $this->kunjunganTahunIni($tahunIni);
-        $dataKunjunganTahunLalu =  $this->kunjunganTahunLalu($tahunLalu);
+        $dataKunjunganTahunIni =  $this->kunjungan($tahunIni);
+        $dataKunjunganTahunLalu =  $this->kunjungan($tahunLalu);
 
-        $dataRekonTahunIni =  $this->rekonTahun($tahunIni, $tglAkhir);
-        $dataRekonTahunLalu =  $this->rekonTahun($tahunLalu, $tglAkhirLalu);
+        $dataRekonTahunIni =  $this->rekon($tahunIni, $tglAkhir);
+        $dataRekonTahunLalu =  $this->rekon($tahunLalu, $tglAkhirLalu);
 
-        $dataMonitoringTahunIni =  $this->monitoringTahun($tahunIni, $tglAkhir);
-        $dataMonitoringTahunLalu =  $this->monitoringTahun($tahunLalu, $tglAkhirLalu);
+        $dataMonitoringTahunIni =  $this->monitoring($tahunIni, $tglAkhir);
+        $dataMonitoringTahunLalu =  $this->monitoring($tahunLalu, $tglAkhirLalu);
 
-        $dataBatalTahunIni =  $this->batalTahun($tahunIni, $tglAkhir);
-        $dataBatalTahunLalu =  $this->batalTahun($tahunLalu, $tglAkhirLalu);
+        $dataBatalTahunIni =  $this->batal($tahunIni, $tglAkhir);
+        $dataBatalTahunLalu =  $this->batal($tahunLalu, $tglAkhirLalu);
 
         $dataKontrolTahunIni = $this->getChartData($tahunIni, $tglAkhir);
         $dataKontrolTahunLalu = $this->getChartData($tahunLalu, $tglAkhirLalu);
@@ -52,7 +52,7 @@ class ChartBpjsController extends Controller
         ]);
     }
 
-    private function bpjsTahunIni($tahun)
+    private function peserta($tahun)
     {
         return DB::connection('mysql6')->table('bpjs.peserta as peserta')
             ->select(
@@ -65,20 +65,7 @@ class ChartBpjsController extends Controller
             ->get();
     }
 
-    private function bpjsTahunLalu($tahun)
-    {
-        return DB::connection('mysql5')->table('bpjs.peserta as peserta')
-            ->select(
-                DB::raw('YEAR(peserta.tanggal) as tahun'),
-                DB::raw('MONTH(peserta.tanggal) as bulan'),
-                DB::raw('COUNT(peserta.noKartu) as total')
-            )
-            ->whereYear('peserta.tanggal', $tahun)
-            ->groupBy('tahun', 'bulan')
-            ->get();
-    }
-
-    private function kunjunganTahunIni($tahun)
+    private function kunjungan($tahun)
     {
         return DB::connection('mysql6')->table('bpjs.kunjungan as kunjungan')
             ->select(
@@ -91,20 +78,7 @@ class ChartBpjsController extends Controller
             ->get();
     }
 
-    private function kunjunganTahunLalu($tahun)
-    {
-        return DB::connection('mysql6')->table('bpjs.kunjungan as kunjungan')
-            ->select(
-                DB::raw('YEAR(kunjungan.tglSEP) as tahun'),
-                DB::raw('MONTH(kunjungan.tglSEP) as bulan'),
-                DB::raw('COUNT(kunjungan.noSEP) as total')
-            )
-            ->whereYear('kunjungan.tglSEP', $tahun)
-            ->groupBy('tahun', 'bulan')
-            ->get();
-    }
-
-    private function rekonTahun($tahun, $tanggal)
+    private function rekon($tahun, $tanggal)
     {
         return DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
@@ -118,7 +92,7 @@ class ChartBpjsController extends Controller
             ->get();
     }
 
-    private function monitoringTahun($tahun, $tanggal)
+    private function monitoring($tahun, $tanggal)
     {
         return DB::connection('mysql6')->table('bpjs.monitoring_rencana_kontrol as monitoring')
             ->select(
@@ -132,7 +106,7 @@ class ChartBpjsController extends Controller
             ->get();
     }
 
-    private function batalTahun($tahun, $tanggal)
+    private function batal($tahun, $tanggal)
     {
         return DB::connection('mysql6')->table('bpjs.rencana_kontrol as rekon')
             ->select(
@@ -151,9 +125,9 @@ class ChartBpjsController extends Controller
     public function getChartData($tahun, $tanggal)
     {
         return [
-            'rekon' => $this->rekonTahun($tahun, $tanggal),
-            'monitoring' => $this->monitoringTahun($tahun, $tanggal),
-            'batal' => $this->batalTahun($tahun, $tanggal),
+            'rekon' => $this->rekon($tahun, $tanggal),
+            'monitoring' => $this->monitoring($tahun, $tanggal),
+            'batal' => $this->batal($tahun, $tanggal),
         ];
     }
 }

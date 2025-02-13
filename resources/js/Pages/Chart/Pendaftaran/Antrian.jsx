@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Pendaftaran = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => {
+const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -100,4 +100,4 @@ const Pendaftaran = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu })
     );
 };
 
-export default Pendaftaran;
+export default Antrian;
