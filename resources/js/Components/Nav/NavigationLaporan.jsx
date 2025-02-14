@@ -42,7 +42,8 @@ export default function NavigationLaporan() {
             route().current('kunjunganPerHari.index') ||
             route().current('kunjunganCaraBayar.index') ||
             route().current('kunjunganPerUnit.index') ||
-            route().current('kunjunganRekap.index');
+            route().current('kunjunganRekap.index') ||
+            route().current('tindakanPasien.index');
     };
 
     const navLinks = [
@@ -62,6 +63,7 @@ export default function NavigationLaporan() {
         { label: 'Kunjungan Cara Bayar', route: 'kunjunganCaraBayar.index' },
         { label: 'Kunjungan Per Unit', route: 'kunjunganPerUnit.index' },
         { label: 'Kunjungan Rekap', route: 'kunjunganRekap.index' },
+        { label: 'Tindakan Per Pasien', route: 'tindakanPasien.index' },
     ];
 
     // Sort the links alphabetically by label

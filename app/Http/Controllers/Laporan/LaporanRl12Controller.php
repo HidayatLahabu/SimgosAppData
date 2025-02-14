@@ -55,10 +55,6 @@ class LaporanRl12Controller extends Controller
         $sisaTahunIni = $this->getDataSisaTahun($tglAkhir) ?? 0;
         $sisaTahunLalu = $this->getDataSisaTahun($tglAkhirLalu) ?? 0;
 
-
-
-
-
         // Return data to frontend
         return inertia("Laporan/Rl12/Index", [
             // Tahun ini

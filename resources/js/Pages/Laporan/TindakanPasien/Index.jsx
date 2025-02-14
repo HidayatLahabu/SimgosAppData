@@ -1,24 +1,37 @@
 import React from 'react';
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
+import { router } from "@inertiajs/react";
 import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
+import Cetak from './Cetak';
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
-import TableCellMenu from "@/Components/Table/TableCellMenu";
-import ButtonTime from '@/Components/Button/ButtonTime';
+import { formatDate } from '@/utils/formatDate';
 
-export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+export default function TindakanPasien({
+    auth,
+    dataTable,
+    ruangan,
+    caraBayar,
+    dokter,
+    tglAwal,
+    tglAkhir,
+    queryParams = {},
+}) {
 
     const headers = [
-        { name: "ID" },
-        { name: "PATIENT" },
-        { name: "REF ID" },
-        { name: "NOPEN" },
-        { name: "SEND DATE" },
+        { name: "KUNJUNGAN", className: "w-[6%]" },
+        { name: "NORM", className: "text-center  w-[4%]" },
+        { name: "NAMA PASIEN" },
+        { name: "TANGGAL TINDAKAN", className: "text-wrap w-[10%]" },
+        { name: "RUANGAN", className: "text-wrap" },
+        { name: "CARA BAYAR", className: "text-wrap" },
+        { name: "TINDAKAN", className: "text-wrap" },
+        { name: "DOKTER", className: "text-wrap" },
     ];
 
     // Function to handle search input changes
@@ -30,7 +43,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('imagingStudy.index'), updatedParams, {
+        router.get(route('tindakanPasien.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -50,36 +63,39 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="SatuSehat" />
+            <Head title="Laporan" />
 
-            <div className="py-5">
-                <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
-                    <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
-                            <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Imaging Study {header} {totalCount} {text}</h1>
+            <div className="py-5 flex flex-wrap w-full">
+                <div className="max-w-full mx-auto sm:px-5 lg:px-5 w-full">
+
+                    <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
+                        <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
+                            LAPORAN LAYANAN TINDAKAN PER PASIEN
+                        </h1>
+                        <p className="text-center text-gray-100 pb-4">
+                            <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
+                        </p>
+                        <div className="pl-5 pr-5 pb-5 text-gray-900 dark:text-gray-100 w-full">
+                            <div className="overflow-x-auto">
+
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={10} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
-                                                        className="w-full"
+                                                        className="flex-1"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan patient, ref id dan nopen"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien, ruangan atau dokter"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
-                                                    <ButtonTime href={route("imagingStudy.filterByTime", "hariIni")} text="Hari Ini" />
-                                                    <ButtonTime href={route("imagingStudy.filterByTime", "mingguIni")} text="Minggu Ini" />
-                                                    <ButtonTime href={route("imagingStudy.filterByTime", "bulanIni")} text="Bulan Ini" />
-                                                    <ButtonTime href={route("imagingStudy.filterByTime", "tahunIni")} text="Tahun Ini" />
                                                 </div>
                                             </th>
                                         </tr>
                                     </TableHeader>
                                     <TableHeader>
-                                        <tr>
+                                        <tr className='text-xs'>
                                             {headers.map((header, index) => (
                                                 <TableHeaderCell key={index} className={header.className || ""}>
                                                     {header.name}
@@ -90,17 +106,22 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                     <tbody>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
-                                                <TableRow key={data.refId} isEven={index % 2 === 0}>
-                                                    <TableCell>{data.id}</TableCell>
-                                                    <TableCell>{data.patient}</TableCell>
-                                                    <TableCell>{data.refId}</TableCell>
-                                                    <TableCell>{data.nopen}</TableCell>
-                                                    <TableCell>{data.sendDate}</TableCell>
+                                                <TableRow key={data.KUNJUNGAN} isEven={index % 2 === 0}>
+                                                    <TableCell>{data.KUNJUNGAN}</TableCell>
+                                                    <TableCell>{data.NORM}</TableCell>
+                                                    <TableCell>{data.NAMA}</TableCell>
+                                                    <TableCell>{data.TGLTINDAKAN}</TableCell>
+                                                    <TableCell>{data.RUANGAN}</TableCell>
+                                                    <TableCell>{data.CARABAYAR}</TableCell>
+                                                    <TableCell>{data.TINDAKAN}</TableCell>
+                                                    <TableCell>{data.DOKTER}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="6" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="10" className="px-3 py-3 text-center">
+                                                    Tidak ada data yang dapat ditampilkan
+                                                </td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -109,8 +130,17 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
+            </div >
+
+            <div className="w-full">
+                <Cetak
+                    caraBayar={caraBayar}
+                    ruangan={ruangan}
+                    dokter={dokter}
+                />
             </div>
-        </AuthenticatedLayout>
+
+        </AuthenticatedLayout >
     );
 }

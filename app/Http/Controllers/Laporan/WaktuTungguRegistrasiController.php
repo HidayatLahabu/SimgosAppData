@@ -33,12 +33,7 @@ class WaktuTungguRegistrasiController extends Controller
             ->select([
                 'dokter.ID',
                 'dokter.NIP',
-                DB::raw('CONCAT(
-                    IFNULL(pegawai.GELAR_DEPAN, ""), " ",
-                    pegawai.NAMA, " ",
-                    IFNULL(pegawai.GELAR_BELAKANG, "")
-                ) as DOKTER'),
-                'ruangan.DESKRIPSI as RUANGAN',
+                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER')
             ])
             ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
             ->leftJoin('master.dokter_ruangan as dpjpRuangan', 'dokter.ID', '=', 'dpjpRuangan.DOKTER')

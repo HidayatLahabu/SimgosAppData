@@ -81,7 +81,7 @@ export default function Cetak({
                                     options={Array.isArray(ruangan) ?
                                         ruangan.map((item) => ({
                                             value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
+                                            label: item.DESKRIPSI,
                                         })) : []}
                                     onChange={onRuanganChange}
                                 />
@@ -96,7 +96,7 @@ export default function Cetak({
                                     options={Array.isArray(caraBayar) ?
                                         caraBayar.map((item) => ({
                                             value: item.ID,
-                                            label: item.ID + '. ' + item.DESKRIPSI,
+                                            label: item.DESKRIPSI,
                                         })) : []}
                                     onChange={onBayarChange}
                                 />
@@ -111,7 +111,7 @@ export default function Cetak({
                                     options={Array.isArray(dokter) ?
                                         dokter.map((item) => ({
                                             value: item.ID,
-                                            label: item.ID + '. ' + item.DOKTER,
+                                            label: item.DOKTER,
                                         })) : []}
                                     onChange={onDokterChange}
                                 />
