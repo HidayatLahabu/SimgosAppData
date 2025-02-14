@@ -18,7 +18,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN KUNJUNGAN PER PASIEN
+                                    LAPORAN TINDAKAN PER PASIEN
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -30,44 +30,48 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                     <thead className="text-[10px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">KUNJUNGAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[4%]">STATUS</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL MASUK</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[10%]">TANGGAL KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">TANGGAL MASUK</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">TANGGAL TINDAKAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid ">RUANGAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">CARA BAYAR</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">UNIT PELAYANAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">TINDAKAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">DOKTER</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => {
                                             return (
-                                                <tr key={item.NORM} className="border-b bg-white dark:border-gray-500">
+                                                <tr key={item.KUNJUNGAN} className="border-b bg-white dark:border-gray-500">
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
+                                                    <td className="px-3 py-2 border border-gray-500 border-solid">
+                                                        {item.KUNJUNGAN}
+                                                    </td>
                                                     <td className="px-3 py-2 border border-gray-500 border-solid">
                                                         {item.NORM}
                                                     </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.NAMA_LENGKAP}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.STATUSPENGUNJUNG}
+                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                        {item.NAMA}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
-                                                        {item.TGLTERIMA}
+                                                        {item.TGLMASUK}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
-                                                        {item.TGLKELUAR}
+                                                        {item.TGLTINDAKAN}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
+                                                        {item.RUANGAN}
                                                     </td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                         {item.CARABAYAR}
                                                     </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.UNITPELAYANAN}
+                                                    <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
+                                                        {item.TINDAKAN}
                                                     </td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.DOKTER_REG}
+                                                        {item.DOKTER}
                                                     </td>
                                                 </tr>
                                             );

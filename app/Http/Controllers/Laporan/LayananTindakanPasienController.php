@@ -127,74 +127,71 @@ class LayananTindakanPasienController extends Controller
             'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
             'ruangan'  => 'nullable|integer',
             'caraBayar' => 'nullable|integer',
-            'dokter' => 'nullable|integer',
         ]);
 
         // Ambil nilai input
         $ruangan  = $request->input('ruangan');
         $caraBayar = $request->input('caraBayar');
-        $dokter = $request->input('dokter');
         $dariTanggal    = $request->input('dari_tanggal');
         $sampaiTanggal  = $request->input('sampai_tanggal');
         $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
         $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
 
-        $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
+        $query = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
             ->select([
-                'pendaftaran.NOMOR as NOPEN',
-                'pasien.NORM as NORM',
-                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_LENGKAP'),
-                DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
+                'kunjungan.NOMOR as KUNJUNGAN',
+                'pendaftaran.NORM as NORM',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA'),
                 DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLMASUK"),
-                'referensi.DESKRIPSI as CARABAYAR',
-                DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG'),
-                'ruangan.DESKRIPSI as UNITPELAYANAN',
-                DB::raw("IF(DATE_FORMAT(pasien.TANGGAL, '%d-%m-%Y') = DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y'), 'Baru', 'Lama') as STATUSPENGUNJUNG"),
+                DB::raw("DATE_FORMAT(tindakanMedis.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLTINDAKAN"),
+                'ruanganKunjungan.DESKRIPSI as RUANGAN',
+                'caraBayar.DESKRIPSI as CARABAYAR',
+                'tindakan.NAMA as TINDAKAN',
+                DB::raw('master.getNamaLengkapPegawai(pegawai.NIP) as DOKTER')
             ])
-            ->join('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->join('pendaftaran.tujuan_pasien as tujuanPasien', 'pendaftaran.NOMOR', '=', 'tujuanPasien.NOPEN')
-            ->join('pendaftaran.kunjungan as kunjungan', function ($join) {
-                $join->on('pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-                    ->on('tujuanPasien.RUANGAN', '=', 'kunjungan.RUANGAN');
+            ->leftJoin('master.tindakan as tindakan', 'tindakanMedis.TINDAKAN', '=', 'tindakan.ID')
+            ->leftJoin('layanan.petugas_tindakan_medis as petugas', function ($join) {
+                $join->on('tindakanMedis.ID', '=', 'petugas.TINDAKAN_MEDIS')
+                    ->where('petugas.JENIS', '=', 1)
+                    ->where('petugas.KE', '=', 1);
             })
+            ->leftJoin('master.dokter as dokter', 'petugas.MEDIS', '=', 'dokter.ID')
+            ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
+            ->join('pendaftaran.kunjungan as kunjungan', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->join('pendaftaran.pendaftaran as pendaftaran', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
             ->leftJoin('pendaftaran.penjamin as penjamin', 'pendaftaran.NOMOR', '=', 'penjamin.NOPEN')
-            ->leftJoin('master.referensi as referensi', function ($join) {
-                $join->on('penjamin.JENIS', '=', 'referensi.ID')
-                    ->where('referensi.JENIS', '=', 10);
+            ->leftJoin('master.referensi as caraBayar', function ($join) {
+                $join->on('penjamin.JENIS', '=', 'caraBayar.ID')
+                    ->where('caraBayar.JENIS', '=', 10);
             })
-            ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
-            ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->whereIn('pendaftaran.STATUS', [1, 2])
-            ->groupBy([
-                'pendaftaran.NOMOR',
-                'pasien.NORM',
-                'kunjungan.MASUK',
-                'kunjungan.KELUAR',
-                'referensi.DESKRIPSI',
-                'dokter.NIP',
-                'ruangan.DESKRIPSI',
-                'pendaftaran.TANGGAL',
-            ]);
+            ->leftJoin('master.ruangan as ruanganKunjungan', function ($join) {
+                $join->on('kunjungan.RUANGAN', '=', 'ruanganKunjungan.ID')
+                    ->where('ruanganKunjungan.JENIS', '=', 5);
+            })
+            ->leftJoin('master.referensi as jenisKunjungan', function ($join) {
+                $join->on('ruanganKunjungan.JENIS_KUNJUNGAN', '=', 'jenisKunjungan.ID')
+                    ->where('jenisKunjungan.JENIS', '=', 15);
+            })
+            ->join('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->whereIn('tindakanMedis.STATUS', [1, 2])
+            ->whereNotNull('kunjungan.RUANGAN')
+            ->whereNotNull('petugas.MEDIS');
 
         if ($ruangan) {
-            $query->where('tujuanPasien.RUANGAN', 'LIKE', $ruangan);
+            $query->where('kunjungan.RUANGAN', 'LIKE', $ruangan);
         }
 
         if ($caraBayar) {
             $query->where('penjamin.JENIS', '=', $caraBayar);
         }
 
-        if ($dokter) {
-            $query->where('tujuanPasien.DOKTER', '=', $dokter);
-        }
-
         // Filter berdasarkan tanggal
         $data = $query
-            ->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->whereBetween('tindakanMedis.TANGGAL', [$dariTanggal, $sampaiTanggal])
             ->orderBy('pendaftaran.TANGGAL')
             ->get();
 
-        return inertia("Laporan/PengunjungPerPasien/Print", [
+        return inertia("Laporan/TindakanPasien/Print", [
             'data' => $data,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,

@@ -7,7 +7,6 @@ import SelectTwoInput from "@/Components/Select/SelectTwoInput";
 export default function Cetak({
     ruangan,
     caraBayar,
-    dokter,
 }) {
 
     const { data, setData } = useForm({
@@ -42,14 +41,6 @@ export default function Cetak({
         }
     };
 
-    const onDokterChange = (selectedOption) => {
-        if (selectedOption && selectedOption.value) {
-            setData(prevData => ({ ...prevData, dokter: selectedOption.value }));
-        } else {
-            setData(prevData => ({ ...prevData, dokter: '' }));  // Atau handling sesuai kebutuhan
-        }
-    };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -57,7 +48,7 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("kunjunganPerPasien.print") + "?" + queryString, "_blank");
+        window.open(route("tindakanPasien.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -68,7 +59,7 @@ export default function Cetak({
                         onSubmit={onSubmit}
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
-                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Kunjungan Per Pasien</h1>
+                        <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">Cetak Laporan Tindakan Per Pasien</h1>
 
                         <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
@@ -99,21 +90,6 @@ export default function Cetak({
                                             label: item.DESKRIPSI,
                                         })) : []}
                                     onChange={onBayarChange}
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <InputLabel htmlFor="dokter" value="Dokter Penanggungjawab" />
-                                <SelectTwoInput
-                                    id="dokter"
-                                    name="dokter"
-                                    className="mt-1 block w-full"
-                                    placeholder="Pilih Dokter Penanggungjawab"
-                                    options={Array.isArray(dokter) ?
-                                        dokter.map((item) => ({
-                                            value: item.ID,
-                                            label: item.DOKTER,
-                                        })) : []}
-                                    onChange={onDokterChange}
                                 />
                             </div>
                         </div>

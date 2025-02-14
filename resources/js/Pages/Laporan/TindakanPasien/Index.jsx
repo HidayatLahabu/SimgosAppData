@@ -17,7 +17,6 @@ export default function TindakanPasien({
     dataTable,
     ruangan,
     caraBayar,
-    dokter,
     tglAwal,
     tglAkhir,
     queryParams = {},
@@ -137,7 +136,6 @@ export default function TindakanPasien({
                 <Cetak
                     caraBayar={caraBayar}
                     ruangan={ruangan}
-                    dokter={dokter}
                 />
             </div>
 
