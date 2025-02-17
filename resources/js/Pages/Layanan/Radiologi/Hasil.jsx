@@ -3,27 +3,21 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
-import ButtonDetail from "@/Components/Button/ButtonDetail";
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
-import TableCellMenu from "@/Components/Table/TableCellMenu";
 
-export default function Index({ auth, dataTable, header, totalCount, text, queryParams = {} }) {
+export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
-        { name: "TANGGAL", className: "w-[7%]" },
-        { name: "ID HASIL", className: "w-[6%]" },
-        { name: "KUNJUNGAN", className: "text-center w-[12%]" },
+        { name: "TANGGAL", className: "w-[8%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
-        { name: "TINDAKAN", className: "text-wrap" },
-        { name: "KLINIS", className: "text-wrap" },
-        { name: "KESAN", className: "text-wrap" },
-        { name: "USUL", className: "text-wrap" },
-        { name: "HASIL", className: "text-wrap" },
+        { name: "TINDAKAN", className: "w-[15%]" },
+        { name: "KESAN", className: "text-wrap w-[20%]" },
+        { name: "HASIL", className: "text-wrap w-[30%]" },
     ];
 
     // Function to handle search input changes
@@ -64,7 +58,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                     <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
-                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Hasil Radiologi {header} {totalCount} {text}</h1>
+                                <h1 className="uppercase text-center font-bold text-2xl pb-2">Data Hasil Radiologi</h1>
                                 <Table>
                                     <TableHeader>
                                         <tr>
@@ -73,7 +67,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TextInput
                                                         className="w-full"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan id hasil, kunjungan, NORM, atau nama pasien"
+                                                        placeholder="Cari data berdasarkan NORM atau nama pasien"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -95,14 +89,11 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.idHasil} isEven={index % 2 === 0}>
                                                     <TableCell>{data.tanggal}</TableCell>
-                                                    <TableCell>{data.idHasil}</TableCell>
-                                                    <TableCell>{data.kunjungan}</TableCell>
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.namaPasien}</TableCell>
                                                     <TableCell>{data.tindakan}</TableCell>
-                                                    <TableCell>{data.klinis}</TableCell>
                                                     <TableCell>{data.kesan}</TableCell>
-                                                    <TableCell>{data.usul}</TableCell>
+                                                    <TableCell>{data.hasil}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (

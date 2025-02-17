@@ -30,7 +30,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                     <thead className="text-[10px] font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid">KUNJUNGAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid">ID TINDAKAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[5%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">TANGGAL MASUK</th>

@@ -27,7 +27,8 @@ export default function NavigationRadiologi() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('layananRad.index');
+        return route().current('layananRad.index') ||
+            route().current('layananRad.hasil');
     };
 
     return (
@@ -37,7 +38,7 @@ export default function NavigationRadiologi() {
                 onClick={toggleDropdown}
                 active={isAnyDropdownLinkActive()}
             >
-                Layanan
+                Radiologi
             </NavLink>
             {isDropdownOpen && (
                 <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-48">
@@ -46,7 +47,14 @@ export default function NavigationRadiologi() {
                         active={route().current('layananRad.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Radiologi
+                        Data Order
+                    </NavLink>
+                    <NavLink
+                        href={route('layananRad.hasil')}
+                        active={route().current('layananRad.hasil')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Data Hasil
                     </NavLink>
                 </div>
             )}

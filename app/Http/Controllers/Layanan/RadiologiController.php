@@ -262,9 +262,7 @@ class RadiologiController extends Controller
         if ($searchSubject) {
             $query->where(function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(kunjungan.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(hasil.ID) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 

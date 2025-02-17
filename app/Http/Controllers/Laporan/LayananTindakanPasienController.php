@@ -139,7 +139,7 @@ class LayananTindakanPasienController extends Controller
 
         $query = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
             ->select([
-                'kunjungan.NOMOR as KUNJUNGAN',
+                'tindakanMedis.ID as KUNJUNGAN',
                 'pendaftaran.NORM as NORM',
                 DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA'),
                 DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLMASUK"),
@@ -173,9 +173,10 @@ class LayananTindakanPasienController extends Controller
                     ->where('jenisKunjungan.JENIS', '=', 15);
             })
             ->join('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
-            ->whereIn('tindakanMedis.STATUS', [1, 2])
+            ->where('tindakanMedis.STATUS', 1)
             ->whereNotNull('kunjungan.RUANGAN')
-            ->whereNotNull('petugas.MEDIS');
+            ->whereNotNull('petugas.MEDIS')
+            ->groupBy('tindakanMedis.ID', 'caraBayar.DESKRIPSI', 'pegawai.NIP');
 
         if ($ruangan) {
             $query->where('kunjungan.RUANGAN', 'LIKE', $ruangan);
