@@ -90,6 +90,7 @@ use App\Http\Controllers\Laporan\KunjunganPerPasienController;
 use App\Http\Controllers\Laporan\KunjunganPerUnitController;
 use App\Http\Controllers\Laporan\KunjunganRekapController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
+use App\Http\Controllers\Laporan\LayananTindakanRekapController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -587,6 +588,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('tindakanPasien', [LayananTindakanPasienController::class, 'index'])->name('tindakanPasien.index');
         Route::get('/tindakanPasien-print', [LayananTindakanPasienController::class, 'print'])->name('tindakanPasien.print');
+
+        Route::get('tindakanRekap', [LayananTindakanRekapController::class, 'index'])->name('tindakanRekap.index');
+        Route::get('/tindakanRekap-print', [LayananTindakanRekapController::class, 'print'])->name('tindakanRekap.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

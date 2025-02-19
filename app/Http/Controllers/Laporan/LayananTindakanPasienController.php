@@ -73,7 +73,7 @@ class LayananTindakanPasienController extends Controller
             });
         }
 
-        $data = $query->orderBy('tindakanMedis.TANGGAL')
+        $data = $query->orderByDesc('tindakanMedis.TANGGAL')
             ->paginate(5)
             ->appends(request()->query());
 
@@ -189,7 +189,7 @@ class LayananTindakanPasienController extends Controller
         // Filter berdasarkan tanggal
         $data = $query
             ->whereBetween('tindakanMedis.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->orderBy('pendaftaran.TANGGAL')
+            ->orderByDesc('pendaftaran.TANGGAL')
             ->get();
 
         return inertia("Laporan/TindakanPasien/Print", [

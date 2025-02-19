@@ -64,6 +64,7 @@ export default function NavigationLaporan() {
         { label: 'Kunjungan Per Unit', route: 'kunjunganPerUnit.index' },
         { label: 'Kunjungan Rekap', route: 'kunjunganRekap.index' },
         { label: 'Tindakan Per Pasien', route: 'tindakanPasien.index' },
+        { label: 'Tindakan Rekap', route: 'tindakanRekap.index' },
     ];
 
     // Sort the links alphabetically by label

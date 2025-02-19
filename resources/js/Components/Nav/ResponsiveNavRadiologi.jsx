@@ -29,7 +29,8 @@ export default function ResponsiveNavRadiologi() {
                 <div className="absolute left-0 mt-1 w-full rounded-md shadow-lg bg-white dark:bg-indigo-950 z-10">
                     <div className="rounded-md shadow-xs">
                         <div className="py-1">
-                            <ResponsiveNavLink href={route('layananRad.index')}>Radiologi</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('layananRad.index')}>Order Radiologi</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('layananRad.index')}>Hasil Radiologi</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>
