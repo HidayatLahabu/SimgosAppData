@@ -53,9 +53,10 @@ Kustomisasi:
     9. Untuk perhitungan BOR menggunakan jumlah tempat tidur berdasarkan keputusan pimpinan organisasi atau  
        yang digunakan untuk perhitungan, lakukan perubahan nilai TTIDUR untuk jumlah tahun ini dan 
        TTIDURLALU untuk jumlah tahun lalu, yaitu pada .env 
-   10. Untuk menampilkan Laporan Tindakan Laboratorium dan Radiologi, lakukan penyesuaian pada .env di
+    10. Untuk menampilkan Laporan Tindakan Laboratorium dan Radiologi, lakukan penyesuaian pada .env di
        parameter IDLAB dan IDRAD, sesuaikan dengan ID Laboratorium dan Radiologi pada database master
        table ruangan, untuk kolom JENIS = 3
+   
     
     perhatikan contoh dan catatan pada .env.example
     
