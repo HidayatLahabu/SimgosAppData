@@ -65,6 +65,8 @@ export default function NavigationLaporan() {
         { label: 'Kunjungan Rekap', route: 'kunjunganRekap.index' },
         { label: 'Tindakan Per Pasien', route: 'tindakanPasien.index' },
         { label: 'Tindakan Rekap', route: 'tindakanRekap.index' },
+        { label: 'Tindakan Laboratorium', route: 'tindakanLabGroup.index' },
+        { label: 'Tindakan Radiologi', route: 'tindakanRadGroup.index' },
     ];
 
     // Sort the links alphabetically by label

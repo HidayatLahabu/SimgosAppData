@@ -67,7 +67,7 @@ export default function KunjunganCaraBayar({
                                                     <TableCell className='text-center'>{formatRibuan(data.PEREMPUAN) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.BARU) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.LAMA) || 0}</TableCell>
-                                                    <TableCell className='text-center'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
+                                                    <TableCell className='text-center text-yellow-500'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
@@ -86,7 +86,7 @@ export default function KunjunganCaraBayar({
                                             <TableFooterCell className='text-center'>{formatRibuan(total.PEREMPUAN) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.BARU) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.LAMA) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center text-yellow-500'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
                                         </TableRow>
                                     </TableFooter>
                                 </Table>

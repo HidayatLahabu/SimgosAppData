@@ -72,7 +72,7 @@ export default function PengunjungRekap({
                                                     <TableCell className='text-center'>{formatRibuan(data.INHEALT) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.JKD) || 0}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.IKS) || 0}</TableCell>
-                                                    <TableCell className='text-center'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
+                                                    <TableCell className='text-center text-yellow-500'>{formatRibuan(data.JUMLAH) || 0}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
@@ -93,7 +93,7 @@ export default function PengunjungRekap({
                                             <TableFooterCell className='text-center'>{formatRibuan(total.INHEALTH) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.JKD) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.IKS) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center text-yellow-500'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
                                         </TableRow>
                                     </TableFooter>
                                 </Table>

@@ -89,7 +89,9 @@ use App\Http\Controllers\Laporan\KunjunganPerHariController;
 use App\Http\Controllers\Laporan\KunjunganPerPasienController;
 use App\Http\Controllers\Laporan\KunjunganPerUnitController;
 use App\Http\Controllers\Laporan\KunjunganRekapController;
+use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
+use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRekapController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
@@ -591,6 +593,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('tindakanRekap', [LayananTindakanRekapController::class, 'index'])->name('tindakanRekap.index');
         Route::get('/tindakanRekap-print', [LayananTindakanRekapController::class, 'print'])->name('tindakanRekap.print');
+
+        Route::get('tindakanLabGroup', [LayananTindakanLabGroupController::class, 'index'])->name('tindakanLabGroup.index');
+        Route::get('/tindakanLabGroup-print', [LayananTindakanLabGroupController::class, 'print'])->name('tindakanLabGroup.print');
+
+        Route::get('tindakanRadGroup', [LayananTindakanRadGroupController::class, 'index'])->name('tindakanRadGroup.index');
+        Route::get('/tindakanRadGroup-print', [LayananTindakanRadGroupController::class, 'print'])->name('tindakanRadGroup.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

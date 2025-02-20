@@ -327,7 +327,6 @@ class LaporanRl12Controller extends Controller
         return $result; // Pastikan mengembalikan $result, bukan $data
     }
 
-
     public function print(Request $request)
     {
         // Validasi input

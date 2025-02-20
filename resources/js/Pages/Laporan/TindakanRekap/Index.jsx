@@ -12,7 +12,7 @@ import TableFooterCell from "@/Components/Table/TableFooterCell";
 import { formatDate } from '@/utils/formatDate';
 import { formatRibuan } from '@/utils/formatRibuan';
 
-export default function KunjunganCaraBayar({
+export default function TindakanRekap({
     auth,
     dataTable,
     ruangan,
@@ -68,7 +68,7 @@ export default function KunjunganCaraBayar({
                                                     <TableCell className='text-center'>{formatRibuan(data.RJ)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.RD)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.RI)}</TableCell>
-                                                    <TableCell className='text-center'>{formatRibuan(data.JUMLAH)}</TableCell>
+                                                    <TableCell className='text-center text-yellow-500'>{formatRibuan(data.JUMLAH)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.UMUM)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.BPJS)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.IKS)}</TableCell>
@@ -89,7 +89,7 @@ export default function KunjunganCaraBayar({
                                             <TableFooterCell className='text-center'>{formatRibuan(total.RJ) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.RD) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.RI) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center text-yellow-500'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.UMUM) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.BPJS) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.IKS) || 0}</TableFooterCell>

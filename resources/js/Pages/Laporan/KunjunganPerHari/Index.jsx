@@ -72,7 +72,7 @@ export default function KunjunganPerHari({
                                                     <TableCell className='text-center'>{data.INHEALT || 0}</TableCell>
                                                     <TableCell className='text-center'>{data.JKD || 0}</TableCell>
                                                     <TableCell className='text-center'>{data.IKS || 0}</TableCell>
-                                                    <TableCell className='text-center'>{data.JUMLAH || 0}</TableCell>
+                                                    <TableCell className='text-center text-yellow-500'>{data.JUMLAH || 0}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (

@@ -94,7 +94,7 @@ export default function KunjunganPerUnit({
                                                 <TableCell className="text-center">
                                                     {formatRibuan(item.IKS)}
                                                 </TableCell>
-                                                <TableCell className="text-center">
+                                                <TableCell className="text-center text-yellow-500">
                                                     {formatRibuan(item.JUMLAH)}
                                                 </TableCell>
                                             </TableRow>
@@ -119,7 +119,7 @@ export default function KunjunganPerUnit({
                                             <TableFooterCell className='text-center'>{formatRibuan(total.INHEALT) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.JKD) || 0}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.IKS) || 0}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
+                                            <TableFooterCell className='text-center text-yellow-500'>{formatRibuan(total.JUMLAH) || 0}</TableFooterCell>
                                         </TableRow>
                                     </TableFooter>
                                 </Table>
