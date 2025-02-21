@@ -179,10 +179,8 @@ class WaktuTungguRegistrasiController extends Controller
         // Ambil nilai input
         $ruangan  = $request->input('ruangan');
         $dokter = $request->input('dokter');
-        $dariTanggal    = $request->input('dari_tanggal');
-        $sampaiTanggal  = $request->input('sampai_tanggal');
-        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
-        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+        $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->toDateTimeString();
+        $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->toDateTimeString();
 
         // Variable default untuk label
         $namaRuangan = 'Semua Ruangan';

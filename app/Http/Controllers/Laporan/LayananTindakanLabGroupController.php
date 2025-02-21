@@ -30,6 +30,11 @@ class LayananTindakanLabGroupController extends Controller
             );
         }));
 
+        // Urutkan hasil berdasarkan LAYANAN secara ascending
+        usort($filteredData, function ($a, $b) {
+            return strcmp($a->LAYANAN, $b->LAYANAN);
+        });
+
         // Inisialisasi variabel untuk menyimpan total
         $total = [
             'UMUM' => 0,
@@ -82,6 +87,11 @@ class LayananTindakanLabGroupController extends Controller
                 (!is_null($row->TOTALTAGIHAN) && $row->TOTALTAGIHAN !== 0)
             );
         }));
+
+        // Urutkan hasil berdasarkan LAYANAN secara ascending
+        usort($filteredData, function ($a, $b) {
+            return strcmp($a->LAYANAN, $b->LAYANAN);
+        });
 
         // Inisialisasi variabel untuk menyimpan total
         $total = [

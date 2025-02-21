@@ -126,10 +126,8 @@ class PengunjungPerPasienController extends Controller
         $ruangan  = $request->input('ruangan');
         $caraBayar = $request->input('caraBayar');
         $dokter = $request->input('dokter');
-        $dariTanggal    = $request->input('dari_tanggal');
-        $sampaiTanggal  = $request->input('sampai_tanggal');
-        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
-        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+        $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->toDateTimeString();
+        $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->toDateTimeString();
 
         $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
             ->select([

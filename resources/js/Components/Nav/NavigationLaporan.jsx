@@ -67,6 +67,8 @@ export default function NavigationLaporan() {
         { label: 'Tindakan Rekap', route: 'tindakanRekap.index' },
         { label: 'Tindakan Laboratorium', route: 'tindakanLabGroup.index' },
         { label: 'Tindakan Radiologi', route: 'tindakanRadGroup.index' },
+        { label: 'Tindakan Respond Time', route: 'tindakanRespondTime.index' },
+
     ];
 
     // Sort the links alphabetically by label

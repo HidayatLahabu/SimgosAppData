@@ -49,6 +49,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('tindakanRekap.index')}>Tindakan Rekap</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanLabGroup.index')}>Tindakan Laboratorium</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanRadGroup.index')}>Tindakan Radiologi</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('tindakanRespondTime.index')}>Tindakan Respond Time</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

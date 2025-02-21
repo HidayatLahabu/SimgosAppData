@@ -93,6 +93,7 @@ use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRekapController;
+use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -599,6 +600,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('tindakanRadGroup', [LayananTindakanRadGroupController::class, 'index'])->name('tindakanRadGroup.index');
         Route::get('/tindakanRadGroup-print', [LayananTindakanRadGroupController::class, 'print'])->name('tindakanRadGroup.print');
+
+        Route::get('tindakanRespondTime', [LayananTindakanRespondTimeController::class, 'index'])->name('tindakanRespondTime.index');
+        Route::get('/tindakanRespondTime-print', [LayananTindakanRespondTimeController::class, 'print'])->name('tindakanRespondTime.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

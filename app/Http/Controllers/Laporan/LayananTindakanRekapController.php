@@ -45,6 +45,7 @@ class LayananTindakanRekapController extends Controller
             ->whereBetween('tindakanMedis.TANGGAL', [$tgl_awal, $tgl_akhir])
             ->where('kunjungan.RUANGAN', 'LIKE', '%')
             ->groupBy('tindakanMedis.TINDAKAN', 'ruangan.DESKRIPSI')
+            ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('tindakan.NAMA')
             ->get();
 
@@ -102,8 +103,8 @@ class LayananTindakanRekapController extends Controller
         // Ambil nilai input
         $ruangan  = $request->input('ruangan');
         $caraBayar = $request->input('caraBayar');
-        $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->startOfDay()->format('Y-m-d H:i:s');
-        $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->format('Y-m-d H:i:s');
+        $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->toDateTimeString();
+        $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->toDateTimeString();
 
         $query = DB::connection('mysql7')->table('layanan.tindakan_medis as tindakanMedis')
             ->select([
@@ -144,6 +145,7 @@ class LayananTindakanRekapController extends Controller
         // Filter berdasarkan tanggal
         $data = $query
             ->whereBetween('tindakanMedis.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('ruangan.DESKRIPSI')
             ->orderBy('tindakan.NAMA')
             ->get();
 
