@@ -9,10 +9,16 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\MasterReferensiModel;
 
-class PengunjungPerPasienController extends Controller
+class PasienMasukController extends Controller
 {
     public function index()
     {
+        // Tanggal awal tahun
+        $tgl_awal = Carbon::now()->startOfYear()->format('Y-m-d 00:00:00');
+
+        // Tanggal hari ini
+        $tgl_akhir = Carbon::now()->endOfDay()->format('Y-m-d 23:59:59');
+
         $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         $query = DB::connection('mysql2')->table('pendaftaran.pendaftaran as pendaftaran')
@@ -22,6 +28,7 @@ class PengunjungPerPasienController extends Controller
                 DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_LENGKAP'),
                 DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLMASUK"),
+                DB::raw("CONCAT(DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), '%H:%i:%s')) as SELISIH"),
                 'referensi.DESKRIPSI as CARABAYAR',
                 DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG'),
                 'ruangan.DESKRIPSI as UNITPELAYANAN',
@@ -40,7 +47,7 @@ class PengunjungPerPasienController extends Controller
             })
             ->leftJoin('master.dokter as dokter', 'tujuanPasien.DOKTER', '=', 'dokter.ID')
             ->leftJoin('master.ruangan as ruangan', 'tujuanPasien.RUANGAN', '=', 'ruangan.ID')
-            ->whereDate('pendaftaran.TANGGAL', '=', DB::raw('CURRENT_DATE'))
+            ->whereBetween('pendaftaran.TANGGAL', [$tgl_awal, $tgl_akhir])
             ->whereIn('pendaftaran.STATUS', [1, 2])
             ->groupBy([
                 'pendaftaran.NOMOR',
@@ -58,9 +65,6 @@ class PengunjungPerPasienController extends Controller
                 $q->whereRaw('LOWER(master.getNamaLengkap(pasien.NORM)) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(ruangan.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(pendaftaran.NORM) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pendaftaran.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(master.getNamaLengkapPegawai(dokter.NIP)) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(IF(DATE_FORMAT(pasien.TANGGAL, "%d-%m-%Y") = DATE_FORMAT(pendaftaran.TANGGAL, "%d-%m-%Y"), "Baru", "Lama")) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
@@ -78,37 +82,15 @@ class PengunjungPerPasienController extends Controller
             ->orderBy('ID')
             ->get();
 
-        $dokter = DB::connection('mysql2')->table('master.dokter as dokter')
-            ->select([
-                'dokter.ID',
-                'dokter.NIP',
-                DB::raw('CONCAT(
-                    IFNULL(pegawai.GELAR_DEPAN, ""), " ",
-                    pegawai.NAMA, " ",
-                    IFNULL(pegawai.GELAR_BELAKANG, "")
-                ) as DOKTER'),
-                'ruangan.DESKRIPSI as RUANGAN',
-            ])
-            ->leftJoin('master.pegawai as pegawai', 'dokter.NIP', '=', 'pegawai.NIP')
-            ->leftJoin('master.dokter_ruangan as dpjpRuangan', 'dokter.ID', '=', 'dpjpRuangan.DOKTER')
-            ->leftJoin('master.ruangan as ruangan', 'dpjpRuangan.RUANGAN', '=', 'ruangan.ID')
-            ->where('dokter.STATUS', 1)
-            ->whereNotNull('pegawai.NAMA')
-            ->where('ruangan.JENIS_KUNJUNGAN', 1)
-            ->where('ruangan.STATUS', 1)
-            ->where('ruangan.JENIS', 5)
-            ->where('ruangan.DESKRIPSI', 'NOT LIKE', '%Umum%')
-            ->orderBy('pegawai.NAMA')
-            ->get();
-
-        return inertia('Laporan/PengunjungPerPasien/Index', [
+        return inertia('Laporan/PasienMasuk/Index', [
             'ruangan' => $ruangan,
             'caraBayar' => $caraBayar,
-            'dokter' =>  $dokter,
             'dataTable' => [
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
+            'tglAwal' => $tgl_awal,
+            'tglAkhir' => $tgl_akhir,
             'queryParams' => request()->all(),
         ]);
     }
@@ -126,7 +108,6 @@ class PengunjungPerPasienController extends Controller
         // Ambil nilai input
         $ruangan  = $request->input('ruangan');
         $caraBayar = $request->input('caraBayar');
-        $dokter = $request->input('dokter');
         $dariTanggal = Carbon::parse($request->input('dari_tanggal'))->toDateTimeString();
         $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->toDateTimeString();
 
@@ -137,6 +118,7 @@ class PengunjungPerPasienController extends Controller
                 DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_LENGKAP'),
                 DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLMASUK"),
+                DB::raw("CONCAT(DATEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), ' hari ', DATE_FORMAT(TIMEDIFF(kunjungan.MASUK, pendaftaran.TANGGAL), '%H:%i:%s')) as SELISIH"),
                 'referensi.DESKRIPSI as CARABAYAR',
                 DB::raw('master.getNamaLengkapPegawai(dokter.NIP) as DOKTER_REG'),
                 'ruangan.DESKRIPSI as UNITPELAYANAN',
@@ -175,17 +157,13 @@ class PengunjungPerPasienController extends Controller
             $query->where('penjamin.JENIS', '=', $caraBayar);
         }
 
-        if ($dokter) {
-            $query->where('tujuanPasien.DOKTER', '=', $dokter);
-        }
-
         // Filter berdasarkan tanggal
         $data = $query
             ->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
             ->orderBy('pendaftaran.TANGGAL')
             ->get();
 
-        return inertia("Laporan/PengunjungPerPasien/Print", [
+        return inertia("Laporan/PasienMasuk/Print", [
             'data' => $data,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,

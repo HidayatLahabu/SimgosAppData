@@ -94,6 +94,8 @@ use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRekapController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
+use App\Http\Controllers\Laporan\PasienKeluarController;
+use App\Http\Controllers\Laporan\PasienMasukController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -603,6 +605,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('tindakanRespondTime', [LayananTindakanRespondTimeController::class, 'index'])->name('tindakanRespondTime.index');
         Route::get('/tindakanRespondTime-print', [LayananTindakanRespondTimeController::class, 'print'])->name('tindakanRespondTime.print');
+
+        Route::get('kegiatanPasienMasuk', [PasienMasukController::class, 'index'])->name('kegiatanPasienMasuk.index');
+        Route::get('/kegiatanPasienMasuk-print', [PasienMasukController::class, 'print'])->name('kegiatanPasienMasuk.print');
+
+        Route::get('kegiatanPasienKeluar', [PasienKeluarController::class, 'index'])->name('kegiatanPasienKeluar.index');
+        Route::get('/kegiatanPasienKeluar-print', [PasienKeluarController::class, 'print'])->name('kegiatanPasienKeluar.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

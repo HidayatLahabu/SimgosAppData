@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Laporan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MasterRuanganModel;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -20,22 +19,6 @@ class LayananTindakanRespondTimeController extends Controller
 
         // Panggil prosedur yang telah dibuat
         $data = DB::connection('mysql10')->select('CALL laporan.LaporanResponTime(?, ?, ?, ?, ?, ?)', [$tgl_awal, $tgl_akhir, '%', 0, 0, 0]);
-
-        // // Filter data seperti sebelumnya
-        // $filteredData = array_values(array_filter($data, function ($row) {
-        //     return (
-        //         (!is_null($row->NORM) && $row->NORM !== '') ||
-        //         (!is_null($row->NAMALENGKAP) && $row->NAMALENGKAP !== '') ||
-        //         (!is_null($row->RUANGAN) && $row->RUANGAN !== '') ||
-        //         (!is_null($row->NAMATINDAKAN) && $row->NAMATINDAKAN !== '') ||
-        //         (!is_null($row->TGL_ORDER) && $row->TGL_ORDER !== '') ||
-        //         (!is_null($row->TGL_TERIMA) && $row->TGL_TERIMA !== '') ||
-        //         (!is_null($row->TGL_HASIL) && $row->TGL_HASIL !== '') ||
-        //         (!is_null($row->SELISIH1) && $row->SELISIH1 !== '') ||
-        //         (!is_null($row->SELISIH2) && $row->SELISIH2 !== '') ||
-        //         (!is_null($row->SELISIH3) && $row->SELISIH3 !== '')
-        //     );
-        // }));
 
         // Filter data sesuai dengan kondisi pencarian dan tetap mempertahankan data yang tidak kosong
         $filteredData = array_values(array_filter($data, function ($row) use ($search) {

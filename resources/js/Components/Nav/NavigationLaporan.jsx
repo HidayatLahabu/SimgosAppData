@@ -68,7 +68,8 @@ export default function NavigationLaporan() {
         { label: 'Tindakan Laboratorium', route: 'tindakanLabGroup.index' },
         { label: 'Tindakan Radiologi', route: 'tindakanRadGroup.index' },
         { label: 'Tindakan Respond Time', route: 'tindakanRespondTime.index' },
-
+        { label: 'Kegiatan Pasien Masuk', route: 'kegiatanPasienMasuk.index' },
+        { label: 'Kegiatan Pasien Keluar', route: 'kegiatanPasienKeluar.index' },
     ];
 
     // Sort the links alphabetically by label
