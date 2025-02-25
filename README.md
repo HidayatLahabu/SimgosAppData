@@ -60,11 +60,14 @@ Kustomisasi:
     
     perhatikan contoh dan catatan pada .env.example
     
-    11. Untuk akses khusus pengguna manajemen, dapat di buat user yang mengandung kata Manajemen, maka hanya
+    11. Untuk akses khusus pengguna manajemen, dapat dibuat user yang mengandung kata Manajemen, maka hanya
         akan menampilkan menu Beranda, Satusehat Sinkronisasi, Laporan dan Informasi saja
-    12. Untuk petugas loket pendaftaran yang membutuhkan menu jadwal kontrol dan konsul, dapat di buat user 
+    12. Untuk petugas loket pendaftaran yang membutuhkan menu jadwal kontrol dan konsul, dapat dibuat user 
         yang mengandung kata Pendaftaran, maka akan hanya tampil menu Beranda dan Kunjungan
-
+    13. Untuk petugas ata pegawai Laboratorium, yang hanya akan mengakses menu terkait saja, dapat dibuat 
+        user yang mengandung kata Laboratorium
+    14. Untuk petugas atau pegawai Radiologi, yang hanya akan mengakses menu terkait saja, dapat dibuat user  
+        yang mengandung kata Radiologi
 
 Memperbarui Aplikasi:
 
