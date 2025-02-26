@@ -33,9 +33,7 @@ export default function Print({
                                     <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 border border-gray-500">
                                         <thead className="uppercase font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                             <tr>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">KODE RS</th>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid">NAMA RUMAH SAKIT</th>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[14%]">CARA BAYAR</th>
+                                                <th className="px-3 py-2 border border-gray-500 border-solid">CARA BAYAR</th>
                                                 <th className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid w-[14%]">PASIEN RAWAT JALAN</th>
                                                 <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">PASIEN RAWAT INAP</th>
                                                 <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">PASIEN RAWAT JALAN LABORATORIUM</th>
@@ -47,12 +45,6 @@ export default function Print({
                                         <tbody>
                                             {data.map((item, index) => (
                                                 <tr key={item.KODERS} className="border-b bg-white dark:border-gray-500">
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.KODERS}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.NAMAINST}
-                                                    </td>
                                                     <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
                                                         {item.DESKRIPSI}
                                                     </td>

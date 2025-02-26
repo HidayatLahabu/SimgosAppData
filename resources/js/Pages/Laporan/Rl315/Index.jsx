@@ -18,8 +18,6 @@ export default function LaporanRl315({
 }) {
 
     const headers = [
-        { name: "KODE RS", className: "w-[7%]" },
-        { name: "NAMA RUMAH SAKIT" },
         { name: "CARA PEMBAYARAN" },
         { name: "PASIEN RAWAT JALAN", className: "text-wrap text-center w-[13%]" },
         { name: "PASIEN RAWAT INAP", className: "text-wrap text-center w-[13%]" },
@@ -58,8 +56,7 @@ export default function LaporanRl315({
                                     <tbody>
                                         {data.map((item, index) => (
                                             <TableRow key={`${item.KODERS}-${index}`} isEven={index % 2 === 0}>
-                                                <TableCell>{item.KODERS}</TableCell>
-                                                <TableCell>{item.NAMAINST}</TableCell>
+
                                                 <TableCell className='uppercase'>{item.DESKRIPSI}</TableCell>
                                                 <TableCell className="text-center">
                                                     {formatRibuan(item.RJ)}

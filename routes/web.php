@@ -98,6 +98,7 @@ use App\Http\Controllers\Laporan\PasienKeluarController;
 use App\Http\Controllers\Laporan\PasienKeluarDaruratController;
 use App\Http\Controllers\Laporan\PasienKeluarRanapController;
 use App\Http\Controllers\Laporan\PasienMasukController;
+use App\Http\Controllers\Laporan\PasienMeninggalController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungRekapController;
@@ -616,6 +617,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kegiatanPasienKeluarDarurat', [PasienKeluarDaruratController::class, 'index'])->name('kegiatanPasienKeluarDarurat.index');
         Route::get('/kegiatanPasienKeluarDarurat-print', [PasienKeluarDaruratController::class, 'print'])->name('kegiatanPasienKeluarDarurat.print');
+
+        Route::get('kegiatanPasienMeninggal', [PasienMeninggalController::class, 'index'])->name('kegiatanPasienMeninggal.index');
+        Route::get('/kegiatanPasienMeninggal-print', [PasienMeninggalController::class, 'print'])->name('kegiatanPasienMeninggal.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

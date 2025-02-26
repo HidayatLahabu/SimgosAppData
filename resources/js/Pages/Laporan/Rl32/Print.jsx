@@ -33,28 +33,20 @@ export default function Print({
                                     <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 border border-gray-500">
                                         <thead className="uppercase font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                             <tr>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">KODE RS</th>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid">NAMA RUMAH SAKIT</th>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[14%]">JENIS PELAYANAN</th>
-                                                <th className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid w-[14%]">TOTAL PASIEN RUJUKAN</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TOTAL PASIEN NON RUJUKAN</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN DIRAWAT</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN DIRUJUK</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">TINDAK LANJUT PELAYANAN PULANG</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">MENINGGAL DI IGD</th>
-                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[13%]">DOA</th>
+                                                <th className="px-3 py-2 border border-gray-500 border-solid">JENIS PELAYANAN</th>
+                                                <th className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid w-[10%]">TOTAL PASIEN RUJUKAN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">TOTAL PASIEN NON RUJUKAN</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">TINDAK LANJUT PELAYANAN DIRAWAT</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">TINDAK LANJUT PELAYANAN DIRUJUK</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">TINDAK LANJUT PELAYANAN PULANG</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">MENINGGAL DI IGD</th>
+                                                <th className="px-3 py-2 border text-wrap text-center border-gray-500 border-solid w-[10%]">DOA</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
                                             {data.map((item, index) => (
                                                 <tr key={item.KODERS} className="border-b bg-white dark:border-gray-500">
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.KODERS}
-                                                    </td>
-                                                    <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.NAMAINST}
-                                                    </td>
                                                     <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
                                                         {item.DESKRIPSI}
                                                     </td>

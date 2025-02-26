@@ -71,6 +71,7 @@ export default function NavigationLaporan() {
         { label: 'Pasien Masuk', route: 'kegiatanPasienMasuk.index' },
         { label: 'Pasien Keluar Ranap', route: 'kegiatanPasienKeluarRanap.index' },
         { label: 'Pasien Keluar Darurat', route: 'kegiatanPasienKeluarDarurat.index' },
+        { label: 'Pasien Meninggal', route: 'kegiatanPasienMeninggal.index' },
     ];
 
     // Sort the links alphabetically by label

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MasterReferensiModel;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class PasienKeluarDaruratController extends Controller
+class PasienMeninggalController extends Controller
 {
     public function index()
     {
@@ -19,7 +19,7 @@ class PasienKeluarDaruratController extends Controller
         $search = request('search') ? strtolower(request('search')) : null;
 
         // Panggil prosedur yang telah dibuat
-        $data = DB::connection('mysql10')->select('CALL laporan.LaporanPasienKeluar(?, ?, ?, ?, ?, ?)', [$tgl_awal, $tgl_akhir, 0, '%', 2, 0]);
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanPasienMeninggal(?, ?, ?, ?, ?, ?)', [$tgl_awal, $tgl_akhir, 0, '%', 3, 0]);
 
         // Filter data sesuai dengan kondisi pencarian dan tetap mempertahankan data yang tidak kosong
         $filteredData = array_values(array_filter($data, function ($row) use ($search) {
@@ -29,10 +29,10 @@ class PasienKeluarDaruratController extends Controller
                 (!is_null($row->CARABAYAR) && $row->CARABAYAR !== '') ||
                 (!is_null($row->NOPEN) && $row->NOPEN !== '') ||
                 (!is_null($row->TGLMASUK) && $row->TGLMASUK !== '') ||
-                (!is_null($row->TGLKELUAR) && $row->TGL_KELUAR !== '') ||
-                (!is_null($row->UNIT1) && $row->UNIT1 !== '') ||
+                (!is_null($row->TGLMENINGGAL) && $row->TGLMENINGGAL !== '') ||
+                (!is_null($row->UNIT) && $row->UNIT !== '') ||
                 (!is_null($row->CARAKELUAR) && $row->CARAKELUAR !== '') ||
-                (!is_null($row->TARIFRS) && $row->TARIFRS !== '')
+                (!is_null($row->KEADAANKELUAR) && $row->KEADAANKELUAR !== '')
             );
 
             if (!$search) {
@@ -43,7 +43,7 @@ class PasienKeluarDaruratController extends Controller
                 (isset($row->NORM) && stripos($row->NORM, $search) !== false) ||
                 (isset($row->NAMALENGKAP) && stripos($row->NAMALENGKAP, $search) !== false) ||
                 (isset($row->UNIT1) && stripos($row->UNIT1, $search) !== false) ||
-                (isset($row->CARAKELUAR) && stripos($row->CARAKELUAR, $search) !== false)
+                (isset($row->KEADAANKELUAR) && stripos($row->KEADAANKELUAR, $search) !== false)
             );
 
             return $matchesSearch && $hasValue;
@@ -76,7 +76,7 @@ class PasienKeluarDaruratController extends Controller
             ->orderBy('ID')
             ->get();
 
-        return inertia("Laporan/PasienKeluarDarurat/Index", [
+        return inertia("Laporan/PasienMeninggal/Index", [
             'dataTable' => $paginatedData,
             'tglAwal' => $tgl_awal,
             'tglAkhir' => $tgl_akhir,
@@ -102,7 +102,7 @@ class PasienKeluarDaruratController extends Controller
         $sampaiTanggal = Carbon::parse($request->input('sampai_tanggal'))->endOfDay()->toDateTimeString();
 
         // Panggil prosedur yang telah dibuat
-        $data = DB::connection('mysql10')->select('CALL laporan.LaporanPasienKeluar(?, ?, ?, ?, ?, ?)', [$dariTanggal, $sampaiTanggal, 0, $ruangan, 2, $caraBayar]);
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanPasienMeninggal(?, ?, ?, ?, ?, ?)', [$dariTanggal, $sampaiTanggal, 0, $ruangan, 3, $caraBayar]);
 
         // Filter data seperti sebelumnya
         $filteredData = array_values(array_filter($data, function ($row) {
@@ -112,11 +112,10 @@ class PasienKeluarDaruratController extends Controller
                 (!is_null($row->CARABAYAR) && $row->CARABAYAR !== '') ||
                 (!is_null($row->NOPEN) && $row->NOPEN !== '') ||
                 (!is_null($row->TGLMASUK) && $row->TGLMASUK !== '') ||
-                (!is_null($row->TGLKELUAR) && $row->TGL_KELUAR !== '') ||
-                (!is_null($row->UNIT1) && $row->UNIT1 !== '') ||
+                (!is_null($row->TGLMENINGGAL) && $row->TGLMENINGGAL !== '') ||
+                (!is_null($row->UNIT) && $row->UNIT !== '') ||
                 (!is_null($row->CARAKELUAR) && $row->CARAKELUAR !== '') ||
-                (!is_null($row->TARIFRS) && $row->TARIFRS !== 0) ||
-                (!is_null($row->STATUS_GROUPING) && $row->STATUS_GROUPING !== '')
+                (!is_null($row->KEADAANKELUAR) && $row->KEADAANKELUAR !== '')
             );
         }));
 
@@ -125,7 +124,7 @@ class PasienKeluarDaruratController extends Controller
             return strcmp($a->TGLMASUK, $b->TGLMASUK);
         });
 
-        return inertia("Laporan/PasienKeluarDarurat/Print", [
+        return inertia("Laporan/PasienMeninggal/Print", [
             'data' => $filteredData,
             'dariTanggal' => $dariTanggal,
             'sampaiTanggal' => $sampaiTanggal,

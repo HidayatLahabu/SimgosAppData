@@ -44,7 +44,7 @@ export default function PasienKeluar({
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('kegiatanPasienKeluarRanap.index'), updatedParams, {
+        router.get(route('kegiatanPasienKeluarDarurat.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -71,7 +71,7 @@ export default function PasienKeluar({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN KEGIATAN PASIEN KELUAR RAWAT INAP
+                            LAPORAN KEGIATAN PASIEN KELUAR RAWAT DARURAT
                         </h1>
                         <p className="text-center text-gray-100 pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}

@@ -17,12 +17,13 @@ export default function Cetak({
     useEffect(() => {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        const firstDayOfYear = `${currentYear}-01-01`;
+        const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const firstDayOfMonth = `${currentYear}-${currentMonth}-01`;
         const formattedCurrentDate = currentDate.toISOString().split("T")[0];
 
         setData(prevData => ({
             ...prevData,
-            dari_tanggal: firstDayOfYear,
+            dari_tanggal: firstDayOfMonth,
             sampai_tanggal: formattedCurrentDate
         }));
     }, []);
@@ -50,7 +51,7 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("kunjunganPerUnit.print") + "?" + queryString, "_blank");
+        window.open(route("kegiatanPasienKeluarDarurat.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -62,7 +63,7 @@ export default function Cetak({
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">
-                            Cetak Laporan Kunjungan Per Unit
+                            Cetak Laporan Kegiatan Pasien Keluar Ranap Darurat
                         </h1>
 
                         <div className="mt-4 flex space-x-4">

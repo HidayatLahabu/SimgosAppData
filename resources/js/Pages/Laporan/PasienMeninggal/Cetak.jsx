@@ -50,7 +50,7 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("kunjunganPerUnit.print") + "?" + queryString, "_blank");
+        window.open(route("kegiatanPasienMeninggal.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -62,7 +62,7 @@ export default function Cetak({
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">
-                            Cetak Laporan Kunjungan Per Unit
+                            Cetak Laporan Kegiatan Pasien Meninggal
                         </h1>
 
                         <div className="mt-4 flex space-x-4">

@@ -18,16 +18,14 @@ export default function LaporanRl32({
 }) {
 
     const headers = [
-        { name: "KODE RS", className: "w-[7%]" },
-        { name: "NAMA RUMAH SAKIT" },
-        { name: "JENIS PELAYANAN", className: "w-[14%]" },
-        { name: "TOTAL PASIEN RUJUKAN", className: "text-wrap text-center w-[14%]" },
-        { name: "TOTAL PASIEN NON RUJUKAN", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN DIRAWAT", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN DIRUJUK", className: "text-wrap text-center w-[13%]" },
-        { name: "TINDAK LANJUT PELAYANAN PULANG", className: "text-wrap text-center w-[13%]" },
-        { name: "MENINGGAL DI IGD", className: "text-wrap text-center w-[13%]" },
-        { name: "DOA", className: "text-wrap text-center w-[13%]" },
+        { name: "JENIS PELAYANAN" },
+        { name: "TOTAL PASIEN RUJUKAN", className: "text-wrap text-center w-[10%]" },
+        { name: "TOTAL PASIEN NON RUJUKAN", className: "text-wrap text-center w-[10%]" },
+        { name: "TINDAK LANJUT PELAYANAN DIRAWAT", className: "text-wrap text-center w-[10%]" },
+        { name: "TINDAK LANJUT PELAYANAN DIRUJUK", className: "text-wrap text-center w-[10%]" },
+        { name: "TINDAK LANJUT PELAYANAN PULANG", className: "text-wrap text-center w-[10%]" },
+        { name: "MENINGGAL DI IGD", className: "text-wrap text-center w-[10%]" },
+        { name: "DOA", className: "text-wrap text-center w-[10%]" },
     ];
 
     return (
@@ -60,8 +58,6 @@ export default function LaporanRl32({
                                     <tbody>
                                         {data.map((item, index) => (
                                             <TableRow key={`${item.KODERS}-${index}`} isEven={index % 2 === 0}>
-                                                <TableCell>{item.KODERS}</TableCell>
-                                                <TableCell>{item.NAMAINST}</TableCell>
                                                 <TableCell className='uppercase'>{item.DESKRIPSI}</TableCell>
                                                 <TableCell className="text-center">
                                                     {formatRibuan(item.RUJUKAN)}

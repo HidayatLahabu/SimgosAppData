@@ -37,7 +37,7 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">BPJS</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">IKS</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">FREKUENSI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">TAGIHAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">TAGIHAN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,7 +74,7 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BPJS) || 0}</td>
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.IKS) || 0}</td>
                                             <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.FREKUENSI) || 0}</td>
-                                            <td className="px-2 py-2 text-right border border-gray-500 border-solid">{formatRibuan(total.TOTALTAGIHAN) || 0}</td>
+                                            <td className="px-2 py-2 text-right border border-gray-500 border-solid">{formatNumber(total.TOTALTAGIHAN) || 0}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

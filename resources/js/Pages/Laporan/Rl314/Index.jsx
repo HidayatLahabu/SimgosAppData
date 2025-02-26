@@ -19,15 +19,15 @@ export default function LaporanRl314({
 
     const headers = [
         { name: "JENIS SPESIALISASI", className: "w-[16%]" },
-        { name: "RUJUKAN DITERIMA DARI PUSKESMAS", className: "text-wrap text-center" },
-        { name: "RUJUKAN DITERIMA DARI FASILITAS KESEHATAN", className: "text-wrap text-center" },
-        { name: "RUJUKAN DITERIMA DARI RS LAIN", className: "text-wrap text-center" },
-        { name: "RUJUKAN DIKEMBALIKAN KE PUSKESMAS", className: "text-wrap text-center" },
-        { name: "RUJUKAN DIKEMBALIKAN KE FASILITAS KESEHATAN", className: "text-wrap text-center" },
-        { name: "RUJUKAN DIKEMBALIKAN KE RS ASAL", className: "text-wrap text-center" },
-        { name: "DIRUJUK PASIEN RUJUKAN", className: "text-wrap text-center" },
-        { name: "DIRUJUK PASIEN DATANG SENDIRI", className: "text-wrap text-center" },
-        { name: "DIRUJUK DITERIMA KEMBALI", className: "text-wrap text-center" },
+        { name: "RUJUKAN DITERIMA DARI PUSKESMAS", className: "text-wrap text-center w-[9%]" },
+        { name: "RUJUKAN DITERIMA DARI FASILITAS KESEHATAN", className: "text-wrap text-center w-[9%]" },
+        { name: "RUJUKAN DITERIMA DARI RS LAIN", className: "text-wrap text-center w-[9%]" },
+        { name: "RUJUKAN DIKEMBALIKAN KE PUSKESMAS", className: "text-wrap text-center w-[9%]" },
+        { name: "RUJUKAN DIKEMBALIKAN KE FASILITAS KESEHATAN", className: "text-wrap text-center w-[9%]" },
+        { name: "RUJUKAN DIKEMBALIKAN KE RS ASAL", className: "text-wrap text-center w-[9%]" },
+        { name: "DIRUJUK PASIEN RUJUKAN", className: "text-wrap text-center w-[9%]" },
+        { name: "DIRUJUK PASIEN DATANG SENDIRI", className: "text-wrap text-center w-[9%]" },
+        { name: "DIRUJUK DITERIMA KEMBALI", className: "text-wrap text-center w-[9%]" },
     ];
 
     return (

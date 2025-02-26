@@ -13,13 +13,12 @@ export default function Cetak() {
     useEffect(() => {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        const firstDayOfMonth = `${currentYear}-${currentMonth}-01`;
+        const firstDayOfYear = `${currentYear}-01-01`;
         const formattedCurrentDate = currentDate.toISOString().split("T")[0];
 
         setData(prevData => ({
             ...prevData,
-            dari_tanggal: firstDayOfMonth,
+            dari_tanggal: firstDayOfYear,
             sampai_tanggal: formattedCurrentDate
         }));
     }, []);

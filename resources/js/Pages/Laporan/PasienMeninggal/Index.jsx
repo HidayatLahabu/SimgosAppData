@@ -29,10 +29,9 @@ export default function PasienKeluar({
         { name: "CARA BAYAR", className: "text-wrap w-[10%]" },
         { name: "NOPEN", className: "text-center w-[8%]" },
         { name: "MASUK", className: "text-center w-[7%]" },
-        { name: "KELUAR", className: "text-center w-[7%]" },
+        { name: "MENINGGAL", className: "text-center w-[7%]" },
         { name: "RUANGAN", className: "text-wrap" },
-        { name: "CARA KELUAR" },
-        { name: "TARIF RS", className: "text-right w-[9%]" },
+        { name: "KEADAAN KELUAR" },
     ];
 
     // Function to handle search input changes
@@ -44,7 +43,7 @@ export default function PasienKeluar({
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('kegiatanPasienKeluarRanap.index'), updatedParams, {
+        router.get(route('kegiatanPasienMeninggal.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -71,7 +70,7 @@ export default function PasienKeluar({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN KEGIATAN PASIEN KELUAR RAWAT INAP
+                            LAPORAN KEGIATAN PASIEN MENINGGAL
                         </h1>
                         <p className="text-center text-gray-100 pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
@@ -87,7 +86,7 @@ export default function PasienKeluar({
                                                     <TextInput
                                                         className="flex-1"
                                                         defaultValue={queryParams.search || ''}
-                                                        placeholder="Cari data berdasarkan NORM, nama pasien, ruangan atau cara keluar"
+                                                        placeholder="Cari data berdasarkan NORM, nama pasien, ruangan atau keadaan keluar"
                                                         onChange={e => onInputChange('search', e)}
                                                         onKeyPress={e => onKeyPress('search', e)}
                                                     />
@@ -108,15 +107,14 @@ export default function PasienKeluar({
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.NORM} isEven={index % 2 === 0}>
-                                                    <TableCell className='text-center'>{data.NORM}</TableCell>
+                                                    <TableCell className='text-center'>{data.NORM.replace(/-/g, '')}</TableCell>
                                                     <TableCell>{data.NAMALENGKAP}</TableCell>
                                                     <TableCell>{data.CARABAYAR}</TableCell>
                                                     <TableCell className='text-center'>{data.NOPEN}</TableCell>
                                                     <TableCell className='text-center'>{data.TGLMASUK}</TableCell>
-                                                    <TableCell className='text-center'>{data.TGLKELUAR}</TableCell>
-                                                    <TableCell>{data.UNIT1}</TableCell>
-                                                    <TableCell>{data.CARAKELUAR}</TableCell>
-                                                    <TableCell className='text-right'>{formatRibuan(data.TARIFRS)}</TableCell>
+                                                    <TableCell className='text-center'>{data.TGLMENINGGAL}</TableCell>
+                                                    <TableCell>{data.UNIT}</TableCell>
+                                                    <TableCell>{data.KEADAANKELUAR}</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (
