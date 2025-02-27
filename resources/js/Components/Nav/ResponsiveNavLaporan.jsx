@@ -44,9 +44,9 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('kunjunganPerHari.index')}>Kunjungan Per Hari</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kunjunganCaraBayar.index')}>Kunjungan Cara Bayar</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kunjunganPerUnit.index')}>Kunjungan Per Unit</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('kunjunganRekap.index')}>Kunjungan Rekap</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('kunjunganRekap.index')}>Rekap Kunjungan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanPasien.index')}>Tindakan Per Pasien</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('tindakanRekap.index')}>Tindakan Rekap</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('tindakanRekap.index')}>Rekap Tindakan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanLabGroup.index')}>Tindakan Laboratorium</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanRadGroup.index')}>Tindakan Radiologi</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanRespondTime.index')}>Tindakan Respond Time</ResponsiveNavLink>
@@ -54,6 +54,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('kegiatanPasienKeluarRanap.index')}>Pasien Keluar Ranap</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienKeluarDarurat.index')}>Pasien Keluar Darurat</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienMeninggal.index')}>Pasien Meninggal</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('kegiatanPasienMeninggalRekap.index')}>Rekap Meninggal</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

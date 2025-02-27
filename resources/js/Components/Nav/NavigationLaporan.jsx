@@ -43,7 +43,16 @@ export default function NavigationLaporan() {
             route().current('kunjunganCaraBayar.index') ||
             route().current('kunjunganPerUnit.index') ||
             route().current('kunjunganRekap.index') ||
-            route().current('tindakanPasien.index');
+            route().current('tindakanPasien.index') ||
+            route().current('tindakanRekap.index') ||
+            route().current('tindakanLabGroup.index') ||
+            route().current('tindakanRadGroup.index') ||
+            route().current('tindakanRespondTime.index') ||
+            route().current('kegiatanPasienMasuk.index') ||
+            route().current('kegiatanPasienKeluarRanap.index') ||
+            route().current('kegiatanPasienKeluarDarurat.index') ||
+            route().current('kegiatanPasienMeninggal.index') ||
+            route().current('kegiatanPasienMeninggalRekap.index');
     };
 
     const navLinks = [
@@ -62,9 +71,9 @@ export default function NavigationLaporan() {
         { label: 'Kunjungan Per Hari', route: 'kunjunganPerHari.index' },
         { label: 'Kunjungan Cara Bayar', route: 'kunjunganCaraBayar.index' },
         { label: 'Kunjungan Per Unit', route: 'kunjunganPerUnit.index' },
-        { label: 'Kunjungan Rekap', route: 'kunjunganRekap.index' },
+        { label: 'Rekap Kunjungan', route: 'kunjunganRekap.index' },
         { label: 'Tindakan Per Pasien', route: 'tindakanPasien.index' },
-        { label: 'Tindakan Rekap', route: 'tindakanRekap.index' },
+        { label: 'Rekap Tindakan', route: 'tindakanRekap.index' },
         { label: 'Tindakan Laboratorium', route: 'tindakanLabGroup.index' },
         { label: 'Tindakan Radiologi', route: 'tindakanRadGroup.index' },
         { label: 'Tindakan Respond Time', route: 'tindakanRespondTime.index' },
@@ -72,6 +81,7 @@ export default function NavigationLaporan() {
         { label: 'Pasien Keluar Ranap', route: 'kegiatanPasienKeluarRanap.index' },
         { label: 'Pasien Keluar Darurat', route: 'kegiatanPasienKeluarDarurat.index' },
         { label: 'Pasien Meninggal', route: 'kegiatanPasienMeninggal.index' },
+        { label: 'Rekap Meninggal', route: 'kegiatanPasienMeninggalRekap.index' },
     ];
 
     // Sort the links alphabetically by label
