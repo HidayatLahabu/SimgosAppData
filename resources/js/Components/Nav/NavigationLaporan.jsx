@@ -52,7 +52,8 @@ export default function NavigationLaporan() {
             route().current('kegiatanPasienKeluarRanap.index') ||
             route().current('kegiatanPasienKeluarDarurat.index') ||
             route().current('kegiatanPasienMeninggal.index') ||
-            route().current('kegiatanPasienMeninggalRekap.index');
+            route().current('kegiatanPasienMeninggalRekap.index') ||
+            route().current('lamaDirawat.index');
     };
 
     const navLinks = [
@@ -82,6 +83,7 @@ export default function NavigationLaporan() {
         { label: 'Pasien Keluar Darurat', route: 'kegiatanPasienKeluarDarurat.index' },
         { label: 'Pasien Meninggal', route: 'kegiatanPasienMeninggal.index' },
         { label: 'Rekap Meninggal', route: 'kegiatanPasienMeninggalRekap.index' },
+        { label: 'Lama Dirawat', route: 'lamaDirawat.index' },
     ];
 
     // Sort the links alphabetically by label

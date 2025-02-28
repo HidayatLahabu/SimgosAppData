@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Print({ data, dariTanggal, sampaiTanggal }) {
 
     useEffect(() => {
         import('@/../../resources/css/print.css');
     }, []);
+
+    const isBPJS = data.some(item => item.CARABAYAR?.toLowerCase().includes("bpjs"));
 
     return (
         <div className="h-screen w-screen bg-white">
@@ -18,7 +21,7 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl">
-                                    LAPORAN KEGIATAN PASIEN MENINGGAL
+                                    LAPORAN LAMA DIRAWAT
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -35,9 +38,10 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[10%]">CARA BAYAR</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[6%]">NOPEN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-center text-wrap w-[7%]">TANGGAL MASUK</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center text-wrap w-[7%]">TANGGAL MENINGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center text-wrap w-[7%]">TANGGAL KELUAR</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid text-wrap">RUANGAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap">CARA KELUAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap">KAMAR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">HARI RAWAT</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,13 +65,16 @@ export default function Print({ data, dariTanggal, sampaiTanggal }) {
                                                         {item.TGLMASUK}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap text-center border border-gray-500 border-solid">
-                                                        {item.TGLMENINGGAL}
+                                                        {item.TGLKELUAR}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
                                                         {item.UNIT}
                                                     </td>
                                                     <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                                                        {item.KEADAANKELUAR}
+                                                        {item.KAMAR}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-nowrap text-center border border-gray-500 border-solid">
+                                                        {item.LD} Hari
                                                     </td>
                                                 </tr>
                                             );
