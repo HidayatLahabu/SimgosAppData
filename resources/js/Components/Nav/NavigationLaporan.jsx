@@ -54,7 +54,8 @@ export default function NavigationLaporan() {
             route().current('kegiatanPasienMeninggal.index') ||
             route().current('kegiatanPasienMeninggalRekap.index') ||
             route().current('lamaDirawat.index') ||
-            route().current('hariPerawatan.index');
+            route().current('hariPerawatan.index') ||
+            route().current('pasienDirawat.index');
     };
 
     const navLinks = [
@@ -86,6 +87,7 @@ export default function NavigationLaporan() {
         { label: 'Rekap Meninggal', route: 'kegiatanPasienMeninggalRekap.index' },
         { label: 'Lama Dirawat', route: 'lamaDirawat.index' },
         { label: 'Hari Perawatan', route: 'hariPerawatan.index' },
+        { label: 'Pasien Dirawat', route: 'pasienDirawat.index' },
     ];
 
     // Sort the links alphabetically by label

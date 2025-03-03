@@ -107,6 +107,7 @@ use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
+use App\Http\Controllers\Laporan\PasienDirawatController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -632,6 +633,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('hariPerawatan', [HariPerawatanController::class, 'index'])->name('hariPerawatan.index');
         Route::get('/hariPerawatan-print', [HariPerawatanController::class, 'print'])->name('hariPerawatan.print');
+
+        Route::get('pasienDirawat', [PasienDirawatController::class, 'index'])->name('pasienDirawat.index');
+        Route::get('/pasienDirawat-print', [PasienDirawatController::class, 'print'])->name('pasienDirawat.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

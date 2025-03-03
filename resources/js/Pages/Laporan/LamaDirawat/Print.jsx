@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Head } from "@inertiajs/react";
 import { formatDate } from '@/utils/formatDate';
-import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Print({ data, dariTanggal, sampaiTanggal }) {
 
