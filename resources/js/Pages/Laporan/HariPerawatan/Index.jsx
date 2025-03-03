@@ -12,7 +12,7 @@ import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import { formatDate } from '@/utils/formatDate';
 
-export default function LamaDirawat({
+export default function HariPerawatan({
     auth,
     dataTable,
     caraBayar,
@@ -31,7 +31,7 @@ export default function LamaDirawat({
         { name: "KELUAR", className: "text-center w-[7%]" },
         { name: "RUANGAN", className: "text-wrap" },
         { name: "KAMAR", className: "text-wrap" },
-        { name: "LAMA DIRAWAT", className: " text-wrap text-center w-[7%]" },
+        { name: "HARI RAWAT", className: "text-center w-[7%]" },
     ];
 
     // Function to handle search input changes
@@ -70,7 +70,7 @@ export default function LamaDirawat({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN LAMA DIRAWAT
+                            LAPORAN HARI PERAWATAN
                         </h1>
                         <p className="text-center text-gray-100 pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
@@ -107,7 +107,7 @@ export default function LamaDirawat({
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.NORM} isEven={index % 2 === 0} className={` 
-                                                    ${data.LD < 0 ? 'text-red-500 font-bold' : ''}`}>
+                                                    ${data.JMLHP < 0 ? 'text-red-500 font-bold' : ''}`}>
                                                     <TableCell className='text-center'>{data.NORM.replace(/-/g, '')}</TableCell>
                                                     <TableCell>{data.NAMALENGKAP}</TableCell>
                                                     <TableCell>{data.CARABAYAR}</TableCell>
@@ -116,7 +116,7 @@ export default function LamaDirawat({
                                                     <TableCell className='text-center'>{data.TGLKELUAR}</TableCell>
                                                     <TableCell>{data.UNIT}</TableCell>
                                                     <TableCell>{data.KAMAR}</TableCell>
-                                                    <TableCell className='text-center'>{data.LD} Hari</TableCell>
+                                                    <TableCell className='text-center'>{data.JMLHP} Hari</TableCell>
                                                 </TableRow>
                                             ))
                                         ) : (

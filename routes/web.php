@@ -99,6 +99,7 @@ use App\Http\Controllers\Laporan\PasienMeninggalRekapController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\HariPerawatanController;
 use App\Http\Controllers\Laporan\LamaDirawatController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
@@ -628,6 +629,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('lamaDirawat', [LamaDirawatController::class, 'index'])->name('lamaDirawat.index');
         Route::get('/lamaDirawat-print', [LamaDirawatController::class, 'print'])->name('lamaDirawat.print');
+
+        Route::get('hariPerawatan', [HariPerawatanController::class, 'index'])->name('hariPerawatan.index');
+        Route::get('/hariPerawatan-print', [HariPerawatanController::class, 'print'])->name('hariPerawatan.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
