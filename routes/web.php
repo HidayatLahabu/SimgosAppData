@@ -100,6 +100,7 @@ use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
 use App\Http\Controllers\Laporan\HariPerawatanController;
+use App\Http\Controllers\Laporan\KegiatanRawatInapController;
 use App\Http\Controllers\Laporan\LamaDirawatController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
@@ -636,6 +637,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('pasienDirawat', [PasienDirawatController::class, 'index'])->name('pasienDirawat.index');
         Route::get('/pasienDirawat-print', [PasienDirawatController::class, 'print'])->name('pasienDirawat.print');
+
+        Route::get('kegiatanRawatInap', [KegiatanRawatInapController::class, 'index'])->name('kegiatanRawatInap.index');
+        Route::get('/kegiatanRawatInap-print', [KegiatanRawatInapController::class, 'print'])->name('kegiatanRawatInap.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
