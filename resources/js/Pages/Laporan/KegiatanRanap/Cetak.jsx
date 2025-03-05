@@ -6,6 +6,7 @@ import SelectTwoInput from "@/Components/Select/SelectTwoInput";
 
 export default function Cetak({
     ruangan,
+    caraBayar,
 }) {
 
     const { data, setData } = useForm({
@@ -34,6 +35,14 @@ export default function Cetak({
         }
     };
 
+    const onBayarChange = (selectedOption) => {
+        if (selectedOption && selectedOption.value) {
+            setData(prevData => ({ ...prevData, caraBayar: selectedOption.value }));
+        } else {
+            setData(prevData => ({ ...prevData, caraBayar: '' }));  // Atau handling sesuai kebutuhan
+        }
+    };
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -41,7 +50,7 @@ export default function Cetak({
         const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v !== ''));
 
         const queryString = new URLSearchParams(filteredData).toString();
-        window.open(route("pengunjungRekap.print") + "?" + queryString, "_blank");
+        window.open(route("kegiatanRawatInap.print") + "?" + queryString, "_blank");
     };
 
     return (
@@ -53,7 +62,7 @@ export default function Cetak({
                         className="p-4 sm-8 bg-white dark:bg-indigo-950 shadow sm:rounded-lg"
                     >
                         <h1 className="uppercase text-center font-bold text-2xl pt-2 text-white">
-                            Cetak Laporan Rekapitulasi Kunjungan
+                            Cetak Laporan Kegiatan Rawat Inap
                         </h1>
 
                         <div className="mt-4 flex space-x-4">
@@ -72,6 +81,24 @@ export default function Cetak({
                                     onChange={onRuanganChange}
                                 />
                             </div>
+                            <div className="flex-1">
+                                <InputLabel htmlFor="caraBayar" value="Cara Bayar" />
+                                <SelectTwoInput
+                                    id="caraBayar"
+                                    name="caraBayar"
+                                    className="mt-1 block w-full"
+                                    placeholder="Pilih Cara Bayar"
+                                    options={Array.isArray(caraBayar) ?
+                                        caraBayar.map((item) => ({
+                                            value: item.ID,
+                                            label: item.DESKRIPSI,
+                                        })) : []}
+                                    onChange={onBayarChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-4 flex space-x-4">
                             <div className="flex-1">
                                 <InputLabel
                                     htmlFor="dari_tanggal"

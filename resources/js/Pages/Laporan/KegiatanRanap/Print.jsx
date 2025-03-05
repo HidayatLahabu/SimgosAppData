@@ -19,7 +19,7 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                         <div className="p-2 bg-white">
                             <div className="overflow-auto">
                                 <h1 className="text-center font-bold text-2xl uppercase">
-                                    LAPORAN REKAPITULASI KUNJUNGAN {ruangan ? `RUANGAN ${ruangan}` : ''}
+                                    LAPORAN LAPORAN KEGIATAN RAWAT INAP
                                 </h1>
                                 <p className="text-center font-bold text-2xl">
                                     {new Date(dariTanggal).toLocaleDateString() === new Date(sampaiTanggal).toLocaleDateString()
@@ -32,47 +32,59 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">DESKRIPSI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">LAKI-LAKI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[9%]">PEREMPUAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">UMUM</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">INHEALT</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKD</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">IKS</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JUMLAH</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">AWAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">MASUK</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">PINDAHAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">DIPINDAHKAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">HIDUP</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">MENINGGAL</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">MENINGGAL &lt; 48</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap text-center w-[7%]">MENINGGAL &gt; 48</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap text-center w-[7%]">AKHIR</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap text-center w-[7%]">LAMA DIRAWAT</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-wrap text-center w-[7%]">HARI PERAWATAN</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.map((item, key) => {
                                             return (
-                                                <tr key={item.IDSTATUSPENGUNJUNG} className="border-b bg-white dark:border-gray-500">
+                                                <tr key={item.ID} className="border-b bg-white dark:border-gray-500">
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">{key + 1}</td>
                                                     <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                                                        {item.IDSTATUSPENGUNJUNG === 1 ? "Pengunjung Baru" : "Pengunjung Lama"}
+                                                        {item.DESKRIPSI}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.LAKILAKI) || 0}
+                                                        {formatRibuan(item.AWAL)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.PEREMPUAN) || 0}
+                                                        {formatRibuan(item.MASUK)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.UMUM) || 0}
+                                                        {formatRibuan(item.PINDAHAN)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.JKN) || 0}
+                                                        {formatRibuan(item.DIPINDAHKAN)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.INHEALT) || 0}
+                                                        {formatRibuan(item.HIDUP)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.JKD) || 0}
+                                                        {formatRibuan(item.MATI)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.IKS) || 0}
+                                                        {formatRibuan(item.MATIKURANG48)}
                                                     </td>
                                                     <td className="px-3 py-2 text-center border border-gray-500 border-solid">
-                                                        {formatRibuan(item.JUMLAH) || 0}
+                                                        {formatRibuan(item.MATILEBIH48)}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.SISA)}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.LD)}
+                                                    </td>
+                                                    <td className="px-3 py-2 text-center border border-gray-500 border-solid">
+                                                        {formatRibuan(item.HP)}
                                                     </td>
                                                 </tr>
                                             );
@@ -81,14 +93,17 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                     <tfoot>
                                         <tr className='bg-gray-300 font-bold text-sm'>
                                             <td colSpan={2} className='px-2 py-2 text-right border border-gray-500 border-solid'>TOTAL</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LAKILAKI) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.PEREMPUAN) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.UMUM) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKN) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.INHEALTH) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JKD) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.IKS) || 0}</td>
-                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.JUMLAH) || 0}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.AWAL)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.MASUK)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.PINDAHAN)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.DIPINDAHKAN)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.HIDUP)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.MATI)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.MATIKURANG48)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.MATILEBIH48)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.SISA)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.LD)}</td>
+                                            <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.HP)}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

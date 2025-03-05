@@ -30,11 +30,11 @@ export default function KegiatanRanap({
         { name: "DIPINDAHKAN", className: "text-center w-[7%]" },
         { name: "HIDUP", className: "text-center w-[7%]" },
         { name: "MENINGGAL", className: "text-center w-[7%]" },
-        { name: "MENINGGAL < 48", className: "text-center w-[7%]" },
-        { name: "MENINGGAL > 48", className: "text-center w-[7%]" },
+        { name: "MENINGGAL < 48", className: "text-wrap text-center w-[7%]" },
+        { name: "MENINGGAL > 48", className: "text-wrap text-center w-[7%]" },
         { name: "AKHIR", className: "text-center w-[7%]" },
-        { name: "LAMA DIRAWAT", className: " text-wrap text-center w-[9%]" },
-        { name: "HARI PERAWATAN", className: " text-wrap text-center w-[9%]" },
+        { name: "LAMA DIRAWAT", className: "text-wrap text-center w-[7%]" },
+        { name: "HARI PERAWATAN", className: "text-wrap text-center w-[7%]" },
     ];
 
     return (
