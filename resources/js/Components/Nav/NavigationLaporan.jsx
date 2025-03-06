@@ -105,7 +105,7 @@ export default function NavigationLaporan() {
                 Laporan
             </NavLink>
             {isDropdownOpen && (
-                <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-96 grid grid-cols-2 gap-2">
+                <div className="absolute dark:bg-indigo-900 text-white shadow-md mt-2 rounded-lg py-2 px-1 w-[600px] grid grid-cols-3 gap-2">
                     {sortedNavLinks.map((link) => (
                         <NavLink
                             key={link.route}
