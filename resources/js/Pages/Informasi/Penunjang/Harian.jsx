@@ -11,7 +11,7 @@ import { formatRibuan } from '@/utils/formatRibuan';
 export default function Harian({ harian }) {
 
     const headers = [
-        { name: "TANGGAL", className: "w-[10%]" },
+        { name: "TANGGAL", className: "w-[14%]" },
         { name: "SUB UNIT" },
         { name: "KUNJUNGAN", className: "text-right w-[10%]" },
         { name: "LAST UPDATED", className: "w-[25%]" },
