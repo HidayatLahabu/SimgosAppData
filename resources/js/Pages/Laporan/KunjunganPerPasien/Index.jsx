@@ -21,8 +21,8 @@ export default function KunjunganPerPasien({
 }) {
 
     const headers = [
-        { name: "NORM", className: "w-[6%]" },
-        { name: "NAMA PASIEN", className: "text-center" },
+        { name: "NORM", className: "text-center w-[6%]" },
+        { name: "NAMA PASIEN" },
         { name: "STATUS", className: "text-center w-[4%]" },
         { name: "TANGGAL MASUK", className: "text-wrap w-[10%]" },
         { name: "CARA BAYAR", className: "text-wrap" },
@@ -109,7 +109,7 @@ export default function KunjunganPerPasien({
                                                 <TableRow key={data.NORM} isEven={index % 2 === 0}>
                                                     <TableCell>{data.NORM}</TableCell>
                                                     <TableCell>{data.NAMA_LENGKAP}</TableCell>
-                                                    <TableCell>{data.STATUSPENGUNJUNG}</TableCell>
+                                                    <TableCell className='text-center'>{data.STATUSPENGUNJUNG}</TableCell>
                                                     <TableCell>{data.TGLTERIMA}</TableCell>
                                                     <TableCell>{data.CARABAYAR}</TableCell>
                                                     <TableCell>{data.UNITPELAYANAN}</TableCell>

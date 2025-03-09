@@ -23,7 +23,7 @@ export default function LamaDirawat({
 }) {
 
     const headers = [
-        { name: "NORM", className: "text-center w-[4%]" },
+        { name: "NORM", className: "text-center w-[6%]" },
         { name: "NAMA PASIEN" },
         { name: "CARA BAYAR", className: "text-wrap w-[10%]" },
         { name: "NOPEN", className: "text-center w-[8%]" },

@@ -21,18 +21,17 @@ class KegiatanRawatInapController extends Controller
 
         $filteredData = array_values(array_filter($data, function ($row) {
             return (
-                (!is_null($row->DESKRIPSI) && $row->DESKRIPSI !== 0) ||
-                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
-                (!is_null($row->MASUK) && $row->MASUK !== 0) ||
-                (!is_null($row->PINDAHAN) && $row->PINDAHAN !== 0) ||
-                (!is_null($row->DIPINDAHKAN) && $row->DIPINDAHKAN !== 0) ||
-                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
-                (!is_null($row->MATI) && $row->MATI !== 0) ||
-                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
-                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0) ||
-                (!is_null($row->SISA) && $row->SISA !== 0) ||
-                (!is_null($row->LD) && $row->LD !== 0) ||
-                (!is_null($row->HP) && $row->HP !== 0)
+                ($row->AWAL ?? 0) > 0 ||
+                ($row->MASUK ?? 0) > 0 ||
+                ($row->PINDAHAN ?? 0) > 0 ||
+                ($row->DIPINDAHKAN ?? 0) > 0 ||
+                ($row->HIDUP ?? 0) > 0 ||
+                ($row->MATI ?? 0) > 0 ||
+                ($row->MATIKURANG48 ?? 0) > 0 ||
+                ($row->MATILEBIH48 ?? 0) > 0 ||
+                ($row->SISA ?? 0) > 0 ||
+                ($row->LD ?? 0) > 0 ||
+                ($row->HP ?? 0) > 0
             );
         }));
 
@@ -40,6 +39,17 @@ class KegiatanRawatInapController extends Controller
         usort($filteredData, function ($a, $b) {
             return strcmp($a->DESKRIPSI, $b->DESKRIPSI);
         });
+
+        // Filter agar hanya satu baris per DESKRIPSI
+        $uniqueData = [];
+        foreach ($filteredData as $row) {
+            if (!isset($uniqueData[$row->DESKRIPSI])) {
+                $uniqueData[$row->DESKRIPSI] = $row;
+            }
+        }
+
+        // Konversi kembali ke array dengan Inertia
+        $filteredData = array_values($uniqueData);
 
         // Inisialisasi variabel untuk menyimpan total
         $total = [
@@ -111,18 +121,17 @@ class KegiatanRawatInapController extends Controller
 
         $filteredData = array_values(array_filter($data, function ($row) {
             return (
-                (!is_null($row->DESKRIPSI) && $row->DESKRIPSI !== 0) ||
-                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
-                (!is_null($row->MASUK) && $row->MASUK !== 0) ||
-                (!is_null($row->PINDAHAN) && $row->PINDAHAN !== 0) ||
-                (!is_null($row->DIPINDAHKAN) && $row->DIPINDAHKAN !== 0) ||
-                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
-                (!is_null($row->MATI) && $row->MATI !== 0) ||
-                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
-                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0) ||
-                (!is_null($row->SISA) && $row->SISA !== 0) ||
-                (!is_null($row->LD) && $row->LD !== 0) ||
-                (!is_null($row->HP) && $row->HP !== 0)
+                ($row->AWAL ?? 0) > 0 ||
+                ($row->MASUK ?? 0) > 0 ||
+                ($row->PINDAHAN ?? 0) > 0 ||
+                ($row->DIPINDAHKAN ?? 0) > 0 ||
+                ($row->HIDUP ?? 0) > 0 ||
+                ($row->MATI ?? 0) > 0 ||
+                ($row->MATIKURANG48 ?? 0) > 0 ||
+                ($row->MATILEBIH48 ?? 0) > 0 ||
+                ($row->SISA ?? 0) > 0 ||
+                ($row->LD ?? 0) > 0 ||
+                ($row->HP ?? 0) > 0
             );
         }));
 
@@ -130,6 +139,17 @@ class KegiatanRawatInapController extends Controller
         usort($filteredData, function ($a, $b) {
             return strcmp($a->DESKRIPSI, $b->DESKRIPSI);
         });
+
+        // Filter agar hanya satu baris per DESKRIPSI
+        $uniqueData = [];
+        foreach ($filteredData as $row) {
+            if (!isset($uniqueData[$row->DESKRIPSI])) {
+                $uniqueData[$row->DESKRIPSI] = $row;
+            }
+        }
+
+        // Konversi kembali ke array dengan Inertia
+        $filteredData = array_values($uniqueData);
 
         // Inisialisasi variabel untuk menyimpan total
         $total = [

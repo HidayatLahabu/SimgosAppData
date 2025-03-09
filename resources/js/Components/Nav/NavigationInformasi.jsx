@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import NavLink from '@/Components/Nav/NavLink';
 
-export default function NavigationLogs() {
+export default function NavigationInformasi() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -27,9 +27,10 @@ export default function NavigationLogs() {
 
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
-        return route().current('logsBridge.index') ||
-            route().current('logsAkses.index') ||
-            route().current('logsRequest.index');
+        return route().current('statistikKunjungan.index') ||
+            route().current('informasiKunjungan.index') ||
+            route().current('informasiPengunjung.index') ||
+            route().current('informasiPenunjang.index');
     };
 
     return (
