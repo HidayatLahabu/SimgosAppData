@@ -3,7 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Laboratorium from './Laboratorium';
 import Radiologi from './Radiologi';
-
+import HasilLab from './HasilLab';
+import HasilRad from './HasilRad';
 
 export default function Index({
     auth,
@@ -13,6 +14,10 @@ export default function Index({
     laboratoriumTahunLalu,
     radiologiTahunIni,
     radiologiTahunLalu,
+    hasilLabTahunIni,
+    hasilLabTahunLalu,
+    hasilRadTahunIni,
+    hasilRadTahunLalu,
 }) {
 
     return (
@@ -34,6 +39,25 @@ export default function Index({
                         tahunLalu={tahunLalu}
                         radiologiTahunIni={radiologiTahunIni}
                         radiologiTahunLalu={radiologiTahunLalu}
+                    />
+                </div>
+            </div>
+
+            <div className="flex flex-wrap w-full">
+                <div className="w-1/2">
+                    <HasilLab
+                        tahunIni={tahunIni}
+                        tahunLalu={tahunLalu}
+                        hasilLabTahunIni={hasilLabTahunIni}
+                        hasilLabTahunLalu={hasilLabTahunLalu}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <HasilRad
+                        tahunIni={tahunIni}
+                        tahunLalu={tahunLalu}
+                        hasilRadTahunIni={hasilRadTahunIni}
+                        hasilRadTahunLalu={hasilRadTahunLalu}
                     />
                 </div>
             </div>

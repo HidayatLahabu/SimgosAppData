@@ -19,6 +19,12 @@ class ChartLayananController extends Controller
         $radiologiTahunIni =  $this->radiologi($tahunIni);
         $radiologiTahunLalu =  $this->radiologi($tahunLalu);
 
+        $hasilLabTahunIni =  $this->hasilLab($tahunIni);
+        $hasilLabTahunLalu =  $this->hasilLab($tahunLalu);
+
+        $hasilRadTahunIni =  $this->hasilRad($tahunIni);
+        $hasilRadTahunLalu =  $this->hasilRad($tahunLalu);
+
         return inertia("Chart/Layanan/Index", [
             'tahunIni' => $tahunIni,
             'tahunLalu' => $tahunLalu,
@@ -26,6 +32,10 @@ class ChartLayananController extends Controller
             'laboratoriumTahunLalu' => $laboratoriumTahunLalu->toArray(),
             'radiologiTahunIni' => $radiologiTahunIni->toArray(),
             'radiologiTahunLalu' => $radiologiTahunLalu->toArray(),
+            'hasilLabTahunIni' => $hasilLabTahunIni->toArray(),
+            'hasilLabTahunLalu' => $hasilLabTahunLalu->toArray(),
+            'hasilRadTahunIni' => $hasilRadTahunIni->toArray(),
+            'hasilRadTahunLalu' => $hasilRadTahunLalu->toArray(),
         ]);
     }
 
@@ -49,6 +59,32 @@ class ChartLayananController extends Controller
                 DB::raw('YEAR(radiologi.TANGGAL) as tahun'),
                 DB::raw('MONTH(radiologi.TANGGAL) as bulan'),
                 DB::raw('COUNT(radiologi.NOMOR) as total')
+            )
+            ->whereYear('radiologi.TANGGAL', $tahun)
+            ->groupBy('tahun', 'bulan')
+            ->get();
+    }
+
+    private function hasilLab($tahun)
+    {
+        return DB::connection('mysql7')->table('layanan.hasil_lab as laboratorium')
+            ->select(
+                DB::raw('YEAR(laboratorium.TANGGAL) as tahun'),
+                DB::raw('MONTH(laboratorium.TANGGAL) as bulan'),
+                DB::raw('COUNT(laboratorium.ID) as total')
+            )
+            ->whereYear('laboratorium.TANGGAL', $tahun)
+            ->groupBy('tahun', 'bulan')
+            ->get();
+    }
+
+    private function hasilRad($tahun)
+    {
+        return DB::connection('mysql7')->table('layanan.hasil_rad as radiologi')
+            ->select(
+                DB::raw('YEAR(radiologi.TANGGAL) as tahun'),
+                DB::raw('MONTH(radiologi.TANGGAL) as bulan'),
+                DB::raw('COUNT(radiologi.ID) as total')
             )
             ->whereYear('radiologi.TANGGAL', $tahun)
             ->groupBy('tahun', 'bulan')
