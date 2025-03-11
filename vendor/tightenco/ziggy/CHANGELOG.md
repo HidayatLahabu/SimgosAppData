@@ -8,6 +8,12 @@ Breaking changes are marked with ⚠️.
 
 ## [Unreleased]
 
+## [v2.5.1] - 2025-01-31
+
+**Fixed**
+
+* Fix `current()` type in strict mode by @bakerkretzmar in https://github.com/tighten/ziggy/pull/809
+
 ## [v2.5.0] - 2025-01-22
 
 **Added**
@@ -468,7 +474,8 @@ See [UPGRADING](UPGRADING.md#upgrading-from-1x-to-2x) for detailed upgrade instr
 
 For previous changes see the [Releases](https://github.com/tighten/ziggy/releases) page.
 
-[Unreleased]: https://github.com/tighten/ziggy/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/tighten/ziggy/compare/v2.5.1...HEAD
+[v2.5.1]: https://github.com/tighten/ziggy/compare/v2.5.0...v2.5.1
 [v2.5.0]: https://github.com/tighten/ziggy/compare/v2.4.2...v2.5.0
 [v2.4.2]: https://github.com/tighten/ziggy/compare/v2.4.1...v2.4.2
 [v2.4.1]: https://github.com/tighten/ziggy/compare/v2.4.0...v2.4.1

@@ -170,12 +170,12 @@ interface ParsedQs {
  * Ziggy's Router class.
  */
 interface Router {
-    current(): RouteName | undefined;
-    current<T extends RouteName>(name: T, params?: ParameterValue | RouteParams<T>): boolean;
+    current(): ValidRouteName | undefined;
+    current<T extends ValidRouteName>(name: T, params?: ParameterValue | RouteParams<T>): boolean;
     get params(): Record<string, string>;
     get routeParams(): Record<string, string>;
     get queryParams(): ParsedQs;
-    has<T extends RouteName>(name: T): boolean;
+    has<T extends ValidRouteName>(name: T): boolean;
 }
 
 /**
