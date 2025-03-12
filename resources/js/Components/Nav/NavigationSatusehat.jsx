@@ -49,7 +49,8 @@ export default function NavigationSatusehat() {
             route().current('conditionPa.index') ||
             route().current('conditionTumor.index') ||
             route().current('imagingStudy.index') ||
-            route().current('tindakanToLoinc.index');
+            route().current('tindakanToLoinc.index') ||
+            route().current('sinkronisasi.index');
     };
 
     // List of dropdown items

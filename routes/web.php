@@ -64,6 +64,7 @@ use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Chart\ChartPendaftaranController;
+use App\Http\Controllers\Chart\ChartStatistikKunjunganController;
 use App\Http\Controllers\Laporan\KunjunganRekapController;
 use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\ImagingStudyController;
@@ -657,7 +658,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('chartPendaftaran', [ChartPendaftaranController::class, 'index'])->name('chartPendaftaran.index');
         Route::get('chartBpjs', [ChartBpjsController::class, 'index'])->name('chartBpjs.index');
         Route::get('chartLayanan', [ChartLayananController::class, 'index'])->name('chartLayanan.index');
-        Route::get('chartInformasi', [ChartPendaftaranController::class, 'index'])->name('chartInformasi.index');
+        Route::get('chartInformasi', [ChartStatistikKunjunganController::class, 'index'])->name('chartInformasi.index');
         Route::get('chartLaporan', [ChartPendaftaranController::class, 'index'])->name('chartLaporan.index');
     });
 });
