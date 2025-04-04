@@ -15,8 +15,20 @@ const convertSecondsToHMS = (seconds) => {
 
 export default function WaktuTunggu({ waktuTungguTercepat, waktuTungguTerlama }) {
 
-    const waktuTungguMenitCepat = convertSecondsToHMS(waktuTungguTercepat.WAKTU_TUNGGU_RATA_RATA);
-    const waktuTungguMenitLama = convertSecondsToHMS(waktuTungguTerlama.WAKTU_TUNGGU_RATA_RATA);
+    // const waktuTungguMenitCepat = convertSecondsToHMS(waktuTungguTercepat.WAKTU_TUNGGU_RATA_RATA);
+    // const waktuTungguMenitLama = convertSecondsToHMS(waktuTungguTerlama.WAKTU_TUNGGU_RATA_RATA);
+
+    if (!waktuTungguTercepat || !waktuTungguTerlama) {
+        return <div className="text-gray-500">Data waktu tunggu belum tersedia.</div>;
+    }
+
+    const waktuTungguMenitCepat = waktuTungguTercepat?.WAKTU_TUNGGU_RATA_RATA != null
+        ? convertSecondsToHMS(waktuTungguTercepat.WAKTU_TUNGGU_RATA_RATA)
+        : "00:00:00";
+
+    const waktuTungguMenitLama = waktuTungguTerlama?.WAKTU_TUNGGU_RATA_RATA != null
+        ? convertSecondsToHMS(waktuTungguTerlama.WAKTU_TUNGGU_RATA_RATA)
+        : "00:00:00";
 
     return (
         <div className="max-w-full mx-auto sm:pr-5 lg:pr-5 w-full">
