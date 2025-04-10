@@ -56,6 +56,7 @@ export default function NavigationLaporan() {
             route().current('lamaDirawat.index') ||
             route().current('hariPerawatan.index') ||
             route().current('pasienDirawat.index') ||
+            route().current('laporanRP1.index') ||
             route().current('kegiatanRawatInap.index');
     };
 
@@ -90,6 +91,7 @@ export default function NavigationLaporan() {
         { label: 'Hari Perawatan', route: 'hariPerawatan.index' },
         { label: 'Pasien Dirawat', route: 'pasienDirawat.index' },
         { label: 'Rekap Kegiatan RI', route: 'kegiatanRawatInap.index' },
+        { label: 'Rekap Sensus Harian', route: 'laporanRP1.index' },
     ];
 
     // Sort the links alphabetically by label

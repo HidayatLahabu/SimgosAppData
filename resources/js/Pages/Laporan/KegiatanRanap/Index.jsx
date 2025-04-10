@@ -28,7 +28,7 @@ export default function KegiatanRanap({
         { name: "MASUK", className: "text-center w-[7%]" },
         { name: "PINDAHAN", className: "text-center w-[7%]" },
         { name: "DIPINDAHKAN", className: "text-center w-[7%]" },
-        { name: "HIDUP", className: "text-center w-[7%]" },
+        { name: "KELUAR HIDUP", className: "text-wrap text-center w-[7%]" },
         { name: "MENINGGAL", className: "text-center w-[7%]" },
         { name: "MENINGGAL < 48", className: "text-wrap text-center w-[7%]" },
         { name: "MENINGGAL > 48", className: "text-wrap text-center w-[7%]" },

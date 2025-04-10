@@ -103,6 +103,7 @@ use App\Http\Controllers\Informasi\InformasiPengunjungController;
 use App\Http\Controllers\Laporan\HariPerawatanController;
 use App\Http\Controllers\Laporan\KegiatanRawatInapController;
 use App\Http\Controllers\Laporan\LamaDirawatController;
+use App\Http\Controllers\Laporan\LaporanRP1Controller;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
@@ -641,6 +642,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kegiatanRawatInap', [KegiatanRawatInapController::class, 'index'])->name('kegiatanRawatInap.index');
         Route::get('/kegiatanRawatInap-print', [KegiatanRawatInapController::class, 'print'])->name('kegiatanRawatInap.print');
+
+        Route::get('laporanRP1', [LaporanRP1Controller::class, 'index'])->name('laporanRP1.index');
+        Route::get('/laporanRP1-print', [LaporanRP1Controller::class, 'print'])->name('laporanRP1.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
