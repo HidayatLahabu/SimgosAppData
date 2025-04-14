@@ -10,23 +10,24 @@ import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import { formatDate } from '@/utils/formatDate';
 
-export default function PengunjungPerPasien({
+export default function PasienBelumGrouping({
     auth,
     dataTable,
     tglAwal,
     tglAkhir,
+    ruangan,
 }) {
 
     const headers = [
-        { name: "NOPEN", className: "w-[6%]" },
-        { name: "NORM", className: "w-[6%]" },
+        { name: "MASUK", className: "w-[8%]" },
+        { name: "PULANG", className: "w-[8%]" },
+        { name: "NOPEN", className: "w-[7%]" },
+        { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN", className: "text-center" },
-        { name: "TANGGAL REGISTRASI", className: "text-wrap text-center w-[10%]" },
-        { name: "UNIT PELAYANAN", className: "text-wrap" },
-        { name: "CARA BAYAR", className: "text-wrap" },
-        { name: "NO KARTU", className: "text-wrap w-[9%]" },
-        { name: "SEP", className: "text-wrap" },
+        { name: "SEP", className: "w-[11%]" },
         { name: "DOKTER", className: "text-wrap" },
+        { name: "LOS", className: "w-[3%]" },
+        { name: "UNIT PELAYANAN", className: "text-wrap" },
     ];
 
     return (
@@ -38,7 +39,7 @@ export default function PengunjungPerPasien({
 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <h1 className="uppercase text-center font-bold text-2xl text-gray-100 pt-4">
-                            LAPORAN PENGUNJUNG PASIEN BELUM GROUPING
+                            LAPORAN PASIEN BELUM FINAL GROUPING
                         </h1>
                         <p className="text-center text-white pb-4">
                             <strong>Periode Tanggal: </strong>{formatDate(tglAwal)} s.d {formatDate(tglAkhir)}
@@ -59,15 +60,15 @@ export default function PengunjungPerPasien({
 
                                         {dataTable.data.map((data, index) => (
                                             <TableRow key={data.NOPEN} isEven={index % 2 === 0}>
-                                                <TableCell>{data.NOPEN}</TableCell>
+                                                <TableCell>{data.TGLMASUK}</TableCell>
+                                                <TableCell>{data.TGLKELUAR}</TableCell>
+                                                <TableCell>{data.NOMOR}</TableCell>
                                                 <TableCell>{data.NORM}</TableCell>
-                                                <TableCell>{data.NAMALENGKAP}</TableCell>
-                                                <TableCell>{data.TGLREG}</TableCell>
-                                                <TableCell>{data.RUANGTERAKHIR}</TableCell>
-                                                <TableCell>{data.CARABAYAR}</TableCell>
-                                                <TableCell>{data.NOMORKARTU}</TableCell>
-                                                <TableCell>{data.NOMORSEP}</TableCell>
-                                                <TableCell>{data.DOKTER_REG}</TableCell>
+                                                <TableCell>{data.NAMAPASIEN}</TableCell>
+                                                <TableCell>{data.NOSEP}</TableCell>
+                                                <TableCell>{data.DPJP}</TableCell>
+                                                <TableCell>{data.LOS}</TableCell>
+                                                <TableCell>{data.UNITPELAYANAN}</TableCell>
                                             </TableRow>
                                         ))}
                                         {dataTable.length === 0 && (
@@ -87,7 +88,9 @@ export default function PengunjungPerPasien({
             </div >
 
             <div className="w-full">
-                <Cetak />
+                <Cetak
+                    ruangan={ruangan}
+                />
             </div>
 
         </AuthenticatedLayout >

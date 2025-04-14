@@ -30,6 +30,7 @@ use App\Http\Controllers\Satusehat\ConsentController;
 use App\Http\Controllers\Satusehat\PatientController;
 use App\Http\Controllers\Bpjs\KunjunganBpjsController;
 use App\Http\Controllers\Chart\ChartLayananController;
+use App\Http\Controllers\Laporan\LaporanRP1Controller;
 use App\Http\Controllers\Logs\PenggunaAksesController;
 use App\Http\Controllers\Medicalrecord\CpptController;
 use App\Http\Controllers\Pendaftaran\KonsulController;
@@ -39,6 +40,7 @@ use App\Http\Controllers\Satusehat\LocationController;
 use App\Http\Controllers\Satusehat\SpecimenController;
 use App\Http\Controllers\Bpjs\RencanaKontrolController;
 use App\Http\Controllers\Inventory\TransaksiController;
+use App\Http\Controllers\Laporan\LamaDirawatController;
 use App\Http\Controllers\Laporan\LaporanRl12Controller;
 use App\Http\Controllers\Laporan\LaporanRl31Controller;
 use App\Http\Controllers\Laporan\LaporanRl32Controller;
@@ -54,17 +56,17 @@ use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
 use App\Http\Controllers\Laporan\LaporanRl314Controller;
 use App\Http\Controllers\Laporan\LaporanRl315Controller;
-use App\Http\Controllers\Laporan\PasienKeluarController;
 use App\Http\Controllers\Layanan\LaboratoriumController;
 use App\Http\Controllers\Logs\PenggunaRequestController;
 use App\Http\Controllers\Satusehat\MedicationController;
+use App\Http\Controllers\Laporan\HariPerawatanController;
+use App\Http\Controllers\Laporan\PasienDirawatController;
 use App\Http\Controllers\Pendaftaran\KunjunganController;
 use App\Http\Controllers\Pendaftaran\ReservasiController;
 use App\Http\Controllers\Satusehat\BarangToBzaController;
 use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Chart\ChartPendaftaranController;
-use App\Http\Controllers\Chart\ChartStatistikKunjunganController;
 use App\Http\Controllers\Laporan\KunjunganRekapController;
 use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\ImagingStudyController;
@@ -79,6 +81,7 @@ use App\Http\Controllers\Pendaftaran\PendaftaranController;
 use App\Http\Controllers\Laporan\KunjunganPerHariController;
 use App\Http\Controllers\Laporan\KunjunganPerUnitController;
 use App\Http\Controllers\Satusehat\ServiceRequestController;
+use App\Http\Controllers\Laporan\KegiatanRawatInapController;
 use App\Http\Controllers\Laporan\PasienKeluarRanapController;
 use App\Http\Controllers\Laporan\PengunjungPerHariController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
@@ -99,18 +102,15 @@ use App\Http\Controllers\Laporan\LayananTindakanRekapController;
 use App\Http\Controllers\Laporan\PasienMeninggalRekapController;
 use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
+use App\Http\Controllers\Chart\ChartStatistikKunjunganController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
-use App\Http\Controllers\Laporan\HariPerawatanController;
-use App\Http\Controllers\Laporan\KegiatanRawatInapController;
-use App\Http\Controllers\Laporan\LamaDirawatController;
-use App\Http\Controllers\Laporan\LaporanRP1Controller;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
-use App\Http\Controllers\Laporan\PasienDirawatController;
+use App\Http\Controllers\Laporan\PasienBelumGroupingController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -645,6 +645,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('laporanRP1', [LaporanRP1Controller::class, 'index'])->name('laporanRP1.index');
         Route::get('/laporanRP1-print', [LaporanRP1Controller::class, 'print'])->name('laporanRP1.print');
+
+        Route::get('pasienBelumGrouping', [PasienBelumGroupingController::class, 'index'])->name('pasienBelumGrouping.index');
+        Route::get('/pasienBelumGrouping-print', [PasienBelumGroupingController::class, 'print'])->name('pasienBelumGrouping.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

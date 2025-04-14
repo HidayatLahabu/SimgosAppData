@@ -60,6 +60,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('pasienDirawat.index')}>Pasien Dirawat</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanRanap.index')}>Rekap Kegiatan RI</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRP1.index')}>Rekap Sensus Harian</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('pasienBelumGrouping.index')}>Belum FInal Groping</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>
