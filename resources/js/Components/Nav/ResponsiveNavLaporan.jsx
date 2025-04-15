@@ -51,7 +51,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('tindakanRadGroup.index')}>Tindakan Radiologi</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('tindakanRespondTime.index')}>Tindakan Respond Time</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienMasuk.index')}>Pasien Masuk</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('kegiatanPasienKeluarRanap.index')}>Pasien Keluar Ranap</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('kegiatanPasienKeluarRanap.index')}>Pasien Keluar RI</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienKeluarDarurat.index')}>Pasien Keluar Darurat</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienMeninggal.index')}>Pasien Meninggal</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanPasienMeninggalRekap.index')}>Rekap Meninggal</ResponsiveNavLink>
@@ -59,6 +59,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('hariPerawatan.index')}>Hari Perawatan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('pasienDirawat.index')}>Pasien Dirawat</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('kegiatanRanap.index')}>Rekap Kegiatan RI</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('kegiatanRanap.index')}>Rekap Pasien Keluar RI</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('laporanRP1.index')}>Rekap Sensus Harian</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('pasienBelumGrouping.index')}>Belum FInal Groping</ResponsiveNavLink>
                         </div>

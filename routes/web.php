@@ -111,6 +111,7 @@ use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
 use App\Http\Controllers\Laporan\PasienBelumGroupingController;
+use App\Http\Controllers\Laporan\RekapPasienKeluarController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -648,6 +649,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('pasienBelumGrouping', [PasienBelumGroupingController::class, 'index'])->name('pasienBelumGrouping.index');
         Route::get('/pasienBelumGrouping-print', [PasienBelumGroupingController::class, 'print'])->name('pasienBelumGrouping.print');
+
+        Route::get('rekapPasienKeluarRi', [RekapPasienKeluarController::class, 'index'])->name('rekapPasienKeluarRi.index');
+        Route::get('/rekapPasienKeluarRi-print', [RekapPasienKeluarController::class, 'print'])->name('rekapPasienKeluarRi.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

@@ -58,6 +58,7 @@ export default function NavigationLaporan() {
             route().current('pasienDirawat.index') ||
             route().current('laporanRP1.index') ||
             route().current('pasienBelumGrouping.index') ||
+            route().current('rekapPasienKeluarRi.index') ||
             route().current('kegiatanRawatInap.index');
     };
 
@@ -84,8 +85,8 @@ export default function NavigationLaporan() {
         { label: 'Tindakan Radiologi', route: 'tindakanRadGroup.index' },
         { label: 'Tindakan Respond Time', route: 'tindakanRespondTime.index' },
         { label: 'Pasien Masuk', route: 'kegiatanPasienMasuk.index' },
-        { label: 'Pasien Keluar Ranap', route: 'kegiatanPasienKeluarRanap.index' },
-        { label: 'Pasien Keluar Darurat', route: 'kegiatanPasienKeluarDarurat.index' },
+        { label: 'Pasien Keluar RI', route: 'kegiatanPasienKeluarRanap.index' },
+        { label: 'Pasien Keluar IGD', route: 'kegiatanPasienKeluarDarurat.index' },
         { label: 'Pasien Meninggal', route: 'kegiatanPasienMeninggal.index' },
         { label: 'Rekap Meninggal', route: 'kegiatanPasienMeninggalRekap.index' },
         { label: 'Lama Dirawat', route: 'lamaDirawat.index' },
@@ -94,6 +95,7 @@ export default function NavigationLaporan() {
         { label: 'Rekap Kegiatan RI', route: 'kegiatanRawatInap.index' },
         { label: 'Rekap Sensus Harian', route: 'laporanRP1.index' },
         { label: 'Belum Final Grouping', route: 'pasienBelumGrouping.index' },
+        { label: 'Rekap Pasien Keluar RI', route: 'rekapPasienKeluarRi.index' },
     ];
 
     // Sort the links alphabetically by label
