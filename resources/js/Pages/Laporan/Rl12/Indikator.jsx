@@ -41,16 +41,16 @@ export default function ThisYear({
                                         <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
                                             URAIAN
                                         </th>
-                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600">
+                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600 w-[13%]">
                                             Tahun {tahunIni}
                                         </th>
-                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600 w-[13%]">
                                             Tahun {tahunLalu}
                                         </th>
-                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600 w-[13%]">
                                             Naik/Turun
                                         </th>
-                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900">
+                                        <th className="text-normal font-semibold uppercase px-2 py-1 text-yellow-500 dark:bg-indigo-900 border border-gray-500 dark:border-gray-600 w-[13%]">
                                             PERSENTASE Naik/Turun
                                         </th>
                                     </tr>

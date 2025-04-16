@@ -23,16 +23,14 @@ export default function KegiatanRanap({
 }) {
 
     const headers = [
-        { name: "RUANGAN" },
-        { name: "AWAL", className: "text-center w-[7%]" },
-        { name: "MASUK", className: "text-center w-[7%]" },
+        { name: "UNIT LAYANAN" },
+        { name: "PASIEN AWAL", className: "text-center text-wrap w-[7%]" },
+        { name: "PASIEN MASUK", className: "text-center text-wrap w-[7%]" },
         { name: "PINDAHAN", className: "text-center w-[7%]" },
         { name: "DIPINDAHKAN", className: "text-center w-[7%]" },
         { name: "KELUAR HIDUP", className: "text-wrap text-center w-[7%]" },
         { name: "MENINGGAL", className: "text-center w-[7%]" },
-        { name: "MENINGGAL < 48", className: "text-wrap text-center w-[7%]" },
-        { name: "MENINGGAL > 48", className: "text-wrap text-center w-[7%]" },
-        { name: "AKHIR", className: "text-center w-[7%]" },
+        { name: "PASIEN AKHIR", className: "text-center text-wrap w-[7%]" },
         { name: "LAMA DIRAWAT", className: "text-wrap text-center w-[7%]" },
         { name: "HARI PERAWATAN", className: "text-wrap text-center w-[7%]" },
     ];
@@ -73,8 +71,6 @@ export default function KegiatanRanap({
                                                     <TableCell className='text-center'>{formatRibuan(data.DIPINDAHKAN)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.HIDUP)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.MATI)}</TableCell>
-                                                    <TableCell className='text-center'>{formatRibuan(data.MATIKURANG48)}</TableCell>
-                                                    <TableCell className='text-center'>{formatRibuan(data.MATILEBIH48)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.SISA)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.LD)}</TableCell>
                                                     <TableCell className='text-center'>{formatRibuan(data.HP)}</TableCell>
@@ -97,8 +93,6 @@ export default function KegiatanRanap({
                                             <TableFooterCell className='text-center'>{formatRibuan(total.DIPINDAHKAN)}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.HIDUP)}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.MATI)}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.MATIKURANG48)}</TableFooterCell>
-                                            <TableFooterCell className='text-center'>{formatRibuan(total.MATILEBIH48)}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.SISA)}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.LD)}</TableFooterCell>
                                             <TableFooterCell className='text-center'>{formatRibuan(total.HP)}</TableFooterCell>

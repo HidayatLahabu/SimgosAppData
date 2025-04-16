@@ -33,21 +33,21 @@ export default function Print({
                                     <table className="w-full text-xs text-left rtl:text-right text-gray-500 dark:text-gray-900 border border-gray-500">
                                         <thead className="uppercase font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                                             <tr>
-                                                <th className="px-3 py-2 border border-gray-500 border-solid w-[15%]">JENIS PELAYANAN</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">PASIEN AWAL</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">PASIEN MASUK</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">PASIEN KELUAR</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">MATI &lt; 48</th>
+                                                <th className="px-3 py-2 border border-gray-500 border-solid">JENIS PELAYANAN</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">PASIEN AWAL</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">PASIEN MASUK</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">PASIEN KELUAR</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">MATI &lt; 48</th>
                                                 <th className="px-3 py-2 border text-center border-gray-500 border-solid">MATI &gt; 48</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">JUMLAH LAMA</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">PASIEN AKHIR</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">JUMLAH HARI</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">VVIP</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">VIP</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">KELAS I</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">KELAS II</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">KELAS III</th>
-                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid">KELAS KHUSUS</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">JUMLAH LAMA</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">PASIEN AKHIR</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">JUMLAH HARI</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">VVIP</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">VIP</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">KELAS I</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">KELAS II</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">KELAS III</th>
+                                                <th className="px-3 py-2 border text-center border-gray-500 border-solid w-[6%]">KELAS KHUSUS</th>
                                             </tr>
                                         </thead>
 

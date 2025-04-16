@@ -59,6 +59,7 @@ export default function NavigationLaporan() {
             route().current('laporanRP1.index') ||
             route().current('pasienBelumGrouping.index') ||
             route().current('rekapPasienKeluarRi.index') ||
+            route().current('kegiatanRiPerUnit.index') ||
             route().current('kegiatanRawatInap.index');
     };
 
@@ -96,6 +97,7 @@ export default function NavigationLaporan() {
         { label: 'Rekap Sensus Harian', route: 'laporanRP1.index' },
         { label: 'Belum Final Grouping', route: 'pasienBelumGrouping.index' },
         { label: 'Rekap Pasien Keluar RI', route: 'rekapPasienKeluarRi.index' },
+        { label: 'Kegiatan RI Per Unit', route: 'kegiatanRiPerUnit.index' },
     ];
 
     // Sort the links alphabetically by label

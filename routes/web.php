@@ -104,6 +104,7 @@ use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Chart\ChartStatistikKunjunganController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
+use App\Http\Controllers\Laporan\LaporanRL31PerUnitController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
@@ -652,6 +653,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('rekapPasienKeluarRi', [RekapPasienKeluarController::class, 'index'])->name('rekapPasienKeluarRi.index');
         Route::get('/rekapPasienKeluarRi-print', [RekapPasienKeluarController::class, 'print'])->name('rekapPasienKeluarRi.print');
+
+        Route::get('rekapPasienKeluarRi', [RekapPasienKeluarController::class, 'index'])->name('rekapPasienKeluarRi.index');
+        Route::get('/rekapPasienKeluarRi-print', [RekapPasienKeluarController::class, 'print'])->name('rekapPasienKeluarRi.print');
+
+        Route::get('kegiatanRiPerUnit', [LaporanRL31PerUnitController::class, 'index'])->name('kegiatanRiPerUnit.index');
+        Route::get('/kegiatanRiPerUnit-print', [LaporanRL31PerUnitController::class, 'print'])->name('kegiatanRiPerUnit.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {

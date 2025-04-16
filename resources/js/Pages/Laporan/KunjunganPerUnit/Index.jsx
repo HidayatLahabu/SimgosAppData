@@ -24,16 +24,16 @@ export default function KunjunganPerUnit({
 
     const headers = [
         { name: "UNIT LAYANAN" },
-        { name: "LAKI-LAKI", className: "text-center w-[7%]" },
-        { name: "PEREMPUAN", className: "text-center  w-[7%]" },
-        { name: "KASUS BARU", className: "text-wrap text-center w-[7%]" },
-        { name: "KASUS LAMA", className: "text-wrap text-center w-[7%]" },
-        { name: "UMUM", className: "text-center w-[7%]" },
-        { name: "JKN", className: "text-center w-[7%]" },
-        { name: "INHEALT", className: "text-center w-[7%]" },
-        { name: "JKD", className: "text-center w-[7%]" },
-        { name: "IKS", className: "text-center w-[7%]" },
-        { name: "JUMLAH", className: "text-center w-[7%]" },
+        { name: "LAKI-LAKI", className: "text-center w-[8%]" },
+        { name: "PEREMPUAN", className: "text-center  w-[8%]" },
+        { name: "KASUS BARU", className: "text-wrap text-center w-[8%]" },
+        { name: "KASUS LAMA", className: "text-wrap text-center w-[8%]" },
+        { name: "UMUM", className: "text-center w-[8%]" },
+        { name: "JKN", className: "text-center w-[8%]" },
+        { name: "INHEALT", className: "text-center w-[8%]" },
+        { name: "JKD", className: "text-center w-[8%]" },
+        { name: "IKS", className: "text-center w-[8%]" },
+        { name: "JUMLAH", className: "text-center w-[8%]" },
     ];
 
     return (

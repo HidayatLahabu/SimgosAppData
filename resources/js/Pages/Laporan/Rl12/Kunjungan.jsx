@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { formatRibuan } from '@/utils/formatRibuan';
 
 export default function Kunjungan({
     tahun,
@@ -24,12 +25,12 @@ export default function Kunjungan({
                 <thead className="text-sm font-bold text-gray-900 bg-gray-300 dark:text-gray-900 border border-gray-500">
                     <tr>
                         <th className="px-3 py-2 border border-gray-500 border-solid">JUMLAH TEMPAT TIDUR</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">JUMLAH AWAL</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">JUMLAH MASUK</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">JUMLAH KELUAR</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">MENINGGAL &lt; 48</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">MENINGGAL &gt; 48</th>
-                        <th className="px-3 py-2 border border-gray-500 border-solid">PASIEN DI RAWAT</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">JUMLAH AWAL</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">JUMLAH MASUK</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">JUMLAH KELUAR</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">MENINGGAL &lt; 48</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">MENINGGAL &gt; 48</th>
+                        <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[12%]">PASIEN DI RAWAT</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,23 +38,23 @@ export default function Kunjungan({
                         <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                             {ttidur}
                         </td>
-                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                            {awalTahun}
+                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid text-center">
+                            {formatRibuan(awalTahun)}
                         </td>
-                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                            {masukTahun}
+                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid text-center">
+                            {formatRibuan(masukTahun)}
                         </td>
-                        <td className="px-3 py-2 border border-gray-500 border-solid">
-                            {keluarTahun}
+                        <td className="px-3 py-2 border border-gray-500 border-solid text-center">
+                            {formatRibuan(keluarTahun)}
                         </td>
-                        <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                            {lebih48Tahun}
+                        <td className="px-3 py-2 text-wrap border border-gray-500 border-solid text-center">
+                            {formatRibuan(lebih48Tahun)}
                         </td>
-                        <td className="px-3 py-2 text-wrap border border-gray-500 border-solid">
-                            {kurang48Tahun}
+                        <td className="px-3 py-2 text-wrap border border-gray-500 border-solid text-center">
+                            {formatRibuan(kurang48Tahun)}
                         </td>
-                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
-                            {sisaTahun}
+                        <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid text-center">
+                            {formatRibuan(sisaTahun)}
                         </td>
                     </tr>
                 </tbody>

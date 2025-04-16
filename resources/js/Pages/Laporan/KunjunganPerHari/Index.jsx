@@ -20,16 +20,16 @@ export default function KunjunganPerHari({
 
     const headers = [
         { name: "TANGGAL" },
-        { name: "LAKI-LAKI", className: "text-center w-[9%]" },
-        { name: "PEREMPUAN", className: "text-center w-[9%]" },
-        { name: "BARU", className: "text-center w-[7%]" },
-        { name: "LAMA", className: "text-center w-[7%]" },
-        { name: "UMUM", className: "text-center w-[7%]" },
-        { name: "JKN", className: "text-center w-[7%]" },
-        { name: "INHEALT", className: "text-center w-[7%]" },
-        { name: "JKD", className: "text-center w-[7%]" },
-        { name: "IKS", className: "text-center w-[7%]" },
-        { name: "JUMLAH", className: "text-center w-[9%]" },
+        { name: "LAKI-LAKI", className: "text-center w-[8%]" },
+        { name: "PEREMPUAN", className: "text-center w-[8%]" },
+        { name: "BARU", className: "text-center w-[8%]" },
+        { name: "LAMA", className: "text-center w-[8%]" },
+        { name: "UMUM", className: "text-center w-[8%]" },
+        { name: "JKN", className: "text-center w-[8%]" },
+        { name: "INHEALT", className: "text-center w-[8%]" },
+        { name: "JKD", className: "text-center w-[8%]" },
+        { name: "IKS", className: "text-center w-[8%]" },
+        { name: "JUMLAH", className: "text-center w-[8%]" },
     ];
 
     return (

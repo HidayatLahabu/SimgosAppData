@@ -32,16 +32,16 @@ export default function Print({ data, total, dariTanggal, sampaiTanggal, ruangan
                                         <tr>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">UNIT LAYANAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">LAKI-LAKI</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">PEREMPUAN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">KASUS BARU</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">KASUS LAMA</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">UMUM</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKN</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">INHEALT</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JKD</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">IKS</th>
-                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[7%]">JUMLAH</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">LAKI-LAKI</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">PEREMPUAN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">KASUS BARU</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">KASUS LAMA</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">UMUM</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">JKN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">INHEALT</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">JKD</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">IKS</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid text-center w-[8%]">JUMLAH</th>
                                         </tr>
                                     </thead>
                                     <tbody>
