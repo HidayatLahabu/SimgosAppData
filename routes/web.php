@@ -113,6 +113,7 @@ use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
 use App\Http\Controllers\Laporan\PasienBelumGroupingController;
 use App\Http\Controllers\Laporan\RekapPasienKeluarController;
+use App\Http\Controllers\Laporan\RespondTimeIgdController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -659,6 +660,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('kegiatanRiPerUnit', [LaporanRL31PerUnitController::class, 'index'])->name('kegiatanRiPerUnit.index');
         Route::get('/kegiatanRiPerUnit-print', [LaporanRL31PerUnitController::class, 'print'])->name('kegiatanRiPerUnit.print');
+
+        Route::get('respondTimeIgd', [RespondTimeIgdController::class, 'index'])->name('respondTimeIgd.index');
+        Route::get('/respondTimeIgd-print', [RespondTimeIgdController::class, 'print'])->name('respondTimeIgd.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
