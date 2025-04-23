@@ -111,6 +111,7 @@ use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
+use App\Http\Controllers\Laporan\MonitoringStatusKegiatanController;
 use App\Http\Controllers\Laporan\PasienBelumGroupingController;
 use App\Http\Controllers\Laporan\RekapPasienKeluarController;
 use App\Http\Controllers\Laporan\RespondTimeIgdController;
@@ -663,6 +664,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('respondTimeIgd', [RespondTimeIgdController::class, 'index'])->name('respondTimeIgd.index');
         Route::get('/respondTimeIgd-print', [RespondTimeIgdController::class, 'print'])->name('respondTimeIgd.print');
+
+        Route::get('monitoringKegiatan', [MonitoringStatusKegiatanController::class, 'index'])->name('monitoringKegiatan.index');
+        Route::get('/monitoringKegiatan-print', [MonitoringStatusKegiatanController::class, 'print'])->name('monitoringKegiatan.print');
     });
 
     Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
