@@ -65,6 +65,7 @@ export default function ResponsiveNavLaporan() {
                             <ResponsiveNavLink href={route('pasienBelumGrouping.index')}>Belum FInal Groping</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('respondTImeIgd.index')}>Respond Time IGD</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('monitoringKegiatan.index')}>Monitoring Kegiatan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('monitoringKegiatanRekap.index')}>Monitoring Kegiatan Rekap</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

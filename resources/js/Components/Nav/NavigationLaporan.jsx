@@ -62,6 +62,7 @@ export default function NavigationLaporan() {
             route().current('kegiatanRiPerUnit.index') ||
             route().current('respondTimeIgd.index') ||
             route().current('monitoringKegiatan.index') ||
+            route().current('monitoringKegiatanRekap.index') ||
             route().current('kegiatanRawatInap.index');
     };
 
@@ -102,6 +103,7 @@ export default function NavigationLaporan() {
         { label: 'Kegiatan RI Per Unit', route: 'kegiatanRiPerUnit.index' },
         { label: 'Respond Time IGD', route: 'respondTimeIgd.index' },
         { label: 'Monitoring Kegiatan', route: 'monitoringKegiatan.index' },
+        { label: 'Monitoring Kegiatan Rekap', route: 'monitoringKegiatanRekap.index' },
     ];
 
     // Sort the links alphabetically by label

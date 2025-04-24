@@ -68,6 +68,7 @@ use App\Http\Controllers\Satusehat\CompositionController;
 use App\Http\Controllers\Satusehat\ObservationController;
 use App\Http\Controllers\Chart\ChartPendaftaranController;
 use App\Http\Controllers\Laporan\KunjunganRekapController;
+use App\Http\Controllers\Laporan\RespondTimeIgdController;
 use App\Http\Controllers\Master\TindakanRuanganController;
 use App\Http\Controllers\Satusehat\ImagingStudyController;
 use App\Http\Controllers\Satusehat\OrganizationController;
@@ -84,12 +85,15 @@ use App\Http\Controllers\Satusehat\ServiceRequestController;
 use App\Http\Controllers\Laporan\KegiatanRawatInapController;
 use App\Http\Controllers\Laporan\PasienKeluarRanapController;
 use App\Http\Controllers\Laporan\PengunjungPerHariController;
+use App\Http\Controllers\Laporan\RekapPasienKeluarController;
 use App\Http\Controllers\Satusehat\TindakanToLoincController;
 use App\Http\Controllers\Laporan\KunjunganCaraBayarController;
 use App\Http\Controllers\Laporan\KunjunganPerPasienController;
+use App\Http\Controllers\Laporan\LaporanRL31PerUnitController;
 use App\Http\Controllers\Pendaftaran\AntrianRuanganController;
 use App\Http\Controllers\Satusehat\ConditionHasilPaController;
 use App\Http\Controllers\Satusehat\DiagnosticReportController;
+use App\Http\Controllers\Laporan\PasienBelumGroupingController;
 use App\Http\Controllers\Laporan\PasienKeluarDaruratController;
 use App\Http\Controllers\Laporan\PengunjungCaraBayarController;
 use App\Http\Controllers\Laporan\PengunjungPerPasienController;
@@ -104,17 +108,14 @@ use App\Http\Controllers\Laporan\PengunjungBelumGroupController;
 use App\Http\Controllers\Satusehat\MedicationDispanseController;
 use App\Http\Controllers\Chart\ChartStatistikKunjunganController;
 use App\Http\Controllers\Informasi\InformasiPengunjungController;
-use App\Http\Controllers\Laporan\LaporanRL31PerUnitController;
 use App\Http\Controllers\Laporan\LayananTindakanPasienController;
 use App\Http\Controllers\Laporan\WaktuTungguRegistrasiController;
 use App\Http\Controllers\Laporan\LayananTindakanLabGroupController;
 use App\Http\Controllers\Laporan\LayananTindakanRadGroupController;
+use App\Http\Controllers\Laporan\MonitoringKegiatanRekapController;
+use App\Http\Controllers\Laporan\MonitoringStatusKegiatanController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
-use App\Http\Controllers\Laporan\MonitoringStatusKegiatanController;
-use App\Http\Controllers\Laporan\PasienBelumGroupingController;
-use App\Http\Controllers\Laporan\RekapPasienKeluarController;
-use App\Http\Controllers\Laporan\RespondTimeIgdController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -553,6 +554,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
     });
 
+    Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
+        Route::get('statistikKunjungan', [StatistikKunjunganController::class, 'index'])->name('statistikKunjungan.index');
+        Route::get('/statistikKunjungan-print', [StatistikKunjunganController::class, 'print'])->name('statistikKunjungan.print');
+        Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
+        Route::get('/kunjungan-print', [InformasiKunjunganController::class, 'print'])->name('informasiKunjungan.print');
+        Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
+        Route::get('/pengunjung-print', [InformasiPengunjungController::class, 'print'])->name('informasiPengunjung.print');
+        Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
+        Route::get('/penunjang-print', [InformasiPenunjangController::class, 'print'])->name('informasiPenunjang.print');
+    });
+
     Route::prefix('laporan')->namespace('App\Http\Controllers\Laporan')->group(function () {
         Route::get('laporanRl12', [LaporanRl12Controller::class, 'index'])->name('laporanRl12.index');
         Route::get('/laporanRl12-print', [LaporanRl12Controller::class, 'print'])->name('laporanRl12.print');
@@ -667,17 +679,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('monitoringKegiatan', [MonitoringStatusKegiatanController::class, 'index'])->name('monitoringKegiatan.index');
         Route::get('/monitoringKegiatan-print', [MonitoringStatusKegiatanController::class, 'print'])->name('monitoringKegiatan.print');
-    });
 
-    Route::prefix('informasi')->namespace('App\Http\Controllers\Informasi')->group(function () {
-        Route::get('statistikKunjungan', [StatistikKunjunganController::class, 'index'])->name('statistikKunjungan.index');
-        Route::get('/statistikKunjungan-print', [StatistikKunjunganController::class, 'print'])->name('statistikKunjungan.print');
-        Route::get('kunjungan', [InformasiKunjunganController::class, 'index'])->name('informasiKunjungan.index');
-        Route::get('/kunjungan-print', [InformasiKunjunganController::class, 'print'])->name('informasiKunjungan.print');
-        Route::get('pengunjung', [InformasiPengunjungController::class, 'index'])->name('informasiPengunjung.index');
-        Route::get('/pengunjung-print', [InformasiPengunjungController::class, 'print'])->name('informasiPengunjung.print');
-        Route::get('penunjang', [InformasiPenunjangController::class, 'index'])->name('informasiPenunjang.index');
-        Route::get('/penunjang-print', [InformasiPenunjangController::class, 'print'])->name('informasiPenunjang.print');
+        Route::get('monitoringKegiatan', [MonitoringStatusKegiatanController::class, 'index'])->name('monitoringKegiatan.index');
+        Route::get('/monitoringKegiatan-print', [MonitoringStatusKegiatanController::class, 'print'])->name('monitoringKegiatan.print');
+
+        Route::get('monitoringKegiatanRekap', [MonitoringKegiatanRekapController::class, 'index'])->name('monitoringKegiatanRekap.index');
+        Route::get('/monitoringKegiatanRekap-print', [MonitoringKegiatanRekapController::class, 'print'])->name('monitoringKegiatanRekap.print');
     });
 
     Route::prefix('chart')->namespace('App\Http\Controllers\Chart')->group(function () {
