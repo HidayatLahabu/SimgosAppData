@@ -83,7 +83,7 @@ const KunjunganBulanan = ({ kunjunganBulanan }) => {
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Kunjungan Bulanan</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Rawat Jalan Bulanan</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>

@@ -18,6 +18,8 @@ class ChartStatistikKunjunganController extends Controller
         $rujukanBulanan = $this->getRujukanBulanan();
         $kunjunganTahunan = $this->getKunjunganTahunan();
         $rujukanTahunan = $this->getRujukanTahunan();
+        $rajalBulanan = $this->getRajalBulanan();
+        $rajalBulananLalu = $this->getRajalBulananLalu();
 
         return inertia("Chart/Informasi/Index", [
             'kunjunganHarian' => $kunjunganHarian->toArray(),
@@ -28,6 +30,8 @@ class ChartStatistikKunjunganController extends Controller
             'rujukanBulanan' => $rujukanBulanan->toArray(),
             'kunjunganTahunan' => $kunjunganTahunan->toArray(),
             'rujukanTahunan' => $rujukanTahunan->toArray(),
+            'rajalBulanan' => $rajalBulanan->toArray(),
+            'rajalBulananLalu' => $rajalBulananLalu->toArray(),
         ]);
     }
 
@@ -197,5 +201,42 @@ class ChartStatistikKunjunganController extends Controller
             ->groupBy(DB::raw('YEAR(statistikRujukan.TANGGAL)'))
             ->orderBy(DB::raw('YEAR(statistikRujukan.TANGGAL)'), 'desc')
             ->get();
+    }
+
+    protected function getRajalBulanan()
+    {
+        $now = now();
+        $startOfYear = $now->copy()->startOfYear();
+        $today = $now->copy()->endOfDay();
+
+        return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+            ->select(
+                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
+                DB::raw('SUM(kunjungan.VALUE) as jumlah')
+            )
+            ->whereBetween('kunjungan.TANGGAL', [$startOfYear, $today])
+            ->havingRaw('SUM(kunjungan.VALUE) > 0')
+            ->groupBy('kunjungan.SUBUNIT')
+            ->get(); // <-- return this collection
+    }
+
+    protected function getRajalBulananLalu()
+    {
+        $now = now();
+        // Ambil awal tahun sebelumnya
+        $startOfLastYear = $now->copy()->subYear()->startOfYear();
+
+        // Ambil akhir tahun sebelumnya
+        $endOfLastYear = $now->copy()->subYear()->endOfYear();
+
+        return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
+            ->select(
+                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
+                DB::raw('SUM(kunjungan.VALUE) as jumlah')
+            )
+            ->whereBetween('kunjungan.TANGGAL', [$startOfLastYear, $endOfLastYear])
+            ->havingRaw('SUM(kunjungan.VALUE) > 0') // Query untuk tahun sebelumnya
+            ->groupBy('kunjungan.SUBUNIT')
+            ->get(); // <-- return this collection
     }
 }

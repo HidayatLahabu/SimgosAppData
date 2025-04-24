@@ -9,6 +9,8 @@ import KunjunganBulanan from './KunjunganBulanan';
 import RujukanBulanan from './RujukanBulanan';
 import KunjunganTahunan from './KunjunganTahunan';
 import RujukanTahunan from './RujukanTahunan';
+import RajalBulanan from './RajalBulanan';
+import RajalBulananLalu from './RajalBulananLalu';
 
 export default function Index({
     auth,
@@ -20,6 +22,8 @@ export default function Index({
     rujukanBulanan,
     kunjunganTahunan,
     rujukanTahunan,
+    rajalBulanan,
+    rajalBulananLalu,
 }) {
 
     return (
@@ -74,6 +78,19 @@ export default function Index({
                 <div className="w-1/2">
                     <RujukanTahunan
                         rujukanTahunan={rujukanTahunan}
+                    />
+                </div>
+            </div>
+
+            <div className="flex flex-wrap w-full">
+                <div className="w-1/2">
+                    <RajalBulanan
+                        rajalBulanan={rajalBulanan}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <RajalBulananLalu
+                        rajalBulananLalu={rajalBulananLalu}
                     />
                 </div>
             </div>
