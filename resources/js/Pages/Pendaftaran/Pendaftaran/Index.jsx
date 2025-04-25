@@ -20,6 +20,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
         { name: "NORM", className: "w-[7%]" },
         { name: "NAMA PASIEN" },
         { name: "TANGGAL", className: "text-center w-[12%]" },
+        { name: "RUANGAN TUJUAN" },
         { name: "PENJAMIN", className: "w-[15%]" },
         { name: "STATUS", className: "text-center w-[7%]" },
         { name: "MENU", className: "text-center w-[5%]" },
@@ -109,6 +110,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell className='text-center'>{data.tanggal}</TableCell>
+                                                    <TableCell>{data.ruangan}</TableCell>
                                                     <TableCell>{data.penjamin}</TableCell>
                                                     <TableCell className='text-center'>
                                                         {data.status === 0 ? 'Batal' : data.status === 1 ? 'Aktif' : 'Selesai'}
