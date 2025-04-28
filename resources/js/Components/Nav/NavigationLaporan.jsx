@@ -103,7 +103,7 @@ export default function NavigationLaporan() {
         { label: 'Kegiatan RI Per Unit', route: 'kegiatanRiPerUnit.index' },
         { label: 'Respond Time IGD', route: 'respondTimeIgd.index' },
         { label: 'Monitoring Kegiatan', route: 'monitoringKegiatan.index' },
-        { label: 'Monitoring Kegiatan Rekap', route: 'monitoringKegiatanRekap.index' },
+        { label: 'Rekap Kegiatan', route: 'monitoringKegiatanRekap.index' },
     ];
 
     // Sort the links alphabetically by label

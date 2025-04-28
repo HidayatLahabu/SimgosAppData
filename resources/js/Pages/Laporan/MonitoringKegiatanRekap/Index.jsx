@@ -8,13 +8,16 @@ import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
+import TableFooter from "@/Components/Table/TableFooter";
+import TableFooterCell from "@/Components/Table/TableFooterCell";
 import Cetak from './Cetak';
 
 export default function MonitoringKegiatanRekap({
     auth,
     items,
     tgl_awal,
-    tgl_akhir
+    tgl_akhir,
+    total,
 }) {
 
     const headers = [
@@ -72,6 +75,18 @@ export default function MonitoringKegiatanRekap({
                                             </tr>
                                         )}
                                     </tbody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TableFooterCell className='text-right'>TOTAL</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_KUNJUNGAN)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_FINAL_KUNJUNGAN)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_RESEP)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_LAB)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_RAD)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_KONSUL)}</TableFooterCell>
+                                            <TableFooterCell className='text-center'>{formatRibuan(total.BLM_TERIMA_MUTASI)}</TableFooterCell>
+                                        </TableRow>
+                                    </TableFooter>
                                 </Table>
                             </div>
                         </div>

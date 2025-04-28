@@ -32,10 +32,38 @@ class MonitoringKegiatanRekapController extends Controller
             );
         }));
 
+        // Urutkan hasil berdasarkan LAYANAN secara ascending
+        usort($filteredData, function ($a, $b) {
+            return strcmp($a->DESKRIPSI, $b->DESKRIPSI);
+        });
+
+        // Inisialisasi variabel untuk menyimpan total
+        $total = [
+            'BLM_TERIMA_KUNJUNGAN' => 0,
+            'BLM_FINAL_KUNJUNGAN' => 0,
+            'BLM_TERIMA_RESEP' => 0,
+            'BLM_TERIMA_LAB' => 0,
+            'BLM_TERIMA_RAD' => 0,
+            'BLM_TERIMA_KONSUL' => 0,
+            'BLM_TERIMA_MUTASI' => 0,
+        ];
+
+        // Loop melalui hasil query dan jumlahkan nilai
+        foreach ($filteredData as $row) {
+            $total['BLM_TERIMA_KUNJUNGAN'] += $row->BLM_TERIMA_KUNJUNGAN ?? 0;
+            $total['BLM_FINAL_KUNJUNGAN'] += $row->BLM_FINAL_KUNJUNGAN ?? 0;
+            $total['BLM_TERIMA_RESEP'] += $row->BLM_TERIMA_RESEP ?? 0;
+            $total['BLM_TERIMA_LAB'] += $row->BLM_TERIMA_LAB ?? 0;
+            $total['BLM_TERIMA_RAD'] += $row->BLM_TERIMA_RAD ?? 0;
+            $total['BLM_TERIMA_KONSUL'] += $row->BLM_TERIMA_KONSUL ?? 0;
+            $total['BLM_TERIMA_MUTASI'] += $row->BLM_TERIMA_MUTASI ?? 0;
+        }
+
         return inertia("Laporan/MonitoringKegiatanRekap/Index", [
             'items' => $filteredData,
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
+            'total' => $total,
         ]);
     }
 
@@ -65,10 +93,49 @@ class MonitoringKegiatanRekapController extends Controller
             );
         }));
 
+        // Urutkan hasil berdasarkan LAYANAN secara ascending
+        usort($filteredData, function ($a, $b) {
+            return strcmp($a->DESKRIPSI, $b->DESKRIPSI);
+        });
+
+        // Filter agar hanya satu baris per DESKRIPSI
+        $uniqueData = [];
+        foreach ($filteredData as $row) {
+            if (!isset($uniqueData[$row->DESKRIPSI])) {
+                $uniqueData[$row->DESKRIPSI] = $row;
+            }
+        }
+
+        // Konversi kembali ke array dengan Inertia
+        $filteredData = array_values($uniqueData);
+
+        // Inisialisasi variabel untuk menyimpan total
+        $total = [
+            'BLM_TERIMA_KUNJUNGAN' => 0,
+            'BLM_FINAL_KUNJUNGAN' => 0,
+            'BLM_TERIMA_RESEP' => 0,
+            'BLM_TERIMA_LAB' => 0,
+            'BLM_TERIMA_RAD' => 0,
+            'BLM_TERIMA_KONSUL' => 0,
+            'BLM_TERIMA_MUTASI' => 0,
+        ];
+
+        // Loop melalui hasil query dan jumlahkan nilai
+        foreach ($filteredData as $row) {
+            $total['BLM_TERIMA_KUNJUNGAN'] += $row->BLM_TERIMA_KUNJUNGAN ?? 0;
+            $total['BLM_FINAL_KUNJUNGAN'] += $row->BLM_FINAL_KUNJUNGAN ?? 0;
+            $total['BLM_TERIMA_RESEP'] += $row->BLM_TERIMA_RESEP ?? 0;
+            $total['BLM_TERIMA_LAB'] += $row->BLM_TERIMA_LAB ?? 0;
+            $total['BLM_TERIMA_RAD'] += $row->BLM_TERIMA_RAD ?? 0;
+            $total['BLM_TERIMA_KONSUL'] += $row->BLM_TERIMA_KONSUL ?? 0;
+            $total['BLM_TERIMA_MUTASI'] += $row->BLM_TERIMA_MUTASI ?? 0;
+        }
+
         return inertia("Laporan/MonitoringKegiatanRekap/Print", [
             'items' => ['data' => $filteredData],
             'tgl_awal' => $tgl_awal,
             'tgl_akhir' => $tgl_akhir,
+            'total' => $total,
         ]);
     }
 }

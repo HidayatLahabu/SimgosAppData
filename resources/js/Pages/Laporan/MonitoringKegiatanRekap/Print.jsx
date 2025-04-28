@@ -6,7 +6,8 @@ import { formatRibuan } from '@/utils/formatRibuan';
 export default function Print({
     items,
     tgl_awal,
-    tgl_akhir
+    tgl_akhir,
+    total,
 }) {
 
     useEffect(() => {
@@ -64,6 +65,18 @@ export default function Print({
                                                 </tr>
                                             )}
                                         </tbody>
+                                        <tfoot>
+                                            <tr className='bg-gray-300 font-bold text-sm'>
+                                                <td className='px-2 py-2 text-right border border-gray-500 border-solid'>TOTAL</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_KUNJUNGAN)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_FINAL_KUNJUNGAN)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_RESEP)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_LAB)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_RAD)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_KONSUL)}</td>
+                                                <td className="px-2 py-2 text-center border border-gray-500 border-solid">{formatRibuan(total.BLM_TERIMA_MUTASI)}</td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
 
