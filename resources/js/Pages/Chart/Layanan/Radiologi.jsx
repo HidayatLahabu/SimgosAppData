@@ -57,6 +57,13 @@ const Radiologi = ({ radiologiTahunIni, radiologiTahunLalu, tahunIni, tahunLalu 
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: {
+                        left: 1,
+                        right: 1,
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -68,9 +75,10 @@ const Radiologi = ({ radiologiTahunIni, radiologiTahunLalu, tahunIni, tahunLalu 
                         ticks: {
                             color: 'rgb(176, 175, 153)',
                         },
+                        categoryPercentage: 0.7,
+                        barPercentage: 0.5
                     },
                 },
-                barThickness: 30,
                 grouped: true,
             },
         });

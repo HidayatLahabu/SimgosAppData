@@ -57,6 +57,13 @@ const Laboratorium = ({ laboratoriumTahunIni, laboratoriumTahunLalu, tahunIni, t
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: {
+                        left: 1,
+                        right: 1,
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -68,12 +75,11 @@ const Laboratorium = ({ laboratoriumTahunIni, laboratoriumTahunLalu, tahunIni, t
                         ticks: {
                             color: 'rgb(176, 175, 153)',
                         },
-                        barPercentage: 0.4,
-                        categoryPercentage: 0.8,
+                        categoryPercentage: 0.7,
+                        barPercentage: 0.5
                     },
                 },
-                barThickness: 30,
-                grouped: true,  // Untuk memastikan bar perbandingan
+                grouped: true,
             },
         });
 

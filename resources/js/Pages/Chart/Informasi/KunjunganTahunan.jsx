@@ -15,7 +15,11 @@ const KunjunganTahunan = ({ kunjunganTahunan }) => {
 
         const ctx = chartRef.current.getContext("2d");
 
-        const filteredData = kunjunganTahunan.slice(0, 5).reverse();
+        // const filteredData = kunjunganTahunan.slice(0, 5).reverse();
+        const filteredData = kunjunganTahunan
+            .filter(item => (item.rajal > 0 || item.darurat > 0 || item.ranap > 0))
+            .slice(0, 5)
+            .reverse();
 
         const labels = filteredData.map(item => `${item.tahun}`);
         const rajalCounts = filteredData.map(item => item.rajal);

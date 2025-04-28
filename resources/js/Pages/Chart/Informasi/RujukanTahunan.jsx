@@ -15,7 +15,10 @@ const RujukanTahunan = ({ rujukanTahunan }) => {
 
         const ctx = chartRef.current.getContext("2d");
 
-        const filteredData = rujukanTahunan.slice(0, 5).reverse();
+        const filteredData = rujukanTahunan
+            .filter(item => (item.masuk > 0 || item.keluar > 0 || item.balik > 0))
+            .slice(0, 5)
+            .reverse();
 
         const labels = filteredData.map(item => `${item.tahun}`);
         const rajalCounts = filteredData.map(item => item.masuk);
