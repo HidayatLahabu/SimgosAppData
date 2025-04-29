@@ -10,6 +10,9 @@ class ChartStatistikKunjunganController extends Controller
 {
     public function index()
     {
+        $tahunIni = now()->year; // ambil tahun sekarang
+        $tahunLalu = $tahunIni - 1;
+
         $kunjunganHarian = $this->getKunjunganHarian();
         $rujukanHarian = $this->getRujukanHarian();
         $kunjunganMingguan = $this->getKunjunganMingguan();
@@ -20,8 +23,12 @@ class ChartStatistikKunjunganController extends Controller
         $rujukanTahunan = $this->getRujukanTahunan();
         $rajalBulanan = $this->getRajalBulanan();
         $rajalBulananLalu = $this->getRajalBulananLalu();
+        $ranapBulananIni = $this->getRanapBulanan($tahunIni);
+        $ranapBulananLalu = $this->getRanapBulanan($tahunLalu);
 
         return inertia("Chart/Informasi/Index", [
+            'tahunIni' => $tahunIni,
+            'tahunLalu' => $tahunLalu,
             'kunjunganHarian' => $kunjunganHarian->toArray(),
             'rujukanHarian' => $rujukanHarian->toArray(),
             'kunjunganMingguan' => $kunjunganMingguan->toArray(),
@@ -32,6 +39,8 @@ class ChartStatistikKunjunganController extends Controller
             'rujukanTahunan' => $rujukanTahunan->toArray(),
             'rajalBulanan' => $rajalBulanan->toArray(),
             'rajalBulananLalu' => $rajalBulananLalu->toArray(),
+            'ranapBulananIni' => $ranapBulananIni->toArray(),
+            'ranapBulananLalu' => $ranapBulananLalu->toArray(),
         ]);
     }
 
@@ -217,7 +226,7 @@ class ChartStatistikKunjunganController extends Controller
             ->whereBetween('kunjungan.TANGGAL', [$startOfYear, $today])
             ->havingRaw('SUM(kunjungan.VALUE) > 0')
             ->groupBy('kunjungan.SUBUNIT')
-            ->get(); // <-- return this collection
+            ->get();
     }
 
     protected function getRajalBulananLalu()
@@ -238,5 +247,20 @@ class ChartStatistikKunjunganController extends Controller
             ->havingRaw('SUM(kunjungan.VALUE) > 0') // Query untuk tahun sebelumnya
             ->groupBy('kunjungan.SUBUNIT')
             ->get(); // <-- return this collection
+    }
+
+    protected function getRanapBulanan($tahun)
+    {
+        return DB::connection('mysql12')->table('informasi.pasien_rawat_inap as pasienRanap')
+            ->select(
+                DB::raw('MONTH(pasienRanap.TANGGAL) as bulan'),
+                DB::raw('SUM(CASE WHEN pasienRanap.ID = "1" THEN pasienRanap.VALUE ELSE 0 END) as masuk'),
+                DB::raw('SUM(CASE WHEN pasienRanap.ID = "2" THEN pasienRanap.VALUE ELSE 0 END) as dirawat'),
+                DB::raw('SUM(CASE WHEN pasienRanap.ID = "3" THEN pasienRanap.VALUE ELSE 0 END) as keluar')
+            )
+            ->whereYear('pasienRanap.TANGGAL', $tahun)
+            ->groupBy(DB::raw('YEAR(pasienRanap.TANGGAL), MONTH(pasienRanap.TANGGAL)'))
+            ->orderBy(DB::raw('MONTH(pasienRanap.TANGGAL)'), 'asc')
+            ->get();
     }
 }

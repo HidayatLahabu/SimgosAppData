@@ -11,6 +11,7 @@ import KunjunganTahunan from './KunjunganTahunan';
 import RujukanTahunan from './RujukanTahunan';
 import RajalBulanan from './RajalBulanan';
 import RajalBulananLalu from './RajalBulananLalu';
+import RanapBulanan from './RanapBulanan';
 
 export default function Index({
     auth,
@@ -24,6 +25,10 @@ export default function Index({
     rujukanTahunan,
     rajalBulanan,
     rajalBulananLalu,
+    ranapBulananIni,
+    ranapBulananLalu,
+    tahunIni,
+    tahunLalu,
 }) {
 
     return (
@@ -93,6 +98,15 @@ export default function Index({
                         rajalBulananLalu={rajalBulananLalu}
                     />
                 </div>
+            </div>
+
+            <div className="flex flex-col w-full h-full">
+                <RanapBulanan
+                    tahunIni={tahunIni}
+                    tahunLalu={tahunLalu}
+                    ranapBulananIni={ranapBulananIni}
+                    ranapBulananLalu={ranapBulananLalu}
+                />
             </div>
 
         </AuthenticatedLayout>
