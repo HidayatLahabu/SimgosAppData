@@ -18,23 +18,14 @@ const RajalBulanan = ({ rajalBulananLalu }) => {
             chartInstanceRef.current.destroy();
         }
 
-        // Persiapkan data
-        const filteredData = rajalBulananLalu.slice(0, 12).reverse();
+        // Ambil semua data yang jumlahnya > 0
+        const filteredValidData = rajalBulananLalu
+            .filter(item => item.jumlah > 100)
+            .sort((a, b) => b.jumlah - a.jumlah); // Urutkan dari jumlah terbesar ke terkecil
 
-        // Hapus data dengan jumlah 0
-        const filteredValidData = filteredData.filter(item => item.jumlah > 0);
-
-        const labels = filteredValidData.map(item => item.subUnit || "Tidak diketahui");
-        const rajalCounts = filteredValidData.map(item => item.jumlah);
-
-        // Urutkan berdasarkan jumlah (rajalCounts) secara menurun
-        const sortedData = filteredValidData
-            .map((item, index) => ({ label: labels[index], rajalCount: rajalCounts[index] }))
-            .sort((a, b) => b.rajalCount - a.rajalCount); // Urutkan dari terbesar ke terkecil
-
-        // Ambil label dan jumlah yang sudah diurutkan
-        const sortedLabels = sortedData.map(item => item.label);
-        const sortedRajalCounts = sortedData.map(item => item.rajalCount);
+        // Ambil label dan nilai dari data yang sudah diurutkan
+        const sortedLabels = filteredValidData.map(item => item.subUnit || "Tidak diketahui");
+        const sortedRajalCounts = filteredValidData.map(item => item.jumlah);
 
         // Buat chart baru
         chartInstanceRef.current = new Chart(ctx, {
@@ -66,6 +57,9 @@ const RajalBulanan = ({ rajalBulananLalu }) => {
                         stacked: true,
                         ticks: {
                             color: 'rgb(176, 175, 153)',
+                            font: {
+                                size: 10,
+                            },
                         },
                     },
                 },
@@ -85,6 +79,7 @@ const RajalBulanan = ({ rajalBulananLalu }) => {
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100">
                     <h1 className="uppercase text-center font-bold text-xl">Rawat Jalan Per Unit Tahun Lalu</h1>
+                    <h2 className="text-center font-bold text-xs text-red-400">Pasien Lebih dari 100 orang</h2>
                     <canvas ref={chartRef}></canvas>
                 </div>
             </div>

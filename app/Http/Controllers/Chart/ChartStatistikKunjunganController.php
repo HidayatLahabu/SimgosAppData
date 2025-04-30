@@ -224,8 +224,9 @@ class ChartStatistikKunjunganController extends Controller
                 DB::raw('SUM(kunjungan.VALUE) as jumlah')
             )
             ->whereBetween('kunjungan.TANGGAL', [$startOfYear, $today])
-            ->havingRaw('SUM(kunjungan.VALUE) > 0')
             ->groupBy('kunjungan.SUBUNIT')
+            ->havingRaw('SUM(kunjungan.VALUE) > 0')
+            ->orderByRaw('SUM(kunjungan.VALUE) DESC')
             ->get();
     }
 
@@ -246,6 +247,8 @@ class ChartStatistikKunjunganController extends Controller
             ->whereBetween('kunjungan.TANGGAL', [$startOfLastYear, $endOfLastYear])
             ->havingRaw('SUM(kunjungan.VALUE) > 0') // Query untuk tahun sebelumnya
             ->groupBy('kunjungan.SUBUNIT')
+            ->havingRaw('SUM(kunjungan.VALUE) > 0')
+            ->orderByRaw('SUM(kunjungan.VALUE) DESC')
             ->get(); // <-- return this collection
     }
 
