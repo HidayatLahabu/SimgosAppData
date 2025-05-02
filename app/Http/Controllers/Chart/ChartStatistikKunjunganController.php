@@ -21,10 +21,12 @@ class ChartStatistikKunjunganController extends Controller
         $rujukanBulanan = $this->getRujukanBulanan();
         $kunjunganTahunan = $this->getKunjunganTahunan();
         $rujukanTahunan = $this->getRujukanTahunan();
-        $rajalBulanan = $this->getRajalBulanan();
-        $rajalBulananLalu = $this->getRajalBulananLalu();
+        $rajalBulanan = $this->getRajalBulanan($tahunIni);
+        $rajalBulananLalu = $this->getRajalBulanan($tahunLalu);
         $ranapBulananIni = $this->getRanapBulanan($tahunIni);
         $ranapBulananLalu = $this->getRanapBulanan($tahunLalu);
+        $penunjangBulanan = $this->getPenunjangBulanan($tahunIni);
+        $penunjangBulananLalu = $this->getPenunjangBulanan($tahunLalu);
 
         return inertia("Chart/Informasi/Index", [
             'tahunIni' => $tahunIni,
@@ -41,6 +43,10 @@ class ChartStatistikKunjunganController extends Controller
             'rajalBulananLalu' => $rajalBulananLalu->toArray(),
             'ranapBulananIni' => $ranapBulananIni->toArray(),
             'ranapBulananLalu' => $ranapBulananLalu->toArray(),
+            'rajalBulanan' => $rajalBulanan->toArray(),
+            'rajalBulananLalu' => $rajalBulananLalu->toArray(),
+            'penunjangBulanan' => $penunjangBulanan->toArray(),
+            'penunjangBulananLalu' => $penunjangBulananLalu->toArray(),
         ]);
     }
 
@@ -212,44 +218,18 @@ class ChartStatistikKunjunganController extends Controller
             ->get();
     }
 
-    protected function getRajalBulanan()
+    protected function getRajalBulanan($tahun)
     {
-        $now = now();
-        $startOfYear = $now->copy()->startOfYear();
-        $today = $now->copy()->endOfDay();
-
         return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
             ->select(
                 DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
                 DB::raw('SUM(kunjungan.VALUE) as jumlah')
             )
-            ->whereBetween('kunjungan.TANGGAL', [$startOfYear, $today])
+            ->whereYear('kunjungan.TANGGAL', $tahun)
             ->groupBy('kunjungan.SUBUNIT')
             ->havingRaw('SUM(kunjungan.VALUE) > 0')
             ->orderByRaw('SUM(kunjungan.VALUE) DESC')
             ->get();
-    }
-
-    protected function getRajalBulananLalu()
-    {
-        $now = now();
-        // Ambil awal tahun sebelumnya
-        $startOfLastYear = $now->copy()->subYear()->startOfYear();
-
-        // Ambil akhir tahun sebelumnya
-        $endOfLastYear = $now->copy()->subYear()->endOfYear();
-
-        return DB::connection('mysql12')->table('informasi.kunjungan as kunjungan')
-            ->select(
-                DB::raw('MIN(kunjungan.SUBUNIT) as subUnit'),
-                DB::raw('SUM(kunjungan.VALUE) as jumlah')
-            )
-            ->whereBetween('kunjungan.TANGGAL', [$startOfLastYear, $endOfLastYear])
-            ->havingRaw('SUM(kunjungan.VALUE) > 0') // Query untuk tahun sebelumnya
-            ->groupBy('kunjungan.SUBUNIT')
-            ->havingRaw('SUM(kunjungan.VALUE) > 0')
-            ->orderByRaw('SUM(kunjungan.VALUE) DESC')
-            ->get(); // <-- return this collection
     }
 
     protected function getRanapBulanan($tahun)
@@ -264,6 +244,20 @@ class ChartStatistikKunjunganController extends Controller
             ->whereYear('pasienRanap.TANGGAL', $tahun)
             ->groupBy(DB::raw('YEAR(pasienRanap.TANGGAL), MONTH(pasienRanap.TANGGAL)'))
             ->orderBy(DB::raw('MONTH(pasienRanap.TANGGAL)'), 'asc')
+            ->get();
+    }
+
+    protected function getPenunjangBulanan($tahun)
+    {
+        return DB::connection('mysql12')->table('informasi.penunjang as penunjang')
+            ->select(
+                DB::raw('MIN(penunjang.SUBUNIT) as subUnit'),
+                DB::raw('SUM(penunjang.VALUE) as jumlah')
+            )
+            ->whereYear('penunjang.TANGGAL', $tahun)
+            ->groupBy('penunjang.SUBUNIT')
+            ->havingRaw('SUM(penunjang.VALUE) > 0')
+            ->orderByRaw('SUM(penunjang.VALUE) DESC')
             ->get();
     }
 }
