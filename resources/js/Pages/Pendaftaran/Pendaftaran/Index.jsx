@@ -76,7 +76,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={7} className="px-3 py-2">
+                                            <th colSpan={8} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
                                                         className="flex-1"
@@ -124,7 +124,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
