@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLalu }) => {
+const Kunjungan = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -40,17 +40,17 @@ const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLal
                 labels: bulan,
                 datasets: [
                     {
-                        label: `Tahun ${tahunIni}`,
-                        data: tahunIniCounts,
-                        backgroundColor: "rgba(28, 185, 237)",
-                        borderColor: "rgba(28, 185, 237)",
-                        borderWidth: 1,
-                    },
-                    {
-                        label: `Tahun ${tahunLalu}`,
+                        label: `${tahunLalu}`,
                         data: tahunLaluCounts,
                         backgroundColor: "rgba(28, 185, 237, 0.4)",
                         borderColor: "rgba(28, 185, 237, 0.4)",
+                        borderWidth: 1,
+                    },
+                    {
+                        label: `${tahunIni}`,
+                        data: tahunIniCounts,
+                        backgroundColor: "rgba(28, 185, 237)",
+                        borderColor: "rgba(28, 185, 237)",
                         borderWidth: 1,
                     },
                 ],
@@ -106,4 +106,4 @@ const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLal
     );
 };
 
-export default Pendaftaran;
+export default Kunjungan;

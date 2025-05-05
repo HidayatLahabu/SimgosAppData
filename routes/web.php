@@ -51,6 +51,7 @@ use App\Http\Controllers\Satusehat\ConditionController;
 use App\Http\Controllers\Satusehat\EncounterController;
 use App\Http\Controllers\Satusehat\ProcedureController;
 use App\Http\Controllers\Bpjs\MonitoringRekonController;
+use App\Http\Controllers\Chart\ChartLaporanController;
 use App\Http\Controllers\Inventory\PenerimaanController;
 use App\Http\Controllers\Inventory\PengirimanController;
 use App\Http\Controllers\Inventory\PermintaanController;
@@ -692,7 +693,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('chartBpjs', [ChartBpjsController::class, 'index'])->name('chartBpjs.index');
         Route::get('chartLayanan', [ChartLayananController::class, 'index'])->name('chartLayanan.index');
         Route::get('chartInformasi', [ChartStatistikKunjunganController::class, 'index'])->name('chartInformasi.index');
-        Route::get('chartLaporan', [ChartPendaftaranController::class, 'index'])->name('chartLaporan.index');
+        Route::get('chartLaporan', [ChartLaporanController::class, 'index'])->name('chartLaporan.index');
     });
 });
 

@@ -44,6 +44,31 @@ const Kontrol = ({
             data: {
                 labels: bulan,
                 datasets: [
+
+                    {
+                        label: `Rencana ${tahunLalu}`,
+                        data: dataRekonTahunLalu,
+                        backgroundColor: "rgba(54, 162, 235, 0.3)",
+                        borderColor: "rgba(54, 162, 235, 0.7)",
+                        borderWidth: 1,
+                        stack: "tahunLalu",
+                    },
+                    {
+                        label: `Berkunjung ${tahunLalu}`,
+                        data: dataMonitoringTahunLalu,
+                        backgroundColor: "rgba(255, 99, 132, 0.3)",
+                        borderColor: "rgba(255, 99, 132, 0.7)",
+                        borderWidth: 1,
+                        stack: "tahunLalu",
+                    },
+                    {
+                        label: `Batal ${tahunLalu}`,
+                        data: dataBatalTahunLalu,
+                        backgroundColor: "rgba(255, 206, 86, 0.3)",
+                        borderColor: "rgba(255, 206, 86, 0.7)",
+                        borderWidth: 1,
+                        stack: "tahunLalu",
+                    },
                     {
                         label: `Rencana ${tahunIni}`,
                         data: dataRekonTahunIni,
@@ -68,30 +93,6 @@ const Kontrol = ({
                         borderWidth: 1,
                         stack: "tahunIni",
                     },
-                    {
-                        label: `Rencana ${tahunLalu}`,
-                        data: dataRekonTahunLalu,
-                        backgroundColor: "rgba(54, 162, 235, 0.3)",
-                        borderColor: "rgba(54, 162, 235, 0.7)",
-                        borderWidth: 1,
-                        stack: "tahunLalu",
-                    },
-                    {
-                        label: `Berkunjung ${tahunLalu}`,
-                        data: dataMonitoringTahunLalu,
-                        backgroundColor: "rgba(255, 99, 132, 0.3)",
-                        borderColor: "rgba(255, 99, 132, 0.7)",
-                        borderWidth: 1,
-                        stack: "tahunLalu",
-                    },
-                    {
-                        label: `Batal ${tahunLalu}`,
-                        data: dataBatalTahunLalu,
-                        backgroundColor: "rgba(255, 206, 86, 0.3)",
-                        borderColor: "rgba(255, 206, 86, 0.7)",
-                        borderWidth: 1,
-                        stack: "tahunLalu",
-                    }
                 ],
             },
 

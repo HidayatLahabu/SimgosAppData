@@ -40,17 +40,17 @@ const Pendaftaran = ({ kunjunganTahunIni, kunjunganTahunLalu, tahunIni, tahunLal
                 labels: bulan,
                 datasets: [
                     {
-                        label: `Tahun ${tahunIni}`,
-                        data: tahunIniCounts,
-                        backgroundColor: "rgba(250, 181, 5)",
-                        borderColor: "rgba(250, 181, 5)",
-                        borderWidth: 1,
-                    },
-                    {
-                        label: `Tahun ${tahunLalu}`,
+                        label: `${tahunLalu}`,
                         data: tahunLaluCounts,
                         backgroundColor: "rgba(250, 181, 5, 0.4)",
                         borderColor: "rgba(250, 181, 5, 0.4)",
+                        borderWidth: 1,
+                    },
+                    {
+                        label: `${tahunIni}`,
+                        data: tahunIniCounts,
+                        backgroundColor: "rgba(250, 181, 5)",
+                        borderColor: "rgba(250, 181, 5)",
                         borderWidth: 1,
                     },
                 ],

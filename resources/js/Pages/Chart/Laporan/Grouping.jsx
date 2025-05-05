@@ -4,7 +4,7 @@ import { Chart, registerables } from "chart.js";
 // Mendaftarkan elemen yang digunakan
 Chart.register(...registerables);
 
-const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => {
+const Grouping = ({ pasienBelumGrouping, pasienBelumGroupingLalu, tahunIni, tahunLalu }) => {
     const chartRef = useRef(null); // Referensi untuk chart
     let chartInstance = null;
 
@@ -25,11 +25,11 @@ const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => 
         const tahunIniCounts = Array(12).fill(0);
         const tahunLaluCounts = Array(12).fill(0);
 
-        antrianTahunIni.forEach((item) => {
+        pasienBelumGrouping.forEach((item) => {
             tahunIniCounts[item.bulan - 1] = item.total;
         });
 
-        antrianTahunLalu.forEach((item) => {
+        pasienBelumGroupingLalu.forEach((item) => {
             tahunLaluCounts[item.bulan - 1] = item.total;
         });
 
@@ -42,15 +42,15 @@ const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => 
                     {
                         label: `${tahunLalu}`,
                         data: tahunLaluCounts,
-                        backgroundColor: "rgba(245, 7, 197, 0.4)",
-                        borderColor: "rgba(245, 7, 197, 0.4)",
+                        backgroundColor: "rgba(245, 40, 145, 0.4)",
+                        borderColor: "rgba(245, 40, 145, 0.4)",
                         borderWidth: 1,
                     },
                     {
                         label: `${tahunIni}`,
                         data: tahunIniCounts,
-                        backgroundColor: "rgba(245, 7, 197)",
-                        borderColor: "rgba(245, 7, 197)",
+                        backgroundColor: "rgba(245, 40, 145)",
+                        borderColor: "rgba(245, 40, 145)",
                         borderWidth: 1,
                     },
                 ],
@@ -86,7 +86,7 @@ const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => 
         return () => {
             if (chartInstance) chartInstance.destroy();
         };
-    }, [antrianTahunIni, antrianTahunLalu]);
+    }, [pasienBelumGrouping, pasienBelumGroupingLalu]);
 
     return (
         <div className="p-5 flex flex-wrap w-full">
@@ -95,7 +95,7 @@ const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => 
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
                             <div>
-                                <h1 className="uppercase text-center font-bold text-xl">Antrian Tahun {tahunIni} dan {tahunLalu}</h1>
+                                <h1 className="uppercase text-center font-bold text-xl">Pasien Belum Grouping</h1>
                                 <canvas ref={chartRef}></canvas>
                             </div>
                         </div>
@@ -106,4 +106,4 @@ const Antrian = ({ antrianTahunIni, antrianTahunLalu, tahunIni, tahunLalu }) => 
     );
 };
 
-export default Antrian;
+export default Grouping;
