@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chart;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ class ChartLaporanController extends Controller
         $ttidur = env('TTIDUR', 246);
 
         $dataIndikatorPelayanan = $this->getStatistikPerBulan($ttidur);
+        $dataPasienMasukKeluar = $this->getDataPasienMasukKeluar();
 
         $dataPasienBelumGrouping =  $this->pasienBelumGroupingPerBulan($tahunIni);
         $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
@@ -25,7 +27,39 @@ class ChartLaporanController extends Controller
             'pasienBelumGrouping' => $dataPasienBelumGrouping->toArray(),
             'pasienBelumGroupingLalu' => $dataPasienBelumGroupingLalu->toArray(),
             'indikatorPelayanan' => $dataIndikatorPelayanan,
+            'pasienMasukKeluar' => $dataPasienMasukKeluar,
         ]);
+    }
+
+    private function getDataPasienMasukKeluar()
+    {
+        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+        $tgl_akhir = Carbon::now()->toDateString();
+
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                ($row->MASUK + $row->PINDAHAN) !== 0 ||
+                ($row->DIPINDAHKAN + $row->HIDUP) !== 0 ||
+                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
+                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
+                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
+                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
+                'awal' => $item->AWAL ?? 0,
+                'masuk' => ($item->MASUK ?? 0) + ($item->PINDAHAN ?? 0),
+                'keluar' => ($item->DIPINDAHKAN ?? 0) + ($item->HIDUP ?? 0),
+                'mati' => ($item->MATIKURANG48 ?? 0) + ($item->MATILEBIH48 ?? 0),
+            ];
+        });
+
+        return $chartData->values();
     }
 
     public function getStatistikPerBulan($ttidur)
@@ -33,21 +67,21 @@ class ChartLaporanController extends Controller
         $tahun = date('Y');  // Menentukan tahun saat ini (tahun berjalan)
 
         $data = DB::connection('mysql12')->select("
-        SELECT 
-            YEAR(t.TANGGAL) AS TAHUN,
-            MONTH(t.TANGGAL) AS BULAN,
-            ROUND((SUM(HP) * 100) / (? * SUM(JMLHARI)), 2) AS BOR,
-            ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
-            ROUND(SUM(JMLKLR) / ?, 2) AS BTO,
-            ROUND(((? * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
-            ROUND((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR), 2) AS NDR,
-            ROUND(((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR), 2) AS GDR
-        FROM informasi.indikator_rs r
-        JOIN master.tanggal t ON r.TANGGAL = t.TANGGAL
-        WHERE YEAR(t.TANGGAL) = ? AND HP > 0
-        GROUP BY YEAR(t.TANGGAL), MONTH(t.TANGGAL)
-        ORDER BY TAHUN, BULAN
-    ", [$ttidur, $ttidur, $ttidur, $tahun]);
+            SELECT 
+                YEAR(t.TANGGAL) AS TAHUN,
+                MONTH(t.TANGGAL) AS BULAN,
+                ROUND((SUM(HP) * 100) / (? * SUM(JMLHARI)), 2) AS BOR,
+                ROUND(SUM(LD) / SUM(JMLKLR), 2) AS AVLOS,
+                ROUND(SUM(JMLKLR) / ?, 2) AS BTO,
+                ROUND(((? * SUM(JMLHARI)) - SUM(HP)) / SUM(JMLKLR), 2) AS TOI,
+                ROUND((SUM(LEBIH48JAM) * 1000) / SUM(JMLKLR), 2) AS NDR,
+                ROUND(((SUM(KURANG48JAM) + SUM(LEBIH48JAM)) * 1000) / SUM(JMLKLR), 2) AS GDR
+            FROM informasi.indikator_rs r
+            JOIN master.tanggal t ON r.TANGGAL = t.TANGGAL
+            WHERE YEAR(t.TANGGAL) = ? AND HP > 0
+            GROUP BY YEAR(t.TANGGAL), MONTH(t.TANGGAL)
+            ORDER BY TAHUN, BULAN
+        ", [$ttidur, $ttidur, $ttidur, $tahun]);
 
         $result = [];
 

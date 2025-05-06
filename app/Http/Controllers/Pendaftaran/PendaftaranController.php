@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Pendaftaran;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\MasterRuanganModel;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class PendaftaranController extends Controller
 {
@@ -50,6 +52,12 @@ class PendaftaranController extends Controller
         // Hitung rata-rata
         $rataRata = $this->rataRata();
 
+        $ruangan = MasterRuanganModel::where('JENIS', 5)
+            ->whereIn('JENIS_KUNJUNGAN', [1, 2, 3, 4, 5])
+            ->where('STATUS', 1)
+            ->orderBy('DESKRIPSI')
+            ->get();
+
         // Return Inertia view with paginated data and rata-rata
         return inertia("Pendaftaran/Pendaftaran/Index", [
             'dataTable' => [
@@ -57,6 +65,7 @@ class PendaftaranController extends Controller
                 'links' => $dataArray['links'], // Pagination links
             ],
             'rataRata' => $rataRata, // Pass rata-rata data to frontend
+            'ruangan' => $ruangan,
             'queryParams' => request()->all()
         ]);
     }
@@ -292,6 +301,86 @@ class PendaftaranController extends Controller
         return inertia("Pendaftaran/Pendaftaran/Detail", [
             'detail'            => $query,
             'nomorPendaftaran'  => $noPendaftaran,
+        ]);
+    }
+
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan' => 'nullable|string',
+            'statusKunjungan' => 'nullable|integer|in:1,2,3',
+            'dari_tanggal' => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan = $request->input('ruangan');
+        $statusKunjungan = $request->input('statusKunjungan');
+        $dariTanggal = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variabel default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaStatusPendaftaran = 'Semua Status Aktifitas Pendaftaran';
+
+        // Query utama
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select(
+                'pendaftaran.NOMOR as nomor',
+                'pendaftaran.NORM as norm',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
+                'pendaftaran.TANGGAL as tanggal',
+                'penjamin.NOMOR as penjamin',
+                'pendaftaran.STATUS as status',
+                'ruangan.DESKRIPSI as ruangan',
+            )
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
+            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
+            ->where('pasien.STATUS', 1);
+
+        // Filter berdasarkan ruangan
+        if (!empty($ruangan)) {
+            $query->where('ruangan.ID', $ruangan);
+
+            // Mendapatkan nama ruangan yang sesuai dari hasil query
+            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
+                ->where('ID', $ruangan)
+                ->value('DESKRIPSI');
+        }
+
+        //Filter berdasarkan jenis kunjungan
+        if ($statusKunjungan == null) {
+            $query->whereIn('pendaftaran.STATUS', [0, 1, 2]);
+        } elseif ($statusKunjungan == 1) {
+            $query->where('pendaftaran.STATUS', 0); // Batal Kunjungan
+            $namaStatusPendaftaran = 'Batal';
+        } elseif ($statusKunjungan == 2) {
+            $query->where('pendaftaran.STATUS', 1); // Sedang Dilayani
+            $namaStatusPendaftaran = 'Aktif';
+        } elseif ($statusKunjungan == 3) {
+            $query->where('pendaftaran.STATUS', 2); // Selesai
+            $namaStatusPendaftaran = 'Selesai';
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('pendaftaran.TANGGAL')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Pendaftaran/Pendaftaran/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaStatusPendaftaran' => $namaStatusPendaftaran,
         ]);
     }
 }

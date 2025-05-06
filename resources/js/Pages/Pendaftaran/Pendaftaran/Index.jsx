@@ -12,8 +12,9 @@ import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import TableCellMenu from "@/Components/Table/TableCellMenu";
 import CardMenu from "@/Components/Card/CardMenu";
+import Cetak from "./Cetak"
 
-export default function Index({ auth, dataTable, header, totalCount, rataRata, queryParams = {} }) {
+export default function Index({ auth, dataTable, header, totalCount, rataRata, ruangan, queryParams = {} }) {
 
     const headers = [
         { name: "NOMOR", className: "w-[9%]" },
@@ -135,6 +136,11 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, q
                     </div>
                 </div>
             </div>
+
+            <div className="w-full pb-2">
+                <Cetak ruangan={ruangan} />
+            </div>
+
         </AuthenticatedLayout>
     );
 }

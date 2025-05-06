@@ -136,7 +136,7 @@ export default function Index({ auth, dataTable, header, totalCount, rataRata, r
             </div>
 
             <div className="w-full pb-2">
-                <Cetak ruangan={ruangan} queryParams={queryParams || {}} />
+                <Cetak ruangan={ruangan} />
             </div>
 
         </AuthenticatedLayout>
