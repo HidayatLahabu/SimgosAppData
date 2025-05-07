@@ -45,6 +45,11 @@ class LaporanRl31Controller extends Controller
             );
         }));
 
+        // Sort berdasarkan MASUK secara descending (tertinggi ke terendah)
+        usort($filteredData, function ($a, $b) {
+            return $b->MASUK <=> $a->MASUK;
+        });
+
         return inertia("Laporan/Rl31/Index", [
             'items' => $filteredData,
             'tgl_awal' => $tgl_awal,

@@ -18,7 +18,6 @@ const PasienMasukKeluar = ({ pasienMasukKeluar }) => {
             chartInstanceRef.current.destroy();
         }
 
-        // Filter data yang relevan (data dengan nilai lebih dari 0)
         const filteredData = pasienMasukKeluar.filter(item => item.awal > 0 || item.masuk > 0 || item.keluar > 0 || item.mati > 0);
 
         // Cek jika ada lebih dari satu jenis layanan
@@ -93,6 +92,17 @@ const PasienMasukKeluar = ({ pasienMasukKeluar }) => {
             },
             options: {
                 responsive: true,
+                plugins: {
+                    legend: {
+                        position: "top",
+                        labels: {
+                            color: 'rgb(176, 175, 153)',
+                            font: {
+                                size: 11,
+                            },
+                        },
+                    },
+                },
                 indexAxis: 'y',
                 scales: {
                     x: {
@@ -127,7 +137,7 @@ const PasienMasukKeluar = ({ pasienMasukKeluar }) => {
         <div className="p-5 w-full">
             <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                 <div className="p-5 text-gray-900 dark:text-gray-100">
-                    <h1 className="uppercase text-center font-bold text-xl">RL 31 - PASIEN AWAL, MASUK & KELUAR</h1>
+                    <h1 className="uppercase text-center font-bold text-xl">RL 3.1 - PASIEN AWAL, MASUK & KELUAR</h1>
                     <canvas ref={chartRef}></canvas>
                 </div>
             </div>

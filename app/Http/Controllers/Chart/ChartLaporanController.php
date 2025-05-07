@@ -17,7 +17,7 @@ class ChartLaporanController extends Controller
 
         $dataIndikatorPelayanan = $this->getStatistikPerBulan($ttidur);
         $dataPasienMasukKeluar = $this->getDataPasienMasukKeluar();
-
+        $dataPasienRanap = $this->getDataPasienRanap();
         $dataPasienBelumGrouping =  $this->pasienBelumGroupingPerBulan($tahunIni);
         $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
 
@@ -28,38 +28,8 @@ class ChartLaporanController extends Controller
             'pasienBelumGroupingLalu' => $dataPasienBelumGroupingLalu->toArray(),
             'indikatorPelayanan' => $dataIndikatorPelayanan,
             'pasienMasukKeluar' => $dataPasienMasukKeluar,
+            'pasienRanap' => $dataPasienRanap,
         ]);
-    }
-
-    private function getDataPasienMasukKeluar()
-    {
-        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
-        $tgl_akhir = Carbon::now()->toDateString();
-
-        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
-
-        $filteredData = array_values(array_filter($data, function ($row) {
-            return (
-                ($row->MASUK + $row->PINDAHAN) !== 0 ||
-                ($row->DIPINDAHKAN + $row->HIDUP) !== 0 ||
-                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
-                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
-                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
-                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0)
-            );
-        }));
-
-        $chartData = collect($filteredData)->map(function ($item) {
-            return [
-                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
-                'awal' => $item->AWAL ?? 0,
-                'masuk' => ($item->MASUK ?? 0) + ($item->PINDAHAN ?? 0),
-                'keluar' => ($item->DIPINDAHKAN ?? 0) + ($item->HIDUP ?? 0),
-                'mati' => ($item->MATIKURANG48 ?? 0) + ($item->MATILEBIH48 ?? 0),
-            ];
-        });
-
-        return $chartData->values();
     }
 
     public function getStatistikPerBulan($ttidur)
@@ -99,6 +69,70 @@ class ChartLaporanController extends Controller
         }
 
         return $result;
+    }
+
+    private function getDataPasienMasukKeluar()
+    {
+        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+        $tgl_akhir = Carbon::now()->toDateString();
+
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                ($row->MASUK + $row->PINDAHAN) !== 0 ||
+                ($row->DIPINDAHKAN + $row->HIDUP) !== 0 ||
+                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
+                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
+                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
+                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
+                'awal' => $item->AWAL ?? 0,
+                'masuk' => ($item->MASUK ?? 0) + ($item->PINDAHAN ?? 0),
+                'keluar' => ($item->DIPINDAHKAN ?? 0) + ($item->HIDUP ?? 0),
+                'mati' => ($item->MATIKURANG48 ?? 0) + ($item->MATILEBIH48 ?? 0),
+            ];
+        });
+
+        return $chartData->values();
+    }
+
+    private function getDataPasienRanap()
+    {
+        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+        $tgl_akhir = Carbon::now()->toDateString();
+
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                (!is_null($row->VVIP) && $row->VVIP !== 0) ||
+                (!is_null($row->VIP) && $row->VIP !== 0) ||
+                (!is_null($row->KLSI) && $row->KLSI !== 0) ||
+                (!is_null($row->KLSII) && $row->KLSII !== 0) ||
+                (!is_null($row->KLSIII) && $row->KLSIII !== 0) ||
+                (!is_null($row->KLSKHUSUS) && $row->KLSKHUSUS !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
+                'vvip' => $item->VVIP ?? 0,
+                'vip' => ($item->VIP ?? 0),
+                'kls1' => ($item->KLSI ?? 0),
+                'kls2' => ($item->KLSII ?? 0),
+                'kls3' => ($item->KLSIII ?? 0),
+                'kls_khusus' => ($item->KLSKHUSUS ?? 0),
+            ];
+        });
+
+        return $chartData->values();
     }
 
     private function pasienBelumGroupingPerBulan($tahun)

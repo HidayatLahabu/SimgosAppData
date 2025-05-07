@@ -4,7 +4,7 @@ import { Head } from "@inertiajs/react";
 import Indikator from './Indikator';
 import Grouping from './Grouping';
 import PasienMasukKeluar from './PasienMasukKeluar';
-
+import PasienRanap from './PasienRanap';
 
 export default function Index({
     auth,
@@ -14,6 +14,7 @@ export default function Index({
     pasienBelumGroupingLalu,
     indikatorPelayanan,
     pasienMasukKeluar,
+    pasienRanap,
 }) {
 
     return (
@@ -35,8 +36,8 @@ export default function Index({
 
             <div className="flex flex-wrap w-full">
                 <div className="w-1/2">
-                    <Indikator
-                        indikatorPelayanan={indikatorPelayanan}
+                    <PasienRanap
+                        pasienRanap={pasienRanap}
                     />
                 </div>
                 <div className="w-1/2">
