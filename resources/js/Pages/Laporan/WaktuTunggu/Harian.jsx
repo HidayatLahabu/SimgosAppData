@@ -30,7 +30,7 @@ export default function Harian({ dataTable, queryParams = {} }) {
             delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('laporanWaktuTunggu.index'), updatedParams, {
+        router.get(route('pengunjungWaktuTunggu.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
