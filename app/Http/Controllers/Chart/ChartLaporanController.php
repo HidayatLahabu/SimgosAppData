@@ -14,12 +14,18 @@ class ChartLaporanController extends Controller
         $tahunIni = now()->year;
         $tahunLalu = $tahunIni - 1;
         $ttidur = env('TTIDUR', 246);
+        $tglAwal = Carbon::now()->startOfYear()->format('Y-m-d');
+        $tglAwalLalu = Carbon::now()->subYear()->startOfYear()->format('Y-m-d');
+        $tglAkhir = Carbon::now()->endOfDay()->format('Y-m-d');
+        $tglAkhirLalu = Carbon::now()->subYear()->endOfYear()->format('Y-m-d');
 
         $dataIndikatorPelayanan = $this->getStatistikPerBulan($ttidur);
         $dataPasienMasukKeluar = $this->getDataPasienMasukKeluar();
         $dataPasienRanap = $this->getDataPasienRanap();
         $dataPasienBelumGrouping =  $this->pasienBelumGroupingPerBulan($tahunIni);
         $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
+        $dataLaporanRl32 =  $this->getLaporanRL32($tglAwal, $tglAkhir);
+        $dataLaporanRl32Lalu =  $this->getLaporanRL32($tglAwalLalu, $tglAkhirLalu);
 
         return inertia("Chart/Laporan/Index", [
             'tahunIni' => $tahunIni,
@@ -29,7 +35,73 @@ class ChartLaporanController extends Controller
             'indikatorPelayanan' => $dataIndikatorPelayanan,
             'pasienMasukKeluar' => $dataPasienMasukKeluar,
             'pasienRanap' => $dataPasienRanap,
+            'laporanRl32' => $dataLaporanRl32,
+            'laporanRl32Lalu' => $dataLaporanRl32Lalu,
         ]);
+    }
+
+    private function getLaporanRL32($tgl_awal, $tgl_akhir)
+    {
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL32(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                (!is_null($row->DESKRIPSI) && $row->DESKRIPSI !== '') ||
+                (!is_null($row->RUJUKAN) && $row->RUJUKAN !== 0) ||
+                (!is_null($row->NONRUJUKAN) && $row->NONRUJUKAN !== 0) ||
+                (!is_null($row->DIRAWAT) && $row->DIRAWAT !== 0) ||
+                (!is_null($row->DIRUJUK) && $row->DIRUJUK !== 0) ||
+                (!is_null($row->PULANG) && $row->PULANG !== 0) ||
+                (!is_null($row->MENINGGAL) && $row->MENINGGAL !== 0) ||
+                (!is_null($row->DOA) && $row->DOA !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
+                'rujukan' => $item->RUJUKAN ?? 0,
+                'nonrujukan' => $item->NONRUJUKAN ?? 0,
+                'dirawat' => $item->DIRAWAT ?? 0,
+                'dirujuk' => $item->DIRUJUK ?? 0,
+                'pulang' => $item->PULANG ?? 0,
+                'meninggal' => $item->MENINGGAL ?? 0,
+                'doa' => $item->DOA ?? 0,
+            ];
+        });
+
+        return $chartData->values();
+    }
+
+    private function getDataPasienMasukKeluar()
+    {
+        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
+        $tgl_akhir = Carbon::now()->toDateString();
+
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                ($row->MASUK + $row->PINDAHAN) !== 0 ||
+                ($row->DIPINDAHKAN + $row->HIDUP) !== 0 ||
+                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
+                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
+                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
+                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
+                'awal' => $item->AWAL ?? 0,
+                'masuk' => ($item->MASUK ?? 0) + ($item->PINDAHAN ?? 0),
+                'keluar' => ($item->DIPINDAHKAN ?? 0) + ($item->HIDUP ?? 0),
+                'mati' => ($item->MATIKURANG48 ?? 0) + ($item->MATILEBIH48 ?? 0),
+            ];
+        });
+
+        return $chartData->values();
     }
 
     public function getStatistikPerBulan($ttidur)
@@ -69,37 +141,6 @@ class ChartLaporanController extends Controller
         }
 
         return $result;
-    }
-
-    private function getDataPasienMasukKeluar()
-    {
-        $tgl_awal = Carbon::now()->startOfYear()->toDateString();
-        $tgl_akhir = Carbon::now()->toDateString();
-
-        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL31(?, ?)', [$tgl_awal, $tgl_akhir]);
-
-        $filteredData = array_values(array_filter($data, function ($row) {
-            return (
-                ($row->MASUK + $row->PINDAHAN) !== 0 ||
-                ($row->DIPINDAHKAN + $row->HIDUP) !== 0 ||
-                (!is_null($row->AWAL) && $row->AWAL !== 0) ||
-                (!is_null($row->HIDUP) && $row->HIDUP !== 0) ||
-                (!is_null($row->MATIKURANG48) && $row->MATIKURANG48 !== 0) ||
-                (!is_null($row->MATILEBIH48) && $row->MATILEBIH48 !== 0)
-            );
-        }));
-
-        $chartData = collect($filteredData)->map(function ($item) {
-            return [
-                'jenis_pelayanan' => $item->DESKRIPSI,  // Deskripsi dari layanan
-                'awal' => $item->AWAL ?? 0,
-                'masuk' => ($item->MASUK ?? 0) + ($item->PINDAHAN ?? 0),
-                'keluar' => ($item->DIPINDAHKAN ?? 0) + ($item->HIDUP ?? 0),
-                'mati' => ($item->MATIKURANG48 ?? 0) + ($item->MATILEBIH48 ?? 0),
-            ];
-        });
-
-        return $chartData->values();
     }
 
     private function getDataPasienRanap()
