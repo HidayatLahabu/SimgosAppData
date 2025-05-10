@@ -26,6 +26,8 @@ class ChartLaporanController extends Controller
         $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
         $dataLaporanRl32 =  $this->getLaporanRL32($tglAwal, $tglAkhir);
         $dataLaporanRl32Lalu =  $this->getLaporanRL32($tglAwalLalu, $tglAkhirLalu);
+        $dataLaporanRl314 =  $this->getLaporanRL314($tglAwal, $tglAkhir);
+        $dataLaporanRl314Lalu =  $this->getLaporanRL314($tglAwalLalu, $tglAkhirLalu);
 
         return inertia("Chart/Laporan/Index", [
             'tahunIni' => $tahunIni,
@@ -37,7 +39,45 @@ class ChartLaporanController extends Controller
             'pasienRanap' => $dataPasienRanap,
             'laporanRl32' => $dataLaporanRl32,
             'laporanRl32Lalu' => $dataLaporanRl32Lalu,
+            'laporanRl314' => $dataLaporanRl314,
+            'laporanRl314Lalu' => $dataLaporanRl314Lalu,
         ]);
+    }
+
+    private function getLaporanRL314($tgl_awal, $tgl_akhir)
+    {
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL314(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                (!is_null($row->PUSKESMAS) && $row->PUSKESMAS !== 0) ||
+                (!is_null($row->FASKES) && $row->FASKES !== 0) ||
+                (!is_null($row->RS) && $row->RS !== 0) ||
+                (!is_null($row->KEMBALIPUSKESMAS) && $row->KEMBALIPUSKESMAS !== 0) ||
+                (!is_null($row->KEMBALIFASKES) && $row->KEMBALIFASKES !== 0) ||
+                (!is_null($row->KEMBALIRS) && $row->KEMBALIRS !== 0) ||
+                (!is_null($row->PASIENRUJUKAN) && $row->PASIENRUJUKAN !== 0) ||
+                (!is_null($row->DATANGSENDIRI) && $row->DATANGSENDIRI !== 0) ||
+                (!is_null($row->DITERIMAKEMBALI) && $row->DITERIMAKEMBALI !== 0)
+            );
+        }));
+
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'deskripsi' => $item->DESKRIPSI ?? 'Spesialisasi Lainnya',  // Deskripsi dari layanan
+                'puskesmas' => $item->PUSKESMAS ?? 0,
+                'faskes' => $item->FASKES ?? 0,
+                'rs' => $item->RS ?? 0,
+                'kembaliPuskesmas' => $item->KEMBALIPUSKESMAS ?? 0,
+                'kembaliFaskes' => $item->KEMBALIFASKES ?? 0,
+                'kembaliRs' => $item->KEMBALIRS ?? 0,
+                'pasienRujukan' => $item->PASIENRUJUKAN ?? 0,
+                'datangSendiri' => $item->DATANGSENDIRI ?? 0,
+                'diterimaKembali' => $item->DITERIMAKEMBALI ?? 0,
+            ];
+        });
+
+        return $chartData->values();
     }
 
     private function getLaporanRL32($tgl_awal, $tgl_akhir)
