@@ -92,6 +92,11 @@ const PasienMasukKeluar = ({ pasienMasukKeluar }) => {
             },
             options: {
                 responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                    axis: 'y', // <- Tambahan penting ini
+                },
                 plugins: {
                     legend: {
                         position: "top",

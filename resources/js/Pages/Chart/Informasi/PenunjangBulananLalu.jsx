@@ -8,7 +8,7 @@ const PenunjangBulananLalu = ({ penunjangBulananLalu }) => {
     const chartRef = useRef(null);
     const chartInstanceRef = useRef(null);
 
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear() - 1;
 
     useEffect(() => {
         const ctx = chartRef.current.getContext("2d");
@@ -36,8 +36,8 @@ const PenunjangBulananLalu = ({ penunjangBulananLalu }) => {
                     {
                         label: `${currentYear}`,
                         data: sortedRajalCounts,
-                        backgroundColor: "rgba(192, 222, 24, 0.4)",
-                        borderColor: "rgba(192, 222, 24, 0.4)",
+                        backgroundColor: "rgba(192, 222, 24, 0.6)",
+                        borderColor: "rgba(192, 222, 24, 0.6)",
                         borderWidth: 1,
                     },
                 ],

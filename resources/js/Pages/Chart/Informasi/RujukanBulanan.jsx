@@ -52,6 +52,11 @@ const RujukanBulanan = ({ rujukanBulanan }) => {
             },
             options: {
                 responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                    axis: 'y', // <- Tambahan penting ini
+                },
                 indexAxis: 'y', // Membuat chart menjadi horizontal
                 scales: {
                     x: {

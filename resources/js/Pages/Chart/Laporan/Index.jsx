@@ -8,13 +8,13 @@ import PasienRanap from './PasienRanap';
 import LaporanRl32 from './LaporanRl32';
 import LaporanRl314 from './LaporanRl314';
 import LaporanRl314Lalu from './LaporanRl314Lalu';
+import LaporanRl315 from './LaporanRl315';
+import LaporanRl315Lalu from './LaporanRl315Lalu';
 
 export default function Index({
     auth,
     tahunIni,
     tahunLalu,
-    pasienBelumGrouping,
-    pasienBelumGroupingLalu,
     indikatorPelayanan,
     pasienMasukKeluar,
     pasienRanap,
@@ -22,6 +22,10 @@ export default function Index({
     laporanRl32Lalu,
     laporanRl314,
     laporanRl314Lalu,
+    laporanRl315,
+    laporanRl315Lalu,
+    pasienBelumGrouping,
+    pasienBelumGroupingLalu,
 }) {
 
     return (
@@ -68,6 +72,21 @@ export default function Index({
                     <LaporanRl314Lalu
                         tahunLalu={tahunLalu}
                         laporanRl314Lalu={laporanRl314Lalu}
+                    />
+                </div>
+            </div>
+
+            <div className="flex flex-wrap w-full">
+                <div className="w-1/2">
+                    <LaporanRl315
+                        tahunIni={tahunIni}
+                        laporanRl315={laporanRl315}
+                    />
+                </div>
+                <div className="w-1/2">
+                    <LaporanRl315Lalu
+                        tahunLalu={tahunLalu}
+                        laporanRl315Lalu={laporanRl315Lalu}
                     />
                 </div>
             </div>

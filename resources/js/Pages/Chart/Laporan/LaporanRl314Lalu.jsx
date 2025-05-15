@@ -96,6 +96,11 @@ const LaporanRl314Lalu = ({ tahunLalu, laporanRl314Lalu }) => {
             },
             options: {
                 responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                    axis: 'y', // <- Tambahan penting ini
+                },
                 indexAxis: "y", // horizontal
                 plugins: {
                     legend: {

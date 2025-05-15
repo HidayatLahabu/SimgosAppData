@@ -28,6 +28,8 @@ class ChartLaporanController extends Controller
         $dataLaporanRl32Lalu =  $this->getLaporanRL32($tglAwalLalu, $tglAkhirLalu);
         $dataLaporanRl314 =  $this->getLaporanRL314($tglAwal, $tglAkhir);
         $dataLaporanRl314Lalu =  $this->getLaporanRL314($tglAwalLalu, $tglAkhirLalu);
+        $dataLaporanRl315 =  $this->getLaporanRL315($tglAwal, $tglAkhir);
+        $dataLaporanRl315Lalu =  $this->getLaporanRL315($tglAwalLalu, $tglAkhirLalu);
 
         return inertia("Chart/Laporan/Index", [
             'tahunIni' => $tahunIni,
@@ -41,8 +43,42 @@ class ChartLaporanController extends Controller
             'laporanRl32Lalu' => $dataLaporanRl32Lalu,
             'laporanRl314' => $dataLaporanRl314,
             'laporanRl314Lalu' => $dataLaporanRl314Lalu,
+            'laporanRl315' => $dataLaporanRl315,
+            'laporanRl315Lalu' => $dataLaporanRl315Lalu,
         ]);
     }
+
+    private function getLaporanRL315($tgl_awal, $tgl_akhir)
+    {
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL315(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        // Filter hanya data yang memiliki nilai bukan 0 dan deskripsi bukan "Asuransi :"
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                $row->DESKRIPSI !== 'Asuransi :' && // <-- baris tambahan untuk menghilangkan Asuransi umum
+                (
+                    (!is_null($row->RJ) && $row->RJ != 0) ||
+                    (!is_null($row->LAB) && $row->LAB != 0) ||
+                    (!is_null($row->RAD) && $row->RAD != 0) ||
+                    (!is_null($row->JMLRI) && $row->JMLRI != 0)
+                )
+            );
+        }));
+
+        // Mapping ke format chart-friendly
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'deskripsi' => $item->DESKRIPSI ?? 'Tidak Diketahui',
+                'RJ' => $item->RJ ?? 0,
+                'LAB' => $item->LAB ?? 0,
+                'RAD' => $item->RAD ?? 0,
+                'JMLRI' => $item->JMLRI ?? 0,
+            ];
+        });
+
+        return $chartData->values();
+    }
+
 
     private function getLaporanRL314($tgl_awal, $tgl_akhir)
     {

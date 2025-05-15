@@ -52,7 +52,12 @@ const KunjunganBulanan = ({ kunjunganBulanan }) => {
             },
             options: {
                 responsive: true,
-                indexAxis: 'y', // Membuat chart menjadi horizontal
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                    axis: 'y', // <- Tambahan penting ini
+                },
+                indexAxis: 'y', // Horizontal bar chart
                 scales: {
                     x: {
                         stacked: true,

@@ -98,6 +98,10 @@ const Kontrol = ({
 
             options: {
                 responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
                 maintainAspectRatio: false,
                 scales: {
                     y: {

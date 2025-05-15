@@ -48,37 +48,37 @@ const RanapBulanan = ({
             ],
             datasets: [
                 {
-                    label: `Masuk (${tahunLalu})`,
+                    label: `Masuk ${tahunLalu}`,
                     data: dataMasukTahunLalu,
                     backgroundColor: 'rgba(255, 99, 132, 0.5)', // Lighter red
                     stack: 'tahunLalu', // <-- penting!
                 },
                 {
-                    label: `Dirawat (${tahunLalu})`,
+                    label: `Dirawat ${tahunLalu}`,
                     data: dataDirawatTahunLalu,
                     backgroundColor: 'rgba(49, 180, 245, 0.5)', // Lighter blue
                     stack: 'tahunLalu',
                 },
                 {
-                    label: `Keluar (${tahunLalu})`,
+                    label: `Keluar ${tahunLalu}`,
                     data: dataKeluarTahunLalu,
                     backgroundColor: 'rgba(69, 196, 88, 0.5)', // Lighter green
                     stack: 'tahunLalu',
                 },
                 {
-                    label: `Masuk (${tahunIni})`,
+                    label: `Masuk ${tahunIni}`,
                     data: dataMasukTahunIni,
                     backgroundColor: 'rgba(255, 99, 132)', // Darker red
                     stack: 'tahunIni',
                 },
                 {
-                    label: `Dirawat (${tahunIni})`,
+                    label: `Dirawat ${tahunIni}`,
                     data: dataDirawatTahunIni,
                     backgroundColor: 'rgba(49, 180, 245)', // Darker blue
                     stack: 'tahunIni',
                 },
                 {
-                    label: `Keluar (${tahunIni})`,
+                    label: `Keluar ${tahunIni}`,
                     data: dataKeluarTahunIni,
                     backgroundColor: 'rgba(69, 196, 88)', // Darker green
                     stack: 'tahunIni',
