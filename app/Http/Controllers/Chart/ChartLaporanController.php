@@ -30,6 +30,8 @@ class ChartLaporanController extends Controller
         $dataLaporanRl314Lalu =  $this->getLaporanRL314($tglAwalLalu, $tglAkhirLalu);
         $dataLaporanRl315 =  $this->getLaporanRL315($tglAwal, $tglAkhir);
         $dataLaporanRl315Lalu =  $this->getLaporanRL315($tglAwalLalu, $tglAkhirLalu);
+        $dataLaporanRl51 =  $this->getLaporanRL51($tglAwal, $tglAkhir);
+        $dataLaporanRl51Lalu =  $this->getLaporanRL51($tglAwalLalu, $tglAkhirLalu);
 
         return inertia("Chart/Laporan/Index", [
             'tahunIni' => $tahunIni,
@@ -45,7 +47,32 @@ class ChartLaporanController extends Controller
             'laporanRl314Lalu' => $dataLaporanRl314Lalu,
             'laporanRl315' => $dataLaporanRl315,
             'laporanRl315Lalu' => $dataLaporanRl315Lalu,
+            'laporanRl51' => $dataLaporanRl51,
+            'laporanRl51Lalu' => $dataLaporanRl51Lalu,
         ]);
+    }
+
+    private function getLaporanRL51($tgl_awal, $tgl_akhir)
+    {
+        $data = DB::connection('mysql10')->select('CALL laporan.LaporanRL51(?, ?)', [$tgl_awal, $tgl_akhir]);
+
+        // Filter hanya data yang memiliki nilai bukan 0 dan deskripsi bukan "Asuransi :"
+        $filteredData = array_values(array_filter($data, function ($row) {
+            return (
+                (!is_null($row->JUMLAH) && $row->JUMLAH !== 0)
+            );
+        }));
+
+        // Mapping ke format chart-friendly
+        $chartData = collect($filteredData)->map(function ($item) {
+            return [
+                'deskripsi' => $item->DESKRIPSI ?? 'Tidak Diketahui',
+                'jenisKunjungan' => $item->JENIS_KUNJUNGAN ?? 'Tidak Diketahui',
+                'jumlah' => $item->JUMLAH ?? 0,
+            ];
+        });
+
+        return $chartData->values();
     }
 
     private function getLaporanRL315($tgl_awal, $tgl_akhir)

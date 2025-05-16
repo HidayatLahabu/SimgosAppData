@@ -17,11 +17,11 @@ const LaporanRL32 = ({ tahunIni, tahunLalu, laporanRl32, laporanRl32Lalu }) => {
 
         // Filter data untuk hanya nilai > 100
         const filteredDataTahunIni = laporanRl32.filter(item =>
-            (item.rujukan > 100 || item.nonrujukan > 10 || item.dirawat > 10 || item.dirujuk > 10 || item.pulang > 10 || item.meninggal > 10 || item.doa > 10)
+            (item.rujukan > 100 || item.nonrujukan > 100 || item.dirawat > 100 || item.dirujuk > 100 || item.pulang > 100 || item.meninggal > 100 || item.doa > 100)
         );
 
         const filteredDataTahunLalu = laporanRl32Lalu.filter(item =>
-            (item.rujukan > 10 || item.nonrujukan > 10 || item.dirawat > 10 || item.dirujuk > 10 || item.pulang > 10 || item.meninggal > 10 || item.doa > 10)
+            (item.rujukan > 100 || item.nonrujukan > 100 || item.dirawat > 100 || item.dirujuk > 100 || item.pulang > 100 || item.meninggal > 100 || item.doa > 100)
         );
 
         // Labels dari data yang sudah di filter
@@ -204,7 +204,7 @@ const LaporanRL32 = ({ tahunIni, tahunLalu, laporanRl32, laporanRl32Lalu }) => {
                 <div className="max-w-full mx-auto w-full">
                     <div className="bg-white dark:bg-indigo-950 overflow-hidden shadow-sm sm:rounded-lg w-full">
                         <div className="p-5 text-gray-900 dark:text-gray-100 w-full">
-                            <h1 className="uppercase text-center font-bold text-xl">Laporan RL 3.2-RAWAT DARURAT</h1>
+                            <h1 className="uppercase text-center font-bold text-xl">Laporan RL 3.2 - RAWAT DARURAT</h1>
                             <canvas ref={chartRef}></canvas>
                         </div>
                     </div>

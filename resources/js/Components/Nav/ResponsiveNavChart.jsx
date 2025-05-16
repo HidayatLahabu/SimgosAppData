@@ -33,7 +33,7 @@ export default function ResponsiveNavLogs() {
                             <ResponsiveNavLink href={route('chartBpjs.index')}>BPJS</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('chartLayanan.index')}>Layanan</ResponsiveNavLink>
                             <ResponsiveNavLink href={route('chartInformasi.index')}>Informasi</ResponsiveNavLink>
-                            <ResponsiveNavLink href={route('chartLaporan.index')}>Laporan</ResponsiveNavLink>
+                            <ResponsiveNavLink href={route('chartLaporan.index')}>Laporan RL</ResponsiveNavLink>
                         </div>
                     </div>
                 </div>

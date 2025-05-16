@@ -78,7 +78,7 @@ export default function NavigationLogs() {
                         active={route().current('chartLaporan.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
-                        Laporan
+                        Laporan RL
                     </NavLink>
                 </div>
             )}
