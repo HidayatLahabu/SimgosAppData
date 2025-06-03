@@ -2,6 +2,7 @@ import React from 'react';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import Indikator from './Indikator';
+import IndikatorTahun from './IndikatorTahun';
 import Grouping from './Grouping';
 import PasienMasukKeluar from './PasienMasukKeluar';
 import PasienRanap from './PasienRanap';
@@ -17,6 +18,7 @@ export default function Index({
     tahunIni,
     tahunLalu,
     indikatorPelayanan,
+    indikatorPelayananTahunan,
     pasienMasukKeluar,
     pasienRanap,
     laporanRl32,
@@ -42,24 +44,21 @@ export default function Index({
                     />
                 </div>
                 <div className="w-1/2">
-                    <PasienMasukKeluar
-                        pasienMasukKeluar={pasienMasukKeluar}
+                    <IndikatorTahun
+                        indikatorPelayananTahunan={indikatorPelayananTahunan}
                     />
                 </div>
             </div>
 
             <div className="flex flex-wrap w-full">
                 <div className="w-1/2">
-                    <PasienRanap
-                        pasienRanap={pasienRanap}
+                    <PasienMasukKeluar
+                        pasienMasukKeluar={pasienMasukKeluar}
                     />
                 </div>
                 <div className="w-1/2">
-                    <LaporanRl32
-                        tahunIni={tahunIni}
-                        tahunLalu={tahunLalu}
-                        laporanRl32={laporanRl32}
-                        laporanRl32Lalu={laporanRl32Lalu}
+                    <PasienRanap
+                        pasienRanap={pasienRanap}
                     />
                 </div>
             </div>
@@ -96,11 +95,11 @@ export default function Index({
 
             <div className="flex flex-wrap w-full">
                 <div className="w-1/2">
-                    <LaporanRl51
+                    <LaporanRl32
                         tahunIni={tahunIni}
-                        laporanRl51={laporanRl51}
                         tahunLalu={tahunLalu}
-                        laporanRl51Lalu={laporanRl51Lalu}
+                        laporanRl32={laporanRl32}
+                        laporanRl32Lalu={laporanRl32Lalu}
                     />
                 </div>
                 <div className="w-1/2">

@@ -20,10 +20,9 @@ class ChartLaporanController extends Controller
         $tglAkhirLalu = Carbon::now()->subYear()->endOfYear()->format('Y-m-d');
 
         $dataIndikatorPelayanan = $this->getStatistikPerBulan($ttidur);
+        $dataIndikatorPelayananTahunan = $this->getStatistikPerTahun($ttidur);
         $dataPasienMasukKeluar = $this->getDataPasienMasukKeluar();
         $dataPasienRanap = $this->getDataPasienRanap();
-        $dataPasienBelumGrouping =  $this->pasienBelumGroupingPerBulan($tahunIni);
-        $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
         $dataLaporanRl32 =  $this->getLaporanRL32($tglAwal, $tglAkhir);
         $dataLaporanRl32Lalu =  $this->getLaporanRL32($tglAwalLalu, $tglAkhirLalu);
         $dataLaporanRl314 =  $this->getLaporanRL314($tglAwal, $tglAkhir);
@@ -32,13 +31,14 @@ class ChartLaporanController extends Controller
         $dataLaporanRl315Lalu =  $this->getLaporanRL315($tglAwalLalu, $tglAkhirLalu);
         $dataLaporanRl51 =  $this->getLaporanRL51($tglAwal, $tglAkhir);
         $dataLaporanRl51Lalu =  $this->getLaporanRL51($tglAwalLalu, $tglAkhirLalu);
+        // $dataPasienBelumGrouping =  $this->pasienBelumGroupingPerBulan($tahunIni);
+        // $dataPasienBelumGroupingLalu =  $this->pasienBelumGroupingPerBulan($tahunLalu);
 
         return inertia("Chart/Laporan/Index", [
             'tahunIni' => $tahunIni,
             'tahunLalu' => $tahunLalu,
-            'pasienBelumGrouping' => $dataPasienBelumGrouping->toArray(),
-            'pasienBelumGroupingLalu' => $dataPasienBelumGroupingLalu->toArray(),
             'indikatorPelayanan' => $dataIndikatorPelayanan,
+            'indikatorPelayananTahunan' => $dataIndikatorPelayananTahunan,
             'pasienMasukKeluar' => $dataPasienMasukKeluar,
             'pasienRanap' => $dataPasienRanap,
             'laporanRl32' => $dataLaporanRl32,
@@ -49,6 +49,8 @@ class ChartLaporanController extends Controller
             'laporanRl315Lalu' => $dataLaporanRl315Lalu,
             'laporanRl51' => $dataLaporanRl51,
             'laporanRl51Lalu' => $dataLaporanRl51Lalu,
+            // 'pasienBelumGrouping' => $dataPasienBelumGrouping->toArray(),
+            // 'pasienBelumGroupingLalu' => $dataPasienBelumGroupingLalu->toArray(),
         ]);
     }
 
@@ -245,6 +247,49 @@ class ChartLaporanController extends Controller
 
         return $result;
     }
+
+    public function getStatistikPerTahun($ttidur)
+    {
+        $data = DB::connection('mysql12')->select("
+        SELECT 
+            YEAR(t.TANGGAL) AS TAHUN,
+            ROUND((IFNULL(SUM(r.HP), 0) * 100) / (? * IFNULL(SUM(r.JMLHARI), 1)), 2) AS BOR,
+            ROUND(IFNULL(SUM(r.LD), 0) / NULLIF(SUM(r.JMLKLR), 0), 2) AS AVLOS,
+            ROUND(IFNULL(SUM(r.JMLKLR), 0) / ?, 2) AS BTO,
+            ROUND(((? * IFNULL(SUM(r.JMLHARI), 0)) - IFNULL(SUM(r.HP), 0)) / NULLIF(SUM(r.JMLKLR), 0), 2) AS TOI,
+            ROUND((IFNULL(SUM(r.LEBIH48JAM), 0) * 1000) / NULLIF(SUM(r.JMLKLR), 0), 2) AS NDR,
+            ROUND(((IFNULL(SUM(r.KURANG48JAM), 0) + IFNULL(SUM(r.LEBIH48JAM), 0)) * 1000) / NULLIF(SUM(r.JMLKLR), 0), 2) AS GDR
+        FROM master.tanggal t
+        LEFT JOIN informasi.indikator_rs r ON r.TANGGAL = t.TANGGAL
+        WHERE r.HP > 0
+        GROUP BY YEAR(t.TANGGAL)
+        ORDER BY TAHUN DESC
+    ", [$ttidur, $ttidur, $ttidur]);
+
+        // Urutkan ascending tahun 
+        $data = collect($data)->sortBy('TAHUN')->values()->all();
+
+        // Batasi 5 tahun terakhir di PHP
+        if (count($data) > 5) {
+            $data = array_slice($data, -5);
+        }
+
+        $result = [];
+        foreach ($data as $d) {
+            $result[] = [
+                'tahun' => $d->TAHUN,
+                'bor' => round($d->BOR, 2),
+                'avlos' => round($d->AVLOS, 2),
+                'bto' => round($d->BTO, 2),
+                'toi' => round($d->TOI, 2),
+                'ndr' => round($d->NDR, 2),
+                'gdr' => round($d->GDR, 2),
+            ];
+        }
+
+        return $result;
+    }
+
 
     private function getDataPasienRanap()
     {
