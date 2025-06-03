@@ -20,12 +20,13 @@ class PenggunaRequestController extends Controller
         $query = DB::connection('mysql8')->table('logs.pengguna_request_log as request')
             ->select(
                 'request.ID as id',
+                'request.PENGGUNA as penggunaId',
                 'request.TANGGAL_AKSES as mulai',
                 'request.TANGGAL_SELESAI as selesai',
                 'request.LOKASI_AKSES as asal',
                 'request.TUJUAN_AKSES as tujuan',
                 'request.REQUEST_URI as url',
-                'pengguna.NAMA as nama'
+                'pengguna.NAMA as nama',
             )
             ->leftJoin('aplikasi.pengguna as pengguna', 'pengguna.ID', '=', 'request.PENGGUNA');
 
