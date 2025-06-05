@@ -13,8 +13,6 @@ const LaporanRL51 = ({ tahunIni, tahunLalu, laporanRl51, laporanRl51Lalu }) => {
 
         const ctx = chartRef.current.getContext("2d");
 
-        // Fungsi bantu untuk mengelompokkan data berdasarkan DESKRIPSI
-        // Menghasilkan objek { DESKRIPSI: JUMLAH }
         const groupDataByDeskripsi = (data) => {
             const result = {};
             (data || []).forEach(({ deskripsi, jumlah }) => {
@@ -26,28 +24,32 @@ const LaporanRL51 = ({ tahunIni, tahunLalu, laporanRl51, laporanRl51Lalu }) => {
         const dataTahunIni = groupDataByDeskripsi(laporanRl51);
         const dataTahunLalu = groupDataByDeskripsi(laporanRl51Lalu);
 
-        // Gabungkan semua label unik dari dua tahun
-        const labels = Array.from(new Set([...Object.keys(dataTahunIni), ...Object.keys(dataTahunLalu)]));
+        const dataBaruTahunIni = dataTahunIni["Pengunjung Baru"] || 0;
+        const dataLamaTahunIni = dataTahunIni["Pengunjung Lama"] || 0;
+        const dataBaruTahunLalu = dataTahunLalu["Pengunjung Baru"] || 0;
+        const dataLamaTahunLalu = dataTahunLalu["Pengunjung Lama"] || 0;
 
-        // Map data sesuai label
-        const dataTahunIniArr = labels.map(label => dataTahunIni[label] || 0);
-        const dataTahunLaluArr = labels.map(label => dataTahunLalu[label] || 0);
+        const labels = ["Pengunjung Baru", "Pengunjung Lama"];
 
         const datasets = [
             {
                 label: `Tahun ${tahunIni}`,
-                data: dataTahunIniArr,
-                backgroundColor: "rgba(37, 83, 247, 1)",
-                borderColor: "rgba(37, 83, 247, 1)",
+                data: [dataBaruTahunIni, dataLamaTahunIni],
+                backgroundColor: "rgba(75, 192, 192, 1)",
+                borderColor: "rgba(75, 192, 192, 1)",
                 borderWidth: 1,
+                categoryPercentage: 0.8,
+                barPercentage: 0.9,
             },
             {
                 label: `Tahun ${tahunLalu}`,
-                data: dataTahunLaluArr,
-                backgroundColor: "rgba(217, 232, 53, 1)",
-                borderColor: "rgba(217, 232, 53, 1)",
+                data: [dataBaruTahunLalu, dataLamaTahunLalu],
+                backgroundColor: "rgba(255, 99, 132, 0.7)",
+                borderColor: "rgba(255, 99, 132, 0.7)",
                 borderWidth: 1,
-            },
+                categoryPercentage: 0.8,
+                barPercentage: 0.9,
+            }
         ];
 
         chartInstance.current = new Chart(ctx, {
@@ -58,16 +60,25 @@ const LaporanRL51 = ({ tahunIni, tahunLalu, laporanRl51, laporanRl51Lalu }) => {
                 plugins: {
                     legend: {
                         position: "top",
-                        labels: { color: 'rgb(176, 175, 153)', font: { size: 12 } },
+                        labels: {
+                            color: 'rgb(176, 175, 153)',
+                            font: { size: 10 },
+                        },
                     },
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { color: "rgb(176, 175, 153)", font: { size: 12 } },
+                        ticks: {
+                            color: "rgb(176, 175, 153)",
+                            font: { size: 10 },
+                        },
                     },
                     x: {
-                        ticks: { color: "rgb(176, 175, 153)", font: { size: 12 } },
+                        ticks: {
+                            color: "rgb(176, 175, 153)",
+                            font: { size: 10 },
+                        },
                     },
                 },
             },
