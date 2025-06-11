@@ -293,38 +293,59 @@ class DashboardController extends Controller
 
     protected function getStatistikKunjungan()
     {
-        $lastFiveDaysData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
-            ->select(
-                'statistikKunjungan.RJ as rajal',
-                'statistikKunjungan.RD as darurat',
-                'statistikKunjungan.RI as ranap',
-                'statistikKunjungan.TANGGAL as tanggal'
-            )
-            ->where(function ($query) {
-                $query->where('statistikKunjungan.RJ', '>', 0)
-                    ->orWhere('statistikKunjungan.RD', '>', 0)
-                    ->orWhere('statistikKunjungan.RI', '>', 0);
-            })
-            ->whereBetween('statistikKunjungan.TANGGAL', [now()->subDays(7)->toDateString(), now()->toDateString()])
-            ->orderBy('statistikKunjungan.TANGGAL', 'asc')
-            ->get()
-            ->map(function ($item) {
-                // Format the 'tanggal' field to dd-mm-yyyy
-                $item->tanggal = Carbon::parse($item->tanggal)->format('d M');
-                return $item;
-            });
+        $startDate = now()->subDays(7)->toDateString();
+        $endDate = now()->toDateString();
 
-        // Data statistik kunjungan untuk hari ini
-        $todayData = DB::connection('mysql12')->table('informasi.statistik_kunjungan as statistikKunjungan')
+        // Ambil data RJ dan RD dari tabel pengunjung
+        $rajalDaruratData = DB::connection('mysql12')->table('informasi.pengunjung as pengunjung')
             ->select(
-                'statistikKunjungan.TANGGAL as updated'
+                'pengunjung.TANGGAL as tanggal',
+                DB::raw('SUM(CASE WHEN pengunjung.ID = "1" THEN pengunjung.VALUE ELSE 0 END) as rajal'),
+                DB::raw('SUM(CASE WHEN pengunjung.ID = "2" THEN pengunjung.VALUE ELSE 0 END) as darurat')
             )
-            ->whereDate('statistikKunjungan.TANGGAL', now()->toDateString())
-            ->first();
+            ->whereBetween('pengunjung.TANGGAL', [$startDate, $endDate])
+            ->groupBy('pengunjung.TANGGAL');
+
+        // Ambil data RI (hanya yang masih dirawat) dari pasien_rawat_inap
+        $ranapData = DB::connection('mysql12')->table('informasi.pasien_rawat_inap as pasienRanap')
+            ->select(
+                'pasienRanap.TANGGAL as tanggal',
+                DB::raw('SUM(CASE WHEN pasienRanap.ID = "2" THEN pasienRanap.VALUE ELSE 0 END) as ranap')
+            )
+            ->whereBetween('pasienRanap.TANGGAL', [$startDate, $endDate])
+            ->groupBy('pasienRanap.TANGGAL');
+
+        // Gabungkan data RJ, RD, dan RI berdasarkan tanggal
+        $combined = collect($rajalDaruratData->get())->map(function ($item) {
+            $item->ranap = 0;
+            return $item;
+        });
+
+        $ranapMap = collect($ranapData->get())->keyBy('tanggal');
+
+        $lastSevenDaysData = $combined->map(function ($item) use ($ranapMap) {
+            $tanggal = $item->tanggal;
+            if (isset($ranapMap[$tanggal])) {
+                $item->ranap = $ranapMap[$tanggal]->ranap;
+            }
+            $item->tanggal = Carbon::parse($item->tanggal)->format('d M');
+            return $item;
+        });
+
+        // Ambil tanggal terakhir update dari kedua tabel
+        $lastUpdatedRajalDarurat = DB::connection('mysql12')->table('informasi.pengunjung')
+            ->whereDate('TANGGAL', now()->toDateString())
+            ->max('LASTUPDATED');
+
+        $lastUpdatedRanap = DB::connection('mysql12')->table('informasi.pasien_rawat_inap')
+            ->whereDate('TANGGAL', now()->toDateString())
+            ->max('LASTUPDATED');
+
+        $latestUpdated = max($lastUpdatedRajalDarurat, $lastUpdatedRanap);
 
         return [
-            'todayUpdated' => $todayData->updated ?? null,
-            'lastFiveDaysData' => $lastFiveDaysData,
+            'todayUpdated' => $latestUpdated,
+            'lastFiveDaysData' => $lastSevenDaysData,
         ];
     }
 
