@@ -69,7 +69,7 @@ export default function SatuSehatTable({ items = [] }) {
                                                         : 'text-yellow-400'
                                                     }`}
                                             >
-                                                {item.TOTAL.toLocaleString()}
+                                                {item.TOTAL}
                                             </td>
                                             <td
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
@@ -79,7 +79,7 @@ export default function SatuSehatTable({ items = [] }) {
                                                         : 'text-yellow-400'
                                                     }`}
                                             >
-                                                {item.MEMILIKI_ID.toLocaleString()}
+                                                {item.MEMILIKI_ID}
                                             </td>
                                             <td
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
@@ -89,7 +89,7 @@ export default function SatuSehatTable({ items = [] }) {
                                                         : 'text-yellow-400'
                                                     }`}
                                             >
-                                                {item.TIDAK_MEMILIKI_ID.toLocaleString()}
+                                                {item.TIDAK_MEMILIKI_ID}
                                             </td>
                                             <td
                                                 className={`border border-gray-600 px-4 py-2 text-center ${item.PERSEN > 50
