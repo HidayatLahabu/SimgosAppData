@@ -32,9 +32,11 @@ class TindakanController extends Controller
             ->orderBy('referensi.DESKRIPSI')
             ->orderBy('tindakan.NAMA');
 
-        // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(tindakan.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(tindakan.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(referensi.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
         // Paginate the results

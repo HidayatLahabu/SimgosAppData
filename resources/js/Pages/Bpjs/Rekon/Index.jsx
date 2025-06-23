@@ -16,13 +16,14 @@ import Cetak from './Cetak';
 export default function Index({ auth, dataTable, header, text, totalCount, queryParams = {} }) {
 
     const headers = [
-        { name: "NORM", className: "w-[7%]" },
-        { name: "NAMA PASIEN", className: "w-[25%]" },
+        { name: "NORM", className: "w-[5%]" },
+        { name: "NAMA PASIEN" },
         { name: "NOMOR KONTROL", className: "w-[12%]" },
         { name: "TANGGAL KONTROL", className: "w-[9%]" },
         { name: "RUANGAN TUJUAN" },
         { name: "JADWAL DOKTER" },
-        { name: "MENU", className: "text-center w-[7%]" },
+        { name: "TANGGAL DIBUAT", className: "w-[9%]" },
+        { name: "MENU", className: "text-center w-[5%]" },
     ];
 
     // Function to handle search input changes
@@ -84,7 +85,7 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                         </tr>
                                     </TableHeader>
                                     <TableHeader>
-                                        <tr>
+                                        <tr className='text-xs'>
                                             {headers.map((header, index) => (
                                                 <TableHeaderCell key={index} className={header.className || ""}>
                                                     {header.name}
@@ -92,7 +93,7 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                             ))}
                                         </tr>
                                     </TableHeader>
-                                    <tbody>
+                                    <tbody className='text-xs'>
                                         {dataTable.data.length > 0 ? (
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.noSurat} isEven={index % 2 === 0}>
@@ -102,6 +103,7 @@ export default function Index({ auth, dataTable, header, text, totalCount, query
                                                     <TableCell>{data.tanggal}</TableCell>
                                                     <TableCell>{data.poliTujuan}</TableCell>
                                                     <TableCell>{data.namaDokter}</TableCell>
+                                                    <TableCell>{data.tglDibuat}</TableCell>
                                                     <TableCellMenu>
                                                         <ButtonDetail
                                                             href={route("rekonBpjs.detail", { id: data.noSurat })}

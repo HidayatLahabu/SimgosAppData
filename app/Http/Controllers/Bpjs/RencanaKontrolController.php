@@ -24,12 +24,14 @@ class RencanaKontrolController extends Controller
                 'poli.nama as poliTujuan',
                 'dpjp.nama as namaDokter',
                 'pasienBpjs.nama as pasienNama',
+                'jadwalKontrol.DIBUAT_TANGGAL as tglDibuat',
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
             ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
             ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
+            ->leftJoin('medicalrecord.jadwal_kontrol as jadwalKontrol', 'rekon.noSurat', '=', 'jadwalKontrol.NOMOR_REFERENSI')
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->groupBy(
                 'rekon.noSurat',
@@ -38,7 +40,8 @@ class RencanaKontrolController extends Controller
                 'rekon.tglRencanaKontrol',
                 'poli.nama',
                 'dpjp.nama',
-                'pasienBpjs.nama'
+                'pasienBpjs.nama',
+                'jadwalKontrol.DIBUAT_TANGGAL'
             );
 
         // Add search filter if provided
@@ -84,12 +87,14 @@ class RencanaKontrolController extends Controller
                 'poli.nama as poliTujuan',
                 'dpjp.nama as namaDokter',
                 'pasienBpjs.nama as pasienNama',
+                'jadwalKontrol.DIBUAT_TANGGAL as tglDibuat',
             )
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
             ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
             ->leftJoin('bpjs.peserta as pasienBpjs', 'pasienBpjs.noKartu', '=', 'rekon.nomor')
+            ->leftJoin('medicalrecord.jadwal_kontrol as jadwalKontrol', 'rekon.noSurat', '=', 'jadwalKontrol.NOMOR_REFERENSI')
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
             ->groupBy(
                 'rekon.noSurat',
@@ -98,7 +103,8 @@ class RencanaKontrolController extends Controller
                 'rekon.tglRencanaKontrol',
                 'poli.nama',
                 'dpjp.nama',
-                'pasienBpjs.nama'
+                'pasienBpjs.nama',
+                'jadwalKontrol.DIBUAT_TANGGAL'
             );
 
         // Add filter based on the provided filter
@@ -155,12 +161,15 @@ class RencanaKontrolController extends Controller
                 'poli.nama as poliKontrol',
                 'rekon.user',
                 'rekon.status',
+                'jadwalKontrol.DIBUAT_TANGGAL as tglDibuat',
+                'jadwalKontrol.KUNJUNGAN as kunjungan',
             )
             ->leftJoin('bpjs.dpjp as dpjp', 'dpjp.kode', '=', 'rekon.kodeDokter')
             ->leftJoin('bpjs.kunjungan as kunjungan', 'kunjungan.noSEP', '=', 'rekon.nomor')
             ->leftJoin('bpjs.poli as poli', 'poli.kode', '=', 'rekon.poliKontrol')
             ->leftJoin('bpjs.peserta as peserta', 'peserta.noKartu', '=', 'kunjungan.noKartu')
             ->leftJoin('master.kartu_identitas_pasien as pasien', 'pasien.NOMOR', '=', 'peserta.nik')
+            ->leftJoin('medicalrecord.jadwal_kontrol as jadwalKontrol', 'rekon.noSurat', '=', 'jadwalKontrol.NOMOR_REFERENSI')
             ->where('rekon.noSurat', $id)
             ->distinct()
             ->first();
