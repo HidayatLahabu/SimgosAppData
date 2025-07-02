@@ -39,6 +39,9 @@ class KunjunganBpjsController extends Controller
         // Paginate the results
         $data = $query->orderByDesc('kunjungan.tglSEP')->paginate(10)->appends(request()->query());
 
+        $countQuery = clone $query;
+        $count = $countQuery->count();
+
         // Convert data to array
         $dataArray = $data->toArray();
 
@@ -48,7 +51,8 @@ class KunjunganBpjsController extends Controller
                 'data' => $dataArray['data'], // Only the paginated data
                 'links' => $dataArray['links'], // Pagination links
             ],
-            'queryParams' => request()->all()
+            'queryParams' => request()->all(),
+            'totalCount' => $count,
         ]);
     }
 
