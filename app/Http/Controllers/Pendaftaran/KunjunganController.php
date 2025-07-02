@@ -190,6 +190,7 @@ class KunjunganController extends Controller
                 'kunjungan.NOMOR as nomor',
                 DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
                 'pasien.NORM as norm',
+                'kontak.NOMOR as nohp',
                 'ruangan.DESKRIPSI as ruangan',
                 'kunjungan.MASUK as masuk',
                 'kunjungan.KELUAR as keluar',
@@ -198,6 +199,7 @@ class KunjunganController extends Controller
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'kunjungan.RUANGAN')
+            ->leftJoin('master.kontak_pasien as kontak', 'kontak.NORM', '=', 'pasien.NORM')
             ->where('pasien.STATUS', 1);
 
         // Filter berdasarkan ruangan

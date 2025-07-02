@@ -46,6 +46,7 @@ export default function Print({
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[3%]">NO</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[7%]">NORM</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid">NAMA PASIEN</th>
+                                            <th className="px-3 py-2 border border-gray-500 border-solid w-[10%] text-center">NOHP</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[12%] text-center">NOMOR KUNJUNGAN</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">TANGGAL MASUK</th>
                                             <th className="px-3 py-2 border border-gray-500 border-solid w-[12%]">TANGGAL KELUAR</th>
@@ -62,6 +63,9 @@ export default function Print({
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.nama}
+                                                </td>
+                                                <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
+                                                    {item.nohp}
                                                 </td>
                                                 <td className="px-3 py-2 text-nowrap border border-gray-500 border-solid">
                                                     {item.nomor}
