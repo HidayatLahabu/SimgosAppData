@@ -1,3 +1,11 @@
+# 🚧 Status Proyek
+
+⚠️ **Pengembangan sementara dihentikan**  
+Saat ini pengembang sedang mengerjakan project lain, sehingga repository ini tidak akan mendapatkan update dalam waktu dekat.  
+Kontribusi dari komunitas tetap diterima melalui pull request.
+
+---
+
 SimgosAppData adalah aplikasi tambahan yang dirancang untuk melengkapi aplikasi SIMGOS Kemenkes. 
 Aplikasi ini memanfaatkan database SIMGOS, dan untuk database usersimgos dibuat terpisah sebagai 
 tempat penyimpanan informasi pengguna.
