@@ -18,7 +18,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
         { name: "KUNJUNGAN", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
-        { name: "JENIS KELAMIN", className: "text-center w-[12%]" },
+        { name: "JENIS KELAMIN", className: "text-center w-[6%]" },
         { name: "TINDAKAN" },
         { name: "PARAMETER" },
         { name: "HASIL" },

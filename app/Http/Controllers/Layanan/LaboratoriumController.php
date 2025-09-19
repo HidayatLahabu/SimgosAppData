@@ -296,7 +296,7 @@ class LaboratoriumController extends Controller
             kunjungan.NOMOR as kunjungan,
             pendaftaran.NORM as norm,
             master.getNamaLengkap(pasien.NORM) as namaPasien,
-            master.JENIS_KELAMIN as kelamin,
+            pasien.JENIS_KELAMIN as kelamin,
             tindakanLab.NAMA as tindakan,
             parameter.PARAMETER as parameter,
             hasil.HASIL as hasil,
