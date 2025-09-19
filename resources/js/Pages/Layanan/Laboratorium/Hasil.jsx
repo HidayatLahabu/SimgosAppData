@@ -3,7 +3,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
-import Cetak from "./Cetak"
+import CetakRekap from "./CetakRekap"
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
@@ -67,7 +67,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={9} className="px-3 py-2">
+                                            <th colSpan={10} className="px-3 py-2">
                                                 <div className="flex items-center space-x-2">
                                                     <TextInput
                                                         className="w-full"
@@ -107,7 +107,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="9" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="10" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>
@@ -117,6 +117,10 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="w-full">
+                <CetakRekap />
             </div>
         </AuthenticatedLayout>
     );

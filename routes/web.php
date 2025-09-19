@@ -491,6 +491,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/detail/{id}', [LaboratoriumController::class, 'detail'])->name('layananLab.detail');
         Route::get('/print', [LaboratoriumController::class, 'print'])->name('layananLab.print');
         Route::get('/hasil', [LaboratoriumController::class, 'hasil'])->name('layananLab.hasil');
+        Route::get('/hasilRekap', [LaboratoriumController::class, 'hasilRekap'])->name('layananLab.hasilRekap');
         Route::get('/catatan', [LaboratoriumController::class, 'catatan'])->name('layananLab.catatan');
         Route::get('/filter/{filter}', [LaboratoriumController::class, 'filterByTime'])
             ->name('layananLab.filterByTime')

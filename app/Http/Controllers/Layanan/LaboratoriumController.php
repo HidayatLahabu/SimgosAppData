@@ -320,6 +320,57 @@ class LaboratoriumController extends Controller
         ]);
     }
 
+    public function hasilRekap(Request $request)
+    {
+        $dari = $request->input('dari_tanggal');
+        $sampai = $request->input('sampai_tanggal');
+
+        $rekap = DB::connection('mysql7')->table('layanan.hasil_lab as hasil')
+            ->leftJoin('layanan.tindakan_medis as tindakanMedis', 'hasil.TINDAKAN_MEDIS', '=', 'tindakanMedis.ID')
+            ->leftJoin('master.tindakan as tindakanLab', 'tindakanMedis.TINDAKAN', '=', 'tindakanLab.ID')
+            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'tindakanMedis.KUNJUNGAN', '=', 'kunjungan.NOMOR')
+            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'kunjungan.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->when($dari && $sampai, function ($q) use ($dari, $sampai) {
+                $q->whereBetween(DB::raw('DATE(hasil.TANGGAL)'), [$dari, $sampai]);
+            })
+            ->selectRaw('
+            pasien.JENIS_KELAMIN as kelamin,
+            tindakanLab.NAMA as tindakan,
+            COUNT(*) as jumlah
+        ')
+            ->groupBy('pasien.JENIS_KELAMIN', 'tindakanLab.NAMA')
+            ->get();
+
+        // Pivot hasil jadi per tindakan
+        $rekapPivot = [];
+        foreach ($rekap as $row) {
+            $tindakan = $row->tindakan ?? 'Tidak diketahui';
+            if (!isset($rekapPivot[$tindakan])) {
+                $rekapPivot[$tindakan] = [
+                    'tindakan' => $tindakan,
+                    'laki' => 0,
+                    'perempuan' => 0,
+                    'total' => 0,
+                ];
+            }
+
+            if ($row->kelamin == 1 || strtoupper($row->kelamin) == 'L') {
+                $rekapPivot[$tindakan]['laki'] += $row->jumlah;
+            } elseif ($row->kelamin == 2 || strtoupper($row->kelamin) == 'P') {
+                $rekapPivot[$tindakan]['perempuan'] += $row->jumlah;
+            }
+            $rekapPivot[$tindakan]['total'] += $row->jumlah;
+        }
+
+        return inertia("Layanan/Laboratorium/PrintRekap", [
+            'rekap' => array_values($rekapPivot),
+            'dari' => $dari,
+            'sampai' => $sampai,
+        ]);
+    }
+
+
     public function catatan()
     {
         // Get the search term from the request
