@@ -18,6 +18,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
         { name: "KUNJUNGAN", className: "text-center w-[12%]" },
         { name: "NORM", className: "w-[6%]" },
         { name: "NAMA PASIEN" },
+        { name: "JENIS KELAMIN", className: "text-center w-[12%]" },
         { name: "TINDAKAN" },
         { name: "PARAMETER" },
         { name: "HASIL" },
@@ -97,6 +98,7 @@ export default function Hasil({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell>{data.kunjungan}</TableCell>
                                                     <TableCell>{data.norm}</TableCell>
                                                     <TableCell>{data.namaPasien}</TableCell>
+                                                    <TableCell> {data.kelamin === 1 ? "Laki-laki" : data.kelamin === 2 ? "Perempuan" : "Tidak Diketahui"} </TableCell>
                                                     <TableCell>{data.tindakan}</TableCell>
                                                     <TableCell>{data.parameter}</TableCell>
                                                     <TableCell>{data.hasil.trim() === '' ? <span className='text-red-500'>Tidak Ada</span> : data.hasil}</TableCell>
