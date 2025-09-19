@@ -20,22 +20,19 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
-./vscode
-vscode
+
+# VSCode
+.vscode/
+
+# Spelling/Dictionary tools
 .cspell/custom-dictionary-workspace.txt
 cspell.json
 
-# for online access
-/app/Providers/AppServiceProvider.php
-app/Providers/AppServiceProvider.php
-/Providers/AppServiceProvider.php
-Providers/AppServiceProvider.php
-AppServiceProvider.php
-/public/.htaccess
-public/.htaccess
-.htaccess
+# Sensitive / config overrides
 app/Http/Middleware/TrustProxies.php
 config/trustedproxy.php
+app/Providers/AppServiceProvider.php
 public/.htaccess
-app/Providers/AppServiceProvider.php
-app/Providers/AppServiceProvider.php
+
+# Laravel VSCode Helper
+laravel-vscode.php
