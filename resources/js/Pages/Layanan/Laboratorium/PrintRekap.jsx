@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Head } from "@inertiajs/react";
+import { formatDate } from '@/utils/formatDate';
 
 export default function PrintRekap({ rekap, dari, sampai }) {
     useEffect(() => {
