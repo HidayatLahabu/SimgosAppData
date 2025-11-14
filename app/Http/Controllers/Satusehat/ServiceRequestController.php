@@ -53,7 +53,7 @@ class ServiceRequestController extends Controller
     public function filterByTime($filter)
     {
         // Define base query
-        $query = SatusehatServiceRequestModel::orderByDesc('sendDate');
+        $query = SatusehatServiceRequestModel::orderByDesc('sendDate')->orderByDesc('id');
 
         // Clone query for count calculation
         $countQuery = clone $query;

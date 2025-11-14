@@ -19,6 +19,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
         { name: "SUBJECT" },
         { name: "REF ID" },
         { name: "NOPEN" },
+        { name: "PERFORMER" },
         { name: "SEND DATE" },
         { name: "MENU", className: "text-center" },
     ];
@@ -99,6 +100,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <TableCell>{data.subject}</TableCell>
                                                     <TableCell>{data.refId}</TableCell>
                                                     <TableCell>{data.nopen}</TableCell>
+                                                    <TableCell>{data.performer}</TableCell>
                                                     <TableCell>{data.sendDate}</TableCell>
                                                     <TableCellMenu>
                                                         <ButtonDetail
