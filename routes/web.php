@@ -208,6 +208,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/serviceRequest/{filter}', [ServiceRequestController::class, 'filterByTime'])
             ->name('serviceRequest.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+        Route::get('/serviceRequest/adaId', [ServiceRequestController::class, 'filterById'])
+            ->name('serviceRequest.filterById');
 
         Route::get('specimen', [SpecimenController::class, 'index'])->name('specimen.index');
         Route::get('specimen/detail/{id}', [SpecimenController::class, 'detail'])->name('specimen.detail');
