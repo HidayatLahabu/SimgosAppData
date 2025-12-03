@@ -200,4 +200,66 @@ class EncounterController extends Controller
         }
         return $json; // Return original if not a valid array
     }
+
+    public function filterById()
+    {
+        // Base Query
+        $query = SatusehatEncounterModel::whereNotNull('id')
+            ->orderByDesc('sendDate')
+            ->orderByDesc('id');
+
+        // Clone untuk count()
+        $countQuery = clone $query;
+
+        // Hitung total
+        $count = $countQuery->count();
+
+        // Search
+        if (request('search')) {
+            $searchSubject = strtolower(request('search'));
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%']);
+            });
+        }
+
+        // Paginate
+        $data = $query->paginate(10)->appends(request()->query());
+
+        // Transform
+        $data->getCollection()->transform(function ($item) {
+            // Format subject
+            $subject = json_decode($item->subject, true);
+            if (is_array($subject)) {
+                $display = $subject['display'] ?? '';
+                $reference = $subject['reference'] ?? '';
+                $item->subject = trim("{$display}, ({$reference})");
+            }
+
+            // Format performer
+            $performer = json_decode($item->performer, true);
+            if (is_array($performer)) {
+                $formatted = [];
+                foreach ($performer as $p) {
+                    $disp = $p['display'] ?? '';
+                    $ref = $p['reference'] ?? '';
+                    $formatted[] = "{$disp} ({$ref})";
+                }
+                $item->performer = implode(', ', $formatted);
+            }
+
+            return $item;
+        });
+
+        return inertia("Satusehat/ServiceRequest/Index", [
+            'dataTable' => [
+                'data' => $data->toArray()['data'],
+                'links' => $data->toArray()['links'],
+            ],
+            'queryParams' => request()->all(),
+            'header' => 'ADA ID',
+            'totalCount' => $count,
+            'text' => 'REF ID',
+        ]);
+    }
 }
