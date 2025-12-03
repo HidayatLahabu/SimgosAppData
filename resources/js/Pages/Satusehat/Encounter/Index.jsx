@@ -5,6 +5,7 @@ import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
 import ButtonDetail from "@/Components/Button/ButtonDetail";
 import ButtonTime from '@/Components/Button/ButtonTime';
+import ButtonId from '@/Components/Button/ButtonId';
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
@@ -77,7 +78,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <ButtonTime href={route("encounter.filterByTime", "mingguIni")} text="Minggu Ini" />
                                                     <ButtonTime href={route("encounter.filterByTime", "bulanIni")} text="Bulan Ini" />
                                                     <ButtonTime href={route("encounter.filterByTime", "tahunIni")} text="Tahun Ini" />
-                                                    <ButtonId href={route("serviceRequest.filterById")} text="Ada ID" />
+                                                    <ButtonId href={route("encounter.filterById")} text="Ada ID" />
                                                 </div>
                                             </th>
                                         </tr>

@@ -251,7 +251,7 @@ class EncounterController extends Controller
             return $item;
         });
 
-        return inertia("Satusehat/ServiceRequest/Index", [
+        return inertia("Satusehat/Encounter/Index", [
             'dataTable' => [
                 'data' => $data->toArray()['data'],
                 'links' => $data->toArray()['links'],
