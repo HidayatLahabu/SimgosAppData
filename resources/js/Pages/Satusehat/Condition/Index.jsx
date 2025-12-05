@@ -79,7 +79,7 @@ export default function Index({ auth, dataTable, header, totalCount, text, query
                                                     <ButtonTime href={route("condition.filterByTime", "mingguIni")} text="Minggu Ini" />
                                                     <ButtonTime href={route("condition.filterByTime", "bulanIni")} text="Bulan Ini" />
                                                     <ButtonTime href={route("condition.filterByTime", "tahunIni")} text="Tahun Ini" />
-                                                     <ButtonId href={route("encounter.filterById")} text="Ada ID" />
+                                                    <ButtonId href={route("condition.filterById")} text="Ada ID" />
                                                 </div>
                                             </th>
                                         </tr>
