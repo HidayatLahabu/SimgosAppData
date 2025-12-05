@@ -168,6 +168,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/condition/{filter}', [ConditionController::class, 'filterByTime'])
             ->name('condition.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');
+        Route::get('/condition/adaId', [ConditionController::class, 'filterById'])
+            ->name('condition.filterById');
 
         Route::get('observation', [ObservationController::class, 'index'])->name('observation.index');
         Route::get('observation/detail/{id}', [ObservationController::class, 'detail'])->name('observation.detail');

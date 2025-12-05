@@ -11,47 +11,115 @@ class LaboratoriumController extends Controller
 {
     public function index()
     {
-        // Get the search term from the request
         $searchSubject = request('search') ? strtolower(request('search')) : null;
 
-        // Start building the query using the query builder
-        $query = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
-            ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
-            ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM')
-            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'orderLab.DOKTER_ASAL')
-            ->leftJoin('master.pegawai as pegawai', 'pegawai.NIP', '=', 'dokter.NIP')
-            ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
-            ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
+        /**
+         * 1) Ambil order_lab (ringan) sebagai paginator agar punya links() / toArray()['links']
+         */
+        $order = DB::connection('mysql7')
+            ->table('layanan.order_lab as ol')
+            ->select('ol.NOMOR', 'ol.TANGGAL', 'ol.KUNJUNGAN', 'ol.DOKTER_ASAL', 'ol.STATUS')
+            ->when($searchSubject, function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(ol.NOMOR) LIKE ?', ["%{$searchSubject}%"])
+                    ->orWhereRaw('LOWER(ol.NOMOR) LIKE ?', ["%{$searchSubject}%"]); // menjaga behavior search
+            })
+            ->orderByDesc('ol.TANGGAL')
+            ->paginate(5) // gunakan paginate agar kita punya total + links
+            ->appends(request()->query());
 
-        // Add search filter if provided
-        if ($searchSubject) {
-            $query->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
-            });
+        // Ambil arrays dari paginator collection (original)
+        $collection = $order->getCollection();
+        $nomorList     = $collection->pluck('NOMOR')->filter()->unique()->values()->all();
+        $kunjunganList = $collection->pluck('KUNJUNGAN')->filter()->unique()->values()->all();
+        $dokterList    = $collection->pluck('DOKTER_ASAL')->filter()->unique()->values()->all();
+
+        /**
+         * 2) Ambil relasi pasien/pendaftaran/kunjungan (batch)
+         * Jika list kosong, skip query dan gunakan koleksi kosong.
+         */
+        $relasi = collect();
+        if (!empty($kunjunganList)) {
+            $relasi = DB::connection('mysql7')
+                ->table('pendaftaran.kunjungan as k')
+                ->leftJoin('pendaftaran.pendaftaran as p', 'p.NOMOR', '=', 'k.NOPEN')
+                ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'p.NORM')
+                ->whereIn('k.NOMOR', $kunjunganList)
+                ->select(
+                    'k.NOMOR as kunjungan',
+                    'k.STATUS as statusKunjungan',
+                    'pasien.NORM as norm',
+                    'pasien.NAMA as namaPasien'
+                )
+                ->get()
+                ->keyBy('kunjungan');
         }
 
-        // Group by 'nomor' and select the first occurrence for other fields
-        $query->selectRaw('
-                orderLab.NOMOR as nomor,
-                MIN(orderLab.TANGGAL) as tanggal,
-                MIN(orderLab.KUNJUNGAN) as kunjungan,
-                master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
-                MIN(pasien.NORM) as norm,                
-                master.getNamaLengkap(pasien.NORM) as nama,
-                MIN(kunjungan.STATUS) as statusKunjungan,
-                MIN(orderLab.STATUS) as statusOrder,
-                MIN(hasil.STATUS) as statusHasil
-            ')
-            ->groupBy('orderLab.NOMOR');
+        /**
+         * 3) Ambil dokter (batch) => pluck NIP keyed by ID
+         */
+        $dokter = collect();
+        if (!empty($dokterList)) {
+            $dokter = DB::connection('mysql7')
+                ->table('master.dokter')
+                ->whereIn('ID', $dokterList)
+                ->pluck('NIP', 'ID'); // [ID => NIP]
+        }
 
-        // Paginate the results
-        $data = $query->orderByDesc('orderLab.TANGGAL')->paginate(5)->appends(request()->query());
+        /**
+         * 4) Ambil status hasil_lab per ORDER_ID (grouped)
+         */
+        $hasil = collect();
+        if (!empty($nomorList)) {
+            $hasil = DB::connection('mysql7')
+                ->table('layanan.order_detil_lab as od')
+                ->leftJoin('layanan.hasil_lab as h', 'h.TINDAKAN_MEDIS', '=', 'od.REF')
+                ->whereIn('od.ORDER_ID', $nomorList)
+                ->select('od.ORDER_ID', DB::raw('MIN(h.STATUS) as statusHasil'))
+                ->groupBy('od.ORDER_ID')
+                ->get()
+                ->keyBy('ORDER_ID');
+        }
 
-        // Convert data to array
-        $dataArray = $data->toArray();
+        /**
+         * 5) Gabungkan semua data — hasilnya collection (masih kecil: page size)
+         *    Tetap pertahankan nama field yang frontend harapkan.
+         */
+        $merged = $collection->map(function ($row) use ($relasi, $dokter, $hasil) {
+            $r  = $relasi[$row->KUNJUNGAN] ?? null;
+            $hs = $hasil[$row->NOMOR]->statusHasil ?? null;
+
+            // NOTE: saya masukkan orderOleh sebagai string kosong ketika tidak ada
+            // Jika sebelumnya frontend mengharapkan hasil fungsi master.getNamaLengkapPegawai,
+            // kita tidak bisa panggil function DB per row di PHP — jadi kita simpan null atau nip.
+            $orderOleh = null;
+            if (isset($dokter[$row->DOKTER_ASAL])) {
+                // simpan NIP; frontend bisa memformat jika perlu
+                $orderOleh = $dokter[$row->DOKTER_ASAL];
+            }
+
+            return (object)[ // pakai object supaya bentuk mirip stdClass query result
+                'nomor'           => $row->NOMOR,
+                'tanggal'         => $row->TANGGAL,
+                'kunjungan'       => $row->KUNJUNGAN,
+                'orderOleh'       => $orderOleh,
+                'norm'            => $r->norm ?? null,
+                'nama'            => $r->namaPasien ?? null,
+                'statusKunjungan' => $r->statusKunjungan ?? null,
+                'statusOrder'     => $row->STATUS,
+                'statusHasil'     => $hs,
+            ];
+        });
+
+        /**
+         * 6) Masukkan kembali collection hasil merge ke paginator
+         *    LengthAwarePaginator memiliki method setCollection — paginate() mengembalikan LengthAwarePaginator
+         */
+        $order->setCollection($merged->values()); // values() agar index rapi
+
+        /**
+         * 7) Bentuk array links + data sama seperti sebelumnya untuk frontend
+         */
+        $orderArray = $order->toArray(); // sekarang 'data' berisi merged, 'links' ada
 
         $ruangan = DB::connection('mysql2')->table('master.ruangan as ruangan')
             ->select('ruangan.JENIS_KUNJUNGAN', 'ruangan.DESKRIPSI')
@@ -69,12 +137,11 @@ class LaboratoriumController extends Controller
             ->orderBy('ruangan.JENIS_KUNJUNGAN')
             ->get();
 
-        // Return Inertia view with paginated data
         return inertia("Layanan/Laboratorium/Index", [
             'ruangan' => $ruangan,
             'dataTable' => [
-                'data' => $dataArray['data'],
-                'links' => $dataArray['links'],
+                'data'  => $orderArray['data'],
+                'links' => $orderArray['links'],
             ],
             'queryParams' => request()->all(),
         ]);
@@ -82,10 +149,9 @@ class LaboratoriumController extends Controller
 
     public function filterByTime($filter)
     {
-        // Mendapatkan istilah pencarian dari request
         $searchSubject = request('search') ? strtolower(request('search')) : null;
 
-        // Membangun query dasar
+        // Base query (untuk data)
         $baseQuery = DB::connection('mysql7')->table('layanan.order_lab as orderLab')
             ->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
@@ -95,7 +161,7 @@ class LaboratoriumController extends Controller
             ->leftJoin('layanan.order_detil_lab as orderDetail', 'orderDetail.ORDER_ID', '=', 'orderLab.NOMOR')
             ->leftJoin('layanan.hasil_lab as hasil', 'hasil.TINDAKAN_MEDIS', '=', 'orderDetail.REF');
 
-        // Menerapkan filter waktu
+        // Filter waktu
         switch ($filter) {
             case 'hariIni':
                 $baseQuery->whereDate('orderLab.TANGGAL', now()->format('Y-m-d'));
@@ -129,47 +195,80 @@ class LaboratoriumController extends Controller
                 abort(404, 'Filter tidak ditemukan');
         }
 
-        // Membangun query data dengan grouping dan seleksi
+        // Query data (clone)
         $dataQuery = clone $baseQuery;
+
         $dataQuery->selectRaw('
-                orderLab.NOMOR as nomor,
-                MIN(orderLab.TANGGAL) as tanggal,
-                MIN(orderLab.KUNJUNGAN) as kunjungan,
-                master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
-                MIN(pasien.NORM) as norm,                
-                master.getNamaLengkap(pasien.NORM) as nama,
-                MIN(kunjungan.STATUS) as statusKunjungan,
-                MIN(orderLab.STATUS) as statusOrder,
-                MIN(hasil.STATUS) as statusHasil
-            ')
+        orderLab.NOMOR as nomor,
+        MIN(orderLab.TANGGAL) as tanggal,
+        MIN(orderLab.KUNJUNGAN) as kunjungan,
+        master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
+        MIN(pasien.NORM) as norm,                
+        master.getNamaLengkap(pasien.NORM) as nama,
+        MIN(kunjungan.STATUS) as statusKunjungan,
+        MIN(orderLab.STATUS) as statusOrder,
+        MIN(hasil.STATUS) as statusHasil
+    ')
             ->groupBy('orderLab.NOMOR');
 
-        // Membangun query count
-        $count = $baseQuery->distinct('orderLab.NOMOR')->count('orderLab.NOMOR');
-
-        // Menambahkan filter pencarian jika ada
+        // Search
         if ($searchSubject) {
             $dataQuery->where(function ($q) use ($searchSubject) {
-                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%']);
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ["%{$searchSubject}%"])
+                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ["%{$searchSubject}%"])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ["%{$searchSubject}%"]);
             });
-
-            // Juga perlu menambahkan filter pencarian pada count jika diperlukan
-            $count = $baseQuery->distinct('orderLab.NOMOR')->count('orderLab.NOMOR');
         }
 
-        // Mengambil data dengan paginasi
-        $data = $dataQuery->orderByDesc('orderLab.TANGGAL')->paginate(5)->appends(request()->query());
+        // Count (lebih cepat, tidak include join berat)
+        $countQuery = DB::connection('mysql7')->table('layanan.order_lab as orderLab');
 
-        // Mengonversi data ke array
+        // Filter waktu untuk count
+        switch ($filter) {
+            case 'hariIni':
+                $countQuery->whereDate('orderLab.TANGGAL', now()->format('Y-m-d'));
+                break;
+            case 'mingguIni':
+                $countQuery->whereBetween('orderLab.TANGGAL', [
+                    now()->startOfWeek()->format('Y-m-d'),
+                    now()->endOfWeek()->format('Y-m-d')
+                ]);
+                break;
+            case 'bulanIni':
+                $countQuery->whereMonth('orderLab.TANGGAL', now()->month)
+                    ->whereYear('orderLab.TANGGAL', now()->year);
+                break;
+            case 'tahunIni':
+                $countQuery->whereYear('orderLab.TANGGAL', now()->year);
+                break;
+        }
+
+        // Search untuk count
+        if ($searchSubject) {
+            $countQuery->leftJoin('pendaftaran.kunjungan as kunjungan', 'kunjungan.NOMOR', '=', 'orderLab.KUNJUNGAN')
+                ->leftJoin('pendaftaran.pendaftaran as pendaftaran', 'pendaftaran.NOMOR', '=', 'kunjungan.NOPEN')
+                ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'pendaftaran.NORM');
+
+            $countQuery->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ["%{$searchSubject}%"])
+                    ->orWhereRaw('LOWER(orderLab.NOMOR) LIKE ?', ["%{$searchSubject}%"])
+                    ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ["%{$searchSubject}%"]);
+            });
+        }
+
+        $count = $countQuery->distinct('orderLab.NOMOR')->count('orderLab.NOMOR');
+
+        // Pagination
+        $data = $dataQuery->orderByDesc('orderLab.TANGGAL')
+            ->paginate(5)
+            ->appends(request()->query());
+
         $dataArray = $data->toArray();
 
-        // Mengembalikan view Inertia dengan data yang dipaginate
         return inertia("Layanan/Laboratorium/Index", [
             'dataTable' => [
-                'data' => $dataArray['data'], // Hanya data yang dipaginate
-                'links' => $dataArray['links'], // Tautan paginasi
+                'data'  => $dataArray['data'],
+                'links' => $dataArray['links'], // aman untuk React
             ],
             'queryParams' => request()->all(),
             'header' => $header,
@@ -177,6 +276,8 @@ class LaboratoriumController extends Controller
             'text' => $text,
         ]);
     }
+
+
 
     public function detail($id)
     {

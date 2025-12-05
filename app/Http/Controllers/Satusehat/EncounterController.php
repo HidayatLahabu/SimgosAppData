@@ -8,42 +8,64 @@ use Illuminate\Http\Request;
 
 class EncounterController extends Controller
 {
+
     public function index()
     {
-        // Define base query
-        $query = SatusehatEncounterModel::orderByDesc('sendDate')->orderByDesc('refId');
+        $search = request('search') ? trim(strtolower(request('search'))) : null;
 
-        // Apply search filter if 'subject' query parameter is present
-        if (request('search')) {
-            $searchSubject = strtolower(request('search'));
-            $query->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
-                ->orWhereRaw('LOWER(refId) LIKE ?', ['%' . $searchSubject . '%']);
+        // Base query
+        $query = SatusehatEncounterModel::select([
+            'id',
+            'refId',
+            'subject',
+            'period',
+            'sendDate'
+        ])
+            ->orderByDesc('sendDate')
+            ->orderByDesc('refId');
+
+        // Search
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(subject) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(refId) LIKE ?', ["%{$search}%"]);
+            });
         }
 
-        // Paginate the results
+        // Paginate
         $data = $query->paginate(10)->appends(request()->query());
 
-        // Modify 'data' to extract JSON fields
+        // Transform collection
         $data->getCollection()->transform(function ($item) {
-            // Decode 'subject' JSON and combine 'display' and 'reference'
-            $subject = json_decode($item->subject, true);
-            if (is_array($subject)) {
-                $display = $subject['display'] ?? '';
-                $reference = $subject['reference'] ?? '';
-                $item->subject = trim("{$display}, ({$reference})");
+
+            // Decode subject JSON
+            if (!empty($item->subject) && str_starts_with($item->subject, '{')) {
+                $subject = json_decode($item->subject, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $display   = $subject['display'] ?? '';
+                    $reference = $subject['reference'] ?? '';
+                    $item->subject = trim("{$display}, ({$reference})");
+                }
             }
 
-            // Decode 'period' JSON and get 'start'
-            $item->period = json_decode($item->period, true)['start'] ?? $item->period;
+            // Decode period JSON
+            if (!empty($item->period) && str_starts_with($item->period, '{')) {
+                $period = json_decode($item->period, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $item->period = $period['start'] ?? $item->period;
+                }
+            }
 
             return $item;
         });
 
-        // Return Inertia view with modified data
+        // Send to Inertia
+        $dataArray = $data->toArray();
+
         return inertia("Satusehat/Encounter/Index", [
             'dataTable' => [
-                'data' => $data->toArray()['data'], // Only the paginated data
-                'links' => $data->toArray()['links'], // Pagination links
+                'data'  => $dataArray['data'],
+                'links' => $dataArray['links'],
             ],
             'queryParams' => request()->all()
         ]);

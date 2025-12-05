@@ -195,4 +195,50 @@ class ConditionController extends Controller
         }
         return $json; // Return original if not a valid array
     }
+
+    public function filterById()
+    {
+        // Base Query
+        $query = SatusehatConditionModel::whereNotNull('id')
+            ->orderByDesc('sendDate')
+            ->orderByDesc('id');
+
+        // Clone untuk count()
+        $countQuery = clone $query;
+
+        // Hitung total
+        $count = $countQuery->count();
+
+        // Apply search filter if 'subject' query parameter is present
+        if (request('search')) {
+            $searchSubject = strtolower(request('search'));
+            $query->whereRaw('LOWER(subject) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(nopen) LIKE ?', ['%' . $searchSubject . '%']);
+        }
+
+        // Paginate the results
+        $data = $query->paginate(10)->appends(request()->query());
+
+        // Modify 'data' to extract JSON fields
+        $data->getCollection()->transform(function ($item) {
+            // Decode 'subject' JSON and combine 'display' and 'reference'
+            $subject = json_decode($item->subject, true);
+            if (is_array($subject)) {
+                $display = $subject['display'] ?? '';
+                $reference = $subject['reference'] ?? '';
+                $item->subject = trim("{$display}, ({$reference})");
+            }
+
+            return $item;
+        });
+
+        // Return Inertia view with paginated data
+        return inertia("Satusehat/Condition/Index", [
+            'dataTable' => [
+                'data' => $data->toArray()['data'], // Only the paginated data
+                'links' => $data->toArray()['links'], // Pagination links
+            ],
+            'queryParams' => request()->all()
+        ]);
+    }
 }
