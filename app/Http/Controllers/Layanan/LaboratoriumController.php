@@ -21,7 +21,7 @@ class LaboratoriumController extends Controller
             ->select('ol.NOMOR', 'ol.TANGGAL', 'ol.KUNJUNGAN', 'ol.DOKTER_ASAL', 'ol.STATUS')
             ->when($searchSubject, function ($q) use ($searchSubject) {
                 $q->whereRaw('LOWER(ol.NOMOR) LIKE ?', ["%{$searchSubject}%"])
-                    ->orWhereRaw('LOWER(ol.NOMOR) LIKE ?', ["%{$searchSubject}%"]); // menjaga behavior search
+                    ->orWhereRaw('LOWER(ol.NOMOR) LIKE ?', ["%{$searchSubject}%"]);
             })
             ->orderByDesc('ol.TANGGAL')
             ->paginate(5) // gunakan paginate agar kita punya total + links
@@ -60,9 +60,16 @@ class LaboratoriumController extends Controller
         $dokter = collect();
         if (!empty($dokterList)) {
             $dokter = DB::connection('mysql7')
-                ->table('master.dokter')
-                ->whereIn('ID', $dokterList)
-                ->pluck('NIP', 'ID'); // [ID => NIP]
+                ->table('master.dokter as d')
+                ->leftJoin('master.pegawai as p', 'p.NIP', '=', 'd.NIP')
+                ->whereIn('d.ID', $dokterList)
+                ->select(
+                    'd.ID',
+                    'd.NIP',
+                    DB::raw('master.getNamaLengkapPegawai(d.NIP) AS namaLengkap')
+                )
+                ->get()
+                ->keyBy('ID');
         }
 
         /**
@@ -91,11 +98,7 @@ class LaboratoriumController extends Controller
             // NOTE: saya masukkan orderOleh sebagai string kosong ketika tidak ada
             // Jika sebelumnya frontend mengharapkan hasil fungsi master.getNamaLengkapPegawai,
             // kita tidak bisa panggil function DB per row di PHP — jadi kita simpan null atau nip.
-            $orderOleh = null;
-            if (isset($dokter[$row->DOKTER_ASAL])) {
-                // simpan NIP; frontend bisa memformat jika perlu
-                $orderOleh = $dokter[$row->DOKTER_ASAL];
-            }
+            $orderOleh = $dokter[$row->DOKTER_ASAL]->namaLengkap ?? null;
 
             return (object)[ // pakai object supaya bentuk mirip stdClass query result
                 'nomor'           => $row->NOMOR,

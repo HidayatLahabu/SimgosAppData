@@ -39,7 +39,8 @@ class AskepController extends Controller
                 $q->whereRaw('LOWER(pasien.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(askep.KUNJUNGAN) LIKE ?', ['%' . $searchSubject . '%'])
                     ->orWhereRaw('LOWER(pasien.NORM) LIKE ?', ['%' . $searchSubject . '%'])
-                    ->orWhereRaw('LOWER(pegawai.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+                    ->orWhereRaw('LOWER(pegawai.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(ruangan.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
             });
         }
 

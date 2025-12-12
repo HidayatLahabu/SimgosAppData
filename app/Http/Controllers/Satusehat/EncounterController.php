@@ -28,7 +28,8 @@ class EncounterController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->whereRaw('LOWER(subject) LIKE ?', ["%{$search}%"])
-                    ->orWhereRaw('LOWER(refId) LIKE ?', ["%{$search}%"]);
+                    ->orWhereRaw('LOWER(refId) LIKE ?', ["%{$search}%"])
+                    ->orWhereRaw('LOWER(id) LIKE ?', ["%{$search}%"]);
             });
         }
 

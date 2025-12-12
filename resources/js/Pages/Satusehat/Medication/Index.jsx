@@ -13,7 +13,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
         { name: "ID" },
-        { name: "MANUFACTURER" },
+        { name: "IDENTIFIER" },
         { name: "REF ID" },
         { name: "NOPEN" },
         { name: "SEND DATE" },
@@ -64,10 +64,10 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             <th colSpan={5} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.manufacturer || ''}
+                                                    defaultValue={queryParams.nopen || ''}
                                                     placeholder="Cari medication"
-                                                    onChange={e => onInputChange('manufacturer', e)}
-                                                    onKeyPress={e => onKeyPress('manufacturer', e)}
+                                                    onChange={e => onInputChange('nopen', e)}
+                                                    onKeyPress={e => onKeyPress('nopen', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -86,7 +86,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             dataTable.data.map((data, index) => (
                                                 <TableRow key={data.nopen} isEven={index % 2 === 0}>
                                                     <TableCell>{data.id}</TableCell>
-                                                    <TableCell>{data.manufacturer}</TableCell>
+                                                    <TableCell>{data.identifier}</TableCell>
                                                     <TableCell>{data.refId}</TableCell>
                                                     <TableCell>{data.nopen}</TableCell>
                                                     <TableCell>{data.sendDate}</TableCell>

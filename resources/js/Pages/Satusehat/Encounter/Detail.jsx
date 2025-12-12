@@ -36,12 +36,33 @@ export default function Detail({ auth, detail }) {
                     <div className="overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
+
+                                {/* HEADER ACTION AREA */}
                                 <div className="relative flex items-center justify-between pb-2">
                                     <ButtonBack href={route("encounter.index")} />
+
+                                    {/* TOMBOL BARU */}
+                                    <div className="flex gap-2 ml-auto">
+                                        <a
+                                            href={route("patient.index")}
+                                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow"
+                                        >
+                                            Patient
+                                        </a>
+
+                                        <a
+                                            href={route("medication.index")}
+                                            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow"
+                                        >
+                                            Medication
+                                        </a>
+                                    </div>
+
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
                                         DATA ENCOUNTER
                                     </h1>
                                 </div>
+
                                 <TableSatusehat
                                     headers={headers}
                                     tables={tables}
@@ -54,5 +75,4 @@ export default function Detail({ auth, detail }) {
             </div>
         </AuthenticatedLayout>
     );
-
 }
