@@ -16,11 +16,11 @@ class OrderLabDetailController extends Controller
                 'ol.NOMOR as no_lab_order',
                 'pasien.NORM as no_rm',
                 DB::raw('master.getNamaLengkap(pasien.NORM) as patient_name'),
-                'pasien.TGL_LAHIR as birth_date',
+                DB::raw('DATE(pasien.TANGGAL_LAHIR) as birth_date'),
                 DB::raw("
-                CASE pasien.JK
-                    WHEN 'L' THEN 'M'
-                    WHEN 'P' THEN 'F'
+                CASE pasien.JENIS_KELAMIN
+                    WHEN 1 THEN 'M'
+                    WHEN 2 THEN 'F'
                     ELSE NULL
                 END as sex
             "),
@@ -33,7 +33,6 @@ class OrderLabDetailController extends Controller
             ->leftJoin('pendaftaran.kunjungan as k', 'k.NOMOR', '=', 'ol.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as p', 'p.NOMOR', '=', 'k.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'p.NORM')
-            ->whereNotNull('od.ORDER_ID')
             ->orderByDesc('ol.TANGGAL')
             ->distinct()
             ->get();
