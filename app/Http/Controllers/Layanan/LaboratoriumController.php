@@ -202,16 +202,16 @@ class LaboratoriumController extends Controller
         $dataQuery = clone $baseQuery;
 
         $dataQuery->selectRaw('
-        orderLab.NOMOR as nomor,
-        MIN(orderLab.TANGGAL) as tanggal,
-        MIN(orderLab.KUNJUNGAN) as kunjungan,
-        master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
-        MIN(pasien.NORM) as norm,                
-        master.getNamaLengkap(pasien.NORM) as nama,
-        MIN(kunjungan.STATUS) as statusKunjungan,
-        MIN(orderLab.STATUS) as statusOrder,
-        MIN(hasil.STATUS) as statusHasil
-    ')
+            orderLab.NOMOR as nomor,
+            MIN(orderLab.TANGGAL) as tanggal,
+            MIN(orderLab.KUNJUNGAN) as kunjungan,
+            master.getNamaLengkapPegawai(dokter.NIP) as orderOleh,
+            MIN(pasien.NORM) as norm,                
+            master.getNamaLengkap(pasien.NORM) as nama,
+            MIN(kunjungan.STATUS) as statusKunjungan,
+            MIN(orderLab.STATUS) as statusOrder,
+            MIN(hasil.STATUS) as statusHSasil
+        ')
             ->groupBy('orderLab.NOMOR');
 
         // Search
@@ -279,8 +279,6 @@ class LaboratoriumController extends Controller
             'text' => $text,
         ]);
     }
-
-
 
     public function detail($id)
     {
@@ -474,7 +472,6 @@ class LaboratoriumController extends Controller
         ]);
     }
 
-
     public function catatan()
     {
         // Get the search term from the request
@@ -632,6 +629,78 @@ class LaboratoriumController extends Controller
             'sampaiTanggal'     => $sampaiTanggal,
             'jenisPenjamin'     => $penjamin,
             'jenisKunjungan'    => $kunjungan,
+        ]);
+    }
+
+    public function orderLabDetail()
+    {
+        $search = request('search');
+
+        /**
+         * Query utama: order_detil_lab sebagai basis
+         * 1 baris = 1 hasil parameter lab
+         */
+        $query = DB::connection('mysql7')
+            ->table('layanan.order_detil_lab as od')
+            ->select(
+                'ol.NOMOR as order_id',
+                'ol.TANGGAL as tanggal_order',
+                'ol.STATUS as status_order',
+                'k.NOMOR as kunjungan',
+                'pasien.NORM as norm',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama_pasien'),
+                'tindakan.NAMA as tindakan',
+                'parameter.PARAMETER as parameter',
+                'hl.HASIL',
+                'hl.NILAI_NORMAL',
+                'hl.SATUAN',
+                'hl.STATUS as status_hasil'
+            )
+
+            // ==== RELASI ORDER ====
+            ->join('layanan.order_lab as ol', 'ol.NOMOR', '=', 'od.ORDER_ID')
+
+            // ==== RELASI KUNJUNGAN & PASIEN ====
+            ->leftJoin('pendaftaran.kunjungan as k', 'k.NOMOR', '=', 'ol.KUNJUNGAN')
+            ->leftJoin('pendaftaran.pendaftaran as p', 'p.NOMOR', '=', 'k.NOPEN')
+            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'p.NORM')
+
+            // ==== RELASI DOKTER ====
+            ->leftJoin('master.dokter as dokter', 'dokter.ID', '=', 'ol.DOKTER_ASAL')
+
+            // ==== RELASI TINDAKAN & HASIL ====
+            ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'od.TINDAKAN')
+            ->leftJoin('layanan.hasil_lab as hl', 'hl.TINDAKAN_MEDIS', '=', 'od.REF')
+            ->leftJoin(
+                'master.parameter_tindakan_lab as parameter',
+                'parameter.ID',
+                '=',
+                'hl.PARAMETER_TINDAKAN'
+            )
+
+            // ==== FILTER OPTIONAL ====
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('ol.NOMOR', 'LIKE', "%{$search}%")
+                        ->orWhere('pasien.NORM', 'LIKE', "%{$search}%")
+                        ->orWhereRaw('LOWER(master.getNamaLengkap(pasien.NORM)) LIKE ?', ['%' . strtolower($search) . '%'])
+                        ->orWhereRaw('LOWER(tindakan.NAMA) LIKE ?', ['%' . strtolower($search) . '%']);
+                });
+            })
+
+            // hanya hasil yang sudah terisi
+            ->whereNotNull('hl.HASIL')
+            ->where('hl.HASIL', '!=', '')
+            ->orderByDesc('ol.TANGGAL')
+            ->paginate(7)
+            ->appends(request()->query());
+
+        return inertia('Layanan/Laboratorium/OrderLabDetail', [
+            'dataTable' => [
+                'data'  => $query->items(),
+                'links' => $query->toArray()['links'],
+            ],
+            'queryParams' => request()->all(),
         ]);
     }
 }

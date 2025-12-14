@@ -28,6 +28,7 @@ export default function NavigationLayanan() {
     // Function to check if any of the dropdown routes are active
     const isAnyDropdownLinkActive = () => {
         return route().current('layananLab.index') ||
+            route().current('layananLab.orderLabDetail') ||
             route().current('layananLab.hasil') ||
             route().current('layananLab.catatan') ||
             route().current('layananRad.index') ||
@@ -53,6 +54,13 @@ export default function NavigationLayanan() {
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Order Laboratorium
+                    </NavLink>
+                    <NavLink
+                        href={route('layananLab.orderLabDetail')}
+                        active={route().current('layananLab.orderLabDetail')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Order Lab Detail
                     </NavLink>
                     <NavLink
                         href={route('layananLab.hasil')}
