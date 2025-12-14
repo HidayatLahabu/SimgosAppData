@@ -13,3 +13,4 @@ Route::get('/ping', function () {
 });
 
 Route::get('/lis/order-lab-detail', [OrderLabDetailController::class, 'index']);
+Route::get('/lis/order-lab-detail/{orderId}', [OrderLabDetailController::class, 'show']);

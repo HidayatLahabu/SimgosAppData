@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Lis;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OrderLabDetailController extends Controller
@@ -47,7 +46,6 @@ class OrderLabDetailController extends Controller
             'data'   => $data,
         ]);
     }
-
 
     public function show(string $orderId)
     {
