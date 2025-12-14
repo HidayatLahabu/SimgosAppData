@@ -52,40 +52,47 @@ class OrderLabDetailController extends Controller
         $data = DB::connection('mysql7')
             ->table('layanan.order_detil_lab as od')
             ->select(
-                'ol.NOMOR as order_id',
-                'ol.TANGGAL as tanggal_order',
-                'k.NOMOR as kunjungan',
-                'pasien.NORM as norm',
-                DB::raw('master.getNamaLengkap(pasien.NORM) as nama_pasien'),
-                'tindakan.NAMA as tindakan',
-                'parameter.PARAMETER as parameter',
-                'hl.HASIL',
-                'hl.NILAI_NORMAL',
-                'hl.SATUAN',
-                'hl.STATUS as status_hasil'
+                'ol.NOMOR as no_lab_order',
+                'parameter.PARAMETER as parameter_code',
+                'tindakan.NAMA as parameter_name',
+                'hl.HASIL as result_value',
+                'hl.SATUAN as unit',
+                'hl.NILAI_NORMAL as reference_range',
+                DB::raw("
+                CASE 
+                    WHEN hl.STATUS = 1 THEN 'N'
+                    WHEN hl.STATUS = 2 THEN 'H'
+                    ELSE NULL
+                END as flag
+            "),
+                'ol.TANGGAL as created_at'
             )
             ->join('layanan.order_lab as ol', 'ol.NOMOR', '=', 'od.ORDER_ID')
-            ->leftJoin('pendaftaran.kunjungan as k', 'k.NOMOR', '=', 'ol.KUNJUNGAN')
-            ->leftJoin('pendaftaran.pendaftaran as p', 'p.NOMOR', '=', 'k.NOPEN')
-            ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'p.NORM')
             ->leftJoin('master.tindakan as tindakan', 'tindakan.ID', '=', 'od.TINDAKAN')
             ->leftJoin('layanan.hasil_lab as hl', 'hl.TINDAKAN_MEDIS', '=', 'od.REF')
-            ->leftJoin('master.parameter_tindakan_lab as parameter', 'parameter.ID', '=', 'hl.PARAMETER_TINDAKAN')
+            ->leftJoin(
+                'master.parameter_tindakan_lab as parameter',
+                'parameter.ID',
+                '=',
+                'hl.PARAMETER_TINDAKAN'
+            )
             ->where('ol.NOMOR', $orderId)
+            ->whereNotNull('hl.HASIL')
+            ->where('hl.HASIL', '!=', '')
             ->orderBy('parameter.PARAMETER')
             ->get();
 
         if ($data->isEmpty()) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Order tidak ditemukan'
+                'message' => 'Lab order tidak ditemukan'
             ], 404);
         }
 
         return response()->json([
             'status' => 'success',
-            'order_id' => $orderId,
-            'data' => $data
+            'no_lab_order' => $orderId,
+            'items' => $data
         ]);
     }
 }
