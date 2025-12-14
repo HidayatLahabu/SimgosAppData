@@ -33,15 +33,21 @@ class OrderLabDetailController extends Controller
             ->leftJoin('pendaftaran.kunjungan as k', 'k.NOMOR', '=', 'ol.KUNJUNGAN')
             ->leftJoin('pendaftaran.pendaftaran as p', 'p.NOMOR', '=', 'k.NOPEN')
             ->leftJoin('master.pasien as pasien', 'pasien.NORM', '=', 'p.NORM')
+
+            // 🔥 BATASI 30 HARI TERAKHIR
+            ->where('ol.TANGGAL', '>=', now()->subDays(30))
+
             ->orderByDesc('ol.TANGGAL')
             ->distinct()
             ->get();
 
         return response()->json([
             'status' => 'success',
+            'count'  => $data->count(),
             'data'   => $data,
         ]);
     }
+
 
     public function show(string $orderId)
     {
