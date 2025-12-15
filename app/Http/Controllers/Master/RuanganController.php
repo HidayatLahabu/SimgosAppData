@@ -29,7 +29,8 @@ class RuanganController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(ruangan.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->whereRaw('LOWER(ruangan.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
+                ->orWhereRaw('LOWER(ruangan.ID) LIKE ?', ['%' . $searchSubject . '%']);;
         }
 
         // Paginate the results
