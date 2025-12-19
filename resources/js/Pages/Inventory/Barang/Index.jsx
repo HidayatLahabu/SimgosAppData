@@ -30,7 +30,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('barang.index'), updatedParams, {
+        router.get(route('daftarBarang.index'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
