@@ -263,6 +263,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('kunjungan')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
         Route::get('/', [KunjunganController::class, 'index'])->name('kunjungan.index');
         Route::get('/detail/{id}', [KunjunganController::class, 'detail'])->name('kunjungan.detail');
+        Route::get('/edit/{id}', [KunjunganController::class, 'edit'])->name('kunjungan.edit');
+        Route::put('/kunjungan/{nomor}', [KunjunganController::class, 'update'])
+            ->name('kunjungan.update');
         Route::get('/filter/{filter}', [KunjunganController::class, 'filterByTime'])
             ->name('kunjungan.filterByTime')
             ->where('filter', 'hariIni|mingguIni|bulanIni|tahunIni');

@@ -91,6 +91,8 @@ use App\Models\MedicalrecordStatusFungsionalModel;
 use App\Models\MedicalrecordTandaVitalModel;
 use App\Models\MedicalrecordTindakanAbciModel;
 use App\Models\MedicalrecordTindakanMmpiModel;
+use Illuminate\Support\Facades\Log;
+
 
 class KunjunganController extends Controller
 {
@@ -692,7 +694,111 @@ class KunjunganController extends Controller
                 'nomorPendaftaran' => $pendaftaran,
                 'dataKunjungan' => $kunjungan,
                 'diagnosa' => $diagnosaId,
+                'kunjunganId' => $noKunjungan,
             ], $relatedData));
+        }
+    }
+
+    public function edit($id)
+    {
+        // Ambil detail kunjungan
+        $query = $this->getDetailKunjungan($id);
+
+        if (!$query) {
+            return redirect()
+                ->route('kunjungan.index')
+                ->with('error', 'Data tidak ditemukan.');
+        }
+
+        return inertia('Pendaftaran/Kunjungan/Edit', [
+            'kunjungan' => [
+                'nomor_kunjungan'   => $query->NOMOR_KUNJUNGAN,
+                'nomor_pendaftaran' => $query->NOMOR_PENDAFTARAN,
+                'norm'              => $query->NORM,
+                'nama_pasien'       => $query->NAMA_PASIEN,
+                'dpjp'              => $query->DPJP,
+                'ruangan_tujuan'    => $query->RUANGAN_TUJUAN,
+                'tanggal_masuk'     => $query->TANGGAL_MASUK,
+                'tanggal_keluar'    => $query->TANGGAL_KELUAR,
+                'status_kunjungan'  => $query->STATUS_AKTIFITAS_KUNJUNGAN,
+            ],
+        ]);
+    }
+
+    public function update(Request $request, $nomor)
+    {
+        // Normalisasi tanggal
+        if ($request->filled('tanggal_masuk')) {
+            $request->merge([
+                'tanggal_masuk' => str_replace('T', ' ', $request->tanggal_masuk),
+            ]);
+        }
+
+        if ($request->filled('tanggal_keluar')) {
+            $request->merge([
+                'tanggal_keluar' => str_replace('T', ' ', $request->tanggal_keluar),
+            ]);
+        }
+
+        // Validasi
+        $validated = $request->validate([
+            'tanggal_masuk'    => ['required', 'date'],
+            'tanggal_keluar'   => ['nullable', 'date', 'after_or_equal:tanggal_masuk'],
+            'status_kunjungan' => ['required', 'integer'],
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Ambil data dari database
+            $current = DB::connection('mysql5')
+                ->table('kunjungan')
+                ->where('NOMOR', $nomor)
+                ->first(['MASUK', 'KELUAR', 'STATUS']);
+
+            if (!$current) {
+                throw new \Exception('Data kunjungan tidak ditemukan');
+            }
+
+            // Bandingkan dan siapkan data untuk update
+            $updateData = [];
+            if ($validated['tanggal_masuk'] !== $current->MASUK) {
+                $updateData['MASUK'] = $validated['tanggal_masuk'];
+            }
+            if ($validated['tanggal_keluar'] !== $current->KELUAR) {
+                $updateData['KELUAR'] = $validated['tanggal_keluar'];
+            }
+            if ($validated['status_kunjungan'] != $current->STATUS) {
+                $updateData['STATUS'] = $validated['status_kunjungan'];
+            }
+
+            // Lakukan update hanya jika ada perubahan
+            if (!empty($updateData)) {
+                DB::connection('mysql5')
+                    ->table('kunjungan')
+                    ->where('NOMOR', $nomor)
+                    ->update($updateData);
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('kunjungan.detail', $nomor)
+                ->with('success', 'Data kunjungan berhasil diperbarui');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            Log::error('Gagal update kunjungan', [
+                'nomor' => $nomor,
+                'payload' => $request->all(),
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'update' => 'Gagal menyimpan data. Perubahan dibatalkan.'
+                ]);
         }
     }
 

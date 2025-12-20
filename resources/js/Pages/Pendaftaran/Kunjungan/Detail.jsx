@@ -8,10 +8,12 @@ import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import TableDetailRme from './TableDetailRme';
+import ButtonEdit from '@/Components/Button/ButtonEditKunjungan';
 
 export default function Detail({
     auth,
     detail,
+    kunjunganId,
     triage,
     rekonsiliasiObatAdmisi,
     rekonsiliasiObatTransfer,
@@ -134,8 +136,16 @@ export default function Detail({
                         <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
                             <div className="overflow-auto w-full">
                                 <div className="relative flex items-center justify-between pb-2">
-                                    <ButtonBack href={route("kunjungan.index")} />
-                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL KUNJUNGAN</h1>
+                                    <ButtonBack
+                                        href={route("kunjungan.index")}
+                                    />
+                                    <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
+                                        DATA DETAIL KUNJUNGAN
+                                    </h1>
+                                    <ButtonEdit
+                                        href={route('kunjungan.edit', kunjunganId)}
+                                        label="Update Kunjungan"
+                                    />
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
