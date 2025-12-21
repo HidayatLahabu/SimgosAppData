@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Pendaftaran;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Models\MasterRuanganModel;
 use App\Models\MedicalrecordTriageModel;
 use App\Http\Controllers\Pendaftaran\MedicalRecordController;
 use App\Models\MedicalrecordAnamnesisDiperolehModel;
@@ -91,8 +92,7 @@ use App\Models\MedicalrecordStatusFungsionalModel;
 use App\Models\MedicalrecordTandaVitalModel;
 use App\Models\MedicalrecordTindakanAbciModel;
 use App\Models\MedicalrecordTindakanMmpiModel;
-use Illuminate\Support\Facades\Log;
-
+use App\Models\PendaftaranKunjunganModel;
 
 class KunjunganController extends Controller
 {
@@ -701,6 +701,10 @@ class KunjunganController extends Controller
 
     public function edit($id)
     {
+        $kunjunganModel = PendaftaranKunjunganModel::where('NOMOR', $id)->firstOrFail();
+
+        $this->authorize('update', $kunjunganModel);
+
         // Ambil detail kunjungan
         $query = $this->getDetailKunjungan($id);
 
@@ -710,6 +714,18 @@ class KunjunganController extends Controller
                 ->with('error', 'Data tidak ditemukan.');
         }
 
+        $ruangan = DB::connection('mysql2')->table('master.ruangan as ruangan')
+            ->select(
+                'ruangan.ID as id',
+                'ruangan.DESKRIPSI as namaRuangan',
+            )
+            ->where('ruangan.STATUS', 1)
+            ->where('ruangan.JENIS', 5)
+            ->whereIn('ruangan.JENIS_KUNJUNGAN', [1, 2, 3])
+            ->orderBy('ruangan.ID')
+            ->orderBy('ruangan.DESKRIPSI')
+            ->get();
+
         return inertia('Pendaftaran/Kunjungan/Edit', [
             'kunjungan' => [
                 'nomor_kunjungan'   => $query->NOMOR_KUNJUNGAN,
@@ -717,62 +733,69 @@ class KunjunganController extends Controller
                 'norm'              => $query->NORM,
                 'nama_pasien'       => $query->NAMA_PASIEN,
                 'dpjp'              => $query->DPJP,
+                'ruangan_id'        => $query->ID_RUANGAN,
                 'ruangan_tujuan'    => $query->RUANGAN_TUJUAN,
                 'tanggal_masuk'     => $query->TANGGAL_MASUK,
                 'tanggal_keluar'    => $query->TANGGAL_KELUAR,
                 'status_kunjungan'  => $query->STATUS_AKTIFITAS_KUNJUNGAN,
             ],
+            'ruanganList' => $ruangan,
         ]);
     }
 
     public function update(Request $request, $nomor)
     {
-        // Normalisasi tanggal
-        if ($request->filled('tanggal_masuk')) {
-            $request->merge([
-                'tanggal_masuk' => str_replace('T', ' ', $request->tanggal_masuk),
-            ]);
-        }
+        // 🔐 AMBIL MODEL & AUTHORIZE
+        $kunjunganModel = PendaftaranKunjunganModel::where('NOMOR', $nomor)->firstOrFail();
+        $this->authorize('update', $kunjunganModel);
 
-        if ($request->filled('tanggal_keluar')) {
-            $request->merge([
-                'tanggal_keluar' => str_replace('T', ' ', $request->tanggal_keluar),
-            ]);
-        }
-
-        // Validasi
+        // Validasi awal
         $validated = $request->validate([
             'tanggal_masuk'    => ['required', 'date'],
             'tanggal_keluar'   => ['nullable', 'date', 'after_or_equal:tanggal_masuk'],
             'status_kunjungan' => ['required', 'integer'],
+            'ruangan_id'       => ['required', 'string'],
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Ambil data dari database
+            // Ambil data current
             $current = DB::connection('mysql5')
                 ->table('kunjungan')
                 ->where('NOMOR', $nomor)
-                ->first(['MASUK', 'KELUAR', 'STATUS']);
+                ->first(['MASUK', 'KELUAR', 'STATUS', 'RUANGAN']);
 
             if (!$current) {
                 throw new \Exception('Data kunjungan tidak ditemukan');
             }
 
-            // Bandingkan dan siapkan data untuk update
+            // Normalisasi tanggal pakai Carbon
+            $tanggal_masuk  = Carbon::parse($validated['tanggal_masuk'])->format('Y-m-d H:i:s');
+            $tanggal_keluar = $validated['tanggal_keluar']
+                ? Carbon::parse($validated['tanggal_keluar'])->format('Y-m-d H:i:s')
+                : null;
+
+            // Siapkan update data
             $updateData = [];
-            if ($validated['tanggal_masuk'] !== $current->MASUK) {
-                $updateData['MASUK'] = $validated['tanggal_masuk'];
+
+            if ($tanggal_masuk !== $current->MASUK) {
+                $updateData['MASUK'] = $tanggal_masuk;
             }
-            if ($validated['tanggal_keluar'] !== $current->KELUAR) {
-                $updateData['KELUAR'] = $validated['tanggal_keluar'];
+
+            if ($tanggal_keluar !== $current->KELUAR) {
+                $updateData['KELUAR'] = $tanggal_keluar;
             }
+
             if ($validated['status_kunjungan'] != $current->STATUS) {
                 $updateData['STATUS'] = $validated['status_kunjungan'];
             }
 
-            // Lakukan update hanya jika ada perubahan
+            if ($validated['ruangan_id'] != $current->RUANGAN) {
+                $updateData['RUANGAN'] = $validated['ruangan_id'];
+            }
+
+            // Update jika ada perubahan
             if (!empty($updateData)) {
                 DB::connection('mysql5')
                     ->table('kunjungan')

@@ -126,6 +126,8 @@ export default function Detail({
         tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
 
+    const isAdmin = auth.user?.role === 'admin';
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Pendaftaran" />
@@ -142,10 +144,13 @@ export default function Detail({
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">
                                         DATA DETAIL KUNJUNGAN
                                     </h1>
-                                    <ButtonEdit
-                                        href={route('kunjungan.edit', kunjunganId)}
-                                        label="Update Kunjungan"
-                                    />
+                                    {isAdmin && (
+                                        <ButtonEdit
+                                            href={route('kunjungan.edit', kunjunganId)}
+                                            label="Update Kunjungan"
+                                        />
+                                    )}
+
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
