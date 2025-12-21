@@ -63,99 +63,101 @@ export default function Edit({ auth, kunjungan, ruanganList }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Edit Kunjungan" />
 
-            <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
+            <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">
-                    <div className="bg-white dark:bg-indigo-900 shadow-sm rounded-lg">
-                        <div className="p-5 dark:bg-indigo-950">
+                    <div className="bg-white dark:bg-indigo-900 overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-5 text-gray-900 dark:text-gray-100 dark:bg-indigo-950">
+                            <div className="overflow-auto w-full">
 
-                            <div className="text-center mb-2">
-                                <h1 className="text-xl font-bold uppercase tracking-wide">
-                                    Edit Kunjungan
-                                </h1>
-                                {!isAdmin && (
-                                    <p className="text-sm text-red-500 mt-1">
-                                        Anda hanya memiliki akses lihat (read-only)
-                                    </p>
-                                )}
-                            </div>
-
-                            <form onSubmit={submit} className="space-y-8">
-
-                                {/* INFORMASI */}
-                                <Section title="Informasi Kunjungan">
-                                    <Grid>
-                                        <Info label="No Pendaftaran" value={data.nomor_pendaftaran} />
-                                        <Info label="No Kunjungan" value={data.nomor_kunjungan} />
-                                        <Info label="NORM" value={data.norm} />
-                                        <Info label="Nama Pasien" value={data.nama_pasien} />
-                                    </Grid>
-
-                                    <Grid>
-                                        <Info label="Ruangan Tujuan" value={`${data.ruangan_id} - ${data.ruangan_tujuan}`} />
-                                        <Info label="DPJP" value={data.dpjp} />
-                                        <Info label="Tanggal Masuk" value={formatDbDatetime(kunjungan.tanggal_masuk)} />
-                                        <Info label="Tanggal Keluar" value={formatDbDatetime(kunjungan.tanggal_keluar)} />
-                                    </Grid>
-                                </Section>
-
-                                {/* EDITABLE */}
-                                <SectionEdit title="Edit Data Kunjungan">
-                                    <GridEdit>
-
-                                        <SelectRuangan
-                                            label="Ruangan"
-                                            value={data.ruangan_id}
-                                            onChange={e => setData('ruangan_id', e.target.value)}
-                                            options={ruanganList}
-                                        />
-
-                                        <Editable
-                                            label="Tanggal Masuk"
-                                            type="datetime-local"
-                                            value={data.tanggal_masuk}
-                                            onChange={e => setData('tanggal_masuk', e.target.value)}
-                                            disabled={!isAdmin}
-                                        />
-
-                                        <Editable
-                                            label="Tanggal Keluar"
-                                            type="datetime-local"
-                                            value={data.tanggal_keluar}
-                                            onChange={e => setData('tanggal_keluar', e.target.value)}
-                                            disabled={!isAdmin}
-                                        />
-
-                                        <SelectStatus
-                                            label="Status Kunjungan"
-                                            value={data.status_kunjungan}
-                                            onChange={e => setData('status_kunjungan', e.target.value)}
-                                            disabled={!isAdmin}
-                                        />
-                                    </GridEdit>
-                                </SectionEdit>
-
-                                {/* ACTION */}
-                                <div className="flex justify-between pt-2">
-                                    <a
-                                        href={route('kunjungan.detail', data.nomor_kunjungan)}
-                                        className="px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white text-sm"
-                                    >
-                                        Kembali
-                                    </a>
-
-                                    {isAdmin && (
-                                        <button
-                                            type="submit"
-                                            disabled={processing}
-                                            className="px-5 py-2 rounded bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold text-sm disabled:opacity-50"
-                                        >
-                                            Simpan
-                                        </button>
+                                <div className="text-center mb-2">
+                                    <h1 className="text-xl font-bold uppercase tracking-wide">
+                                        Edit Kunjungan
+                                    </h1>
+                                    {!isAdmin && (
+                                        <p className="text-sm text-red-500 mt-1">
+                                            Anda hanya memiliki akses lihat (read-only)
+                                        </p>
                                     )}
                                 </div>
 
-                            </form>
+                                <form onSubmit={submit} className="space-y-8">
 
+                                    {/* INFORMASI */}
+                                    <Section title="Informasi Kunjungan">
+                                        <Grid>
+                                            <Info label="No Pendaftaran" value={data.nomor_pendaftaran} />
+                                            <Info label="No Kunjungan" value={data.nomor_kunjungan} />
+                                            <Info label="NORM" value={data.norm} />
+                                            <Info label="Nama Pasien" value={data.nama_pasien} />
+                                        </Grid>
+
+                                        <Grid>
+                                            <Info label="Ruangan Tujuan" value={`${data.ruangan_id} - ${data.ruangan_tujuan}`} />
+                                            <Info label="DPJP" value={data.dpjp} />
+                                            <Info label="Tanggal Masuk" value={formatDbDatetime(kunjungan.tanggal_masuk)} />
+                                            <Info label="Tanggal Keluar" value={formatDbDatetime(kunjungan.tanggal_keluar)} />
+                                        </Grid>
+                                    </Section>
+
+                                    {/* EDITABLE */}
+                                    <SectionEdit title="Edit Data Kunjungan">
+                                        <GridEdit>
+
+                                            <SelectRuangan
+                                                label="Ruangan"
+                                                value={data.ruangan_id}
+                                                onChange={e => setData('ruangan_id', e.target.value)}
+                                                options={ruanganList}
+                                            />
+
+                                            <Editable
+                                                label="Tanggal Masuk"
+                                                type="datetime-local"
+                                                value={data.tanggal_masuk}
+                                                onChange={e => setData('tanggal_masuk', e.target.value)}
+                                                disabled={!isAdmin}
+                                            />
+
+                                            <Editable
+                                                label="Tanggal Keluar"
+                                                type="datetime-local"
+                                                value={data.tanggal_keluar}
+                                                onChange={e => setData('tanggal_keluar', e.target.value)}
+                                                disabled={!isAdmin}
+                                            />
+
+                                            <SelectStatus
+                                                label="Status Kunjungan"
+                                                value={data.status_kunjungan}
+                                                onChange={e => setData('status_kunjungan', e.target.value)}
+                                                disabled={!isAdmin}
+                                            />
+                                        </GridEdit>
+                                    </SectionEdit>
+
+                                    {/* ACTION */}
+                                    <div className="flex justify-between pt-2">
+                                        <a
+                                            href={route('kunjungan.detail', data.nomor_kunjungan)}
+                                            className="px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white text-sm"
+                                        >
+                                            Kembali
+                                        </a>
+
+                                        {isAdmin && (
+                                            <button
+                                                type="submit"
+                                                disabled={processing}
+                                                className="px-5 py-2 rounded bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold text-sm disabled:opacity-50"
+                                            >
+                                                Simpan
+                                            </button>
+                                        )}
+                                    </div>
+
+                                </form>
+
+                            </div>
                         </div>
                     </div>
                 </div>
