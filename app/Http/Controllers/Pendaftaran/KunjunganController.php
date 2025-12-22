@@ -743,13 +743,115 @@ class KunjunganController extends Controller
         ]);
     }
 
+    // public function update(Request $request, $nomor)
+    // {
+    //     // 🔐 Ambil model & authorize
+    //     $kunjunganModel = PendaftaranKunjunganModel::where('NOMOR', $nomor)->firstOrFail();
+    //     $this->authorize('update', $kunjunganModel);
+
+    //     // ✅ Validasi input
+    //     $validated = $request->validate([
+    //         'tanggal_masuk'    => ['required', 'date'],
+    //         'tanggal_keluar'   => ['nullable', 'date', 'after_or_equal:tanggal_masuk'],
+    //         'status_kunjungan' => ['required', 'integer'],
+    //         'ruangan_id'       => ['required', 'string'],
+    //     ]);
+
+    //     DB::beginTransaction();
+
+    //     try {
+    //         // 📌 Ambil data kunjungan saat ini
+    //         $current = DB::connection('mysql5')
+    //             ->table('kunjungan')
+    //             ->where('NOMOR', $nomor)
+    //             ->first([
+    //                 'MASUK',
+    //                 'KELUAR',
+    //                 'STATUS',
+    //                 'RUANGAN',
+    //                 'NOPEN',
+    //             ]);
+
+    //         if (!$current) {
+    //             throw new \Exception('Data kunjungan tidak ditemukan');
+    //         }
+
+    //         // 🕒 Normalisasi tanggal
+    //         $tanggal_masuk  = Carbon::parse($validated['tanggal_masuk'])->format('Y-m-d H:i:s');
+    //         $tanggal_keluar = $validated['tanggal_keluar']
+    //             ? Carbon::parse($validated['tanggal_keluar'])->format('Y-m-d H:i:s')
+    //             : null;
+
+    //         // 🧾 Siapkan data update
+    //         $updateData = [];
+
+    //         if ($tanggal_masuk !== $current->MASUK) {
+    //             $updateData['MASUK'] = $tanggal_masuk;
+    //         }
+
+    //         if ($tanggal_keluar !== $current->KELUAR) {
+    //             $updateData['KELUAR'] = $tanggal_keluar;
+    //         }
+
+    //         if ((int) $validated['status_kunjungan'] !== (int) $current->STATUS) {
+    //             $updateData['STATUS'] = $validated['status_kunjungan'];
+    //         }
+
+    //         if ($validated['ruangan_id'] !== $current->RUANGAN) {
+    //             $updateData['RUANGAN'] = $validated['ruangan_id'];
+    //         }
+
+    //         // 🔄 Update tabel kunjungan (jika ada perubahan)
+    //         if (!empty($updateData)) {
+    //             DB::connection('mysql5')
+    //                 ->table('kunjungan')
+    //                 ->where('NOMOR', $nomor)
+    //                 ->update($updateData);
+
+    //             // 🔁 Sinkronisasi ke tabel tujuan_pasien
+    //             // hanya jika RUANGAN berubah & NOPEN ada
+    //             if (
+    //                 array_key_exists('RUANGAN', $updateData) &&
+    //                 !empty($current->NOPEN)
+    //             ) {
+    //                 DB::connection('mysql5')
+    //                     ->table('tujuan_pasien')
+    //                     ->where('NOPEN', $current->NOPEN)
+    //                     ->update([
+    //                         'RUANGAN' => $validated['ruangan_id'],
+    //                     ]);
+    //             }
+    //         }
+
+    //         DB::commit();
+
+    //         return redirect()
+    //             ->route('kunjungan.detail', $nomor)
+    //             ->with('success', 'Data kunjungan berhasil diperbarui');
+    //     } catch (\Throwable $e) {
+    //         DB::rollBack();
+
+    //         Log::error('Gagal update kunjungan', [
+    //             'nomor'   => $nomor,
+    //             'payload' => $request->all(),
+    //             'error'   => $e->getMessage(),
+    //         ]);
+
+    //         return back()
+    //             ->withInput()
+    //             ->withErrors([
+    //                 'update' => 'Gagal menyimpan data. Perubahan dibatalkan.'
+    //             ]);
+    //     }
+    // }
+
     public function update(Request $request, $nomor)
     {
-        // 🔐 AMBIL MODEL & AUTHORIZE
+        // 🔐 Ambil model & authorize
         $kunjunganModel = PendaftaranKunjunganModel::where('NOMOR', $nomor)->firstOrFail();
         $this->authorize('update', $kunjunganModel);
 
-        // Validasi awal
+        // ✅ Validasi input
         $validated = $request->validate([
             'tanggal_masuk'    => ['required', 'date'],
             'tanggal_keluar'   => ['nullable', 'date', 'after_or_equal:tanggal_masuk'],
@@ -760,23 +862,29 @@ class KunjunganController extends Controller
         DB::beginTransaction();
 
         try {
-            // Ambil data current
+            // 📌 Ambil data kunjungan saat ini
             $current = DB::connection('mysql5')
                 ->table('kunjungan')
                 ->where('NOMOR', $nomor)
-                ->first(['MASUK', 'KELUAR', 'STATUS', 'RUANGAN']);
+                ->first([
+                    'MASUK',
+                    'KELUAR',
+                    'STATUS',
+                    'RUANGAN',
+                    'NOPEN',
+                ]);
 
             if (!$current) {
                 throw new \Exception('Data kunjungan tidak ditemukan');
             }
 
-            // Normalisasi tanggal pakai Carbon
+            // 🕒 Normalisasi tanggal
             $tanggal_masuk  = Carbon::parse($validated['tanggal_masuk'])->format('Y-m-d H:i:s');
             $tanggal_keluar = $validated['tanggal_keluar']
                 ? Carbon::parse($validated['tanggal_keluar'])->format('Y-m-d H:i:s')
                 : null;
 
-            // Siapkan update data
+            // 🧾 Siapkan data update kunjungan
             $updateData = [];
 
             if ($tanggal_masuk !== $current->MASUK) {
@@ -787,20 +895,49 @@ class KunjunganController extends Controller
                 $updateData['KELUAR'] = $tanggal_keluar;
             }
 
-            if ($validated['status_kunjungan'] != $current->STATUS) {
+            if ((int) $validated['status_kunjungan'] !== (int) $current->STATUS) {
                 $updateData['STATUS'] = $validated['status_kunjungan'];
             }
 
-            if ($validated['ruangan_id'] != $current->RUANGAN) {
+            if ($validated['ruangan_id'] !== $current->RUANGAN) {
                 $updateData['RUANGAN'] = $validated['ruangan_id'];
             }
 
-            // Update jika ada perubahan
+            // 🔄 Update tabel kunjungan
             if (!empty($updateData)) {
                 DB::connection('mysql5')
                     ->table('kunjungan')
                     ->where('NOMOR', $nomor)
                     ->update($updateData);
+
+                /**
+                 * =====================================================
+                 * 🔁 SINKRON KE TABEL TERKAIT
+                 * =====================================================
+                 */
+
+                // 1️⃣ Update tujuan_pasien jika RUANGAN berubah
+                if (
+                    array_key_exists('RUANGAN', $updateData) &&
+                    !empty($current->NOPEN)
+                ) {
+                    DB::connection('mysql5')
+                        ->table('tujuan_pasien')
+                        ->where('NOPEN', $current->NOPEN)
+                        ->update([
+                            'RUANGAN' => $validated['ruangan_id'],
+                        ]);
+                }
+
+                // 2️⃣ Update pendaftaran jika MASUK berubah
+                if (array_key_exists('MASUK', $updateData)) {
+                    DB::connection('mysql5')
+                        ->table('pendaftaran')
+                        ->where('NOMOR', $current->NOPEN)
+                        ->update([
+                            'TANGGAL' => $tanggal_masuk,
+                        ]);
+                }
             }
 
             DB::commit();
@@ -812,9 +949,9 @@ class KunjunganController extends Controller
             DB::rollBack();
 
             Log::error('Gagal update kunjungan', [
-                'nomor' => $nomor,
+                'nomor'   => $nomor,
                 'payload' => $request->all(),
-                'error' => $e->getMessage(),
+                'error'   => $e->getMessage(),
             ]);
 
             return back()
