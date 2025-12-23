@@ -117,6 +117,9 @@ use App\Http\Controllers\Laporan\MonitoringKegiatanRekapController;
 use App\Http\Controllers\Laporan\MonitoringStatusKegiatanController;
 use App\Http\Controllers\Satusehat\ConditionPenilaianTumorController;
 use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
+use App\Http\Controllers\Tools\ToolsControlller;
+use App\Http\Controllers\Tools\ToolsKunjunganController;
+use App\Http\Controllers\Tools\ToolsResepController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -706,6 +709,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('chartLayanan', [ChartLayananController::class, 'index'])->name('chartLayanan.index');
         Route::get('chartInformasi', [ChartStatistikKunjunganController::class, 'index'])->name('chartInformasi.index');
         Route::get('chartLaporan', [ChartLaporanController::class, 'index'])->name('chartLaporan.index');
+    });
+
+    Route::prefix('tools')->group(function () {
+        Route::get('toolsKunjungan', [ToolsKunjunganController::class, 'index'])->name('toolsKunjungan.index');
+        Route::get('toolsKunjungan/{id}/edit', [ToolsKunjunganController::class, 'edit'])->name('toolsKunjungan.edit');
+        Route::put('toolsKunjungan/{id}', [ToolsKunjunganController::class, 'update'])->name('toolsKunjungan.update');
+
+        Route::get('toolsResep', [ToolsResepController::class, 'index'])->name('toolsResep.index');
+        Route::get('toolsResep/{id}/edit', [ToolsResepController::class, 'edit'])->name('toolsResep.edit');
+        Route::put('toolsResep/{id}', [ToolsResepController::class, 'update'])->name('toolsResep.update');
     });
 });
 

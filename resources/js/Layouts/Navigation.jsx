@@ -15,6 +15,7 @@ import NavigationKontrol from '@/Components/Nav/NavigationKontrol';
 import NavigationManajemen from '@/Components/Nav/NavigationManajemen';
 import NavigationChart from '@/Components/Nav/NavigationChart';
 import NavigationLab from '@/Components/Nav/NavigationLab';
+import NavigationTools from '@/Components/Nav/NavigationTools';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -65,6 +66,7 @@ export default function Navigation({ user }) {
                             <NavigationChart />
                             <NavigationLogs />
                             <NavigationMaster />
+                            <NavigationTools />
                         </>
                     )
                 }

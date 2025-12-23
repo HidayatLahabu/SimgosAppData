@@ -203,21 +203,6 @@ const Info = ({ label, value }) => (
     </div>
 );
 
-// const Editable = ({ label, type, value, onChange, disabled }) => (
-//     <div className="flex flex-col p-3 rounded bg-white dark:bg-indigo-900 border border-amber-300 text-sm">
-//         <label className="text-amber-700 dark:text-amber-300 font-medium">
-//             {label}
-//         </label>
-
-//         <input
-//             type={type}
-//             value={value}
-//             onChange={onChange}
-//             disabled={disabled}
-//             className="mt-1 rounded px-2 py-1 border disabled:opacity-60"
-//         />
-//     </div>
-// );
 
 const Editable = ({ label, type, value, onChange, disabled }) => (
     <div className="flex flex-col p-3 rounded bg-white dark:bg-indigo-900 border border-amber-300 text-sm">
