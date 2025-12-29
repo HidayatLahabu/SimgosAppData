@@ -68,6 +68,7 @@ class BarangController extends Controller
                 'barang.ID as id',
                 'barang.NAMA as nama',
                 'kategori.NAMA as kategori',
+                'far.FREKUENSI as frekuensi',
                 'satuan.NAMA as satuan',
                 'merk.DESKRIPSI as merk',
                 'rekanan.NAMA as rekanan',
@@ -80,6 +81,8 @@ class BarangController extends Controller
             ->leftJoin('master.referensi as merk', 'barang.MERK', '=', 'merk.ID')
             ->leftJoin('inventory.penyedia as rekanan', 'barang.PENYEDIA', '=', 'rekanan.ID')
             ->leftJoin('inventory.harga_barang as harga', 'barang.ID', '=', 'harga.BARANG')
+            ->leftJoin('master.frekuensi_aturan_resep_kategori as fark', 'kategori.ID', '=', 'fark.KATEGORI')
+            ->leftJoin('master.frekuensi_aturan_resep as far', 'fark.FREKUENSI', '=', 'far.ID')
             ->where('barang.STATUS', 1)
             ->where('merk.JENIS', 39)
             ->where('harga.STATUS', 1)

@@ -1,0 +1,1 @@
+import{j as a}from"./app-Db_8h2jn.js";function o({children:r}){return a.jsx("tfoot",{className:"text-sm font-bold text-nowrap text-gray-700 uppercase bg-gray-50 dark:bg-indigo-900 dark:text-gray-200",children:r})}const b=({children:r,className:e=""})=>a.jsx("th",{className:`px-2 py-2 border border-gray-500 dark:border-gray-600 ${e}`,children:r});export{o as T,b as a};

@@ -13,10 +13,14 @@ import TableCell from "@/Components/Table/TableCell";
 
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
+    // Cek isi dataTable di console browser (Tekan F12)
+    console.log("Data Table Isi:", dataTable);
+
     const headers = [
         { name: "ID" },
         { name: "NAMA BARANG" },
         { name: "KATEGORI" },
+        { name: "FREKUENSI" },
         { name: "SATUAN" },
         { name: "STOK", className: "text-right" },
         { name: "HARGA BELI", className: "text-right" },
@@ -32,7 +36,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
             delete updatedParams[nama];
         }
         // Update the URL and fetch new data based on updatedParams
-        router.get(route('daftarBarang.index'), updatedParams, {
+        router.get(route('daftarBarang.barang'), updatedParams, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -65,7 +69,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={8} className="px-3 py-2">
+                                            <th colSpan={headers.length} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
@@ -92,6 +96,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell>{data.id}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.kategori}</TableCell>
+                                                    <TableCell>{data.frekuensi ?? '-'}</TableCell>
                                                     <TableCell>{data.satuan}</TableCell>
                                                     <TableCell className='text-right'>{formatRibuan(data.stock)}</TableCell>
                                                     <TableCell className='text-right'>{formatNumber(data.beli)}</TableCell>
@@ -100,7 +105,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="8" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan={headers.length} className="px-3 py-3 text-center">
+                                                    Tidak ada data yang dapat ditampilkan
+                                                </td>
                                             </tr>
                                         )}
                                     </tbody>
