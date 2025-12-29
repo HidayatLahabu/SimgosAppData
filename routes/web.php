@@ -427,6 +427,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('inventory')->namespace('App\Http\Controllers\Inventory')->group(function () {
         Route::get('daftarBarang', [BarangController::class, 'index'])->name('daftarBarang.index');
 
+        Route::get('listBarang', [BarangController::class, 'barang'])->name('daftarBarang.barang');
+
         Route::get('orderBarang', [OrderController::class, 'index'])->name('orderBarang.index');
 
         Route::get('penerimaanBarang', [PenerimaanController::class, 'index'])->name('penerimaanBarang.index');

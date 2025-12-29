@@ -16,6 +16,7 @@ import NavigationManajemen from '@/Components/Nav/NavigationManajemen';
 import NavigationChart from '@/Components/Nav/NavigationChart';
 import NavigationLab from '@/Components/Nav/NavigationLab';
 import NavigationTools from '@/Components/Nav/NavigationTools';
+import NavigationBarang from '@/Components/Nav/NavigationBarang.jsx';
 
 export default function Navigation({ user }) {
     const userName = user.name || '';
@@ -32,7 +33,9 @@ export default function Navigation({ user }) {
                         Beranda
                     </NavLink>
                 </div>
-                {userName.includes('Radiologi') ? (
+                {userName.includes('Persediaan') ? (
+                    <NavigationBarang />
+                ) : userName.includes('Radiologi') ? (
                     <NavigationRadiologi />
                 ) : userName.includes('Laboratorium') ? (
                     <NavigationLab />
