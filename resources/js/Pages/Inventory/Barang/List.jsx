@@ -4,6 +4,7 @@ import { Head, router } from "@inertiajs/react";
 import TextInput from "@/Components/Input/TextInput";
 import Pagination from "@/Components/Pagination";
 import { formatNumber } from "@/utils/formatNumber";
+import { formatRibuan } from "@/utils/formatRibuan";
 import Table from "@/Components/Table/Table";
 import TableHeader from "@/Components/Table/TableHeader";
 import TableHeaderCell from "@/Components/Table/TableHeaderCell";
@@ -17,7 +18,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         { name: "NAMA BARANG" },
         { name: "KATEGORI" },
         { name: "SATUAN" },
-        { name: "STOK" },
+        { name: "STOK", className: "text-right" },
         { name: "HARGA BELI", className: "text-right" },
         { name: "HARGA JUAL", className: "text-right" },
     ];
@@ -92,7 +93,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.kategori}</TableCell>
                                                     <TableCell>{data.satuan}</TableCell>
-                                                    <TableCell className='text-right'>{formatNumber(data.stock)}</TableCell>
+                                                    <TableCell className='text-right'>{formatRibuan(data.stock)}</TableCell>
                                                     <TableCell className='text-right'>{formatNumber(data.beli)}</TableCell>
                                                     <TableCell className='text-right'>{formatNumber(data.jual)}</TableCell>
                                                 </TableRow>
