@@ -20,7 +20,6 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         { name: "ID" },
         { name: "NAMA BARANG" },
         { name: "KATEGORI" },
-        { name: "FREKUENSI" },
         { name: "SATUAN" },
         { name: "STOK", className: "text-right" },
         { name: "HARGA BELI", className: "text-right" },
@@ -96,7 +95,6 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                     <TableCell>{data.id}</TableCell>
                                                     <TableCell className='uppercase'>{data.nama}</TableCell>
                                                     <TableCell>{data.kategori}</TableCell>
-                                                    <TableCell>{data.frekuensi ?? '-'}</TableCell>
                                                     <TableCell>{data.satuan}</TableCell>
                                                     <TableCell className='text-right'>{formatRibuan(data.stock)}</TableCell>
                                                     <TableCell className='text-right'>{formatNumber(data.beli)}</TableCell>

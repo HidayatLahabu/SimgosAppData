@@ -57,18 +57,78 @@ class BarangController extends Controller
         ]);
     }
 
+    // public function barang()
+    // {
+    //     // Get the search term from the request
+    //     $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+
+    //     // Start building the query using the query builder
+    //     $query = DB::connection('mysql3')->table('inventory.barang as barang')
+    //         ->select(
+    //             'barang.ID as id',
+    //             'barang.NAMA as nama',
+    //             'kategori.NAMA as kategori',
+    //             'satuan.NAMA as satuan',
+    //             'merk.DESKRIPSI as merk',
+    //             'rekanan.NAMA as rekanan',
+    //             'barang.STOK as stock',
+    //             'harga.HARGA_BELI as beli',
+    //             'harga.HARGA_JUAL as jual'
+    //         )
+    //         ->leftJoin('inventory.kategori as kategori', 'barang.KATEGORI', '=', 'kategori.ID')
+    //         ->leftJoin('inventory.satuan as satuan', 'barang.SATUAN', '=', 'satuan.ID')
+    //         ->leftJoin('master.referensi as merk', 'barang.MERK', '=', 'merk.ID')
+    //         ->leftJoin('inventory.penyedia as rekanan', 'barang.PENYEDIA', '=', 'rekanan.ID')
+    //         ->leftJoin('inventory.harga_barang as harga', 'barang.ID', '=', 'harga.BARANG')
+    //         ->leftJoin('master.frekuensi_aturan_resep_kategori as fark', 'kategori.ID', '=', 'fark.KATEGORI')
+    //         ->leftJoin('master.frekuensi_aturan_resep as far', 'fark.FREKUENSI', '=', 'far.ID')
+    //         ->where('barang.STATUS', 1)
+    //         ->where('merk.JENIS', 39)
+    //         ->where('harga.STATUS', 1)
+    //         ->groupBy(
+    //             'barang.ID',
+    //             'barang.NAMA',
+    //             'kategori.NAMA',
+    //             'satuan.NAMA',
+    //             'merk.DESKRIPSI',
+    //             'rekanan.NAMA',
+    //             'barang.STOK',
+    //             'harga.HARGA_BELI',
+    //             'harga.HARGA_JUAL'
+    //         )
+    //         ->orderBy('barang.NAMA');
+
+    //     // Add search filter if provided
+    //     if ($searchSubject) {
+    //         $query->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+    //             ->orWhereRaw('LOWER(kategori.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+    //     }
+
+    //     // Paginate the results
+    //     $data = $query->paginate(10)->appends(request()->query());
+
+    //     // Convert data to array
+    //     $dataArray = $data->toArray();
+
+    //     // Return Inertia view with paginated data
+    //     return inertia("Inventory/Barang/List", [
+    //         'dataTable' => [
+    //             'data' => $dataArray['data'], // Only the paginated data
+    //             'links' => $dataArray['links'], // Pagination links
+    //         ],
+    //         'queryParams' => request()->all()
+    //     ]);
+    // }
+
     public function barang()
     {
-        // Get the search term from the request
         $searchSubject = request('nama') ? strtolower(request('nama')) : null;
 
-        // Start building the query using the query builder
         $query = DB::connection('mysql3')->table('inventory.barang as barang')
             ->select(
                 'barang.ID as id',
                 'barang.NAMA as nama',
                 'kategori.NAMA as kategori',
-                'far.FREKUENSI as frekuensi',
                 'satuan.NAMA as satuan',
                 'merk.DESKRIPSI as merk',
                 'rekanan.NAMA as rekanan',
@@ -81,29 +141,37 @@ class BarangController extends Controller
             ->leftJoin('master.referensi as merk', 'barang.MERK', '=', 'merk.ID')
             ->leftJoin('inventory.penyedia as rekanan', 'barang.PENYEDIA', '=', 'rekanan.ID')
             ->leftJoin('inventory.harga_barang as harga', 'barang.ID', '=', 'harga.BARANG')
-            ->leftJoin('master.frekuensi_aturan_resep_kategori as fark', 'kategori.ID', '=', 'fark.KATEGORI')
-            ->leftJoin('master.frekuensi_aturan_resep as far', 'fark.FREKUENSI', '=', 'far.ID')
             ->where('barang.STATUS', 1)
             ->where('merk.JENIS', 39)
-            ->where('harga.STATUS', 1)
-            ->orderBy('barang.ID');
+            ->where('harga.STATUS', 1);
 
-        // Add search filter if provided
+        // PERBAIKAN DI SINI: Gunakan closure untuk membungkus OR
         if ($searchSubject) {
-            $query->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(kategori.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+            });
         }
 
-        // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        $data = $query->groupBy(
+            'barang.ID',
+            'barang.NAMA',
+            'kategori.NAMA',
+            'satuan.NAMA',
+            'merk.DESKRIPSI',
+            'rekanan.NAMA',
+            'barang.STOK',
+            'harga.HARGA_BELI',
+            'harga.HARGA_JUAL'
+        )
+            ->orderBy('barang.NAMA')
+            ->paginate(10)
+            ->appends(request()->query());
 
-        // Convert data to array
-        $dataArray = $data->toArray();
-
-        // Return Inertia view with paginated data
         return inertia("Inventory/Barang/List", [
             'dataTable' => [
-                'data' => $dataArray['data'], // Only the paginated data
-                'links' => $dataArray['links'], // Pagination links
+                'data' => $data->items(),
+                'links' => $data->linkCollection()->toArray(),
             ],
             'queryParams' => request()->all()
         ]);
