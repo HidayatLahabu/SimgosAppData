@@ -42,15 +42,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -72,9 +72,9 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TextInput
                                                     className="w-full"
                                                     defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari nama barang"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    placeholder="Cari nama barang dan kategori"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>

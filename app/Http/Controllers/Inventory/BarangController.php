@@ -59,7 +59,7 @@ class BarangController extends Controller
 
     public function barang()
     {
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         $query = DB::connection('mysql3')->table('inventory.barang as barang')
             ->select(
