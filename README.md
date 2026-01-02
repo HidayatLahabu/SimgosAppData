@@ -76,6 +76,7 @@ Kustomisasi:
         user yang mengandung kata Laboratorium
     14. Untuk petugas atau pegawai Radiologi, yang hanya akan mengakses menu terkait saja, dapat dibuat user  
         yang mengandung kata Radiologi
+    15. Tambahan menu Tools, untuk masalah mengatasi masalah di Kunjungan, Resep dan Stock Opname    
 
 Memperbarui Aplikasi:
 
