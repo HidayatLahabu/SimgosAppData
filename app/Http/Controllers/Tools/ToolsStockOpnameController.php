@@ -47,10 +47,54 @@ class ToolsStockOpnameController extends Controller
         ]);
     }
 
+    // public function list($id)
+    // {
+    //     // Start building the query using the query builder
+    //     $query = DB::connection('mysql3')->table('inventory.stok_opname_detil as stockDetail')
+    //         ->distinct()
+    //         ->select(
+    //             'barang.NAMA as nama',
+    //             'satuan.NAMA as satuan',
+    //             DB::raw('IFNULL(stockDetail.AWAL, 0) as awal'),
+    //             DB::raw('IFNULL(stockDetail.MANUAL, 0) as manual'),
+    //             DB::raw('IFNULL(stockDetail.BARANG_MASUK, 0) as masuk'),
+    //             DB::raw('IFNULL(stockDetail.BARANG_KELUAR, 0) as keluar'),
+    //             DB::raw('IFNULL(stockDetail.SISTEM, 0) as sistem'),
+    //             'barangRuangan.ID as idBarang',
+    //             'stockDetail.ID as idSod',
+    //             'stock.ID as idSo',
+    //             'ruangan.DESKRIPSI as ruangan'
+    //         )
+    //         ->leftJoin('inventory.stok_opname as stock', 'stockDetail.STOK_OPNAME', '=', 'stock.ID')
+    //         ->leftJoin('inventory.barang_ruangan as barangRuangan', 'barangRuangan.ID', '=', 'stockDetail.BARANG_RUANGAN')
+    //         ->leftJoin('inventory.barang as barang', 'barang.ID', '=', 'barangRuangan.BARANG')
+    //         ->leftJoin('inventory.satuan as satuan', 'barang.SATUAN', '=', 'satuan.ID')
+    //         ->leftJoin('master.ruangan as ruangan', 'barangRuangan.RUANGAN', '=', 'ruangan.ID')
+    //         ->where('stockDetail.STOK_OPNAME', $id)
+    //         ->orderByDesc('stockDetail.ID');
+
+    //     // Paginate the results
+    //     $data = $query->paginate(10)->appends(request()->query());
+
+    //     // Convert data to array
+    //     $dataArray = $data->toArray();
+
+    //     // Return Inertia view with paginated data
+    //     return inertia("Tools/StockOpname/List", [
+    //         'stockDetail' => [
+    //             'data' => $dataArray['data'], // Only the paginated data
+    //             'links' => $dataArray['links'], // Pagination links
+    //         ],
+    //     ]);
+    // }
+
     public function list($id)
     {
-        // Start building the query using the query builder
-        $query = DB::connection('mysql3')->table('inventory.stok_opname_detil as stockDetail')
+        // ambil query search
+        $searchBarang = request('namaBarang') ? strtolower(request('namaBarang')) : null;
+
+        $query = DB::connection('mysql3')
+            ->table('inventory.stok_opname_detil as stockDetail')
             ->distinct()
             ->select(
                 'barang.NAMA as nama',
@@ -73,20 +117,23 @@ class ToolsStockOpnameController extends Controller
             ->where('stockDetail.STOK_OPNAME', $id)
             ->orderByDesc('stockDetail.ID');
 
-        // Paginate the results
-        $data = $query->paginate(10)->appends(request()->query());
+        // 🔍 filter search
+        if ($searchBarang) {
+            $query->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchBarang . '%']);
+        }
 
-        // Convert data to array
+        $data = $query->paginate(10)->appends(request()->query());
         $dataArray = $data->toArray();
 
-        // Return Inertia view with paginated data
         return inertia("Tools/StockOpname/List", [
             'stockDetail' => [
-                'data' => $dataArray['data'], // Only the paginated data
-                'links' => $dataArray['links'], // Pagination links
+                'data'  => $dataArray['data'],
+                'links' => $dataArray['links'],
             ],
+            'queryParams' => request()->all()
         ]);
     }
+
 
     public function create($id)
     {
