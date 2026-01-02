@@ -51,7 +51,7 @@ export default function Edit({ auth, kunjungan, ruanganList }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Edit Resep" />
+            <Head title="Tools Edit Resep" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">

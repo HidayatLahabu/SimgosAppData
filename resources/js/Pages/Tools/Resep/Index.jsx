@@ -54,7 +54,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
         <AuthenticatedLayout
             user={auth.user}
         >
-            <Head title="Layanan" />
+            <Head title="Tools" />
 
             <div className="py-5">
                 <div className="max-w-8xl mx-auto sm:px-6 lg:px-5">

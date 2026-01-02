@@ -13,8 +13,9 @@ import TableCell from "@/Components/Table/TableCell";
 export default function Index({ auth, dataTable, queryParams = {} }) {
 
     const headers = [
-        { name: "ID" },
+        { name: "ID BARANG" },
         { name: "RUANGAN" },
+        { name: "ID BARANG RUANGAN" },
         { name: "NAMA BARANG" },
         { name: "SATUAN" },
         { name: "STOCK", className: "text-right" },
@@ -22,12 +23,12 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     ];
 
     // Function to handle search input changes
-    const searchFieldChanged = (nama, value) => {
+    const searchFieldChanged = (search, value) => {
         const updatedParams = { ...queryParams, page: 1 }; // Reset to the first page
         if (value) {
-            updatedParams[nama] = value;
+            updatedParams[search] = value;
         } else {
-            delete updatedParams[nama];
+            delete updatedParams[search];
         }
         // Update the URL and fetch new data based on updatedParams
         router.get(route('barangRuangan.index'), updatedParams, {
@@ -37,15 +38,15 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
     };
 
     // Function to handle change in search input
-    const onInputChange = (nama, e) => {
+    const onInputChange = (search, e) => {
         const value = e.target.value;
-        searchFieldChanged(nama, value);
+        searchFieldChanged(search, value);
     };
 
     // Function to handle Enter key press in search input
-    const onKeyPress = (nama, e) => {
+    const onKeyPress = (search, e) => {
         if (e.key !== 'Enter') return;
-        searchFieldChanged(nama, e.target.value);
+        searchFieldChanged(search, e.target.value);
     };
 
     return (
@@ -63,13 +64,13 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                 <Table>
                                     <TableHeader>
                                         <tr>
-                                            <th colSpan={6} className="px-3 py-2">
+                                            <th colSpan={7} className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
-                                                    defaultValue={queryParams.nama || ''}
-                                                    placeholder="Cari nama barang"
-                                                    onChange={e => onInputChange('nama', e)}
-                                                    onKeyPress={e => onKeyPress('nama', e)}
+                                                    defaultValue={queryParams.search || ''}
+                                                    placeholder="Cari nama barang dan ruangan"
+                                                    onChange={e => onInputChange('search', e)}
+                                                    onKeyPress={e => onKeyPress('search', e)}
                                                 />
                                             </th>
                                         </tr>
@@ -89,6 +90,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                                 <TableRow key={data.id} isEven={index % 2 === 0}>
                                                     <TableCell>{data.id}</TableCell>
                                                     <TableCell className='uppercase'>{data.namaRuangan}</TableCell>
+                                                    <TableCell>{data.id_ruangan}</TableCell>
                                                     <TableCell className='uppercase'>{data.namaBarang}</TableCell>
                                                     <TableCell>{data.satuan}</TableCell>
                                                     <TableCell className='text-right'>{formatNumber(data.stock)}</TableCell>
@@ -97,7 +99,7 @@ export default function Index({ auth, dataTable, queryParams = {} }) {
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="5" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
+                                                <td colSpan="7" className="px-3 py-3 text-center">Tidak ada data yang dapat ditampilkan</td>
                                             </tr>
                                         )}
                                     </tbody>

@@ -11,13 +11,14 @@ class BarangRuanganController extends Controller
     public function index()
     {
         // Get the search term from the request
-        $searchSubject = request('nama') ? strtolower(request('nama')) : null;
+        $searchSubject = request('search') ? strtolower(request('search')) : null;
 
         // Start building the query using the query builder
         $query = DB::connection('mysql3')->table('inventory.barang_ruangan as barangruangan')
             ->select(
                 'barang.ID as id',
                 'ruangan.DESKRIPSI as namaRuangan',
+                'barangruangan.ID as id_ruangan',
                 'barang.NAMA as namaBarang',
                 'satuan.NAMA as satuan',
                 'barangruangan.STOK as stock',
@@ -33,7 +34,12 @@ class BarangRuanganController extends Controller
 
         // Add search filter if provided
         if ($searchSubject) {
-            $query->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchSubject . '%']);
+            $query->where(function ($q) use ($searchSubject) {
+                $q->whereRaw('LOWER(barang.NAMA) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('LOWER(ruangan.DESKRIPSI) LIKE ?', ['%' . $searchSubject . '%'])
+                    ->orWhereRaw('CAST(barangruangan.ID AS CHAR) = ?', [$searchSubject]);
+            })
+                ->whereRaw('CAST(barangruangan.RUANGAN AS CHAR) LIKE ?', ['10216%']);
         }
 
         // Paginate the results

@@ -120,6 +120,7 @@ use App\Http\Controllers\Laporan\LayananTindakanRespondTimeController;
 use App\Http\Controllers\Tools\ToolsControlller;
 use App\Http\Controllers\Tools\ToolsKunjunganController;
 use App\Http\Controllers\Tools\ToolsResepController;
+use App\Http\Controllers\Tools\ToolsStockOpnameController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -721,6 +722,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('toolsResep', [ToolsResepController::class, 'index'])->name('toolsResep.index');
         Route::get('toolsResep/{id}/edit', [ToolsResepController::class, 'edit'])->name('toolsResep.edit');
         Route::put('toolsResep/{id}', [ToolsResepController::class, 'update'])->name('toolsResep.update');
+
+        Route::get('toolsSO', [ToolsStockOpnameController::class, 'index'])->name('toolsSO.index');
+        Route::get('toolsSO/list/{id}', [ToolsStockOpnameController::class, 'list'])->name('toolsSO.list');
+        Route::get('toolsSO/tambah/{id}', [ToolsStockOpnameController::class, 'create'])->name('toolsSO.tambah');
+        Route::post('toolsSO/store/{id}', [ToolsStockOpnameController::class, 'store'])->name('toolsSO.store');
     });
 });
 

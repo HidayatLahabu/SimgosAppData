@@ -49,12 +49,21 @@ export default function NavigationTools() {
                     >
                         Kunjungan
                     </NavLink>
+
                     <NavLink
                         href={route('toolsResep.index')}
                         active={route().current('toolsResep.index')}
                         className="flex justify-between items-center px-4 py-2 mb-1 w-full"
                     >
                         Order Resep
+                    </NavLink>
+
+                    <NavLink
+                        href={route('toolsSO.index')}
+                        active={route().current('toolsSO.index')}
+                        className="flex justify-between items-center px-4 py-2 mb-1 w-full"
+                    >
+                        Stock Opname
                     </NavLink>
                 </div>
             )}
