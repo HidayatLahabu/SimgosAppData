@@ -727,6 +727,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('toolsSO/list/{id}', [ToolsStockOpnameController::class, 'list'])->name('toolsSO.list');
         Route::get('toolsSO/tambah/{id}', [ToolsStockOpnameController::class, 'create'])->name('toolsSO.tambah');
         Route::post('toolsSO/store/{id}', [ToolsStockOpnameController::class, 'store'])->name('toolsSO.store');
+        Route::get('toolsSO/{id}/edit', [ToolsStockOpnameController::class, 'edit'])->name('toolsSO.edit');
+        Route::put('toolsSO/{id}', [ToolsStockOpnameController::class, 'update'])->name('toolsSO.update');
     });
 });
 

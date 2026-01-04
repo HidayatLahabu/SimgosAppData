@@ -4,6 +4,8 @@ import { Head, router } from "@inertiajs/react";
 import Pagination from "@/Components/Pagination";
 import CreateButton from '@/Components/Button/ButtonCreate';
 import TextInput from "@/Components/Input/TextInput";
+import TableCellMenu from "@/Components/Table/TableCellMenu";
+import ButtonDetail from "@/Components/Button/ButtonDetail";
 
 export default function Index({ auth, stockDetail, queryParams = {} }) {
 
@@ -68,7 +70,7 @@ export default function Index({ auth, stockDetail, queryParams = {} }) {
                                     {/* SEARCH */}
                                     <thead>
                                         <tr>
-                                            <th colSpan="10" className="px-3 py-2">
+                                            <th colSpan="12" className="px-3 py-2">
                                                 <TextInput
                                                     className="w-full"
                                                     placeholder="Cari nama barang"
@@ -93,6 +95,7 @@ export default function Index({ auth, stockDetail, queryParams = {} }) {
                                             <th className="px-3 py-2 text-right">MASUK</th>
                                             <th className="px-3 py-2 text-right">KELUAR</th>
                                             <th className="px-3 py-2 text-right">SISTEM</th>
+                                            <th className="px-3 py-2">MENU</th>
                                         </tr>
                                     </thead>
 
@@ -104,6 +107,7 @@ export default function Index({ auth, stockDetail, queryParams = {} }) {
                                                     key={row.idSod || index}
                                                     className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500"
                                                 >
+                                                    <td className="px-3 py-3">{row.idSod}</td>
                                                     <td className="px-3 py-3">{row.idSo}</td>
                                                     <td className="px-3 py-3 uppercase">{row.ruangan}</td>
                                                     <td className="px-3 py-3">{row.idBarang}</td>
@@ -114,11 +118,16 @@ export default function Index({ auth, stockDetail, queryParams = {} }) {
                                                     <td className="px-3 py-3 text-right">{row.masuk}</td>
                                                     <td className="px-3 py-3 text-right">{row.keluar}</td>
                                                     <td className="px-3 py-3 text-right">{row.sistem}</td>
+                                                    <TableCellMenu>
+                                                        <ButtonDetail
+                                                            href={route("toolsSO.edit", { id: row.idSod })}
+                                                        />
+                                                    </TableCellMenu>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr className="bg-white border-b dark:bg-indigo-950 dark:border-gray-500">
-                                                <td colSpan="10" className="px-3 py-3 text-center">
+                                                <td colSpan="12" className="px-3 py-3 text-center">
                                                     Tidak ada data yang dapat ditampilkan
                                                 </td>
                                             </tr>

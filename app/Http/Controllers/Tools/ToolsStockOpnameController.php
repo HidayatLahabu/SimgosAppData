@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tools;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
 class ToolsStockOpnameController extends Controller
@@ -46,47 +47,6 @@ class ToolsStockOpnameController extends Controller
             'queryParams' => request()->all()
         ]);
     }
-
-    // public function list($id)
-    // {
-    //     // Start building the query using the query builder
-    //     $query = DB::connection('mysql3')->table('inventory.stok_opname_detil as stockDetail')
-    //         ->distinct()
-    //         ->select(
-    //             'barang.NAMA as nama',
-    //             'satuan.NAMA as satuan',
-    //             DB::raw('IFNULL(stockDetail.AWAL, 0) as awal'),
-    //             DB::raw('IFNULL(stockDetail.MANUAL, 0) as manual'),
-    //             DB::raw('IFNULL(stockDetail.BARANG_MASUK, 0) as masuk'),
-    //             DB::raw('IFNULL(stockDetail.BARANG_KELUAR, 0) as keluar'),
-    //             DB::raw('IFNULL(stockDetail.SISTEM, 0) as sistem'),
-    //             'barangRuangan.ID as idBarang',
-    //             'stockDetail.ID as idSod',
-    //             'stock.ID as idSo',
-    //             'ruangan.DESKRIPSI as ruangan'
-    //         )
-    //         ->leftJoin('inventory.stok_opname as stock', 'stockDetail.STOK_OPNAME', '=', 'stock.ID')
-    //         ->leftJoin('inventory.barang_ruangan as barangRuangan', 'barangRuangan.ID', '=', 'stockDetail.BARANG_RUANGAN')
-    //         ->leftJoin('inventory.barang as barang', 'barang.ID', '=', 'barangRuangan.BARANG')
-    //         ->leftJoin('inventory.satuan as satuan', 'barang.SATUAN', '=', 'satuan.ID')
-    //         ->leftJoin('master.ruangan as ruangan', 'barangRuangan.RUANGAN', '=', 'ruangan.ID')
-    //         ->where('stockDetail.STOK_OPNAME', $id)
-    //         ->orderByDesc('stockDetail.ID');
-
-    //     // Paginate the results
-    //     $data = $query->paginate(10)->appends(request()->query());
-
-    //     // Convert data to array
-    //     $dataArray = $data->toArray();
-
-    //     // Return Inertia view with paginated data
-    //     return inertia("Tools/StockOpname/List", [
-    //         'stockDetail' => [
-    //             'data' => $dataArray['data'], // Only the paginated data
-    //             'links' => $dataArray['links'], // Pagination links
-    //         ],
-    //     ]);
-    // }
 
     public function list($id)
     {
@@ -133,7 +93,6 @@ class ToolsStockOpnameController extends Controller
             'queryParams' => request()->all()
         ]);
     }
-
 
     public function create($id)
     {
@@ -235,6 +194,88 @@ class ToolsStockOpnameController extends Controller
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat menambahkan barang: ' . $e->getMessage())
                 ->withInput();
+        }
+    }
+
+    public function edit($id)
+    {
+        // Ambil data stock opname
+        $stokOpname = DB::connection('mysql3')
+            ->table('inventory.stok_opname_detil as stockDetail')
+            ->distinct()
+            ->select(
+                'barang.NAMA as nama_barang',
+                'satuan.NAMA as satuan',
+                DB::raw('IFNULL(stockDetail.AWAL, 0) as awal'),
+                DB::raw('IFNULL(stockDetail.MANUAL, 0) as manual'),
+                DB::raw('IFNULL(stockDetail.BARANG_MASUK, 0) as barang_masuk'),
+                DB::raw('IFNULL(stockDetail.BARANG_KELUAR, 0) as barang_keluar'),
+                DB::raw('IFNULL(stockDetail.SISTEM, 0) as sistem'),
+                'barangRuangan.ID as idBarang',
+                'stockDetail.ID as idSod',
+                'stock.ID as idSo',
+                'ruangan.DESKRIPSI as ruangan'
+            )
+            ->leftJoin('inventory.stok_opname as stock', 'stockDetail.STOK_OPNAME', '=', 'stock.ID')
+            ->leftJoin('inventory.barang_ruangan as barangRuangan', 'barangRuangan.ID', '=', 'stockDetail.BARANG_RUANGAN')
+            ->leftJoin('inventory.barang as barang', 'barang.ID', '=', 'barangRuangan.BARANG')
+            ->leftJoin('inventory.satuan as satuan', 'barang.SATUAN', '=', 'satuan.ID')
+            ->leftJoin('master.ruangan as ruangan', 'barangRuangan.RUANGAN', '=', 'ruangan.ID')
+            ->where('stockDetail.ID', $id)
+            ->first();
+
+        if (!$stokOpname) {
+            abort(404, "Stok Opname tidak ditemukan");
+        }
+
+        return inertia('Tools/StockOpname/Edit', [
+            'stokOpname' => $stokOpname,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'awal'          => 'required|numeric',
+            'sistem'        => 'required|numeric',
+            'manual'        => 'required|numeric',
+            'barang_masuk'  => 'required|numeric',
+            'barang_keluar' => 'required|numeric',
+        ]);
+
+        DB::connection('mysql3')->beginTransaction();
+
+        try {
+            DB::connection('mysql3')
+                ->table('inventory.stok_opname_detil')
+                ->where('ID', $id)
+                ->update([
+                    'AWAL'          => $validated['awal'],
+                    'SISTEM'        => $validated['sistem'],
+                    'MANUAL'        => $validated['manual'],
+                    'BARANG_MASUK'  => $validated['barang_masuk'],
+                    'BARANG_KELUAR' => $validated['barang_keluar'],
+                ]);
+
+            DB::connection('mysql3')->commit();
+
+            return redirect()
+                ->route('toolsSO.list', ['id' => $id])
+                ->with('success', 'Data stok opname berhasil diperbarui');
+        } catch (\Throwable $e) {
+
+            DB::connection('mysql3')->rollBack();
+
+            Log::error('Gagal update stok opname', [
+                'id' => $id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->route('toolsSO.list', ['id' => $id])
+                ->withErrors([
+                    'message' => 'Terjadi kesalahan saat memperbarui data stok opname'
+                ]);
         }
     }
 }
