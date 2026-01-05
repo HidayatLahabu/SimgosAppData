@@ -85,6 +85,7 @@ export default function Index({ auth, stockDetail, queryParams = {} }) {
                                     {/* HEADER */}
                                     <thead className="text-sm font-bold text-gray-700 bg-gray-50 dark:bg-indigo-900 dark:text-gray-100 border-b-2 border-gray-500">
                                         <tr>
+                                            <th className="px-3 py-2">ID SOD</th>
                                             <th className="px-3 py-2">ID SO</th>
                                             <th className="px-3 py-2">RUANGAN</th>
                                             <th className="px-3 py-2">ID BARANG</th>
