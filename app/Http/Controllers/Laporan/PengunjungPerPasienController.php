@@ -134,6 +134,7 @@ class PengunjungPerPasienController extends Controller
             ->select([
                 'pendaftaran.NOMOR as NOPEN',
                 'pasien.NORM as NORM',
+                'penjamin.NOMOR as SEP',
                 DB::raw('master.getNamaLengkap(pasien.NORM) as NAMA_LENGKAP'),
                 DB::raw("DATE_FORMAT(pendaftaran.TANGGAL, '%d-%m-%Y %H:%i:%s') as TGLREG"),
                 DB::raw("DATE_FORMAT(kunjungan.MASUK, '%d-%m-%Y %H:%i:%s') as TGLMASUK"),
@@ -165,6 +166,7 @@ class PengunjungPerPasienController extends Controller
                 'dokter.NIP',
                 'ruangan.DESKRIPSI',
                 'pendaftaran.TANGGAL',
+                'penjamin.NOMOR'
             ]);
 
         if ($ruangan) {
