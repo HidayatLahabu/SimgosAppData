@@ -258,6 +258,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('pendaftaran')->namespace('App\Http\Controllers\Pendaftaran')->group(function () {
         Route::get('/', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
         Route::get('/detail/{id}', [PendaftaranController::class, 'detail'])->name('pendaftaran.detail');
+        Route::get('/edit/{id}', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+        Route::put('/pendaftaran/{nomor}', [PendaftaranController::class, 'update'])
+            ->name('pendaftaran.update');
         Route::get('/print', [PendaftaranController::class, 'print'])->name('pendaftaran.print');
         Route::get('/filter/{filter}', [PendaftaranController::class, 'filterByTime'])
             ->name('pendaftaran.filterByTime')

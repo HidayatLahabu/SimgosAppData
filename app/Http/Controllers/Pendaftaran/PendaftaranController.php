@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\MasterRuanganModel;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PendaftaranPendaftaranModel;
 
 class PendaftaranController extends Controller
 {
@@ -181,6 +182,86 @@ class PendaftaranController extends Controller
         ]);
     }
 
+    public function print(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'ruangan' => 'nullable|string',
+            'statusKunjungan' => 'nullable|integer|in:1,2,3',
+            'dari_tanggal' => 'required|date',
+            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
+        ]);
+
+        // Ambil nilai input
+        $ruangan = $request->input('ruangan');
+        $statusKunjungan = $request->input('statusKunjungan');
+        $dariTanggal = $request->input('dari_tanggal');
+        $sampaiTanggal = $request->input('sampai_tanggal');
+        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
+        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
+
+        // Variabel default untuk label
+        $namaRuangan = 'Semua Ruangan';
+        $namaStatusPendaftaran = 'Semua Status Aktifitas Pendaftaran';
+
+        // Query utama
+        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
+            ->select(
+                'pendaftaran.NOMOR as nomor',
+                'pendaftaran.NORM as norm',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
+                'pendaftaran.TANGGAL as tanggal',
+                'penjamin.NOMOR as penjamin',
+                'pendaftaran.STATUS as status',
+                'ruangan.DESKRIPSI as ruangan',
+            )
+            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
+            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+            ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
+            ->where('pasien.STATUS', 1);
+
+        // Filter berdasarkan ruangan
+        if (!empty($ruangan)) {
+            $query->where('ruangan.ID', $ruangan);
+
+            // Mendapatkan nama ruangan yang sesuai dari hasil query
+            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
+                ->where('ID', $ruangan)
+                ->value('DESKRIPSI');
+        }
+
+        //Filter berdasarkan jenis kunjungan
+        if ($statusKunjungan == null) {
+            $query->whereIn('pendaftaran.STATUS', [0, 1, 2]);
+        } elseif ($statusKunjungan == 1) {
+            $query->where('pendaftaran.STATUS', 0); // Batal Kunjungan
+            $namaStatusPendaftaran = 'Batal';
+        } elseif ($statusKunjungan == 2) {
+            $query->where('pendaftaran.STATUS', 1); // Sedang Dilayani
+            $namaStatusPendaftaran = 'Aktif';
+        } elseif ($statusKunjungan == 3) {
+            $query->where('pendaftaran.STATUS', 2); // Selesai
+            $namaStatusPendaftaran = 'Selesai';
+        }
+
+        // Filter berdasarkan tanggal
+        $data = $query->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
+            ->orderBy('pendaftaran.TANGGAL')
+            ->get();
+
+        // Kirim data ke frontend menggunakan Inertia
+        return inertia("Pendaftaran/Pendaftaran/Print", [
+            'data' => $data,
+            'dariTanggal' => $dariTanggal,
+            'sampaiTanggal' => $sampaiTanggal,
+            'namaRuangan' => $namaRuangan,
+            'namaStatusPendaftaran' => $namaStatusPendaftaran,
+        ]);
+    }
+
     public function detail($id)
     {
         // Fetch the specific data
@@ -304,83 +385,88 @@ class PendaftaranController extends Controller
         ]);
     }
 
-    public function print(Request $request)
+    public function edit($id)
     {
-        // Validasi input
-        $request->validate([
-            'ruangan' => 'nullable|string',
-            'statusKunjungan' => 'nullable|integer|in:1,2,3',
-            'dari_tanggal' => 'required|date',
-            'sampai_tanggal' => 'required|date|after_or_equal:dari_tanggal',
-        ]);
-
-        // Ambil nilai input
-        $ruangan = $request->input('ruangan');
-        $statusKunjungan = $request->input('statusKunjungan');
-        $dariTanggal = $request->input('dari_tanggal');
-        $sampaiTanggal = $request->input('sampai_tanggal');
-        $dariTanggal = Carbon::parse($dariTanggal)->format('Y-m-d H:i:s');
-        $sampaiTanggal = Carbon::parse($sampaiTanggal)->endOfDay()->format('Y-m-d H:i:s');
-
-        // Variabel default untuk label
-        $namaRuangan = 'Semua Ruangan';
-        $namaStatusPendaftaran = 'Semua Status Aktifitas Pendaftaran';
-
-        // Query utama
-        $query = DB::connection('mysql5')->table('pendaftaran.pendaftaran as pendaftaran')
-            ->select(
-                'pendaftaran.NOMOR as nomor',
-                'pendaftaran.NORM as norm',
-                DB::raw('master.getNamaLengkap(pasien.NORM) as nama'),
-                'pendaftaran.TANGGAL as tanggal',
+        $query = DB::connection('mysql5')
+            ->table('pendaftaran.pendaftaran as p')
+            ->select([
+                'p.NOMOR as nomor_pendaftaran',
+                'p.NORM as norm',
+                DB::raw('master.getNamaLengkap(pasien.NORM) as nama_pasien'),
+                'p.TANGGAL as tanggal_masuk',
                 'penjamin.NOMOR as penjamin',
-                'pendaftaran.STATUS as status',
-                'ruangan.DESKRIPSI as ruangan',
-            )
-            ->leftJoin('master.pasien as pasien', 'pendaftaran.NORM', '=', 'pasien.NORM')
-            ->leftJoin('master.kartu_identitas_pasien as kip', 'pendaftaran.NORM', '=', 'kip.NORM')
-            ->leftJoin('bpjs.peserta as peserta', 'pendaftaran.NORM', '=', 'peserta.norm')
-            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'pendaftaran.NOMOR')
-            ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'pendaftaran.NOMOR')
+                'p.STATUS as status_kunjungan',
+
+                'ruangan.ID as ruangan_id',
+                'ruangan.DESKRIPSI as ruangan_tujuan',
+            ])
+            ->leftJoin('master.pasien as pasien', 'p.NORM', '=', 'pasien.NORM')
+            ->leftJoin('master.kartu_identitas_pasien as kip', 'p.NORM', '=', 'kip.NORM')
+            ->leftJoin('bpjs.peserta as peserta', 'p.NORM', '=', 'peserta.norm')
+            ->leftJoin('pendaftaran.penjamin as penjamin', 'penjamin.NOPEN', '=', 'p.NOMOR')
+            ->leftJoin('pendaftaran.tujuan_pasien as tujuan_pasien', 'tujuan_pasien.NOPEN', '=', 'p.NOMOR')
             ->leftJoin('master.ruangan as ruangan', 'ruangan.ID', '=', 'tujuan_pasien.RUANGAN')
-            ->where('pasien.STATUS', 1);
+            ->where('pasien.STATUS', 1)
+            ->where('p.NOMOR', $id)
+            ->first();
 
-        // Filter berdasarkan ruangan
-        if (!empty($ruangan)) {
-            $query->where('ruangan.ID', $ruangan);
-
-            // Mendapatkan nama ruangan yang sesuai dari hasil query
-            $namaRuangan = DB::connection('mysql5')->table('master.ruangan')
-                ->where('ID', $ruangan)
-                ->value('DESKRIPSI');
+        if (!$query) {
+            return redirect()
+                ->route('pendaftaran.index')
+                ->with('error', 'Data tidak ditemukan.');
         }
 
-        //Filter berdasarkan jenis kunjungan
-        if ($statusKunjungan == null) {
-            $query->whereIn('pendaftaran.STATUS', [0, 1, 2]);
-        } elseif ($statusKunjungan == 1) {
-            $query->where('pendaftaran.STATUS', 0); // Batal Kunjungan
-            $namaStatusPendaftaran = 'Batal';
-        } elseif ($statusKunjungan == 2) {
-            $query->where('pendaftaran.STATUS', 1); // Sedang Dilayani
-            $namaStatusPendaftaran = 'Aktif';
-        } elseif ($statusKunjungan == 3) {
-            $query->where('pendaftaran.STATUS', 2); // Selesai
-            $namaStatusPendaftaran = 'Selesai';
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'This action is unauthorized.');
         }
 
-        // Filter berdasarkan tanggal
-        $data = $query->whereBetween('pendaftaran.TANGGAL', [$dariTanggal, $sampaiTanggal])
-            ->orderBy('pendaftaran.TANGGAL')
-            ->get();
-
-        // Kirim data ke frontend menggunakan Inertia
-        return inertia("Pendaftaran/Pendaftaran/Print", [
-            'data' => $data,
-            'dariTanggal' => $dariTanggal,
-            'sampaiTanggal' => $sampaiTanggal,
-            'namaRuangan' => $namaRuangan,
-            'namaStatusPendaftaran' => $namaStatusPendaftaran,
+        return inertia('Pendaftaran/Pendaftaran/Edit', [
+            'kunjungan' => [
+                'nomor_pendaftaran' => $query->nomor_pendaftaran,
+                'norm'              => $query->norm,
+                'nama_pasien'       => $query->nama_pasien,
+                'ruangan_id'        => $query->ruangan_id,
+                'ruangan_tujuan'    => $query->ruangan_tujuan,
+                'tanggal_masuk'     => $query->tanggal_masuk,
+                'status_kunjungan'  => $query->status_kunjungan,
+            ],
         ]);
+    }
+
+    public function update(Request $request, $nomor)
+    {
+        // 🔒 proteksi admin
+        if (auth()->user()->role !== 'admin') {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        // ✅ validasi hanya tanggal_masuk
+        $request->validate([
+            'tanggal_masuk' => ['required', 'date'],
+        ]);
+
+        // ambil data lama
+        $row = DB::connection('mysql5')
+            ->table('pendaftaran.pendaftaran')
+            ->where('NOMOR', $nomor)
+            ->first();
+
+        if (!$row) {
+            return redirect()
+                ->route('pendaftaran.index')
+                ->with('error', 'Data tidak ditemukan.');
+        }
+
+        // update hanya kolom TANGGAL
+        DB::connection('mysql5')
+            ->table('pendaftaran.pendaftaran')
+            ->where('NOMOR', $nomor)
+            ->update([
+                'TANGGAL' => $request->tanggal_masuk,
+            ]);
+
+        return redirect()
+            ->route('pendaftaran.detail', $nomor)
+            ->with('success', 'Tanggal masuk berhasil diperbarui.');
     }
 }

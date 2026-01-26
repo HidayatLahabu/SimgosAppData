@@ -8,10 +8,12 @@ import TableHeaderCell from "@/Components/Table/TableHeaderCell";
 import TableRow from "@/Components/Table/TableRow";
 import TableCell from "@/Components/Table/TableCell";
 import { formatDate } from '@/utils/formatDate';
+import ButtonEdit from '@/Components/Button/ButtonEditKunjungan';
 
 export default function Detail({
     auth,
     detail,
+    nomorPendaftaran,
 }) {
 
     const headers = [
@@ -41,6 +43,8 @@ export default function Detail({
         tables.push(filteredDetailData.slice(i, i + rowsPerTable));
     }
 
+    const isAdmin = auth.user?.role === 'admin';
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Pendaftaran" />
@@ -53,6 +57,12 @@ export default function Detail({
                                 <div className="relative flex items-center justify-between pb-2">
                                     <ButtonBack href={route("pendaftaran.index")} />
                                     <h1 className="absolute left-1/2 transform -translate-x-1/2 uppercase font-bold text-2xl">DATA DETAIL PENDAFTARAN</h1>
+
+                                    <ButtonEdit
+                                        href={route('pendaftaran.edit', nomorPendaftaran)}
+                                        label="Update Pendaftaran"
+                                    />
+
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {tables.map((tableData, tableIndex) => (
